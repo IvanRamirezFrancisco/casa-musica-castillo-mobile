@@ -1,0 +1,7 @@
+{
+  "name": "casa-musica-mobile",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular-standalone"
+}
