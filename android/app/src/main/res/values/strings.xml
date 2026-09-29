@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Casa de Música Castillo</string>
+    <string name="title_activity_main">Casa de Música Castillo</string>
+    <string name="package_name">com.casademusicacastillo.app</string>
+    <string name="custom_url_scheme">com.casademusicacastillo.app</string>
+</resources>

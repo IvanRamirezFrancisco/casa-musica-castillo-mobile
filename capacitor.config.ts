@@ -1,8 +1,8 @@
 import type { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'io.ionic.starter',
-  appName: 'casa-musica-mobile',
+  appId: 'com.casademusicacastillo.app',
+  appName: 'Casa de Música Castillo',
   webDir: 'www'
 };
 
