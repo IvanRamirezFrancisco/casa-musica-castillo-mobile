@@ -32,14 +32,16 @@ jobs:
           node-version: "22"
           cache: "npm"
 
-      - name: Mostrar versiones
+      - name: Mostrar versiones de Node y npm
         run: |
           node --version
           npm --version
-          npx ng version
 
       - name: Instalar dependencias
         run: npm ci
+
+      - name: Mostrar versión de Angular
+        run: npx ng version
 
       - name: Ejecutar análisis estático
         run: npm run lint
