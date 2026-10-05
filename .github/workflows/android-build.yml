@@ -1,0 +1,79 @@
+name: Android - Build Debug APK
+
+on:
+  pull_request:
+    branches:
+      - develop
+      - main
+
+  push:
+    branches:
+      - develop
+      - main
+
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  android-build:
+    name: Compilar APK Android Debug
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Obtener codigo fuente
+        uses: actions/checkout@v7
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: "22"
+          cache: "npm"
+
+      - name: Configurar Java
+        uses: actions/setup-java@v6
+        with:
+          distribution: "temurin"
+          java-version: "17"
+
+      - name: Configurar Gradle
+        uses: gradle/actions/setup-gradle@v6
+
+      - name: Mostrar versiones
+        run: |
+          node --version
+          npm --version
+          java -version
+
+      - name: Instalar dependencias
+        run: npm ci
+
+      - name: Compilar aplicacion Angular
+        run: npm run build
+
+      - name: Sincronizar Capacitor con Android
+        run: npx cap sync android
+
+      - name: Dar permisos al Gradle Wrapper
+        run: chmod +x android/gradlew
+
+      - name: Compilar APK Debug
+        working-directory: android
+        run: ./gradlew assembleDebug --no-daemon
+
+      - name: Verificar APK generado
+        run: |
+          test -f android/app/build/outputs/apk/debug/app-debug.apk
+          ls -lh android/app/build/outputs/apk/debug/app-debug.apk
+
+      - name: Publicar APK como artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: casa-musica-castillo-debug-apk
+          path: android/app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error
+          retention-days: 14
+
+
