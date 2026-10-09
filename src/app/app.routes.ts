@@ -40,11 +40,11 @@ export const routes: Routes = [
       },
       {
         path: 'orders',
-        loadComponent: () => import('./features/dummy/dummy.page').then((m) => m.DummyPage),
+        loadComponent: () => import('./features/orders/orders.page').then((m) => m.OrdersPage),
       },
       {
         path: 'profile',
-        loadComponent: () => import('./features/dummy/dummy.page').then((m) => m.DummyPage),
+        loadComponent: () => import('./features/profile/profile.page').then((m) => m.ProfilePage),
       },
       {
         path: '',
@@ -64,4 +64,12 @@ export const routes: Routes = [
     path: 'checkout',
     loadChildren: () => import('./features/checkout/checkout.routes').then((m) => m.routes),
   },
+  {
+    path: 'orders/:id',
+    loadComponent: () => import('./features/orders/order-detail/order-detail.page').then((m) => m.OrderDetailPage),
+  },
+  {
+    path: 'profile/edit',
+    loadComponent: () => import('./features/profile/edit-profile/edit-profile.page').then((m) => m.EditProfilePage),
+  }
 ];

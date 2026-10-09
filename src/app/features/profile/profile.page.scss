@@ -1,0 +1,98 @@
+.cmc-header-transparent ion-toolbar {
+  --background: var(--cmc-background);
+  --border-width: 0;
+}
+
+.profile-content {
+  --background: var(--cmc-background);
+  --padding-bottom: var(--cmc-bubble-nav-offset);
+}
+
+.profile-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 24px 16px;
+  margin-bottom: 16px;
+  background: var(--cmc-surface);
+  border-radius: var(--cmc-radius-lg, 20px);
+  box-shadow: var(--cmc-shadow-card);
+
+  p {
+    margin: 0;
+  }
+
+  cmc-button {
+    margin-top: 16px;
+  }
+}
+
+.avatar {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: var(--cmc-primary);
+  color: var(--cmc-text-on-primary);
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1.75rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 8px;
+}
+
+.profile-name {
+  margin: 0;
+}
+
+.options {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  background: var(--cmc-surface);
+  border-radius: var(--cmc-radius-md);
+  box-shadow: var(--cmc-shadow-card);
+  overflow: hidden;
+
+  li + li {
+    border-top: 1px solid var(--cmc-border);
+  }
+}
+
+.option {
+  width: 100%;
+  min-height: 52px;
+  padding: 0 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: transparent;
+  border: none;
+  color: var(--cmc-text-primary);
+  font-family: 'Roboto', sans-serif;
+  font-size: 1rem;
+  text-align: left;
+
+  span {
+    flex: 1;
+  }
+
+  .chevron {
+    color: var(--cmc-text-secondary);
+  }
+
+  &.danger {
+    color: var(--cmc-error);
+
+    .chevron {
+      display: none;
+    }
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--cmc-primary);
+    outline-offset: -2px;
+  }
+}

@@ -6,7 +6,8 @@
 }
 
 .home-toolbar {
-  padding-top: 8px;
+  --padding-top: calc(var(--ion-safe-area-top, env(safe-area-inset-top)) + 8px);
+  --padding-bottom: 8px;
 }
 
 .header-content {
@@ -28,7 +29,6 @@
 
   .cmc-title {
     font-size: 1.25rem;
-    margin: 0;
   }
 }
 
@@ -43,7 +43,7 @@
 }
 
 .search-toolbar {
-  padding-bottom: 8px;
+  --padding-bottom: 8px;
 }
 
 .search-container {
@@ -67,7 +67,6 @@
     flex: 1;
     border: none;
     background: transparent;
-    font-family: 'Roboto', sans-serif;
     font-size: 1rem;
     color: var(--cmc-text-primary);
     outline: none;
@@ -80,7 +79,10 @@
 
 .home-content {
   --background: var(--cmc-background);
-  --padding-bottom: var(--cmc-bubble-nav-offset);
+
+  &::part(scroll) {
+    padding-bottom: calc(var(--cmc-bubble-nav-offset) + var(--cmc-space-6)) !important;
+  }
 }
 
 .promo-banner {
@@ -100,12 +102,11 @@
     bottom: -40px;
     width: 120px;
     height: 120px;
-    background: radial-gradient(circle, rgba(197, 160, 89, 0.2) 0%, rgba(255, 255, 255, 0) 70%);
+    background: radial-gradient(circle, #c5a05933 0%, transparent 70%);
     border-radius: 50%;
   }
 
   .promo-title {
-    font-family: 'Montserrat', sans-serif;
     font-size: 1.5rem;
     font-weight: 700;
     margin-bottom: 8px;
@@ -113,7 +114,6 @@
   }
 
   .promo-desc {
-    font-family: 'Roboto', sans-serif;
     font-size: 1rem;
     line-height: 1.4;
     opacity: 0.9;
@@ -157,9 +157,9 @@
   padding: 8px 16px;
   border-radius: var(--cmc-radius-full);
   box-shadow:
-    inset -2px -2px 4px rgba(231, 222, 213, 0.5),
-    inset 2px 2px 4px rgba(255, 255, 255, 0.8),
-    0 2px 4px rgba(41, 37, 36, 0.05); /* Soft claymorphism */
+    inset -2px -2px 4px #e7ded580,
+    inset 2px 2px 4px #ffffffcc,
+    0 2px 4px #2925240d;
   border: 1px solid var(--cmc-surface);
   flex-shrink: 0;
 

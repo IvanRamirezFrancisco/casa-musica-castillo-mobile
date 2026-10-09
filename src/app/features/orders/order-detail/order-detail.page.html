@@ -1,0 +1,60 @@
+<ion-header class="ion-no-border cmc-header-transparent">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <button type="button" class="nav-back-btn" aria-label="Volver a mis pedidos" (click)="goBack()">
+        <ion-icon name="arrow-back-outline" aria-hidden="true"></ion-icon>
+      </button>
+    </ion-buttons>
+    <ion-title class="cmc-title">Detalle del pedido</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="cmc-page">
+  <div class="cmc-page-container">
+    @if (order(); as o) {
+      <section class="card head" aria-label="Resumen del pedido">
+        <div class="row">
+          <h2 class="cmc-title order-id">{{ o.id }}</h2>
+          <cmc-badge [variant]="variant()">{{ statusLabel() }}</cmc-badge>
+        </div>
+        <p class="cmc-text-secondary">{{ o.date | date: 'dd/MM/yyyy' }}</p>
+      </section>
+
+      @if (o.status === 'cancelled') {
+        <p class="cancel-note" role="status">Este pedido fue cancelado.</p>
+      } @else {
+        <ol class="timeline" aria-label="Progreso del pedido">
+          @for (step of steps(); track step.label) {
+            <li [class.done]="step.done" [attr.aria-current]="step.current ? 'step' : null">
+              <span class="dot" aria-hidden="true"></span>
+              <span>{{ step.label }}</span>
+            </li>
+          }
+        </ol>
+      }
+
+      <section class="card" aria-label="Productos">
+        <h3 class="cmc-title section-title">Productos</h3>
+        <ul class="items">
+          @for (item of o.items; track item.id) {
+            <li class="row">
+              <span class="item-name">{{ item.name }} <span class="cmc-text-secondary">x{{ item.quantity }}</span></span>
+              <span class="cmc-font-bold">{{ item.unitPrice * item.quantity | currency: 'MXN' }}</span>
+            </li>
+          }
+        </ul>
+        <div class="divider"></div>
+        <div class="row"><span class="cmc-text-secondary">Subtotal</span><span>{{ subtotal() | currency: 'MXN' }}</span></div>
+        <div class="row"><span class="cmc-text-secondary">Envío</span><span>{{ o.shipping === 0 ? 'Gratis' : (o.shipping | currency: 'MXN') }}</span></div>
+        <div class="row total"><span class="cmc-title">Total</span><span class="cmc-title">{{ total() | currency: 'MXN' }}</span></div>
+      </section>
+
+      <section class="card" aria-label="Entrega y pago">
+        <div class="row"><span class="cmc-text-secondary">Entrega</span><span class="cmc-font-bold">{{ o.deliveryMethod }}</span></div>
+        <div class="row"><span class="cmc-text-secondary">Pago</span><span class="cmc-font-bold">{{ o.paymentMethod }}</span></div>
+      </section>
+    } @else {
+      <cmc-empty-state heading="Pedido no encontrado" description="No existe un pedido con ese identificador."></cmc-empty-state>
+    }
+  </div>
+</ion-content>

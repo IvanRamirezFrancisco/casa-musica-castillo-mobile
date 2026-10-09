@@ -1,0 +1,41 @@
+<ion-header class="ion-no-border cmc-header-transparent">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <button type="button" class="nav-back-btn" aria-label="Volver al perfil" (click)="goBack()">
+        <ion-icon name="arrow-back-outline" aria-hidden="true"></ion-icon>
+      </button>
+    </ion-buttons>
+    <ion-title class="cmc-title">Editar perfil</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="cmc-page" [scrollY]="true">
+  <div class="cmc-page-container">
+    <form [formGroup]="form" (ngSubmit)="save()" class="edit-form" novalidate>
+      <cmc-input
+        formControlName="name"
+        label="Nombre completo"
+        autocomplete="name"
+        [error]="form.controls.name.invalid && form.controls.name.touched ? 'El nombre es requerido' : ''"
+      ></cmc-input>
+
+      <cmc-input
+        formControlName="email"
+        label="Correo electrónico"
+        type="email"
+        autocomplete="email"
+        [error]="form.controls.email.invalid && form.controls.email.touched ? 'Correo inválido' : ''"
+      ></cmc-input>
+
+      <cmc-input
+        formControlName="phone"
+        label="Teléfono"
+        type="tel"
+        autocomplete="tel"
+        [error]="form.controls.phone.invalid && form.controls.phone.touched ? 'Teléfono inválido (10 dígitos)' : ''"
+      ></cmc-input>
+
+      <cmc-button type="submit" fullWidth>Guardar cambios</cmc-button>
+    </form>
+  </div>
+</ion-content>
