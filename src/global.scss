@@ -171,3 +171,10 @@ a {
     animation-iteration-count: 1 !important;
   }
 }
+/* Bubble Navigation spacing */
+:root {
+  --cmc-bubble-nav-height: 64px;
+  --cmc-bubble-nav-bottom-margin: 12px;
+  --cmc-bubble-nav-spacing: 16px;
+  --cmc-bubble-nav-offset: calc(var(--cmc-bubble-nav-height) + var(--cmc-bubble-nav-bottom-margin) + var(--cmc-bubble-nav-spacing) + env(safe-area-inset-bottom));
+}

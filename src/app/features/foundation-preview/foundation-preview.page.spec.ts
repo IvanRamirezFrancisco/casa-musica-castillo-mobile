@@ -145,9 +145,9 @@ describe('FoundationPreviewPage', () => {
       expect(preview?.loadComponent).toBeDefined();
       expect(await (preview?.loadComponent as () => Promise<unknown>)()).toBe(FoundationPreviewPage);
 
-      expect(routes.find((r) => r.path === 'home')?.loadComponent).toBeDefined();
+      expect(routes.find((r) => r.path === 'main')?.loadComponent).toBeDefined();
       expect(routes.find((r) => r.path === '')).toMatchObject({
-        redirectTo: 'home',
+        redirectTo: 'splash',
         pathMatch: 'full',
       });
     });
