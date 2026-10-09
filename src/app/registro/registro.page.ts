@@ -1,5 +1,4 @@
-
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   AbstractControl,
@@ -35,10 +34,11 @@ export class RegistroPage {
   mostrarConfirmacion = false;
   formularioValidado = false;
 
-  registroForm;
+registroForm;
+private readonly fb = inject(FormBuilder);
 
-  constructor(private fb: FormBuilder) {
-    this.registroForm = this.fb.group({
+constructor() {
+  this.registroForm = this.fb.group({
       username: ['', [
         Validators.required,
         Validators.minLength(3),

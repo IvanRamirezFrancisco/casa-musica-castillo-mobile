@@ -27,9 +27,9 @@
                  autocomplete="username"
                  formControlName="username"
                  placeholder="Ej. musicafan123">
-          <small *ngIf="mostrarError('username')">
-            {{ mensajeError('username') }}
-          </small>
+          @if (mostrarError('username')) {
+            <small>{{ mensajeError('username') }}</small>
+          }
         </div>
 
         <div class="fila">
@@ -39,9 +39,9 @@
                    autocomplete="given-name"
                    formControlName="firstName"
                    placeholder="Tu nombre">
-            <small *ngIf="mostrarError('firstName')">
-              {{ mensajeError('firstName') }}
-            </small>
+            @if (mostrarError('firstName')) {
+              <small>{{ mensajeError('firstName') }}</small>
+            }
           </div>
 
           <div class="campo">
@@ -50,9 +50,9 @@
                    autocomplete="family-name"
                    formControlName="lastName"
                    placeholder="Tu apellido">
-            <small *ngIf="mostrarError('lastName')">
-              {{ mensajeError('lastName') }}
-            </small>
+            @if (mostrarError('lastName')) {
+              <small>{{ mensajeError('lastName') }}</small>
+            }
           </div>
         </div>
 
@@ -62,9 +62,9 @@
                  autocomplete="email"
                  formControlName="email"
                  placeholder="correo@ejemplo.com">
-          <small *ngIf="mostrarError('email')">
-            {{ mensajeError('email') }}
-          </small>
+          @if (mostrarError('email')) {
+            <small>{{ mensajeError('email') }}</small>
+          }
         </div>
 
         <div class="campo">
@@ -74,9 +74,9 @@
                  inputmode="numeric"
                  formControlName="phone"
                  placeholder="7711234567">
-          <small *ngIf="mostrarError('phone')">
-            {{ mensajeError('phone') }}
-          </small>
+          @if (mostrarError('phone')) {
+            <small>{{ mensajeError('phone') }}</small>
+          }
         </div>
 
         <div class="campo">
@@ -93,13 +93,15 @@
               {{ mostrarPassword ? 'Ocultar' : 'Mostrar' }}
             </button>
           </div>
+
           <p class="ayuda">
             Mínimo 10 caracteres, mayúscula,
             minúscula, número y símbolo.
           </p>
-          <small *ngIf="mostrarError('password')">
-            {{ mensajeError('password') }}
-          </small>
+
+          @if (mostrarError('password')) {
+            <small>{{ mensajeError('password') }}</small>
+          }
         </div>
 
         <div class="campo">
@@ -118,12 +120,14 @@
               {{ mostrarConfirmacion ? 'Ocultar' : 'Mostrar' }}
             </button>
           </div>
-          <small *ngIf="mostrarError('confirmPassword')">
-            {{ mensajeError('confirmPassword') }}
-          </small>
-          <small *ngIf="errorContrasenas()">
-            Las contraseñas no coinciden.
-          </small>
+
+          @if (mostrarError('confirmPassword')) {
+            <small>{{ mensajeError('confirmPassword') }}</small>
+          }
+
+          @if (errorContrasenas()) {
+            <small>Las contraseñas no coinciden.</small>
+          }
         </div>
 
         <label class="terminos">
@@ -134,21 +138,24 @@
             (pendientes de publicación).
           </span>
         </label>
-        <small *ngIf="mostrarError('acceptTerms')">
-          Debes aceptar los términos para continuar.
-        </small>
+
+        @if (mostrarError('acceptTerms')) {
+          <small>
+            Debes aceptar los términos para continuar.
+          </small>
+        }
 
         <button class="registrar-btn" type="submit">
           Continuar
         </button>
 
-        <div class="mensaje-exito"
-             role="status"
-             *ngIf="formularioValidado">
-          Formulario validado correctamente.
-          La creación de la cuenta estará disponible
-          cuando integremos el backend.
-        </div>
+        @if (formularioValidado) {
+          <div class="mensaje-exito" role="status">
+            Formulario validado correctamente.
+            La creación de la cuenta estará disponible
+            cuando integremos el backend.
+          </div>
+        }
 
         <p class="aviso">
           Versión de demostración:
