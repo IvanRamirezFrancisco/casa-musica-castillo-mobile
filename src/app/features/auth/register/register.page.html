@@ -1,0 +1,78 @@
+<ion-content class="cmc-page auth-page" [scrollY]="true">
+  <!-- Top Burgundy Area -->
+  <div class="auth-hero">
+    <!-- Custom back button positioned absolutely inside hero -->
+    <button class="auth-back-btn" (click)="goBack()">
+      <ion-icon name="arrow-back-outline"></ion-icon>
+    </button>
+
+    <div class="brand-info">
+      <h1 class="auth-brand-title">Crea tu cuenta</h1>
+      <p class="auth-brand-subtitle">Compra, guarda favoritos y da seguimiento a tus pedidos.</p>
+    </div>
+  </div>
+
+  <!-- Overlapping White Card -->
+  <div class="auth-card-container">
+    <div class="auth-card">
+      <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="auth-form">
+        <cmc-input
+          formControlName="name"
+          label="Nombre completo"
+          type="text"
+          placeholder="Ej. Juan Pérez"
+          [error]="registerForm.controls.name.invalid && registerForm.controls.name.touched ? 'Nombre es requerido (mín. 3)' : ''"
+        ></cmc-input>
+
+        <cmc-input
+          formControlName="email"
+          label="Correo electrónico"
+          type="email"
+          placeholder="ejemplo@correo.com"
+          [error]="registerForm.controls.email.invalid && registerForm.controls.email.touched ? 'Correo inválido' : ''"
+        ></cmc-input>
+
+        <cmc-input
+          formControlName="phone"
+          label="Teléfono"
+          type="tel"
+          placeholder="10 dígitos"
+          [error]="registerForm.controls.phone.invalid && registerForm.controls.phone.touched ? 'Teléfono inválido (10 dígitos)' : ''"
+        ></cmc-input>
+
+        <!-- Contraseña instructions: "Mínimo 6 caracteres" since currently the validation is just 6 -->
+        <cmc-input
+          formControlName="password"
+          label="Contraseña"
+          type="password"
+          placeholder="Mínimo 6 caracteres"
+          [error]="registerForm.controls.password.invalid && registerForm.controls.password.touched ? 'Mínimo 6 caracteres' : ''"
+        ></cmc-input>
+
+        <cmc-input
+          formControlName="confirmPassword"
+          label="Confirmar contraseña"
+          type="password"
+          placeholder="Repite tu contraseña"
+          [error]="(registerForm.controls.confirmPassword.touched && registerForm.hasError('passwordMismatch')) ? 'Las contraseñas no coinciden' : ''"
+        ></cmc-input>
+
+        <cmc-button
+          type="submit"
+          fullWidth
+          [disabled]="registerForm.invalid && registerForm.touched"
+        >
+          Crear cuenta
+        </cmc-button>
+      </form>
+
+      <div class="auth-separator"></div>
+
+      <div class="auth-footer">
+        <p class="cmc-body cmc-text-secondary">
+          ¿Ya tienes cuenta? <a routerLink="/login" class="cmc-link cmc-font-bold">Iniciar sesión</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</ion-content>

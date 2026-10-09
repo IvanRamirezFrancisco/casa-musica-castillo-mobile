@@ -1,0 +1,78 @@
+<ion-header class="ion-no-border cmc-header-transparent">
+  <ion-toolbar class="home-toolbar">
+    <div class="header-content">
+      <div class="brand-title">
+        <ion-icon name="musical-notes-outline" class="brand-icon-small"></ion-icon>
+        <h1 class="cmc-title">Casa de Música</h1>
+      </div>
+      <div class="header-actions">
+        <ion-icon name="heart-outline" class="action-icon"></ion-icon>
+        <ion-icon name="notifications-outline" class="action-icon"></ion-icon>
+      </div>
+    </div>
+  </ion-toolbar>
+  <ion-toolbar class="search-toolbar">
+    <div class="search-container">
+      <ion-icon name="search-outline" class="search-icon"></ion-icon>
+      <input type="text" class="cmc-search-input" placeholder="Buscar guitarras, pianos..." />
+    </div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="cmc-page home-content">
+  <div class="cmc-page-container">
+
+    <!-- Promotion Banner -->
+    <section class="promo-banner">
+      <div class="promo-content">
+        <h2 class="promo-title">Sonido Premium</h2>
+        <p class="promo-desc">Descubre nuestra nueva colección de cuerdas artesanales</p>
+      </div>
+    </section>
+
+    <!-- Categories -->
+    <section class="categories-section">
+      <div class="section-header">
+        <h2 class="section-title cmc-section-title">Explorar</h2>
+      </div>
+      <div class="categories-scroll">
+        @for (category of categories(); track category.id) {
+          <div class="category-chip">
+            <ion-icon [name]="category.icon" class="category-icon"></ion-icon>
+            <span class="category-name cmc-body">{{ category.name }}</span>
+          </div>
+        }
+      </div>
+    </section>
+
+    <!-- Featured Products -->
+    <section class="featured-section">
+      <div class="section-header">
+        <h2 class="section-title cmc-section-title">Novedades</h2>
+        <a class="cmc-link see-all">Ver más</a>
+      </div>
+      <div class="products-grid">
+        @for (product of featuredProducts(); track product.id) {
+          <div class="product-card">
+            <div class="product-image">
+              <ion-icon name="heart-outline" class="favorite-icon"></ion-icon>
+              @if (product.imageUrl) {
+                <img [src]="product.imageUrl" [alt]="product.name" />
+              } @else {
+                <div class="product-placeholder">
+                  <ion-icon name="image-outline"></ion-icon>
+                </div>
+              }
+            </div>
+            <div class="product-info">
+              <span class="product-category cmc-caption">{{ product.category }}</span>
+              <h3 class="product-name cmc-body">{{ product.name }}</h3>
+              <p class="product-price cmc-font-bold">{{ product.price | currency:'MXN' }}</p>
+            </div>
+          </div>
+        }
+      </div>
+    </section>
+
+  </div>
+</ion-content>

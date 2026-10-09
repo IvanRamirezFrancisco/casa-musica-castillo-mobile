@@ -1,0 +1,85 @@
+<ion-header class="ion-no-border cmc-header-minimal">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <button class="nav-back-btn" (click)="goBack()">
+        <ion-icon name="arrow-back-outline"></ion-icon>
+      </button>
+    </ion-buttons>
+    <ion-title class="cmc-title">Método de entrega</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="cmc-page" [scrollY]="true">
+  <div class="cmc-page-container">
+    <div class="options-container" role="radiogroup" aria-label="Opciones de entrega">
+      
+      <!-- Store Option -->
+      <div 
+        class="delivery-option-card" 
+        [class.selected]="selectedMethod === 'store'"
+        (click)="selectMethod('store')"
+        role="radio"
+        [attr.aria-checked]="selectedMethod === 'store'"
+        tabindex="0"
+      >
+        <div class="radio-indicator">
+          <div class="inner-circle"></div>
+        </div>
+        <div class="option-content">
+          <div class="option-header">
+            <span class="cmc-font-bold title">Recoger en tienda</span>
+            <span class="cmc-font-bold price">Gratis</span>
+          </div>
+          <p class="cmc-body cmc-text-secondary description">
+            Recoge hoy mismo en sucursal principal.
+          </p>
+          @if (selectedMethod === 'store') {
+            <div class="store-info">
+              <ion-icon name="location-outline"></ion-icon>
+              <span class="cmc-text-secondary">Av. Juárez 123, Centro</span>
+            </div>
+          }
+        </div>
+      </div>
+
+      <!-- Home Delivery Option -->
+      <div 
+        class="delivery-option-card" 
+        [class.selected]="selectedMethod === 'home'"
+        (click)="selectMethod('home')"
+        role="radio"
+        [attr.aria-checked]="selectedMethod === 'home'"
+        tabindex="0"
+      >
+        <div class="radio-indicator">
+          <div class="inner-circle"></div>
+        </div>
+        <div class="option-content">
+          <div class="option-header">
+            <span class="cmc-font-bold title">Envío a domicilio</span>
+            <span class="cmc-font-bold price">$150.00</span>
+          </div>
+          <p class="cmc-body cmc-text-secondary description">
+            Entrega estimada en 3-5 días hábiles.
+          </p>
+          @if (selectedMethod === 'home') {
+            <div class="address-demo">
+              <div class="address-row">
+                <ion-icon name="home-outline"></ion-icon>
+                <span class="cmc-text-secondary">Usar dirección guardada:</span>
+              </div>
+              <p class="cmc-font-bold">Calle Roma 45, Col. Condesa</p>
+            </div>
+          }
+        </div>
+      </div>
+
+    </div>
+
+    <div class="action-container">
+      <cmc-button fullWidth [disabled]="!selectedMethod" (click)="confirmSelection()">
+        Confirmar método
+      </cmc-button>
+    </div>
+  </div>
+</ion-content>

@@ -1,0 +1,65 @@
+.cmc-header-transparent ion-toolbar {
+  --background: var(--cmc-background);
+  --border-width: 0;
+}
+
+.orders-content {
+  --background: var(--cmc-background);
+  --padding-bottom: var(--cmc-bubble-nav-offset);
+}
+
+.order-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.order-card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 16px;
+  min-height: 48px;
+  background: var(--cmc-surface);
+  border-radius: var(--cmc-radius-md);
+  box-shadow: var(--cmc-shadow-card);
+  color: var(--cmc-text-primary);
+  text-decoration: none;
+
+  &:active {
+    background: var(--cmc-surface-alt);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--cmc-primary);
+    outline-offset: 2px;
+  }
+}
+
+.order-top,
+.order-meta,
+.order-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+
+.order-id {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+}
+
+.order-meta {
+  font-size: 0.875rem;
+}
+
+.order-total {
+  margin-left: auto;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+  color: var(--cmc-primary);
+}

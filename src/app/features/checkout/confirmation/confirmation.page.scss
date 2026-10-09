@@ -1,0 +1,127 @@
+.confirmation-page {
+  --background: var(--cmc-background);
+}
+
+.confirmation-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100%;
+  padding: 40px 16px;
+  position: relative;
+  overflow: hidden;
+}
+
+.success-glow {
+  position: absolute;
+  top: 10%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 250px;
+  height: 250px;
+  background: radial-gradient(circle, rgba(var(--cmc-success-rgb, 46, 125, 50), 0.15) 0%, rgba(255,255,255,0) 70%);
+  z-index: 0;
+  pointer-events: none;
+}
+
+.success-icon-wrapper {
+  position: relative;
+  z-index: 1;
+  margin-bottom: 24px;
+  
+  ion-icon {
+    font-size: 80px;
+    color: var(--cmc-success, #2e7d32);
+  }
+}
+
+.text-center {
+  text-align: center;
+}
+
+.order-id {
+  margin-top: 8px;
+  margin-bottom: 24px;
+  font-size: 1rem;
+  color: var(--cmc-text-primary);
+}
+
+.demo-warning {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(var(--cmc-warning-rgb, 237, 108, 2), 0.15);
+  color: #914201; /* Darker variant of warning for accessible contrast */
+  padding: 12px 16px;
+  border-radius: var(--cmc-radius-md);
+  margin-bottom: 32px;
+  width: 100%;
+  font-size: 0.875rem;
+  line-height: 1.4;
+  font-weight: 500;
+
+  ion-icon {
+    font-size: 20px;
+    flex-shrink: 0;
+    color: #914201;
+  }
+}
+
+h1.cmc-title {
+  color: var(--cmc-text-primary);
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+}
+
+.confirmation-summary {
+  background: var(--cmc-surface);
+  border-radius: var(--cmc-radius-md);
+  padding: 24px;
+  box-shadow: var(--cmc-shadow-card);
+  width: 100%;
+  margin-bottom: 40px;
+  position: relative;
+  z-index: 1;
+
+  .summary-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    
+    h3 {
+      margin: 0;
+      font-size: 1rem;
+      font-weight: 600;
+    }
+    p {
+      margin: 0;
+    }
+  }
+
+  .summary-divider {
+    height: 1px;
+    background: var(--cmc-border);
+    margin: 16px 0;
+  }
+
+  .total-section {
+    margin-top: 24px;
+    
+    .cmc-primary {
+      color: var(--cmc-primary);
+      margin: 0;
+    }
+  }
+}
+
+.actions {
+  width: 100%;
+  position: relative;
+  z-index: 1;
+
+  .mt-3 {
+    display: block;
+    margin-top: 16px;
+  }
+}

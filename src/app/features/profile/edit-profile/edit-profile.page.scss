@@ -1,0 +1,34 @@
+.cmc-header-transparent ion-toolbar {
+  --background: var(--cmc-background);
+  --border-width: 0;
+}
+
+.nav-back-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: none;
+  background: transparent;
+  color: var(--cmc-text-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  ion-icon {
+    font-size: 24px;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--cmc-primary);
+  }
+}
+
+.edit-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 24px 16px;
+  background: var(--cmc-surface);
+  border-radius: var(--cmc-radius-md);
+  box-shadow: var(--cmc-shadow-card);
+}

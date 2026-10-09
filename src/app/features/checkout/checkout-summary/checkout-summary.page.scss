@@ -1,0 +1,134 @@
+.cmc-header-minimal {
+  ion-toolbar {
+    --background: var(--cmc-background);
+    --border-width: 0;
+  }
+}
+
+.nav-back-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--cmc-text-primary);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: none;
+  cursor: pointer;
+
+  ion-icon {
+    font-size: 24px;
+  }
+
+  &:active {
+    background: var(--cmc-surface-alt);
+  }
+}
+
+.checkout-section {
+  margin-bottom: 24px;
+  
+  .section-title {
+    font-size: 1.125rem;
+    margin-bottom: 12px;
+  }
+}
+
+.selection-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--cmc-surface);
+  border-radius: var(--cmc-radius-md);
+  padding: 16px;
+  box-shadow: var(--cmc-shadow-card);
+  cursor: pointer;
+  transition: all var(--cmc-transition-fast);
+
+  &:active {
+    transform: scale(0.98);
+  }
+
+  .card-content {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+
+    .icon-wrapper {
+      width: 40px;
+      height: 40px;
+      background: var(--cmc-surface-alt);
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: var(--cmc-primary);
+      
+      ion-icon {
+        font-size: 20px;
+      }
+    }
+
+    .info {
+      display: flex;
+      flex-direction: column;
+      
+      span {
+        line-height: 1.4;
+      }
+    }
+  }
+
+  .chevron {
+    color: var(--cmc-text-disabled);
+    font-size: 20px;
+  }
+}
+
+.order-summary-card {
+  background: var(--cmc-surface);
+  border-radius: var(--cmc-radius-md);
+  padding: 20px 16px;
+  box-shadow: var(--cmc-shadow-card);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  .summary-items {
+    margin-bottom: 8px;
+  }
+
+  .summary-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .summary-divider {
+    height: 1px;
+    background: var(--cmc-border);
+    margin: 8px 0;
+  }
+
+  .total-row {
+    margin-top: 4px;
+    .cmc-primary {
+      color: var(--cmc-primary);
+    }
+  }
+}
+
+.checkout-actions {
+  margin-top: 32px;
+  margin-bottom: 32px;
+
+  .error-hint {
+    margin-top: 12px;
+    font-size: 0.875rem;
+  }
+}
+
+.text-center {
+  text-align: center;
+}

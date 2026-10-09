@@ -1,0 +1,39 @@
+<ion-header class="ion-no-border cmc-header-transparent">
+  <ion-toolbar>
+    <ion-title class="cmc-title">Mis pedidos</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="cmc-page orders-content">
+  <div class="cmc-page-container">
+    @if (orders().length === 0) {
+      <cmc-empty-state
+        icon="receipt-outline"
+        heading="Aún no tienes pedidos"
+        description="Cuando realices una compra aparecerá aquí."
+      ></cmc-empty-state>
+    } @else {
+      <ul class="order-list" aria-label="Lista de pedidos">
+        @for (order of orders(); track order.id) {
+          <li>
+            <a class="order-card" [routerLink]="['/orders', order.id]" [attr.aria-label]="'Pedido ' + order.id">
+              <div class="order-top">
+                <span class="order-id">{{ order.id }}</span>
+                <cmc-badge [variant]="variantOf(order.status)">{{ labelOf(order.status) }}</cmc-badge>
+              </div>
+              <div class="order-meta cmc-text-secondary">
+                <span>{{ order.date | date: 'dd/MM/yyyy' }}</span>
+                <span>{{ countOf(order) }} {{ countOf(order) === 1 ? 'artículo' : 'artículos' }}</span>
+              </div>
+              <div class="order-bottom">
+                <span class="cmc-text-secondary">{{ order.deliveryMethod }}</span>
+                <span class="order-total">{{ totalOf(order) | currency: 'MXN' }}</span>
+                <ion-icon name="chevron-forward-outline" aria-hidden="true"></ion-icon>
+              </div>
+            </a>
+          </li>
+        }
+      </ul>
+    }
+  </div>
+</ion-content>

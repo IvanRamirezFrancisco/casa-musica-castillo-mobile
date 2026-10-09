@@ -1,0 +1,82 @@
+ion-content {
+  --background: var(--cmc-background);
+}
+
+.preview {
+  display: flex;
+  flex-direction: column;
+  gap: var(--cmc-space-8);
+  min-width: 0;
+  padding-top: max(var(--cmc-space-6), env(safe-area-inset-top));
+  padding-bottom: max(var(--cmc-space-8), env(safe-area-inset-bottom));
+  overflow-x: hidden;
+
+  &__header {
+    display: flex;
+    flex-direction: column;
+    gap: var(--cmc-space-1);
+    padding-bottom: var(--cmc-space-4);
+    border-bottom: 1px solid var(--cmc-border);
+  }
+
+  &__subtitle {
+    color: var(--cmc-primary);
+  }
+
+  &__description {
+    margin-top: var(--cmc-space-2);
+    color: var(--cmc-text-secondary);
+  }
+
+  &__section {
+    display: flex;
+    flex-direction: column;
+    gap: var(--cmc-space-3);
+    min-width: 0;
+  }
+
+  &__section-title {
+    padding-left: var(--cmc-space-3);
+    border-left: 3px solid var(--cmc-accent-gold);
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 24px;
+  }
+
+  &__card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--cmc-space-5);
+    min-width: 0;
+    padding: var(--cmc-space-4);
+    background: var(--cmc-surface);
+    border: 1px solid var(--cmc-border);
+    border-radius: var(--cmc-radius-lg);
+    box-shadow: var(--cmc-shadow-subtle);
+
+    &--row {
+      flex-flow: row wrap;
+      gap: var(--cmc-space-3);
+    }
+  }
+
+  &__item {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--cmc-space-2);
+    min-width: 0;
+
+    > * {
+      max-width: 100%;
+    }
+
+    > cmc-loading {
+      align-self: stretch;
+    }
+  }
+
+  &__counter {
+    text-align: center;
+  }
+}

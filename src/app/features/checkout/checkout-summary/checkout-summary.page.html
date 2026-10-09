@@ -1,0 +1,87 @@
+<ion-header class="ion-no-border cmc-header-minimal">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <button class="nav-back-btn" (click)="goBack()">
+        <ion-icon name="arrow-back-outline"></ion-icon>
+      </button>
+    </ion-buttons>
+    <ion-title class="cmc-title">Finalizar compra</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="cmc-page" [scrollY]="true">
+  <div class="cmc-page-container">
+    <div class="checkout-section">
+      <h3 class="cmc-title section-title">Método de entrega</h3>
+      <div class="selection-card" (click)="goToDelivery()" tabindex="0" role="button">
+        <div class="card-content">
+          <div class="icon-wrapper">
+            <ion-icon name="cube-outline"></ion-icon>
+          </div>
+          <div class="info">
+            @if (checkoutService.deliveryMethod()) {
+              <span class="cmc-font-bold">{{ checkoutService.deliveryMethod()?.title }}</span>
+              <span class="cmc-text-secondary">{{ checkoutService.deliveryMethod()?.description }}</span>
+            } @else {
+              <span class="cmc-text-secondary">Seleccionar método de entrega</span>
+            }
+          </div>
+        </div>
+        <ion-icon name="chevron-forward-outline" class="chevron"></ion-icon>
+      </div>
+    </div>
+
+    <div class="checkout-section">
+      <h3 class="cmc-title section-title">Método de pago</h3>
+      <div class="selection-card" (click)="goToPayment()" tabindex="0" role="button">
+        <div class="card-content">
+          <div class="icon-wrapper">
+            <ion-icon name="card-outline"></ion-icon>
+          </div>
+          <div class="info">
+            @if (checkoutService.paymentMethod()) {
+              <span class="cmc-font-bold">{{ checkoutService.paymentMethod()?.title }}</span>
+              <span class="cmc-text-secondary">{{ checkoutService.paymentMethod()?.description }}</span>
+            } @else {
+              <span class="cmc-text-secondary">Seleccionar método de pago</span>
+            }
+          </div>
+        </div>
+        <ion-icon name="chevron-forward-outline" class="chevron"></ion-icon>
+      </div>
+    </div>
+
+    <div class="checkout-section">
+      <h3 class="cmc-title section-title">Resumen de pedido</h3>
+      <div class="order-summary-card">
+        <div class="summary-items">
+          <span class="cmc-text-secondary">{{ checkoutService.cartItems().length }} artículos</span>
+        </div>
+        <div class="summary-row">
+          <span class="cmc-text-secondary">Subtotal</span>
+          <span class="cmc-font-bold">{{ checkoutService.subtotal() | currency:'MXN' }}</span>
+        </div>
+        <div class="summary-row">
+          <span class="cmc-text-secondary">Envío</span>
+          <span class="cmc-font-bold">{{ checkoutService.shippingCost() === 0 ? 'Por calcular' : (checkoutService.shippingCost() | currency:'MXN') }}</span>
+        </div>
+        <div class="summary-divider"></div>
+        <div class="summary-row total-row">
+          <span class="cmc-title">Total</span>
+          <span class="cmc-title cmc-primary">{{ checkoutService.total() | currency:'MXN' }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="checkout-actions">
+      <cmc-button fullWidth [disabled]="!canProceed()" (click)="confirmOrder()">
+        Confirmar pago
+      </cmc-button>
+      @if (!canProceed()) {
+        <p class="cmc-body cmc-text-secondary text-center error-hint">
+          Selecciona entrega y pago para continuar
+        </p>
+      }
+    </div>
+  </div>
+</ion-content>

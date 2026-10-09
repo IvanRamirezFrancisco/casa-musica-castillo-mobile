@@ -1,0 +1,90 @@
+<ion-header class="ion-no-border cmc-header-transparent">
+  <ion-toolbar>
+    <ion-title class="cmc-title">Carrito</ion-title>
+    <ion-buttons slot="end">
+      <ion-badge color="danger" class="cart-badge">{{ checkoutService.cartItems().length }}</ion-badge>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="cmc-page cart-content" [scrollY]="true">
+  <div class="cmc-page-container">
+    @if (checkoutService.cartItems().length === 0) {
+      <cmc-empty-state
+        icon="cart-outline"
+        heading="Tu carrito está vacío"
+        description="Agrega productos desde el catálogo para continuar."
+        actionLabel="Explorar catálogo"
+        (action)="goToCatalog()"
+      ></cmc-empty-state>
+    } @else {
+      <div class="cart-items">
+        @for (item of checkoutService.cartItems(); track item.id) {
+          <div class="cart-item-card">
+            <div class="item-image">
+              @if (item.imageUrl) {
+                <img [src]="item.imageUrl" [alt]="item.name" />
+              } @else {
+                <div class="product-placeholder">
+                  <ion-icon name="image-outline"></ion-icon>
+                </div>
+              }
+            </div>
+            
+            <div class="item-details">
+              <div class="item-header">
+                <h3 class="cmc-body">{{ item.name }}</h3>
+                <button class="remove-btn" (click)="removeItem(item.id)" aria-label="Eliminar producto">
+                  <ion-icon name="trash-outline"></ion-icon>
+                </button>
+              </div>
+              
+              <div class="item-price cmc-font-bold">
+                {{ item.price | currency:'MXN' }}
+              </div>
+              
+              <div class="item-quantity">
+                <button class="qty-btn" (click)="updateQuantity(item.id, -1)" [disabled]="item.quantity <= 1">
+                  <ion-icon name="remove-outline"></ion-icon>
+                </button>
+                <span class="qty-value">{{ item.quantity }}</span>
+                <button class="qty-btn" (click)="updateQuantity(item.id, 1)">
+                  <ion-icon name="add-outline"></ion-icon>
+                </button>
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+
+      <div class="coupon-section">
+        <cmc-input
+          [formControl]="couponControl"
+          label="Cupón"
+          placeholder="Código de cupón"
+        ></cmc-input>
+        <cmc-button variant="secondary" (click)="applyCoupon()">Aplicar</cmc-button>
+      </div>
+
+      <div class="order-summary">
+        <div class="summary-row">
+          <span class="cmc-text-secondary">Subtotal</span>
+          <span class="cmc-font-bold">{{ checkoutService.subtotal() | currency:'MXN' }}</span>
+        </div>
+        <div class="summary-row">
+          <span class="cmc-text-secondary">Envío</span>
+          <span class="cmc-font-bold">{{ checkoutService.shippingCost() === 0 ? 'Por calcular' : (checkoutService.shippingCost() | currency:'MXN') }}</span>
+        </div>
+        <div class="summary-divider"></div>
+        <div class="summary-row total-row">
+          <span class="cmc-title">Total</span>
+          <span class="cmc-title cmc-primary">{{ checkoutService.total() | currency:'MXN' }}</span>
+        </div>
+      </div>
+
+      <div class="cart-actions">
+        <cmc-button fullWidth (click)="continueToCheckout()">Continuar compra</cmc-button>
+      </div>
+    }
+  </div>
+</ion-content>

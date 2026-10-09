@@ -1,0 +1,58 @@
+<ion-content class="cmc-page auth-page">
+  <!-- Top Burgundy Area -->
+  <div class="auth-hero">
+    <div class="brand-info">
+      <ion-icon name="musical-notes-outline" class="auth-brand-icon"></ion-icon>
+      <h1 class="auth-brand-title">Casa de Música Castillo</h1>
+      <p class="auth-brand-subtitle">Tu música comienza aquí.</p>
+    </div>
+  </div>
+
+  <!-- Overlapping White Card -->
+  <div class="auth-card-container">
+    <div class="auth-card">
+      <div class="auth-card-header">
+        <h2 class="cmc-title">Bienvenido de nuevo</h2>
+        <p class="cmc-body cmc-text-secondary">Inicia sesión para continuar.</p>
+      </div>
+
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="auth-form">
+        <cmc-input
+          formControlName="email"
+          label="Correo electrónico"
+          type="email"
+          placeholder="ejemplo@correo.com"
+          [error]="loginForm.controls.email.invalid && loginForm.controls.email.touched ? 'Correo inválido' : ''"
+        ></cmc-input>
+
+        <cmc-input
+          formControlName="password"
+          label="Contraseña"
+          type="password"
+          placeholder="Ingresa tu contraseña"
+          [error]="loginForm.controls.password.invalid && loginForm.controls.password.touched ? 'Mínimo 6 caracteres' : ''"
+        ></cmc-input>
+
+        <div class="forgot-password-link">
+          <a routerLink="/forgot-password" class="cmc-link">¿Olvidaste tu contraseña?</a>
+        </div>
+
+        <cmc-button
+          type="submit"
+          fullWidth
+          [disabled]="loginForm.invalid && loginForm.touched"
+        >
+          Iniciar sesión
+        </cmc-button>
+      </form>
+
+      <div class="auth-separator"></div>
+
+      <div class="auth-footer">
+        <p class="cmc-body cmc-text-secondary">
+          ¿No tienes cuenta? <a routerLink="/register" class="cmc-link cmc-font-bold">Crear cuenta</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</ion-content>

@@ -1,0 +1,80 @@
+<ion-header class="ion-no-border cmc-header-minimal">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <button class="nav-back-btn" (click)="goBack()">
+        <ion-icon name="arrow-back-outline"></ion-icon>
+      </button>
+    </ion-buttons>
+    <ion-title class="cmc-title">Método de pago</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="cmc-page" [scrollY]="true">
+  <div class="cmc-page-container">
+    <div class="options-container" role="radiogroup" aria-label="Opciones de pago">
+      
+      <!-- Transfer Option -->
+      <div 
+        class="delivery-option-card" 
+        [class.selected]="selectedMethod === 'transfer'"
+        (click)="selectMethod('transfer')"
+        role="radio"
+        [attr.aria-checked]="selectedMethod === 'transfer'"
+        tabindex="0"
+      >
+        <div class="radio-indicator">
+          <div class="inner-circle"></div>
+        </div>
+        <div class="option-content">
+          <div class="option-header">
+            <span class="cmc-font-bold title">Transferencia bancaria</span>
+          </div>
+          <p class="cmc-body cmc-text-secondary description">
+            Realiza el pago directamente a nuestra cuenta.
+          </p>
+          @if (selectedMethod === 'transfer') {
+            <div class="store-info">
+              <ion-icon name="information-circle-outline"></ion-icon>
+              <span class="cmc-text-secondary">Los datos se enviarán al confirmar tu pedido.</span>
+            </div>
+          }
+        </div>
+      </div>
+
+      <!-- Mercado Pago Option -->
+      <div 
+        class="delivery-option-card" 
+        [class.selected]="selectedMethod === 'mercadopago'"
+        (click)="selectMethod('mercadopago')"
+        role="radio"
+        [attr.aria-checked]="selectedMethod === 'mercadopago'"
+        tabindex="0"
+      >
+        <div class="radio-indicator">
+          <div class="inner-circle"></div>
+        </div>
+        <div class="option-content">
+          <div class="option-header">
+            <span class="cmc-font-bold title">Mercado Pago</span>
+          </div>
+          <p class="cmc-body cmc-text-secondary description">
+            Tarjetas, saldo o efectivo.
+          </p>
+          @if (selectedMethod === 'mercadopago') {
+            <div class="store-info">
+              <ion-icon name="lock-closed-outline"></ion-icon>
+              <span class="cmc-text-secondary">Serás redirigido para pagar de forma segura.</span>
+            </div>
+          }
+        </div>
+      </div>
+
+    </div>
+
+    <div class="action-container">
+      <cmc-button fullWidth [disabled]="!selectedMethod" (click)="confirmSelection()">
+        Confirmar método
+      </cmc-button>
+    </div>
+  </div>
+</ion-content>

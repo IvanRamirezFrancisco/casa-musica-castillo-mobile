@@ -1,0 +1,38 @@
+<div class="cmc-input">
+  <label class="cmc-input__label" [for]="inputId">
+    {{ label() }}
+    @if (required()) {
+      <span class="cmc-input__required" aria-hidden="true">*</span>
+    }
+  </label>
+
+  <div
+    class="cmc-input__field"
+    [class.cmc-input__field--filled]="isFilled()"
+    [class.cmc-input__field--error]="hasError()"
+    [class.cmc-input__field--disabled]="isDisabled()"
+  >
+    <input
+      class="cmc-input__control"
+      [id]="inputId"
+      [attr.type]="type()"
+      [value]="value()"
+      [placeholder]="placeholder()"
+      [disabled]="isDisabled()"
+      [required]="required()"
+      [attr.autocomplete]="autocomplete()"
+      [attr.aria-invalid]="hasError() ? 'true' : null"
+      [attr.aria-describedby]="describedBy()"
+      (input)="onInput($event)"
+      (blur)="onBlur()"
+    />
+  </div>
+
+  @if (hasError()) {
+    <p class="cmc-input__message cmc-input__message--error" [id]="errorId" role="alert">
+      {{ error() }}
+    </p>
+  } @else if (hint()) {
+    <p class="cmc-input__message" [id]="hintId">{{ hint() }}</p>
+  }
+</div>

@@ -1,0 +1,9 @@
+<section class="cmc-empty-state">
+  @if (icon(); as iconSource) {
+    <ion-icon class="cmc-empty-state__icon" [icon]="iconSource" aria-hidden="true" />
+  }
+  <h2 class="cmc-empty-state__heading">{{ heading() }}</h2>
+  @if (description()) {
+    <p class="cmc-empty-state__description">{{ description() }}</p>
+  }
+</section>

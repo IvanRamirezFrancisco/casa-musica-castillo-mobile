@@ -1,0 +1,17 @@
+<button
+  [class]="classes()"
+  [class.cmc-button--loading]="loading()"
+  [attr.type]="type()"
+  [disabled]="disabled()"
+  [attr.aria-disabled]="loading() ? 'true' : null"
+  [attr.aria-busy]="loading() ? 'true' : null"
+  (click)="onClick($event)"
+>
+  @if (loading()) {
+    <span class="cmc-button__spinner" aria-hidden="true"></span>
+  }
+  <span class="cmc-button__label"><ng-content /></span>
+  @if (loading()) {
+    <span class="cmc-button__sr-only">{{ loadingLabel() }}</span>
+  }
+</button>
