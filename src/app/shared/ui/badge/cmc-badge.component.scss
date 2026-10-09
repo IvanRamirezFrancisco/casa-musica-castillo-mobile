@@ -1,0 +1,48 @@
+:host {
+  display: inline-block;
+}
+
+/*
+ * Text always uses --cmc-text-primary on a light tint of the semantic color
+ * (≥ 7:1 contrast); the semantic color itself is carried by the border and the
+ * decorative dot, so it never has to meet text contrast on its own.
+ */
+.cmc-badge {
+  --cmc-badge-color: var(--cmc-text-secondary);
+
+  display: inline-flex;
+  align-items: center;
+  gap: var(--cmc-space-2);
+  min-height: 24px;
+  padding: 0 var(--cmc-space-3);
+  background: var(--cmc-surface-alt);
+  background: color-mix(in srgb, var(--cmc-badge-color) 14%, var(--cmc-surface));
+  border: 1px solid var(--cmc-badge-color);
+  border-radius: var(--cmc-radius-full);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 16px;
+  white-space: nowrap;
+  color: var(--cmc-text-primary);
+
+  &::before {
+    content: '';
+    flex: none;
+    width: 6px;
+    height: 6px;
+    border-radius: var(--cmc-radius-full);
+    background: var(--cmc-badge-color);
+  }
+
+  &--success {
+    --cmc-badge-color: var(--cmc-success);
+  }
+
+  &--warning {
+    --cmc-badge-color: var(--cmc-warning);
+  }
+
+  &--error {
+    --cmc-badge-color: var(--cmc-error);
+  }
+}

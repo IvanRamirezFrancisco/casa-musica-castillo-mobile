@@ -1,0 +1,164 @@
+<ion-content class="cmc-page" [fullscreen]="true">
+  <main class="cmc-page-container preview">
+    <header class="preview__header">
+      <h1 class="cmc-title">Casa de Música Castillo</h1>
+      <p class="cmc-section-title preview__subtitle">Foundation UI</p>
+      <p class="cmc-body preview__description">
+        Catálogo interno de componentes y estados visuales.
+      </p>
+    </header>
+
+    <section class="preview__section" aria-labelledby="preview-typography">
+      <h2 id="preview-typography" class="preview__section-title">Tipografía</h2>
+      <div class="preview__card">
+        <div class="preview__item">
+          <p class="cmc-caption">Título principal · Montserrat 700</p>
+          <p class="cmc-title">Título principal</p>
+        </div>
+        <div class="preview__item">
+          <p class="cmc-caption">Título de sección · Montserrat 600</p>
+          <p class="cmc-section-title">Título de sección</p>
+        </div>
+        <div class="preview__item">
+          <p class="cmc-caption">Body · Roboto 400</p>
+          <p class="cmc-body">Texto de cuerpo para descripciones y contenido general.</p>
+        </div>
+        <div class="preview__item">
+          <p class="cmc-caption">Caption · Roboto 400</p>
+          <p class="cmc-caption">Texto secundario y notas de apoyo.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="preview__section" aria-labelledby="preview-buttons">
+      <h2 id="preview-buttons" class="preview__section-title">Botones</h2>
+      <div class="preview__card">
+        <div class="preview__item">
+          <p class="cmc-caption">Primary</p>
+          <cmc-button variant="primary">Acción principal</cmc-button>
+        </div>
+        <div class="preview__item">
+          <p class="cmc-caption">Secondary</p>
+          <cmc-button variant="secondary">Acción secundaria</cmc-button>
+        </div>
+        <div class="preview__item">
+          <p class="cmc-caption">Ghost</p>
+          <cmc-button variant="ghost">Acción secundaria</cmc-button>
+        </div>
+        <div class="preview__item">
+          <p class="cmc-caption">Compact</p>
+          <cmc-button size="compact">Compacto</cmc-button>
+        </div>
+        <div class="preview__item">
+          <p class="cmc-caption">Full width</p>
+          <cmc-button [fullWidth]="true">Continuar</cmc-button>
+        </div>
+        <div class="preview__item">
+          <p class="cmc-caption">Disabled</p>
+          <cmc-button [disabled]="true">Deshabilitado</cmc-button>
+        </div>
+        <div class="preview__item">
+          <p class="cmc-caption">Loading</p>
+          <cmc-button [loading]="true">Cargando</cmc-button>
+        </div>
+      </div>
+    </section>
+
+    <section class="preview__section" aria-labelledby="preview-inputs">
+      <h2 id="preview-inputs" class="preview__section-title">Campos de entrada</h2>
+      <form class="preview__card" [formGroup]="form">
+        <cmc-input
+          label="Nombre"
+          placeholder="Escribe tu nombre"
+          autocomplete="name"
+          formControlName="name"
+        />
+        <p class="cmc-caption" role="status" data-testid="name-preview">
+          Valor del control «Nombre»: {{ nameValue() || '(vacío)' }}
+        </p>
+
+        <cmc-input
+          label="Correo electrónico"
+          type="email"
+          placeholder="correo@ejemplo.com"
+          hint="Utilizaremos este correo para identificar tu cuenta."
+          autocomplete="email"
+          formControlName="email"
+        />
+
+        <cmc-input
+          label="Teléfono"
+          type="tel"
+          [required]="true"
+          autocomplete="tel"
+          formControlName="phone"
+        />
+
+        <cmc-input
+          label="Contraseña"
+          type="password"
+          autocomplete="off"
+          formControlName="password"
+        />
+
+        <cmc-input label="Campo deshabilitado" formControlName="disabled" />
+
+        <cmc-input
+          label="Correo de prueba"
+          type="email"
+          [error]="errorMessage"
+          formControlName="errorDemo"
+        />
+      </form>
+    </section>
+
+    <section class="preview__section" aria-labelledby="preview-badges">
+      <h2 id="preview-badges" class="preview__section-title">Estados</h2>
+      <div class="preview__card preview__card--row">
+        <cmc-badge variant="neutral">Nuevo</cmc-badge>
+        <cmc-badge variant="success">Pagado</cmc-badge>
+        <cmc-badge variant="warning">Pendiente</cmc-badge>
+        <cmc-badge variant="error">Cancelado</cmc-badge>
+      </div>
+    </section>
+
+    <section class="preview__section" aria-labelledby="preview-loading">
+      <h2 id="preview-loading" class="preview__section-title">Carga</h2>
+      <div class="preview__card">
+        <div class="preview__item">
+          <p class="cmc-caption">Sin mensaje</p>
+          <cmc-loading />
+        </div>
+        <div class="preview__item">
+          <p class="cmc-caption">Con mensaje</p>
+          <cmc-loading message="Cargando información..." />
+        </div>
+      </div>
+    </section>
+
+    <section class="preview__section" aria-labelledby="preview-empty">
+      <h2 id="preview-empty" class="preview__section-title">Estado vacío</h2>
+      <div class="preview__card">
+        <cmc-empty-state
+          heading="No hay resultados"
+          description="No encontramos elementos para mostrar."
+          [icon]="emptyStateIcon"
+        />
+      </div>
+    </section>
+
+    <section class="preview__section" aria-labelledby="preview-error">
+      <h2 id="preview-error" class="preview__section-title">Estado de error</h2>
+      <div class="preview__card">
+        <cmc-error-state
+          heading="No pudimos cargar la información"
+          description="Intenta nuevamente."
+          (retry)="onRetry()"
+        />
+        <p class="cmc-caption preview__counter" role="status" data-testid="retry-counter">
+          Reintentos: {{ retries() }}
+        </p>
+      </div>
+    </section>
+  </main>
+</ion-content>

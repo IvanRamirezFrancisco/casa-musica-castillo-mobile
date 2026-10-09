@@ -1,2 +1,135 @@
-// For information on how to create your own theme, please refer to:
-// https://ionicframework.com/docs/theming/
+:root {
+  /*
+   * Casa de Música Castillo
+   * Mobile Design System
+   */
+
+  /* ==================================================
+   * Brand
+   * ================================================== */
+
+  --cmc-primary: #722f37;
+  --cmc-primary-soft: #a64d5b;
+  --cmc-primary-dark: #421a20;
+  --cmc-accent-gold: #c5a059;
+
+  /* ==================================================
+   * Surfaces
+   * ================================================== */
+
+  --cmc-background: #fcfaf7;
+  --cmc-surface: #ffffff;
+  --cmc-surface-alt: #f5efe8;
+
+  /* ==================================================
+   * Typography colors
+   * ================================================== */
+
+  --cmc-text-primary: #292524;
+  --cmc-text-secondary: #6b6560;
+  --cmc-text-disabled: #8f8985;
+  --cmc-text-on-primary: #ffffff;
+
+  /* ==================================================
+   * Borders
+   * ================================================== */
+
+  --cmc-border: #e7ded5;
+  --cmc-border-strong: #d4c8bd;
+
+  /* ==================================================
+   * Semantic colors
+   * ================================================== */
+
+  --cmc-success: #10b981;
+  --cmc-warning: #f59e0b;
+  --cmc-error: #dc2626;
+
+  /* ==================================================
+   * Spacing
+   * 4 / 8 / 12 / 16 / 20 / 24 / 32
+   * ================================================== */
+
+  --cmc-space-1: 4px;
+  --cmc-space-2: 8px;
+  --cmc-space-3: 12px;
+  --cmc-space-4: 16px;
+  --cmc-space-5: 20px;
+  --cmc-space-6: 24px;
+  --cmc-space-8: 32px;
+
+  /* ==================================================
+   * Border radius
+   * ================================================== */
+
+  --cmc-radius-xs: 4px;
+  --cmc-radius-sm: 8px;
+  --cmc-radius-md: 12px;
+  --cmc-radius-lg: 16px;
+  --cmc-radius-xl: 24px;
+  --cmc-radius-full: 9999px;
+
+  /* ==================================================
+   * Shadows / elevation
+   * ================================================== */
+
+  --cmc-shadow-subtle: 0 1px 2px rgb(41 37 36 / 5%);
+  --cmc-shadow-card: 0 2px 8px rgb(41 37 36 / 10%);
+  --cmc-shadow-medium: 0 4px 12px rgb(41 37 36 / 12%);
+  --cmc-shadow-brand: 0 4px 12px rgb(114 47 55 / 15%);
+
+  /* ==================================================
+   * Motion
+   * ================================================== */
+
+  --cmc-transition-fast: 150ms ease;
+  --cmc-transition-base: 220ms ease;
+
+  /* ==================================================
+   * Ionic mapping
+   * ================================================== */
+
+  --ion-font-family: 'Roboto', system-ui, -apple-system, BlinkMacSystemFont,
+    'Segoe UI', sans-serif;
+
+  --ion-background-color: var(--cmc-background);
+  --ion-background-color-rgb: 252, 250, 247;
+
+  --ion-text-color: var(--cmc-text-primary);
+  --ion-text-color-rgb: 41, 37, 36;
+
+  --ion-color-primary: #722f37;
+  --ion-color-primary-rgb: 114, 47, 55;
+  --ion-color-primary-contrast: #ffffff;
+  --ion-color-primary-contrast-rgb: 255, 255, 255;
+  --ion-color-primary-shade: #642931;
+  --ion-color-primary-tint: #80444b;
+
+  --ion-color-secondary: #c5a059;
+  --ion-color-secondary-rgb: 197, 160, 89;
+  --ion-color-secondary-contrast: #292524;
+  --ion-color-secondary-contrast-rgb: 41, 37, 36;
+  --ion-color-secondary-shade: #ad8d4e;
+  --ion-color-secondary-tint: #cbaa6a;
+
+  --ion-color-success: #10b981;
+  --ion-color-success-rgb: 16, 185, 129;
+  --ion-color-success-contrast: #ffffff;
+  --ion-color-success-contrast-rgb: 255, 255, 255;
+  --ion-color-success-shade: #0ea372;
+  --ion-color-success-tint: #28c08e;
+
+  --ion-color-warning: #f59e0b;
+  --ion-color-warning-rgb: 245, 158, 11;
+  --ion-color-warning-contrast: #292524;
+  --ion-color-warning-contrast-rgb: 41, 37, 36;
+  --ion-color-warning-shade: #d88b0a;
+  --ion-color-warning-tint: #f6a823;
+
+  --ion-color-danger: #dc2626;
+  --ion-color-danger-rgb: 220, 38, 38;
+  --ion-color-danger-contrast: #ffffff;
+  --ion-color-danger-contrast-rgb: 255, 255, 255;
+  --ion-color-danger-shade: #c22121;
+  --ion-color-danger-tint: #e03c3c;
+}
