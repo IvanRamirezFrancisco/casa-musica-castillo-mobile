@@ -1,0 +1,155 @@
+.cmc-header-minimal {
+  ion-toolbar {
+    --background: var(--cmc-background);
+    --border-width: 0;
+  }
+}
+
+.nav-back-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--cmc-text-primary);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: none;
+  cursor: pointer;
+
+  ion-icon {
+    font-size: 24px;
+  }
+
+  &:active {
+    background: var(--cmc-surface-alt);
+  }
+}
+
+.options-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.delivery-option-card {
+  background: var(--cmc-surface);
+  border-radius: var(--cmc-radius-md);
+  padding: 20px;
+  display: flex;
+  gap: 16px;
+  box-shadow: var(--cmc-shadow-card);
+  border: 2px solid transparent;
+  transition: all var(--cmc-transition-fast);
+  cursor: pointer;
+
+  .radio-indicator {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    border: 2px solid var(--cmc-border-strong);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0;
+    margin-top: 2px;
+
+    .inner-circle {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: transparent;
+      transition: background var(--cmc-transition-fast);
+    }
+  }
+
+  .option-content {
+    flex: 1;
+
+    .option-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 4px;
+
+      .title {
+        font-size: 1rem;
+      }
+      .price {
+        color: var(--cmc-primary);
+      }
+    }
+
+    .description {
+      font-size: 0.875rem;
+      margin: 0;
+    }
+
+    .store-info, .address-demo {
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px dashed var(--cmc-border);
+      font-size: 0.875rem;
+      
+      ion-icon {
+        color: var(--cmc-primary);
+        margin-right: 8px;
+        vertical-align: middle;
+      }
+    }
+
+    .address-demo {
+      .address-row {
+        margin-bottom: 8px;
+      }
+      p {
+        margin: 0 0 0 24px;
+      }
+    }
+  }
+
+  &.selected {
+    border-color: var(--cmc-primary);
+    background: var(--cmc-primary);
+    color: var(--cmc-text-on-primary);
+
+    .radio-indicator {
+      border-color: var(--cmc-text-on-primary);
+      .inner-circle {
+        background: var(--cmc-text-on-primary);
+      }
+    }
+
+    .option-header {
+      .title, .price {
+        color: var(--cmc-text-on-primary);
+      }
+    }
+
+    .description {
+      color: rgba(255, 255, 255, 0.9);
+    }
+
+    .cmc-text-secondary {
+      color: rgba(255, 255, 255, 0.8) !important;
+    }
+
+    .store-info, .address-demo {
+      border-top-color: rgba(255, 255, 255, 0.35);
+      
+      ion-icon {
+        color: var(--cmc-text-on-primary);
+      }
+    }
+
+    .cmc-font-bold {
+      color: var(--cmc-text-on-primary);
+    }
+  }
+}
+
+.action-container {
+  margin-top: 32px;
+  margin-bottom: 32px;
+}

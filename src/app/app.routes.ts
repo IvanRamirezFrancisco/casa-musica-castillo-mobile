@@ -36,7 +36,7 @@ export const routes: Routes = [
       },
       {
         path: 'cart',
-        loadComponent: () => import('./features/dummy/dummy.page').then((m) => m.DummyPage),
+        loadComponent: () => import('./features/cart/cart.page').then((m) => m.CartPage),
       },
       {
         path: 'orders',
@@ -59,5 +59,9 @@ export const routes: Routes = [
       import('./features/foundation-preview/foundation-preview.page').then(
         (m) => m.FoundationPreviewPage,
       ),
+  },
+  {
+    path: 'checkout',
+    loadChildren: () => import('./features/checkout/checkout.routes').then((m) => m.routes),
   },
 ];

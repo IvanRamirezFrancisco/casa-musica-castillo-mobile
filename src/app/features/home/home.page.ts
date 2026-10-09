@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { IonContent, IonHeader, IonToolbar,   IonIcon } from '@ionic/angular';
 import { addIcons } from 'ionicons';
-import { searchOutline, notificationsOutline, musicalNoteOutline, keypadOutline, ellipseOutline, pulseOutline, heartOutline, imageOutline } from 'ionicons/icons';
+import { searchOutline, notificationsOutline, musicalNoteOutline, keypadOutline, ellipseOutline, pulseOutline, heartOutline, imageOutline, musicalNotesOutline } from 'ionicons/icons';
 
 interface Product {
   id: string;
@@ -37,10 +37,10 @@ import { CurrencyPipe } from '@angular/common';
 })
 export class HomePage {
   categories = signal<Category[]>([
-    { id: '1', name: 'Guitarras', icon: '🎸' },
-    { id: '2', name: 'Pianos', icon: '🎹' },
-    { id: '3', name: 'Baterías', icon: '🥁' },
-    { id: '4', name: 'Vientos', icon: '🎷' },
+    { id: '1', name: 'Guitarras', icon: 'musical-note-outline' },
+    { id: '2', name: 'Pianos', icon: 'keypad-outline' },
+    { id: '3', name: 'Baterías', icon: 'ellipse-outline' },
+    { id: '4', name: 'Vientos', icon: 'pulse-outline' },
   ]);
 
   featuredProducts = signal<Product[]>([
@@ -50,6 +50,6 @@ export class HomePage {
   ]);
 
   constructor() {
-    addIcons({ searchOutline, notificationsOutline, musicalNoteOutline, keypadOutline, ellipseOutline, pulseOutline, heartOutline, imageOutline });
+    addIcons({ searchOutline, notificationsOutline, musicalNoteOutline, keypadOutline, ellipseOutline, pulseOutline, heartOutline, imageOutline, musicalNotesOutline });
   }
 }
