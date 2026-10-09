@@ -1,0 +1,173 @@
+
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Casa de Música Castillo</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <main class="registro-page">
+
+    <div class="marca">
+      <div class="marca-icono">♫</div>
+      <p class="marca-nombre">CASA DE MÚSICA CASTILLO</p>
+      <h1>Crear una cuenta</h1>
+      <p class="subtitulo">
+        Únete a nuestra comunidad musical
+      </p>
+    </div>
+
+    <section class="form-card">
+      <form [formGroup]="registroForm"
+            (ngSubmit)="enviarRegistro()">
+
+        <div class="campo">
+          <label for="username">Nombre de usuario *</label>
+          <input id="username" type="text"
+                 autocomplete="username"
+                 formControlName="username"
+                 placeholder="Ej. musicafan123">
+          @if (mostrarError('username')) {
+            <small>{{ mensajeError('username') }}</small>
+          }
+        </div>
+
+        <div class="fila">
+          <div class="campo">
+            <label for="firstName">Nombre *</label>
+            <input id="firstName" type="text"
+                   autocomplete="given-name"
+                   formControlName="firstName"
+                   placeholder="Tu nombre">
+            @if (mostrarError('firstName')) {
+              <small>{{ mensajeError('firstName') }}</small>
+            }
+          </div>
+
+          <div class="campo">
+            <label for="lastName">Apellido *</label>
+            <input id="lastName" type="text"
+                   autocomplete="family-name"
+                   formControlName="lastName"
+                   placeholder="Tu apellido">
+            @if (mostrarError('lastName')) {
+              <small>{{ mensajeError('lastName') }}</small>
+            }
+          </div>
+        </div>
+
+        <div class="campo">
+          <label for="email">Correo electrónico *</label>
+          <input id="email" type="email"
+                 autocomplete="email"
+                 formControlName="email"
+                 placeholder="correo@ejemplo.com">
+          @if (mostrarError('email')) {
+            <small>{{ mensajeError('email') }}</small>
+          }
+        </div>
+
+        <div class="campo">
+          <label for="phone">Teléfono (opcional)</label>
+          <input id="phone" type="tel"
+                 autocomplete="tel"
+                 inputmode="numeric"
+                 formControlName="phone"
+                 placeholder="7711234567">
+          @if (mostrarError('phone')) {
+            <small>{{ mensajeError('phone') }}</small>
+          }
+        </div>
+
+        <div class="campo">
+          <label for="password">Contraseña *</label>
+          <div class="password-control">
+            <input id="password"
+                   [type]="mostrarPassword ? 'text' : 'password'"
+                   autocomplete="new-password"
+                   formControlName="password"
+                   placeholder="Crea una contraseña segura">
+            <button type="button"
+                    class="mostrar-btn"
+                    (click)="mostrarPassword = !mostrarPassword">
+              {{ mostrarPassword ? 'Ocultar' : 'Mostrar' }}
+            </button>
+          </div>
+
+          <p class="ayuda">
+            Mínimo 10 caracteres, mayúscula,
+            minúscula, número y símbolo.
+          </p>
+
+          @if (mostrarError('password')) {
+            <small>{{ mensajeError('password') }}</small>
+          }
+        </div>
+
+        <div class="campo">
+          <label for="confirmPassword">
+            Confirmar contraseña *
+          </label>
+          <div class="password-control">
+            <input id="confirmPassword"
+                   [type]="mostrarConfirmacion ? 'text' : 'password'"
+                   autocomplete="new-password"
+                   formControlName="confirmPassword"
+                   placeholder="Repite tu contraseña">
+            <button type="button"
+                    class="mostrar-btn"
+                    (click)="mostrarConfirmacion = !mostrarConfirmacion">
+              {{ mostrarConfirmacion ? 'Ocultar' : 'Mostrar' }}
+            </button>
+          </div>
+
+          @if (mostrarError('confirmPassword')) {
+            <small>{{ mensajeError('confirmPassword') }}</small>
+          }
+
+          @if (errorContrasenas()) {
+            <small>Las contraseñas no coinciden.</small>
+          }
+        </div>
+
+        <label class="terminos">
+          <input type="checkbox"
+                 formControlName="acceptTerms">
+          <span>
+            Acepto los términos y condiciones
+            (pendientes de publicación).
+          </span>
+        </label>
+
+        @if (mostrarError('acceptTerms')) {
+          <small>
+            Debes aceptar los términos para continuar.
+          </small>
+        }
+
+        <button class="registrar-btn" type="submit">
+          Continuar
+        </button>
+
+        @if (formularioValidado) {
+          <div class="mensaje-exito" role="status">
+            Formulario validado correctamente.
+            La creación de la cuenta estará disponible
+            cuando integremos el backend.
+          </div>
+        }
+
+        <p class="aviso">
+          Versión de demostración:
+          todavía no se crean cuentas reales.
+        </p>
+
+      </form>
+    </section>
+
+    <p class="pie">
+      Casa de Música Castillo · Tu pasión, nuestra música
+    </p>
+
+  </main>
+</ion-content>
