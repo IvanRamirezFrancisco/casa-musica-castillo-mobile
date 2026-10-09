@@ -1,0 +1,66 @@
+name: Security - Analisis
+
+on:
+  pull_request:
+    branches:
+      - develop
+      - main
+
+  push:
+    branches:
+      - develop
+      - main
+
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  dependency-audit:
+    name: Auditoria de dependencias
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Obtener codigo fuente
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "npm"
+
+      - name: Instalar dependencias
+        run: npm ci
+
+      - name: Auditar dependencias de produccion
+        run: npm audit --omit=dev --audit-level=moderate
+
+      - name: Auditar todas las dependencias
+        continue-on-error: true
+        run: npm audit --audit-level=moderate
+
+  codeql:
+    name: CodeQL JavaScript y TypeScript
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    permissions:
+      security-events: write
+      packages: read
+      contents: read
+      actions: read
+
+    steps:
+      - name: Obtener codigo fuente
+        uses: actions/checkout@v4
+
+      - name: Inicializar CodeQL
+        uses: github/codeql-action/init@v4
+        with:
+          languages: javascript-typescript
+
+      - name: Analizar codigo con CodeQL
+        uses: github/codeql-action/analyze@v4

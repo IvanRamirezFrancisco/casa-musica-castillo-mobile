@@ -1,0 +1,53 @@
+name: CI - Calidad
+
+on:
+  pull_request:
+    branches:
+      - develop
+      - main
+
+  push:
+    branches:
+      - develop
+      - main
+
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  quality:
+    name: Lint, Tests y Build
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Obtener código fuente
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "npm"
+
+      - name: Mostrar versiones de Node y npm
+        run: |
+          node --version
+          npm --version
+
+      - name: Instalar dependencias
+        run: npm ci
+
+      - name: Mostrar versión de Angular
+        run: npx ng version
+
+      - name: Ejecutar análisis estático
+        run: npm run lint
+
+      - name: Ejecutar pruebas automatizadas
+        run: npm test -- --configuration=ci
+
+      - name: Compilar aplicación
+        run: npm run build

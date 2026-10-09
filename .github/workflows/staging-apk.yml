@@ -1,0 +1,73 @@
+name: Release - Staging APK
+
+on:
+  push:
+    branches:
+      - develop
+
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  staging-apk:
+    name: Generar APK de Staging
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Obtener codigo fuente
+        uses: actions/checkout@v7
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: "22"
+          cache: "npm"
+
+      - name: Configurar Java
+        uses: actions/setup-java@v6
+        with:
+          distribution: "temurin"
+          java-version: "21"
+
+      - name: Configurar Gradle
+        uses: gradle/actions/setup-gradle@v6
+
+      - name: Mostrar versiones
+        run: |
+          node --version
+          npm --version
+          java -version
+
+      - name: Instalar dependencias
+        run: npm ci
+
+      - name: Compilar aplicacion Angular
+        run: npm run build
+
+      - name: Sincronizar Capacitor con Android
+        run: npx cap sync android
+
+      - name: Dar permisos al Gradle Wrapper
+        run: chmod +x android/gradlew
+
+      - name: Compilar APK de Staging
+        working-directory: android
+        run: ./gradlew assembleDebug --no-daemon
+
+      - name: Preparar APK de Staging
+        run: |
+          mkdir -p staging
+          cp android/app/build/outputs/apk/debug/app-debug.apk staging/CasaMusicaCastillo-staging.apk
+          test -f staging/CasaMusicaCastillo-staging.apk
+          ls -lh staging/CasaMusicaCastillo-staging.apk
+
+      - name: Publicar APK de Staging
+        uses: actions/upload-artifact@v7
+        with:
+          name: casa-musica-castillo-staging-${{ github.run_number }}
+          path: staging/CasaMusicaCastillo-staging.apk
+          if-no-files-found: error
+          retention-days: 14
