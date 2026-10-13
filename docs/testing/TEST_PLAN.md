@@ -1,455 +1,100 @@
-# Plan de Pruebas
+# PLAN DE PRUEBAS — CASA DE MÚSICA CASTILLO
 
-## Casa de Música Castillo - Aplicación Móvil
+Actualización: 12 de octubre de 2026. Alcance: app Ionic/Angular/Capacitor y contrato REST externo. TT-42, TT-44, TT-48 y TT-49.
 
-**Proyecto:** Casa de Música Castillo - App Móvil  
-**Metodología:** Extreme Programming (XP) + DevOps  
-**Frontend móvil:** Ionic + Angular + TypeScript  
-**Integración nativa:** Capacitor  
-**Plataforma objetivo:** Android  
-**Backend:** Spring Boot API REST  
-**Base de datos:** PostgreSQL  
-**Gestión:** GitHub Projects, GitHub Issues y GitHub Actions
+## Estado real y límites
 
----
+La base auditada es `develop` en `fc071671adea59d09776c0bc718a089ca3488327` (PR #72). Angular 22.2.1, TypeScript 6.0, Vitest 4.0.18, Ionic 9 y Capacitor 8.5.2. Existían 23 archivos de pruebas y 92 pruebas aprobadas. Los cuatro workflows de CI, seguridad, Android y staging habían pasado en ese commit.
 
-## 1. Propósito
+La app usa `DemoCheckoutStateService` y `DemoAccountStateService`; el login navega después de validar el formulario, sin autenticar en servidor. Catálogo apunta a `DummyPage`; búsqueda, detalle y favoritos no tienen recorridos completos. No hay HttpClient ni contrato móvil implementado. Los pedidos demo no se alimentan de los pedidos creados en checkout. Ninguna prueba DEMO demuestra autorización, cobros, persistencia o cumplimiento total de una HU.
 
-El presente Plan de Pruebas define la estrategia de validación y verificación de la aplicación móvil Casa de Música Castillo.
+Se inspeccionó `IvanRamirezFrancisco/backend_` en `46bc32d8b0417370ab35e99866cabbeaaf830bba`, sin modificarlo. [API_CONTRACT.md](API_CONTRACT.md) identifica endpoints y brechas. No se ha autorizado una URL remota ni entregado una cuenta de pruebas: API, carga y estrés no se declaran ejecutados.
 
-Su finalidad es establecer qué pruebas se realizarán, cuándo deberán ejecutarse, qué responsables participarán, qué evidencias deberán conservarse y qué condiciones deberán cumplirse antes de integrar o liberar cambios.
+## Presentación académica
 
-Las pruebas se encuentran relacionadas con las Historias de Usuario HU-01 a HU-14 y con las etapas TEST y SECURITY del flujo DevOps definido para el proyecto.
+Los nombres de actividades de prueba se escribirán **EN MAYÚSCULAS**. En el documento académico final Word/PDF se aplicará además un **color de fuente diferente (azul #1F4E79)** a esas actividades, incluidos los títulos y las filas del calendario. Markdown conserva los títulos, pero no garantiza color; aplicar y verificar el estilo al exportar. El color no será el único medio de distinguirlas.
 
----
+## PRUEBAS UNITARIAS
 
-## 2. Objetivos
+Verifican una unidad de lógica aislada: validadores, cálculos, estado y componentes. Vitest y Angular TestBed se conservan por compatibilidad con el builder instalado. Las pruebas existentes cubren formularios de HU-01–03, Inicio HU-04, carrito/checkout HU-09–11, pedidos HU-12–13 y perfil HU-14; se añaden pruebas de totales, cantidades, limpieza, snapshot y copia de perfil en servicios demo. HU-05–08 quedan planificadas hasta existir implementación.
 
-Los objetivos del proceso de pruebas son:
+Comando: `npm test -- --configuration=ci`. Evidencia: JUnit y cobertura en `reports/unit-tests.xml` y `coverage/app/`. Responsable: Tackalay; revisión técnica IvanRamirezFrancisco. Ejecutar en cada PR/push a develop/main y antes del commit.
 
-- Verificar que cada Historia de Usuario cumpla sus criterios de aceptación funcionales.
-- Comprobar los criterios de aceptación de seguridad definidos para cada HU.
-- Detectar errores antes de integrar cambios en las ramas compartidas.
-- Evitar regresiones sobre funcionalidades previamente implementadas.
-- Verificar que la aplicación compile correctamente.
-- Validar la integración entre la aplicación móvil y la API REST.
-- Comprobar autenticación y autorización.
-- Validar el tratamiento seguro de entradas, sesiones y datos sensibles.
-- Generar evidencias verificables.
-- Automatizar progresivamente las pruebas mediante GitHub Actions.
+## ANÁLISIS DE CÓDIGO ESTÁTICO
 
----
+ESLint/angular-eslint detectan defectos TS/plantilla; `npm run build` verifica compilación TypeScript/Angular y presupuestos. Se aplica transversalmente a HU-01–14 conforme entra código, sin equivaler a su aceptación. CodeQL y npm audit complementan el análisis de seguridad, sin sustituir las pruebas PS.
 
-## 3. Alcance
+Comandos: `npm run lint`, `npm run build`. Responsable: IvanRamirezFrancisco. Evidencia: jobs CI y Security, alertas CodeQL, resultados audit. Momento: PR y push a develop/main.
 
-El plan contempla las funcionalidades definidas en las Historias de Usuario:
+## PRUEBAS DE INTEGRACIÓN
 
-| HU    | Funcionalidad                     |
-| ----- | --------------------------------- |
-| HU-01 | Inicio de sesión                  |
-| HU-02 | Registro de clientes              |
-| HU-03 | Recuperación de contraseña        |
-| HU-04 | Pantalla de inicio                |
-| HU-05 | Catálogo de productos             |
-| HU-06 | Búsqueda de productos             |
-| HU-07 | Detalle de producto               |
-| HU-08 | Favoritos                         |
-| HU-09 | Agregar productos al carrito      |
-| HU-10 | Administración del carrito        |
-| HU-11 | Checkout                          |
-| HU-12 | Consulta de pedidos               |
-| HU-13 | Detalle de pedido                 |
-| HU-14 | Consulta y modificación de perfil |
+Frontend: `critical.integration.spec.ts` utiliza componentes reales, plantillas, formularios y servicios compartidos de TestBed. Verifica propagación carrito→resumen, eliminación vía DOM, perfil válido e inválido. Solo Router.navigate se espía; no se simula una API inexistente. `npm run test:integration` genera JUnit.
 
-También se incluyen tareas técnicas relacionadas con calidad, seguridad, CI/CD, compilación Android y generación de artefactos.
+API: Postman CLI oficial 1.73.0, colección local v2.1 sin vínculo cloud, secretos ni Newman. Contratos 200/400/401/403/404, token inválido y errores controlados. La ejecución manual requiere ambiente `testing` autorizado. Ver [API_CONTRACT.md](API_CONTRACT.md). Al implementar servicios HTTP móviles se añadirá `provideHttpClientTesting`/HttpTestingController compatible con Angular; actualmente no existe una integración HttpClient que probar.
 
----
+Responsables: Tackalay (frontend), IvanRamirezFrancisco (contratos y ambiente). Momento: PR frontend; API antes de aceptar cada incremento y al cambiar contrato.
 
-## 4. Tipos de pruebas
+## PRUEBAS DE ACEPTACIÓN
 
-### 4.1 Análisis estático
+Maestro CLI 2.11.0 local, emulador Android API 34 google_apis x86_64, Java 21. API 34 cumple minSdk 24 y está documentada por Maestro; compilar con SDK 36 no exige emular API 36. Se reutiliza el APK del workflow Android, sin volver a compilarlo ni usar Maestro Cloud.
 
-Su objetivo es detectar problemas de calidad del código sin ejecutar la aplicación.
+Flujos actuales:
 
-Controles:
+| Flujo | HU | Verificación | Límite |
+|---|---|---|---|
+| `auth-demo.yaml` | 01,02,03,04 | Pantallas registro/recuperación y navegación por login demo | No crea cuenta ni recupera contraseña real |
+| `purchase-demo.yaml` | 04,09,10,11 | Carrito precargado, selección entrega/pago y confirmación demo | No agrega desde catálogo, no verifica servidor ni cobra |
+| `account-demo.yaml` | 12,13,14 | Pedidos demo, detalle y formulario de perfil | No aislamiento entre cuentas ni persistencia |
 
-- ESLint.
-- TypeScript.
-- Validaciones del compilador Angular.
-- Errores durante el build.
+HU-05–08 no se incorporan artificialmente al flujo de compra. HU-11 y HU-12 no se presentan como integración real porque los datos son independientes. Completar esos flujos cuando existan endpoints/implementación. Los casos PF/PS de Issues siguen siendo el contrato de aceptación final.
 
-Comando base:
+Responsable: Tackalay; Ivan mantiene emulador/pipeline. Evidencia: JUnit, capturas y salida de Maestro del mismo SHA. Ejecución: después de cada build Android de PR/develop/main; en regresión manual; demostración al cierre de XP. Si el emulador no ejecuta, no sustituirlo por una captura simulada.
 
-```bash
-npm run lint
-```
+## PRUEBAS DE REGRESIÓN
 
-### 4.2 Pruebas unitarias
+Reutilizan las suites anteriores: `npm run test:regression` selecciona auth, inicio, carrito, checkout, pedidos, perfil y servicios; no copia pruebas. Prioridad: autenticación → catálogo/búsqueda (pendiente implementación) → carrito → checkout → pedidos → perfil. El workflow manual `regression.yml` ejecuta esta selección y llama al workflow Android, que incorpora aceptación Maestro. CI y Android ya ejecutan las suites en cada PR; no se agrega otra ejecución automática redundante de regresión.
 
-Su objetivo es comprobar componentes y unidades de código de forma aislada.
+Responsable: Tackalay. Evidencia: `critical-regression` y `acceptance-maestro-demo`. Momento: corrección de errores, final de cada XP y antes de entrega.
 
-Se utilizarán principalmente:
+## PRUEBAS DE RENDIMIENTO
 
-- Angular TestBed.
-- Vitest.
-- Mocks de servicios cuando corresponda.
+k6 OSS 2.3.0 contra `GET /api/public/products/catalog`, HU-05–06 y contenido de HU-04 cuando se integre. Perfil LOAD: 0→2 VUs en 15 s, hasta 5 VUs durante 60 s, descenso a 0 en 15 s; pausa de 1 s/iteración. Mide duración, solicitudes, errores, p90/p95 y checks. Umbrales iniciales de laboratorio: error <1 %, p90 <800 ms, p95 <1000 ms, checks >99 %. Son presupuestos propuestos, no SLA observado; revisar tras baseline autorizado sin ajustarlos solo para ocultar fallas.
 
-Se probarán progresivamente:
+Responsable: IvanRamirezFrancisco ejecuta; Tackalay analiza evidencia. Job PERFORMANCE/LOAD manual, ambiente testing. Evidencia: resumen JSON, serie temporal JSON, log/versiones, SHA, fecha, tamaño/datos del backend. No se mide rendimiento de PostgreSQL directamente desde la app: correlacionar con métricas del servidor cuando estén disponibles.
 
-- componentes;
-- servicios;
-- validadores;
-- guards;
-- lógica de formularios;
-- manejo de respuestas;
-- manejo de errores.
+## PRUEBAS DE ESFUERZO / ESTRÉS
 
-### 4.3 Pruebas de integración
+k6 OSS usa el mismo endpoint verificado, sin login masivo, escrituras o compras. Perfil progresivo 5→10→20 VUs en etapas de 30 s, descenso en 15 s; recuperación con 1 VU durante 30 s a partir de 120 s. Límite fijo 20 VUs, una sola ejecución concurrente. Aborta si error agregado ≥10 % después de 20 s; en recuperación exige p95 <1 s y errores <1 %.
 
-Validarán la interacción entre diferentes partes de la aplicación.
+No representa una prueba destructiva de capacidad máxima. Si no se alcanza degradación con 20 VUs, el límite sigue sin determinar. Si aborta anticipadamente, recuperación queda inconclusa y debe observarse después de enfriar el ambiente. Analizar por fase y comparar latencia/errores; no confundir threshold fallido con fallo de infraestructura.
 
-Ejemplos:
+Responsable: IvanRamirezFrancisco, análisis Tackalay. La carga usa solo `workflow_dispatch` y confirmación del ambiente autorizado, nunca PR ni producción. En PR se ejecuta únicamente `k6 inspect`, sin HTTP. La configuración ausente omite los jobs remotos y deja un resumen NO EJECUTADO. Sin `K6_BASE_URL`, `K6_AUTHORIZED_ORIGIN` y `K6_TEST_AUTHORIZED=true`, el script falla antes de enviar solicitudes. No seguir redirecciones ni desactivar TLS. Cambiar carga máxima requiere revisión y autorización del propietario.
 
-- Componentes con servicios.
-- Servicios con HttpClient.
-- Interceptores.
-- Guards con autenticación.
-- Manejo de sesión.
-- Respuestas simuladas de la API.
-- Manejo global de errores.
+## Cobertura y criterios de salida
 
-### 4.4 Pruebas funcionales
+Medir `src/app/**/*.ts`, excluyendo specs y modelos de tipos (no lógica ejecutable); incluye archivos sin pruebas. V8 con versión igual a Vitest. Reportes text, HTML, lcov y json-summary. Gate CI: 60 % en statements/branches/functions/lines. Metas: baseline 60 %, intermedio 70 %, lógica crítica 80 % cuando sea viable; comprobar cada métrica, no solo líneas. El denominador actual es código demo, no HU completadas ni seguridad del backend.
 
-Las pruebas funcionales verifican los criterios de aceptación de las Historias de Usuario.
+Entrada: alcance y criterios PF/PS revisados, commit identificable, datos sintéticos, herramientas compatibles; para remoto, URL/cuenta/permiso. Salida de HU: criterios funcionales y seguridad comprobados, pruebas pertinentes aprobadas, defectos críticos resueltos, evidencia enlazada y revisión del par. La existencia del archivo o un gate de cobertura no satisface por sí solo la Definition of Done.
 
-Se utiliza la nomenclatura:
+No cerrar TT/HU por esta entrega parcial. Registrar defectos con HU, pasos, esperado/observado, SHA/ambiente y evidencia sanitizada; ejecutar la regresión afectada tras corregir. Retener artifacts 14 días y descargar los de la entrega antes de su expiración. No publicar cuerpos de respuestas de login, tokens, contraseñas, cookies ni datos personales reales.
 
-```text
-PF-HUXX-YY
-```
+## Documentos relacionados
 
-Donde:
+- [TEST_TOOLS.md](TEST_TOOLS.md): herramienta, software, finalidad, justificación, responsable y momento.
+- [TEST_SCHEDULE.md](TEST_SCHEDULE.md): XP/HU/actividad/pipeline/evidencia.
+- [TRACEABILITY_MATRIX.md](TRACEABILITY_MATRIX.md): criterios PF/PS y automatización real.
+- [CI_CD_PLAN.md](../devops/CI_CD_PLAN.md): disparadores y configuración.
+- [SECURITY_CRITERIA.md](../security/SECURITY_CRITERIA.md): requisitos de seguridad conservados.
 
-- `PF` = Prueba Funcional.
-- `HUXX` = Historia de Usuario.
-- `YY` = número consecutivo.
+## PRUEBAS SMOKE Y ANDROID (REQUISITOS CONSERVADOS)
 
-Ejemplo:
+Antes de cada versión candidata comprobar instalación del APK, apertura, login, navegación principal, teclado y ausencia de bloqueo. Repetir con pérdida/restablecimiento de conectividad, persistencia/expiración de sesión e integración Capacitor cuando existan esas capacidades. Los escenarios 5xx, token expirado y errores de red/API requieren implementación/ambiente controlado; siguen PENDIENTES y no se sustituyen por respuestas demo. La seguridad definitiva de precio, stock, propiedad de carrito/pedido/perfil corresponde al servidor.
 
-```text
-PF-HU01-01
-```
+| ESTADO DE CASO | SIGNIFICADO |
+|---|---|
+| PENDIENTE | Aún no ejecutado |
+| APROBADA | Ejecución real obtuvo el resultado esperado |
+| FALLIDA | La ejecución difiere del resultado esperado |
+| BLOQUEADA | Falta una dependencia/ambiente/capacidad identificada |
 
-Cada prueba deberá registrar:
-
-| Campo              | Descripción                              |
-| ------------------ | ---------------------------------------- |
-| ID                 | Identificador                            |
-| HU                 | Historia relacionada                     |
-| Precondición       | Estado necesario antes de probar         |
-| Acción             | Operación realizada                      |
-| Resultado esperado | Comportamiento correcto                  |
-| Resultado obtenido | Resultado real                           |
-| Estado             | APROBADA, FALLIDA, BLOQUEADA o PENDIENTE |
-| Evidencia          | Captura, video, log o reporte            |
-
-### 4.5 Pruebas de seguridad
-
-Las pruebas de seguridad utilizan:
-
-```text
-PS-HUXX-YY
-```
-
-Se comprobarán aspectos como:
-
-- autenticación;
-- autorización;
-- expiración de sesión;
-- almacenamiento seguro;
-- validación de entradas;
-- aislamiento entre usuarios;
-- manipulación de identificadores;
-- manipulación de precios o cantidades;
-- exposición de información sensible;
-- manejo de errores;
-- uso de HTTPS.
-
-Las pruebas solamente se realizarán sobre los sistemas y ambientes autorizados del proyecto.
-
-### 4.6 Pruebas de regresión
-
-Después de integrar cambios relevantes se volverán a ejecutar las pruebas críticas ya aprobadas.
-
-Prioridad de regresión:
-
-1. Autenticación.
-2. Carrito.
-3. Checkout.
-4. Pedidos.
-5. Perfil.
-6. Catálogo y búsqueda.
-7. Favoritos.
-
-Una nueva funcionalidad no deberá romper funcionalidades previamente aprobadas.
-
-### 4.7 Smoke Testing
-
-Cada versión candidata deberá comprobar al menos:
-
-- inicio correcto de la aplicación;
-- navegación principal;
-- acceso al login;
-- conexión con API cuando el ambiente esté disponible;
-- ausencia de errores bloqueantes;
-- instalación y ejecución del APK.
-
----
-
-## 5. Pruebas de compilación
-
-Antes de integrar cambios deberá comprobarse que el proyecto compile.
-
-### Aplicación web/Ionic
-
-```bash
-npm run build
-```
-
-### Sincronización Android
-
-```bash
-npx cap sync android
-```
-
-### Android
-
-La compilación Android deberá realizarse mediante Gradle.
-
-Un fallo de compilación se considera bloqueante para la integración.
-
----
-
-## 6. Pruebas de integración con la API
-
-Cuando una HU consuma Spring Boot se comprobarán:
-
-- respuestas válidas;
-- HTTP 400;
-- HTTP 401;
-- HTTP 403;
-- HTTP 404;
-- errores 5xx;
-- token inválido;
-- token expirado;
-- validaciones de backend;
-- ausencia de información sensible innecesaria.
-
-Las decisiones críticas de seguridad no deberán depender únicamente del cliente móvil.
-
-Esto incluye:
-
-- precios;
-- stock;
-- autorización;
-- propiedad de carritos;
-- propiedad de pedidos;
-- propiedad de perfiles.
-
----
-
-## 7. Pruebas Android
-
-Se comprobarán progresivamente:
-
-- instalación;
-- ejecución;
-- navegación;
-- teclado;
-- conectividad;
-- persistencia de sesión;
-- pérdida de conexión;
-- integración Capacitor;
-- instalación del APK generado.
-
----
-
-## 8. Cobertura
-
-La cobertura automatizada crecerá de manera progresiva.
-
-Metas propuestas:
-
-| Etapa                       |                    Meta |
-| --------------------------- | ----------------------: |
-| Baseline inicial            | 60 % en lógica cubierta |
-| Desarrollo intermedio       |                    70 % |
-| Lógica crítica estabilizada |  80 % cuando sea viable |
-
-La cobertura no sustituye las pruebas funcionales ni las pruebas de seguridad.
-
----
-
-## 9. Responsabilidades
-
-### Ivan Francisco Ramírez
-
-Responsabilidades principales:
-
-- integración técnica;
-- seguridad;
-- API/backend;
-- CI/CD;
-- revisión de pruebas de seguridad;
-- compilación Android;
-- integración de ramas.
-
-### Brayan Lara Barrios
-
-Responsabilidades principales:
-
-- frontend móvil;
-- UI/UX;
-- pruebas funcionales;
-- pruebas de regresión;
-- documentación de resultados;
-- apoyo en automatización de pruebas.
-
-Los dos integrantes participarán en revisiones mediante Pull Requests.
-
----
-
-## 10. Criterios de entrada
-
-Una funcionalidad puede pasar a pruebas cuando:
-
-- su desarrollo principal está implementado;
-- el proyecto compila;
-- sus criterios de aceptación están definidos;
-- existen casos PF y PS asociados;
-- las dependencias necesarias se encuentran disponibles.
-
----
-
-## 11. Criterios de salida
-
-Una HU podrá considerarse terminada cuando:
-
-- cumple sus criterios funcionales;
-- cumple sus criterios de seguridad;
-- se ejecutaron sus pruebas PF;
-- se ejecutaron sus pruebas PS;
-- no existen defectos bloqueantes;
-- el código compila;
-- las pruebas automatizadas disponibles pasan;
-- existe evidencia;
-- la integración se realizó mediante Pull Request cuando corresponda.
-
----
-
-## 12. Estados de prueba
-
-| Estado    | Significado                              |
-| --------- | ---------------------------------------- |
-| PENDIENTE | Todavía no ejecutada                     |
-| APROBADA  | Resultado esperado obtenido              |
-| FALLIDA   | El resultado no coincide con lo esperado |
-| BLOQUEADA | No puede ejecutarse por una dependencia  |
-
----
-
-## 13. Evidencias
-
-Podrán utilizarse:
-
-- capturas de pantalla;
-- videos;
-- logs;
-- GitHub Actions;
-- reportes de cobertura;
-- resultados de análisis de seguridad;
-- Pull Requests;
-- commits;
-- APK;
-- resultados de pruebas manuales.
-
-Las evidencias no deberán incluir:
-
-- contraseñas;
-- tokens;
-- secretos;
-- claves privadas;
-- datos personales reales innecesarios.
-
----
-
-## 14. Trazabilidad
-
-La trazabilidad esperada será:
-
-```text
-Historia de Usuario
-        ↓
-Criterios de aceptación
-        ↓
-PF / PS
-        ↓
-Tarea técnica
-        ↓
-Rama
-        ↓
-Commit
-        ↓
-Pull Request
-        ↓
-GitHub Actions
-        ↓
-Resultado
-```
-
----
-
-## 15. Automatización prevista
-
-La automatización seguirá progresivamente:
-
-```text
-Lint
- ↓
-Unit Tests
- ↓
-Integration Tests
- ↓
-Coverage
- ↓
-Build
- ↓
-Security Checks
- ↓
-Android Build
-```
-
-La ejecución automatizada se implementará mediante GitHub Actions.
-
----
-
-## 16. Mantenimiento
-
-Este documento deberá actualizarse si:
-
-- cambian los criterios de aceptación;
-- aparecen nuevos tipos de pruebas;
-- se incorporan herramientas;
-- cambia la arquitectura;
-- cambia la estrategia CI/CD;
-- aparecen nuevas funcionalidades.
-
----
-
-## 17. Referencias internas
-
-- `TRACEABILITY_MATRIX.md`
-- `../security/SECURITY_CRITERIA.md`
-- `../devops/CI_CD_PLAN.md`
-- GitHub Issues HU-01 a HU-14
-- GitHub Project Casa de Música Castillo - App Móvil
+Para implementación documental se usan IMPLEMENTADO, PARCIAL y PLANIFICADO; esos estados no equivalen a APROBADA de un caso PF/PS. Ivan Francisco Ramírez mantiene integración técnica, API/seguridad/CI/Android; Brayan Lara Barrios (Tackalay) mantiene frontend, funcionales, regresión y resultados. Ambos revisan los PR y actualizan este plan al cambiar requisitos/contrato.
