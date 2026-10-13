@@ -36,7 +36,7 @@ Responsables: Tackalay (frontend), IvanRamirezFrancisco (contratos y ambiente). 
 
 ## PRUEBAS DE ACEPTACIÓN
 
-Maestro CLI 2.11.0 local, emulador Android API 34 google_apis x86_64, Java 21. API 34 cumple minSdk 24 y está documentada por Maestro; compilar con SDK 36 no exige emular API 36. Se reutiliza el APK del workflow Android, sin volver a compilarlo ni usar Maestro Cloud.
+Maestro CLI 2.11.0 local, emulador Android AOSP API 34 (`default`) x86_64, Java 21. API 34 cumple minSdk 24 y está documentada por Maestro; compilar con SDK 36 no exige emular API 36. Se reutiliza el APK del workflow Android, sin volver a compilarlo ni usar Maestro Cloud. Los tres flujos DEMO aprobaron en [run 38401961421](https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/actions/runs/38401961421) sobre `3057af9`; el alcance backend permanece pendiente. AOSP evita el cierre de la app causado por GMS FontsProvider observado y documentado en VALIDATION_REPORT.
 
 Flujos actuales:
 
