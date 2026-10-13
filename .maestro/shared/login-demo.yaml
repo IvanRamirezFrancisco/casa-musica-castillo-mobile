@@ -5,9 +5,11 @@ appId: com.casademusicacastillo.app
 - extendedWaitUntil:
     visible: "Bienvenido de nuevo"
     timeout: 30000
-- tapOn: "ejemplo@correo.com"
+- tapOn:
+    id: "cmc-input-0"
 - inputText: "qa@example.test"
-- tapOn: "Ingresa tu contraseña"
+- tapOn:
+    id: "cmc-input-1"
 - inputText: "demo-only"
 - hideKeyboard
 - tapOn: "Iniciar sesión"
