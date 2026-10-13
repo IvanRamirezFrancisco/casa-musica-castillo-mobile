@@ -33,7 +33,10 @@
                 "output": "assets"
               }
             ],
-            "styles": ["src/global.scss", "src/theme/variables.scss"],
+            "styles": [
+              "src/global.scss",
+              "src/theme/variables.scss"
+            ],
             "scripts": [],
             "browser": "src/main.ts"
           },
@@ -97,18 +100,89 @@
           "options": {
             "tsConfig": "tsconfig.spec.json",
             "buildTarget": "::development",
-            "setupFiles": ["src/test-setup.ts"]
+            "setupFiles": [
+              "src/test-setup.ts"
+            ]
           },
           "configurations": {
             "ci": {
-              "watch": false
+              "watch": false,
+              "coverage": true,
+              "coverageReporters": [
+                "text",
+                "html",
+                "lcov",
+                "json-summary"
+              ],
+              "coverageInclude": [
+                "src/app/**/*.ts"
+              ],
+              "coverageExclude": [
+                "**/*.spec.ts",
+                "**/*.test.ts",
+                "**/*.model.ts"
+              ],
+              "reporters": [
+                "default",
+                [
+                  "junit",
+                  {
+                    "outputFile": "reports/unit-tests.xml"
+                  }
+                ]
+              ],
+              "coverageThresholds": {
+                "statements": 60,
+                "branches": 60,
+                "functions": 60,
+                "lines": 60
+              }
+            },
+            "integration": {
+              "watch": false,
+              "include": [
+                "**/*.integration.spec.ts"
+              ],
+              "reporters": [
+                "default",
+                [
+                  "junit",
+                  {
+                    "outputFile": "reports/integration-tests.xml"
+                  }
+                ]
+              ]
+            },
+            "regression": {
+              "watch": false,
+              "include": [
+                "app/features/auth/**/*.spec.ts",
+                "app/features/home/**/*.spec.ts",
+                "app/features/cart/**/*.spec.ts",
+                "app/features/checkout/**/*.spec.ts",
+                "app/features/orders/**/*.spec.ts",
+                "app/features/profile/**/*.spec.ts",
+                "app/core/services/**/*.spec.ts"
+              ],
+              "reporters": [
+                "default",
+                [
+                  "junit",
+                  {
+                    "outputFile": "reports/regression-tests.xml"
+                  }
+                ]
+              ]
             }
           }
         },
         "lint": {
           "builder": "@angular-eslint/builder:lint",
           "options": {
-            "lintFilePatterns": ["src/**/*.ts", "src/**/*.html"]
+            "lintFilePatterns": [
+              "src/**/*.ts",
+              "src/**/*.html"
+            ]
           }
         }
       }
