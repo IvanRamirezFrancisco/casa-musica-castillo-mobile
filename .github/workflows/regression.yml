@@ -1,0 +1,27 @@
+name: REGRESIÓN - Suite crítica
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  critical:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci
+      - name: Reutilizar unitarias e integración de recorridos críticos
+        run: npm run test:regression
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: critical-regression
+          path: reports/regression-tests.xml
+          if-no-files-found: error
+  android-critical:
+    needs: critical
+    uses: ./.github/workflows/android-build.yml

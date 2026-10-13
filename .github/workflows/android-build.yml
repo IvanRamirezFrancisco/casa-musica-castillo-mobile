@@ -11,6 +11,7 @@ on:
       - develop
       - main
 
+  workflow_call:
   workflow_dispatch:
 
 permissions:
@@ -77,3 +78,8 @@ jobs:
           retention-days: 14
 
 
+
+  acceptance:
+    name: ACEPTACIÓN móvil DEMO
+    needs: android-build
+    uses: ./.github/workflows/acceptance.yml
