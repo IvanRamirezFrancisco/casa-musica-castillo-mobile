@@ -59,7 +59,21 @@ PR abierto hacia develop: [#73](https://github.com/IvanRamirezFrancisco/casa-mus
 
 La jerarquía Android mostró IDs reales `cmc-input-0` y `cmc-input-1`; se corrigió el selector del login compartido, sin eliminar pruebas ni cambiar la app. La ejecución posterior se consulta en los [checks del PR](https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/pull/73/checks). Este registro conserva el fallo observado y no presupone el resultado de la reejecución.
 
-Reejecuciones: 38398640514 aprobó pedidos/perfil; se corrigió el selector de radio con texto agrupado y se evitó relanzar/limpiar dos veces dentro del flujo auth. En 38400022024 aprobaron auth y pedidos/perfil. Compra falló porque Android mató el proceso: `depends on provider com.google.android.gms/.fonts.provider.FontsProvider in dying proc`. Se cambia el emulador a AOSP `default` API 34/x86_64 (disponibilidad comprobada en XML oficial SDK) sin modificar el APK ni omitir pruebas. La compra DEMO completa requiere confirmar la nueva ejecución.
+Reejecuciones: 38398640514 aprobó pedidos/perfil; se corrigió el selector de radio con texto agrupado y se evitó relanzar/limpiar dos veces dentro del flujo auth. En 38400022024 aprobaron auth y pedidos/perfil. Compra falló porque Android mató el proceso: `depends on provider com.google.android.gms/.fonts.provider.FontsProvider in dying proc`. Se cambió el emulador a AOSP `default` API 34/x86_64 (disponibilidad comprobada en XML oficial SDK) sin modificar el APK ni omitir pruebas.
+
+## VERIFICACIÓN APROBADA SOBRE `3057af9`
+
+Todos los workflows activados en el PR aprobaron el 13/10/2026. La aceptación ejecutó realmente **3/3 flujos DEMO**: pedidos/perfil (43 s), compra/entrega/pago/confirmación demo (50 s) y autenticación/navegación (31 s); total 2 min 4 s. No equivale a aprobación de transacciones, autenticación o aislamiento en backend.
+
+| WORKFLOW | RUN APROBADO | ARTIFACT REAL |
+|---|---|---|
+| CI | [38401960769](https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/actions/runs/38401960769) | coverage-and-unit-tests: HTML/lcov/JUnit |
+| INTEGRACIÓN frontend | [38401960752](https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/actions/runs/38401960752) | frontend-integration: JUnit |
+| SECURITY | [38401960884](https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/actions/runs/38401960884) | audit/CodeQL en logs/alertas |
+| k6 INSPECT | [38401960948](https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/actions/runs/38401960948) | validación sin solicitudes; sin métricas de carga |
+| ANDROID + ACEPTACIÓN DEMO | [38401961421](https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/actions/runs/38401961421) | casa-musica-castillo-debug-apk y acceptance-maestro-demo: JUnit/capturas/logs |
+
+Artifacts comprobados existentes y no expirados. Tras cambios documentales se consultan los checks del SHA más reciente del PR; esta tabla identifica exactamente el SHA y los runs ejecutados. API remota, LOAD/STRESS y PF/PS de backend siguen PENDIENTES.
 
 Evidencia añadida y comprobada en TT-42–TT-50 (#61–#69), todas abiertas. Project/HU/iteraciones/responsables conservados. Regresión local: 47 tests; CI reejecuta 103. regression.yml manual reutiliza suites/Android; un nuevo dispatch requiere que GitHub habilite ese workflow en la rama predeterminada. No se modifica main ni se hace merge para forzarlo.
 
