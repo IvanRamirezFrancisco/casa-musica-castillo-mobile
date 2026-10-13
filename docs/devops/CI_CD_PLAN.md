@@ -1,6 +1,6 @@
 # PLAN CI/CD Y EVIDENCIA DE PRUEBAS
 
-Actualizado 12/10/2026. TT-43–50. Plataforma GitHub Actions; XP + DevOps.
+Actualizado 13/10/2026. TT-43–50. Plataforma GitHub Actions; XP + DevOps. Evidencia del PR #73 en docs/testing/VALIDATION_REPORT.md.
 
 ## Base verificada
 
@@ -60,7 +60,7 @@ k6 inspect -e K6_BASE_URL=https://example.invalid -e K6_AUTHORIZED_ORIGIN=https:
 
 ## Aceptación móvil
 
-Maestro 2.11.0 se descarga de release oficial fijado; Java 21, Android API34 google_apis/x86_64/Pixel6 y KVM en runner Ubuntu. No se usa maestro cloud ni API key. `.maestro/config.yaml` selecciona tres flujos, el login común se reutiliza como subflujo. Datos `example.test` y contraseña de demostración solo alimentan formularios locales, sin autenticar una cuenta real.
+Maestro 2.11.0 se descarga de release oficial fijado; Java 21, Android AOSP API34 (`default`)/x86_64/Pixel6 y KVM en runner Ubuntu. No se usa maestro cloud ni API key. `.maestro/config.yaml` selecciona tres flujos, el formulario de login común se reutiliza como subflujo y cada flujo inicializa la app una vez. Datos `example.test` y contraseña de demostración solo alimentan formularios locales, sin autenticar una cuenta real. Los tres flujos aprobaron en run 38401961421 sobre `3057af9`. La imagen AOSP evita el fallo observado del proveedor de fuentes GMS; no acredita integración con Google Play Services.
 
 Ejecutar localmente con APK instalado y dispositivo/emulador disponible:
 
