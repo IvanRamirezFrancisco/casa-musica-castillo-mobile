@@ -1,670 +1,90 @@
-# Plan de Integración y Entrega Continua
+# PLAN CI/CD Y EVIDENCIA DE PRUEBAS
 
-## Casa de Música Castillo - Aplicación Móvil
+Actualizado 12/10/2026. TT-43–50. Plataforma GitHub Actions; XP + DevOps.
 
-## 1. Objetivo
+## Base verificada
 
-Este documento define el proceso de integración continua, pruebas, seguridad, compilación Android, entrega y liberación de versiones de la aplicación móvil Casa de Música Castillo.
+`develop` inicial `fc071671adea59d09776c0bc718a089ca3488327`. Se conservan los pasos existentes de los cuatro pipelines; no se reescriben versiones de acciones ya exitosas. La rama de trabajo parte de develop actualizado: `chore/test-pipelines-completion`. Integración mediante PR hacia develop, sin merge automático y sin escribir directamente main/develop.
 
-El proceso utiliza Extreme Programming (XP) junto con prácticas DevOps.
+Runs iniciales exitosos del mismo SHA:
 
----
+- [CI](https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/actions/runs/37987021496)
+- [Security](https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/actions/runs/37987021478)
+- [Android](https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/actions/runs/37987021517)
+- [Staging](https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/actions/runs/37987021399)
 
-## 2. Ciclo DevOps
+## Flujos implementados
 
-El proyecto utiliza las siguientes etapas:
+| WORKFLOW | DISPARADOR | PASOS / TIPO DE PRUEBA | EVIDENCIA |
+|---|---|---|---|
+| `ci.yml` | PR/push develop/main, manual | npm ci, lint, UNITARIAS + cobertura V8, Angular build | `coverage-and-unit-tests`: HTML/lcov/JSON/JUnit |
+| `security.yml` | PR/push develop/main, manual | audit producción bloqueante moderate, audit completo informativo; CodeQL JS/TS | Logs y Code scanning |
+| `integration.yml` | PR/push develop: frontend; manual: frontend + API | INTEGRACIÓN TestBed; Postman CLI local con ambiente testing | JUnit frontend/API |
+| `android-build.yml` | PR/push develop/main, manual, workflow_call | Build web, cap sync, Gradle debug y artifact; llama aceptación después | APK debug + aceptación |
+| `acceptance.yml` | workflow_call desde Android | Descarga APK del mismo run, emulador KVM/API34, Maestro local | `acceptance-maestro-demo`: JUnit/capturas/debug |
+| `regression.yml` | Manual | REGRESIÓN crítica Vitest/TestBed y reutiliza Android→Acceptance | critical-regression + APK + Maestro |
+| `performance.yml` | PR solo valida scripts; carga exclusivamente manual | Job PERFORMANCE/LOAD o STRESS/ESFUERZO con k6 OSS, selección excluyente | Resumen y serie JSON |
+| `staging-apk.yml` | Push develop/manual | Conserva build y entrega APK staging original | APK staging con número de run |
 
-```text
-PLAN
- ↓
-CODE
- ↓
-BUILD
- ↓
-TEST
- ↓
-SECURITY
- ↓
-RELEASE
- ↓
-DEPLOY
- ↓
-MONITOR
+Android publica el APK antes de aceptación; si falla Maestro, el workflow falla aunque el artifact debug exista. No se afirma que staging dependa de CI/Security: actualmente son flujos paralelos. Descargar artifact no es desplegar backend ni publicar Play Store. Revisión humana debe comprobar gates del mismo SHA antes de entrega. No se alteran protecciones de rama ni relaciones del Project.
+
+## Cobertura y automatización local
+
 ```
-
-Estas mismas etapas se encuentran representadas dentro de GitHub Projects mediante el campo `Etapa DevOps`.
-
----
-
-## 3. PLAN
-
-La herramienta principal de planeación es GitHub Projects.
-
-En esta etapa se administran:
-
-- Product Backlog;
-- Historias de Usuario;
-- tareas técnicas;
-- responsables;
-- prioridades;
-- Story Points;
-- Iteraciones XP;
-- Status;
-- sub-issues;
-- dependencias;
-- productos verificables;
-- Etapa DevOps.
-
----
-
-## 4. CODE
-
-El código será administrado mediante Git y GitHub.
-
-Estrategia de ramas:
-
-```text
-main
- ↑
-develop
- ↑
-feature/*
-chore/*
-fix/*
-```
-
-### main
-
-Representa versiones estables y aprobadas.
-
-### develop
-
-Representa la rama de integración del equipo.
-
-### feature/\*
-
-Se utilizará para desarrollar funcionalidades.
-
-Ejemplo:
-
-```text
-feature/HU-01-login
-```
-
-### chore/\*
-
-Se utilizará para tareas técnicas, configuración o infraestructura.
-
-Ejemplo:
-
-```text
-chore/devops-quality-baseline
-```
-
-### fix/\*
-
-Se utilizará para correcciones específicas.
-
----
-
-## 5. Pull Requests
-
-La integración se realizará mediante Pull Requests.
-
-Flujo:
-
-```text
-Rama de trabajo
-      ↓
-Commit
-      ↓
-Push
-      ↓
-Pull Request
-      ↓
-CI / Security
-      ↓
-Revisión
-      ↓
-Merge
-```
-
-Cuando corresponda, el Pull Request deberá relacionarse con la Issue asociada.
-
----
-
-## 6. BUILD
-
-Cada cambio deberá comprobar que la aplicación puede construirse correctamente.
-
-Proceso previsto:
-
-```text
-Checkout
- ↓
-Node.js
- ↓
 npm ci
- ↓
-Angular/Ionic Build
-```
-
-Comando base:
-
-```bash
+npm run lint
+npm test -- --configuration=ci
+npm run test:integration
+npm run test:regression
 npm run build
 ```
 
-Un fallo de compilación bloqueará la integración.
+Angular 22 utiliza `@angular/build:unit-test`, no Karma. V8 4.0.18 coincide con Vitest 4.0.18. Reportes en `coverage/app/`; se incluyen fuentes sin pruebas del alcance src/app y se excluyen specs/modelos de tipos. Gate 60 % para las cuatro métricas; metas 70 % intermedio/80 % crítico no se declaran por anticipado. Ver TEST_PLAN para alcance demo.
 
----
+## Configuración de ambientes externos
 
-## 7. TEST
+Configurar ambiente GitHub **testing** con restricciones/aprobaciones apropiadas según disponibilidad del repositorio, sin compartir secretos con PRs de forks. Ningún job remoto API/k6 se dispara en PR. No se crean secretos vacíos para simular éxito.
 
-La etapa TEST ejecutará progresivamente:
+API variables: `API_BASE_URL`, `API_AUTHORIZED_ORIGIN`, `API_TEST_AUTHORIZED=true`, `API_USER_ID` cuando corresponda. Secretos: `API_USER_TOKEN` (ROLE_USER fixture), `API_TEST_EMAIL`, `API_TEST_PASSWORD`. La opción manual elige PUBLIC_CONTRACT, AUTHENTICATED_CONTRACT o LOGIN_CONTRACT. Si falta configuración, el job remoto se omite y el resumen indica NO EJECUTADO; no cuenta como prueba aprobada. El runner local falla con mensaje BLOCKED. Ver [contrato](../testing/API_CONTRACT.md).
 
-```text
-Lint
- ↓
-Unit Tests
- ↓
-Integration Tests
- ↓
-Coverage
- ↓
-Build
+k6 variables: `K6_BASE_URL` HTTPS, `K6_AUTHORIZED_ORIGIN` idéntico al origen y `K6_TEST_AUTHORIZED=true`. El operador debe confirmar el permiso y la carga máxima 20 VUs en el input manual. Solo ambiente no productivo expresamente autorizado. El script rechaza configuración faltante y redirecciones; concurrencia única. Revisar métricas de servidor antes y después, abortar si hay impacto. Nunca usar credenciales embebidas en URLs.
+
+Para inspección estática sin red:
+
+```
+k6 inspect -e K6_BASE_URL=https://example.invalid -e K6_AUTHORIZED_ORIGIN=https://example.invalid -e K6_TEST_AUTHORIZED=true tests/performance/load.js
+k6 inspect -e K6_BASE_URL=https://example.invalid -e K6_AUTHORIZED_ORIGIN=https://example.invalid -e K6_TEST_AUTHORIZED=true tests/performance/stress.js
 ```
 
-El plan detallado de pruebas se encuentra en:
+`inspect` evalúa opciones sin enviar carga. El dominio reservado anterior sirve exclusivamente para inspección, no es un ambiente de backend ni evidencia de rendimiento. Ningún resultado de inspect demuestra thresholds cumplidos.
 
-```text
-docs/testing/TEST_PLAN.md
+## Aceptación móvil
+
+Maestro 2.11.0 se descarga de release oficial fijado; Java 21, Android API34 google_apis/x86_64/Pixel6 y KVM en runner Ubuntu. No se usa maestro cloud ni API key. `.maestro/config.yaml` selecciona tres flujos, el login común se reutiliza como subflujo. Datos `example.test` y contraseña de demostración solo alimentan formularios locales, sin autenticar una cuenta real.
+
+Ejecutar localmente con APK instalado y dispositivo/emulador disponible:
+
+```
+adb install -r android/app/build/outputs/apk/debug/app-debug.apk
+maestro test --format JUNIT --output reports/maestro/results.xml --test-output-dir reports/maestro --debug-output reports/maestro/debug .maestro
 ```
 
-La trazabilidad de pruebas se encuentra en:
+Los flujos verifican UI demo y no satisfacen automáticamente PS ni aceptación de servidor. La suite se debe extender cuando catálogo/favoritos/API estén implementados. No emitir un PASS por la sola validez de YAML.
 
-```text
-docs/testing/TRACEABILITY_MATRIX.md
-```
+## Seguridad, evidencia y operación
 
----
+Permisos mínimos de lectura salvo CodeQL que necesita security-events:write ya existente. Sin `pull_request_target`, sin secretos en aceptación/coverage, sin modificar backend. npm audit completo sigue informativo; producción sigue bloqueante. Revisar CodeQL incluso si el job pasa: subir análisis no significa cero hallazgos.
 
-## 8. SECURITY
+Artifacts de pruebas se suben con `if: always()` para diagnosticar fallos. Ausencia de reporte no es éxito. Retención de entrega 14 días; descargar evidencia antes de expirar. Solo estadísticas/JUnit/capturas demo, nunca respuestas de login o archivos temporales de credenciales. `.gitignore` excluye reports/coverage.
 
-La etapa SECURITY incluirá progresivamente:
+En cada run registrar SHA, fecha, versión, comando, resultado y ambiente. Ante fallo, consultar job/log, corregir en rama, repetir checks del cambio y enlazar run final. Mantener historial de fallos relevante; no ocultarlos con continue-on-error en pruebas. Tras PR no hacer merge ni cerrar Issues sin cumplir sus criterios.
 
-- análisis de dependencias;
-- análisis estático;
-- control de secretos;
-- pruebas PS-HUXX-\*;
-- revisión de criterios de seguridad.
+Ver [TEST_SCHEDULE](../testing/TEST_SCHEDULE.md) y [TEST_TOOLS](../testing/TEST_TOOLS.md) para calendario, responsables y fuentes. En Word/PDF las actividades de prueba irán EN MAYÚSCULAS y con fuente de color diferente.
 
-Los criterios transversales se encuentran definidos en:
+## Política de desarrollo y entrega conservada
 
-```text
-docs/security/SECURITY_CRITERIA.md
-```
+PLAN se administra en GitHub Project (backlog, HU/TT, puntos, prioridades, responsables, XP, dependencias, sub-issues y PV). CODE usa ramas feature/* para funcionalidades, chore/* para infraestructura y fix/* para correcciones; develop integra trabajo revisado y main representa versiones estables. BUILD, TEST y SECURITY generan controles/evidencias; RELEASE requiere build y pruebas aprobados, ausencia de defectos bloqueantes y revisión del equipo. PV-01–05 siguen siendo los incrementos planificados.
 
----
+DEPLOY actualmente distribuye APK de prueba mediante artifacts. Publicación en Google Play, firma de release y versionado por tags `v0.x.y` están PLANIFICADOS y requieren configuración/credenciales propias; no se declaran implementados ni se crean tags en esta actividad. MONITOR actualmente revisa Actions, defectos, vulnerabilidades e Issues; observabilidad de producción sigue PENDIENTE. Protección de ramas/checks obligatorios es una decisión posterior del equipo, no una configuración acreditada por este documento.
 
-## 9. Integración continua
-
-GitHub Actions será la plataforma de automatización.
-
-Flujo previsto:
-
-```text
-Pull Request
-     ↓
-Checkout
-     ↓
-Configurar Node
-     ↓
-npm ci
-     ↓
-Lint
-     ↓
-Tests
-     ↓
-Coverage
-     ↓
-Security Checks
-     ↓
-Build
-```
-
-Un fallo en un control obligatorio deberá corregirse antes del merge.
-
----
-
-## 10. Workflow de CI
-
-Archivo previsto:
-
-```text
-.github/workflows/ci.yml
-```
-
-Responsabilidades:
-
-- instalar dependencias;
-- ejecutar lint;
-- ejecutar pruebas;
-- obtener cobertura;
-- construir la aplicación.
-
-Relacionado con:
-
-```text
-TT-43 | Implementar pipeline CI de calidad
-```
-
----
-
-## 11. Workflow de seguridad
-
-Archivo previsto:
-
-```text
-.github/workflows/security.yml
-```
-
-Responsabilidades:
-
-- revisar dependencias;
-- ejecutar análisis estático;
-- detectar vulnerabilidades;
-- apoyar el control de seguridad.
-
-Relacionado con:
-
-```text
-TT-45 | Implementar pipeline de análisis de seguridad
-```
-
----
-
-## 12. Workflow Android
-
-Archivo previsto:
-
-```text
-.github/workflows/android-build.yml
-```
-
-Flujo:
-
-```text
-npm ci
- ↓
-npm run build
- ↓
-npx cap sync android
- ↓
-Configurar Java
- ↓
-Gradle
- ↓
-assembleDebug
- ↓
-APK
-```
-
-Relacionado con:
-
-```text
-TT-46 | Automatizar compilación Android
-```
-
----
-
-## 13. Development
-
-Ramas:
-
-```text
-feature/*
-chore/*
-fix/*
-```
-
-Propósito:
-
-Desarrollo individual antes de la integración.
-
----
-
-## 14. Integration
-
-Rama:
-
-```text
-develop
-```
-
-Propósito:
-
-Integración del trabajo aprobado del equipo.
-
----
-
-## 15. Staging
-
-El entorno de staging utilizará inicialmente:
-
-```text
-develop
-+
-GitHub Actions
-+
-APK de prueba
-```
-
-Flujo:
-
-```text
-develop
- ↓
-CI
- ↓
-Security
- ↓
-Android Build
- ↓
-APK
- ↓
-Pruebas
-```
-
-Relacionado con:
-
-```text
-TT-47 | Implementar entrega de APK de staging
-```
-
----
-
-## 16. Production
-
-Rama:
-
-```text
-main
-```
-
-Representará versiones estables y aprobadas.
-
-La publicación en Google Play u otra tienda solamente será considerada implementada cuando existan:
-
-- cuenta correspondiente;
-- credenciales;
-- firma;
-- configuración;
-- permisos necesarios.
-
-Hasta entonces, el despliegue automatizado se limitará a los artefactos Android del entorno de staging o release.
-
----
-
-## 17. RELEASE
-
-Una versión podrá pasar a RELEASE cuando:
-
-- el build sea exitoso;
-- CI sea satisfactorio;
-- las pruebas obligatorias pasen;
-- no existan defectos bloqueantes;
-- los controles de seguridad requeridos sean satisfactorios;
-- exista evidencia verificable.
-
-Los productos verificables PV-01 a PV-05 representan incrementos planificados del proyecto.
-
----
-
-## 18. Versionado
-
-Cuando el proceso se encuentre estable podrán utilizarse etiquetas Git.
-
-Ejemplos:
-
-```text
-v0.1.0
-v0.2.0
-v1.0.0
-```
-
----
-
-## 19. DEPLOY
-
-Inicialmente DEPLOY representará la distribución del APK de staging para pruebas.
-
-```text
-GitHub Actions
-     ↓
-APK
-     ↓
-Artifact
-     ↓
-Equipo
-     ↓
-Pruebas
-```
-
-Esta etapa no equivale todavía a una publicación automática en Google Play.
-
----
-
-## 20. MONITOR
-
-Durante la etapa académica se supervisarán:
-
-- ejecuciones de GitHub Actions;
-- errores de CI;
-- errores reportados;
-- fallos de pruebas;
-- vulnerabilidades;
-- incidencias registradas mediante GitHub Issues.
-
-En una etapa posterior podrán incorporarse herramientas específicas de observabilidad.
-
----
-
-## 21. Flujo completo
-
-```text
-GitHub Project
-      ↓
-Issue
-      ↓
-feature/* / chore/*
-      ↓
-Commit
-      ↓
-Push
-      ↓
-Pull Request
-      ↓
-┌─────────────────┐
-│ Lint            │
-│ Tests           │
-│ Coverage        │
-│ Security        │
-│ Build           │
-└─────────────────┘
-      ↓
-develop
-      ↓
-Android Build
-      ↓
-APK Staging
-      ↓
-Validación
-      ↓
-main
-      ↓
-Tag / Release
-```
-
----
-
-## 22. Criterios para merge
-
-Un Pull Request podrá integrarse cuando:
-
-- compile correctamente;
-- no tenga errores obligatorios de lint;
-- las pruebas automatizadas requeridas pasen;
-- los controles de seguridad obligatorios pasen;
-- esté relacionado con el trabajo planificado;
-- no contenga secretos;
-- haya sido revisado cuando corresponda.
-
----
-
-## 23. Manejo de fallos
-
-Si un pipeline falla:
-
-```text
-Pull Request
-      ↓
-Check fallido
-      ↓
-Corrección en la rama
-      ↓
-Nuevo commit
-      ↓
-Nueva ejecución automática
-```
-
-No deberá corregirse un fallo mediante cambios directos en `main`.
-
----
-
-## 24. Artefactos
-
-Los pipelines podrán producir:
-
-- resultados de pruebas;
-- reportes de cobertura;
-- logs;
-- APK debug o staging;
-- evidencia de compilación.
-
-Los artefactos deberán poder reproducirse desde el código versionado.
-
----
-
-## 25. Protección de ramas
-
-Se utilizará progresivamente protección sobre:
-
-```text
-develop
-main
-```
-
-Los checks obligatorios se activarán después de implementar y estabilizar los workflows.
-
-Esto evita bloquear el repositorio con pipelines todavía incompletos.
-
----
-
-## 26. Secretos de CI/CD
-
-Los secretos utilizados por pipelines deberán almacenarse mediante mecanismos seguros de GitHub.
-
-No deberán escribirse directamente en:
-
-- código;
-- workflows;
-- README;
-- commits;
-- logs.
-
----
-
-## 27. Relación con GitHub Project
-
-Las tareas relacionadas con este plan incluyen:
-
-```text
-TT-42 | Definir Plan de Pruebas y matriz de trazabilidad
-TT-43 | Implementar pipeline CI de calidad
-TT-44 | Automatizar pruebas unitarias e integración con cobertura
-TT-45 | Implementar pipeline de análisis de seguridad
-TT-46 | Automatizar compilación Android
-TT-47 | Implementar entrega de APK de staging
-TT-48 | Implementar pruebas funcionales y regresión
-TT-49 | Ejecutar y documentar pruebas de seguridad
-TT-50 | Documentar CI/CD, pruebas y evidencias
-```
-
----
-
-## 28. Evidencias
-
-Se conservarán como evidencia:
-
-- capturas de GitHub Project;
-- Issues;
-- Pull Requests;
-- ejecuciones de GitHub Actions;
-- resultados de pruebas;
-- resultados de análisis de seguridad;
-- reportes de cobertura;
-- APK generados;
-- commits;
-- releases cuando correspondan.
-
----
-
-## 29. Estado actual del baseline
-
-Al momento de crear este documento:
-
-- GitHub Project está configurado.
-- Existen HU-01 a HU-14.
-- Existen TT-01 a TT-50.
-- Existen PV-01 a PV-05.
-- Existen las ramas `main` y `develop`.
-- Se utiliza `chore/devops-quality-baseline` para preparar esta infraestructura.
-- Los workflows automáticos todavía deberán implementarse.
-
----
-
-## 30. Evolución prevista
-
-El proceso evolucionará desde:
-
-```text
-Build manual
-+
-Pruebas principalmente manuales
-```
-
-hacia:
-
-```text
-CI automatizado
-+
-Pruebas automatizadas
-+
-Security checks
-+
-Android build
-+
-APK de staging
-+
-Release controlado
-```
-
----
-
-## 31. Referencias internas
-
-- `../testing/TEST_PLAN.md`
-- `../testing/TRACEABILITY_MATRIX.md`
-- `../security/SECURITY_CRITERIA.md`
-- GitHub Project Casa de Música Castillo - App Móvil
+El proceso exige que un PR corresponda a trabajo planificado, compile, pase controles obligatorios, no contenga secretos y tenga revisión antes de merge. En esta actividad se entrega el PR abierto y no se realiza merge. Un fallo se corrige en la rama con otro commit; nunca mediante cambios directos a main.
