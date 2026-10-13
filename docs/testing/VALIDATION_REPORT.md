@@ -77,6 +77,34 @@ Artifacts comprobados existentes y no expirados. Tras cambios documentales se co
 
 Evidencia añadida y comprobada en TT-42–TT-50 (#61–#69), todas abiertas. Project/HU/iteraciones/responsables conservados. Regresión local: 47 tests; CI reejecuta 103. regression.yml manual reutiliza suites/Android; un nuevo dispatch requiere que GitHub habilite ese workflow en la rama predeterminada. No se modifica main ni se hace merge para forzarlo.
 
+## CIERRE ACADÉMICO Y CHECKS DEL PR #73
+
+Continuidad confirmada el 13/10/2026 sobre la rama existente, HEAD remoto `1d7bc3f57892263527ef6f12ae25c18e50d8f630`, base develop `fc071671adea59d09776c0bc718a089ca3488327`. No se creó otro PR/rama ni se modificaron main, develop, PR #71, backend o estados de Issues.
+
+El intento 1 del [run 38403949090](https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/actions/runs/38403949090/attempts/1), job 115319348301, aprobó autenticación y pedidos/perfil, pero falló al esperar `Bienvenido de nuevo` en el arranque de compra. Su artifact `acceptance-maestro-demo` confirma en logcat: limpieza de datos a las 13:23:00, arranque del proceso 2763 a las 13:23:01.671 y **`Destroy timeout of remove-task` / `Killing 2763 ... remove task`** a las 13:23:01.812–.813. Es una carrera de destrucción de la tarea anterior durante el nuevo arranque; no un fallo del selector de compra ni del proveedor GMS en AOSP. Se reejecutó únicamente el job fallido (intento 2) antes de considerar cambios.
+
+**Reintento confirmado:** [run 38403949090, intento 2](https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/actions/runs/38403949090/attempts/2), job 115357239634, aprobado. Maestro ejecutó **3/3 flujos DEMO**: pedidos/perfil 45 s, compra 51 s y autenticación 33 s (2 min 9 s). Artifact real `acceptance-maestro-demo` ID 11823377777, JUnit/capturas/logs. Resolución del último fallo: reejecución del job transitorio; ningún cambio de APK, selector, pruebas, timeout o controles.
+
+| CHECK EN SHA `1d7bc3f` | RUN | ESTADO VERIFICADO |
+|---|---|---|
+| CI - Calidad | 38403948989 | PASS |
+| INTEGRACIÓN frontend | 38403949027 | PASS; API omitida en PR |
+| Security audit / CodeQL | 38403948889 | PASS |
+| k6 validación | 38403948949 | PASS; LOAD/STRESS omitidos |
+| Android APK + ACEPTACIÓN DEMO | 38403949090, intento 2 | PASS; Maestro 3/3 ejecutados |
+
+La publicación de este cierre documental produce un nuevo SHA y nuevas ejecuciones. Su SHA final y runs se registran en el comentario de cierre del [PR #73](https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/pull/73); los [checks](https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/pull/73/checks) deben corresponder a ese HEAD. Esta tabla conserva evidencia ejecutada sobre el SHA indicado y no anticipa el resultado de commits posteriores.
+
+### COMPROBACIÓN DE LOS TRES REQUISITOS DOCENTES
+
+| REQUISITO | EVIDENCIA VERSIONADA | ALCANCE |
+|---|---|---|
+| 1. Definir y calendarizar siete tipos por requerimiento, módulo y sprint | TEST_PLAN + TEST_SCHEDULE: diez columnas explícitas y correspondencia de las 14 HU con módulos/sprints reales del Project, verificada el 13/10 | Definición/planeación completa; ejecución distingue DEMO, PLANIFICADO y PENDIENTE |
+| 2. Recursos/software y justificación | TEST_TOOLS: herramienta, finalidad/justificación, evidencia, responsable y momento/lugar de ejecución | Herramientas existentes conservadas; versiones y fuentes oficiales documentadas |
+| 3. Pipelines por tipo | CI_CD_PLAN y ocho workflows existentes | ci: unitarias/estático/coverage; integration: integración; Android→acceptance: aceptación; regression: regresión reutilizada; performance: carga/estrés manual; security: complementaria; Android/staging: compilación/entrega |
+
+En Word/PDF las actividades de prueba irán **EN MAYÚSCULAS y en azul #1F4E79**. El calendario no simula color en Markdown. Implementar la infraestructura no convierte API/carga remota ni PF/PS de backend en PASS.
+
 ## PENDIENTES FUNCIONALES
 
 API móvil real, guards/sesión/HTTP, catálogo/búsqueda/detalle/favoritos completos y contrato cliente de checkout/pedidos permanecen fuera de la implementación actual. Casos PF/PS sin evidencia siguen PENDIENTES. Se conserva main/develop, backend, PR #71 e Issues abiertas.
@@ -89,7 +117,7 @@ API móvil real, guards/sesión/HTTP, catálogo/búsqueda/detalle/favoritos comp
 4. Security: audit producción y CodeQL; no afirmar cero alertas solo por job verde.
 5. Android: APK del mismo SHA y, si se ejecuta, JUnit/capturas reales Maestro.
 6. Performance: inspect sin red, scripts/umbrales y resumen NO EJECUTADO si no hay ambiente. No presentar gráficos de carga inexistentes.
-7. TEST_SCHEDULE con XP/HU/tipo/objetivo/herramienta/responsable/pipeline/evidencia/estado; títulos coloreados en Word/PDF.
+7. TEST_SCHEDULE con REQUERIMIENTO/HU + MÓDULO + SPRINT/ITERACIÓN XP + tipo/objetivo/herramienta/responsable/pipeline/evidencia/estado; títulos coloreados en Word/PDF.
 8. Issues TT-42–50 con referencia al PR/evidencia y estado abierto; Project con iteraciones reales.
 
 Descargar artifacts antes de su expiración. Ocultar secretos/tokens/correos reales al capturar. Fechar toda evidencia y conservar SHA.
