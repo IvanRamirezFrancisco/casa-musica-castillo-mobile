@@ -12,5 +12,6 @@ tags: [critical, demo]
 - back
 - tapOn: "¿Olvidaste tu contraseña?"
 - assertVisible: "Recuperar acceso"
+- back
 - runFlow: shared/login-demo.yaml
 - takeScreenshot: reports/maestro/auth-demo
