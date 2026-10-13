@@ -1,0 +1,25 @@
+appId: com.casademusicacastillo.app
+name: ACEPTACIÓN DEMO - HU04 HU09 HU10 HU11
+tags: [critical, demo]
+---
+- runFlow: shared/login-demo.yaml
+- tapOn: "Carrito"
+- assertVisible: "Guitarra Acústica Yamaha"
+- scrollUntilVisible:
+    element: "Continuar compra"
+    direction: DOWN
+- tapOn: "Continuar compra"
+- assertVisible: "Selecciona entrega y pago para continuar"
+- tapOn: "Seleccionar método de entrega"
+- tapOn: "Recoger en tienda"
+- tapOn: "Confirmar método"
+- tapOn: "Seleccionar método de pago"
+- tapOn: "Transferencia bancaria"
+- tapOn: "Confirmar método"
+- scrollUntilVisible:
+    element: "Confirmar pago"
+    direction: DOWN
+- tapOn: "Confirmar pago"
+- assertVisible: "¡Pedido Confirmado!"
+- assertVisible: "Este es un pedido demostrativo. No se realizaron cobros reales."
+- takeScreenshot: reports/maestro/purchase-demo
