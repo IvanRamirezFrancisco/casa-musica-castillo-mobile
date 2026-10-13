@@ -59,6 +59,8 @@ PR abierto hacia develop: [#73](https://github.com/IvanRamirezFrancisco/casa-mus
 
 La jerarquía Android mostró IDs reales `cmc-input-0` y `cmc-input-1`; se corrigió el selector del login compartido, sin eliminar pruebas ni cambiar la app. La ejecución posterior se consulta en los [checks del PR](https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/pull/73/checks). Este registro conserva el fallo observado y no presupone el resultado de la reejecución.
 
+Reejecuciones: 38398640514 aprobó pedidos/perfil; se corrigió el selector de radio con texto agrupado y se evitó relanzar/limpiar dos veces dentro del flujo auth. En 38400022024 aprobaron auth y pedidos/perfil. Compra falló porque Android mató el proceso: `depends on provider com.google.android.gms/.fonts.provider.FontsProvider in dying proc`. Se cambia el emulador a AOSP `default` API 34/x86_64 (disponibilidad comprobada en XML oficial SDK) sin modificar el APK ni omitir pruebas. La compra DEMO completa requiere confirmar la nueva ejecución.
+
 Evidencia añadida y comprobada en TT-42–TT-50 (#61–#69), todas abiertas. Project/HU/iteraciones/responsables conservados. Regresión local: 47 tests; CI reejecuta 103. regression.yml manual reutiliza suites/Android; un nuevo dispatch requiere que GitHub habilite ese workflow en la rama predeterminada. No se modifica main ni se hace merge para forzarlo.
 
 ## PENDIENTES FUNCIONALES
