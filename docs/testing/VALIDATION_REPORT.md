@@ -18,6 +18,7 @@ Entorno: Linux, Node 24.19.0, npm 11.9.0; CI conserva Node 22. Versiones del loc
 | `npm test -- --configuration=ci` | PASS: 26 archivos, 103 pruebas | reports/unit-tests.xml; coverage/app |
 | `npm run test:integration` | PASS: 1 archivo, 4 pruebas | reports/integration-tests.xml |
 | `npm run test:regression` | PASS: 16 archivos, 47 pruebas | reports/regression-tests.xml |
+| `npm run test:coverage` | PASS: 103 pruebas y baseline 60 % en las cuatro métricas | coverage/app/coverage-summary.json y HTML/lcov |
 | `npm run build` | PASS | www; warnings preexistentes de Browserslist/budgets, sin ampliar límites |
 | `actionlint 1.7.12 -shellcheck= -pyflakes=` | PASS | Validación semántica YAML Actions; shellcheck/pyflakes no instalados |
 | `node --check` scripts/API/k6 + `bash -n scripts/install-k6.sh` | PASS | Sintaxis de scripts |
@@ -43,7 +44,22 @@ Baseline 60 % en las cuatro métricas: alcanzado. Meta intermedia 70 % global: N
 
 ## GITHUB ACTIONS Y PULL REQUEST
 
-PENDIENTE de publicación/verificación al generar este registro local. Actualizar aquí con los enlaces y conclusiones reales del nuevo PR; no reutilizar runs de develop como si validaran estos cambios.
+Continuación del 13/10/2026: rama remota confirmada inicialmente en `871de06`, basada en develop `fc07167`. Publicación completada en la misma rama mediante el navegador autorizado (Git/connector carecían de autenticación/permisos de escritura). Se verificó el contenido remoto contra la versión local validada.
+
+PR abierto hacia develop: [#73](https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/pull/73), sin merge. Los siete comandos npm se reejecutaron el 13/10 y pasaron. Postman sintético: 8 requests / 26 assertions aprobadas; no se ejecutó API real ni carga remota.
+
+| WORKFLOW / JOB | EJECUCIÓN REAL SOBRE `8437a39` | RESULTADO / ARTIFACT |
+|---|---|---|
+| CI - Calidad | [38397492970](https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/actions/runs/38397492970) | APROBADO: lint/tests/build; coverage-and-unit-tests |
+| INTEGRACIÓN frontend | [38397493060](https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/actions/runs/38397493060) | APROBADO; frontend-integration. API/configuration OMITIDOS por ser PR |
+| Security audit / CodeQL | [38397492985](https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/actions/runs/38397492985) | APROBADOS; no acredita todas las PS |
+| k6 validación | [38397493310](https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/actions/runs/38397493310) | APROBADO inspect; LOAD/STRESS no ejecutados |
+| Android build | [38397493478](https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/actions/runs/38397493478) | APK compilado e instalado; casa-musica-castillo-debug-apk |
+| Maestro primera ejecución | Mismo run Android | FALLÓ: 3/3 flujos no localizaron placeholder de correo. acceptance-maestro-demo conserva JUnit, capturas y jerarquías |
+
+La jerarquía Android mostró IDs reales `cmc-input-0` y `cmc-input-1`; se corrigió el selector del login compartido, sin eliminar pruebas ni cambiar la app. La ejecución posterior se consulta en los [checks del PR](https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/pull/73/checks). Este registro conserva el fallo observado y no presupone el resultado de la reejecución.
+
+Evidencia añadida y comprobada en TT-42–TT-50 (#61–#69), todas abiertas. Project/HU/iteraciones/responsables conservados. Regresión local: 47 tests; CI reejecuta 103. regression.yml manual reutiliza suites/Android; un nuevo dispatch requiere que GitHub habilite ese workflow en la rama predeterminada. No se modifica main ni se hace merge para forzarlo.
 
 ## PENDIENTES FUNCIONALES
 
