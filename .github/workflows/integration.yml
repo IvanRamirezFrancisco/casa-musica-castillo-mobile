@@ -1,0 +1,89 @@
+name: INTEGRACIÓN - Frontend y API
+on:
+  pull_request:
+    branches: [develop, main]
+  push:
+    branches: [develop]
+  workflow_dispatch:
+    inputs:
+      suite:
+        description: Contrato API (ambiente autorizado configurado)
+        type: choice
+        options: [PUBLIC_CONTRACT, AUTHENTICATED_CONTRACT, LOGIN_CONTRACT]
+        default: PUBLIC_CONTRACT
+permissions:
+  contents: read
+jobs:
+  frontend:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci
+      - run: npm run test:integration
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: frontend-integration
+          path: reports/integration-tests.xml
+          if-no-files-found: error
+  configuration:
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    environment: testing
+    outputs:
+      ready: ${{ steps.check.outputs.ready }}
+    steps:
+      - id: check
+        env:
+          BASE: ${{ vars.API_BASE_URL }}
+          ORIGIN: ${{ vars.API_AUTHORIZED_ORIGIN }}
+          AUTHORIZED: ${{ vars.API_TEST_AUTHORIZED }}
+          SUITE: ${{ inputs.suite }}
+          TOKEN: ${{ secrets.API_USER_TOKEN }}
+          USER_ID: ${{ vars.API_USER_ID }}
+          EMAIL: ${{ secrets.API_TEST_EMAIL }}
+          PASSWORD: ${{ secrets.API_TEST_PASSWORD }}
+        run: |
+          ready=true
+          if [[ -z "$BASE" || -z "$ORIGIN" || "$AUTHORIZED" != "true" ]]; then ready=false; fi
+          if [[ "$SUITE" == "AUTHENTICATED_CONTRACT" && ( -z "$TOKEN" || -z "$USER_ID" ) ]]; then ready=false; fi
+          if [[ "$SUITE" == "LOGIN_CONTRACT" && ( -z "$EMAIL" || -z "$PASSWORD" ) ]]; then ready=false; fi
+          echo "ready=$ready" >> "$GITHUB_OUTPUT"
+          if [[ "$ready" == "false" ]]; then
+            echo "## API NO EJECUTADA: falta configuración o fixture autorizada. Esto no acredita integración remota." >> "$GITHUB_STEP_SUMMARY"
+          fi
+  api:
+    needs: configuration
+    if: needs.configuration.outputs.ready == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment: testing
+    env:
+      API_BASE_URL: ${{ vars.API_BASE_URL }}
+      API_AUTHORIZED_ORIGIN: ${{ vars.API_AUTHORIZED_ORIGIN }}
+      API_TEST_AUTHORIZED: ${{ vars.API_TEST_AUTHORIZED }}
+      API_TEST_SUITE: ${{ inputs.suite }}
+      API_USER_TOKEN: ${{ secrets.API_USER_TOKEN }}
+      API_USER_ID: ${{ vars.API_USER_ID }}
+      API_TEST_EMAIL: ${{ secrets.API_TEST_EMAIL }}
+      API_TEST_PASSWORD: ${{ secrets.API_TEST_PASSWORD }}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '22'
+      - name: Instalar Postman CLI oficial (sin login/cloud)
+        run: npm install --global postman-cli@1.73.0
+      - run: postman --version
+      - run: node scripts/run-api-tests.mjs
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: api-contract-results
+          path: reports/api-*.xml
+          if-no-files-found: warn

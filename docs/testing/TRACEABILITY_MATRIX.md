@@ -1,3 +1,44 @@
+# TRAZABILIDAD — ACTUALIZACIÓN VERIFICABLE 12/10/2026
+
+Los casos PF/PS del registro conservado abajo siguen siendo el contrato de aceptación. **PASS de una prueba DEMO no cambia su estado a APROBADO**. Los IDs `API-*` identifican verificaciones parciales del contrato externo; no reemplazan `PF-*`/`PS-*`. Ninguna HU se cierra por esta matriz.
+
+## AUTOMATIZACIÓN ACTUAL Y BRECHAS
+
+Rutas de specs relativas a `src/app/`; JUnit/cobertura en CI. Maestro produce evidencia de UI DEMO. API/k6 requieren ambiente autorizado. Todos los tipos de prueba se definen en [TEST_PLAN](TEST_PLAN.md), herramientas en [TEST_TOOLS](TEST_TOOLS.md) e iteraciones en [TEST_SCHEDULE](TEST_SCHEDULE.md).
+
+| HU / XP | CRITERIO PF RELACIONADO | UNITARIAS / INTEGRACIÓN EXISTENTE O AÑADIDA | ACEPTACIÓN / API / RENDIMIENTO | ESTADO REAL / SEGURIDAD |
+|---|---|---|---|---|
+| 01 / XP1 | PF-HU01-03; 01 pendiente servidor | features/auth/login/login.page.spec.ts | auth-demo; API-HU01-01/02/03 | Formulario/demo; token/sesión/HTTPS PS pendientes |
+| 02 / XP1 | PF-HU02-02/03 parcial | features/auth/register/register.page.spec.ts | auth-demo visita registro | No registro real ni logs/validación servidor comprobados |
+| 03 / XP1 | PF-HU03-02 | features/auth/forgot-password/forgot-password.page.spec.ts | auth-demo visita recuperación | No envío/token temporal/enumeración comprobados |
+| 04 / XP2 | PF-HU04-01/02 parcial | features/home/home.page.spec.ts, layout/main-navigation | auth-demo e Inicio | Contenido demo; PS de sesión/rutas pendientes |
+| 05 / XP2 | PF-HU05-01/03 contrato parcial | Catálogo es DummyPage; pruebas de catálogo pendientes | API-HU05-01; k6 LOAD/STRESS | Contrato preparado sin ejecutar; errores/sensible PS pendientes |
+| 06 / XP2 | PF-HU06-02 contrato parcial | Búsqueda UI sin implementación completa | API-HU06-01; k6 agrupado catálogo | Falta inyección/límites/búsqueda con fixture positiva |
+| 07 / XP3 | PF-HU07-02 contrato | Detalle UI pendiente | API-HU07-01/02 | 400/404 preparados; contenido remoto inseguro pendiente |
+| 08 / XP3 | PF-HU08-01–04 | Favoritos pendiente | Diseñar aceptación al implementar | PS autenticación/aislamiento usuarios pendiente |
+| 09 / XP4 | PF-HU09-03 parcial; 01/02 pendientes | core/services/demo-checkout-state.service.spec.ts | purchase-demo usa carrito precargado; API-HU09-01/02 | No agregar real ni stock/precio servidor; PS pendiente |
+| 10 / XP4 | PF-HU10-01/02/03; 04 estado vacío parcial | cart.page.spec.ts, critical.integration.spec.ts, demo-checkout-state.service.spec.ts | purchase-demo | PASS solo cantidades/totales demo; límites/propiedad servidor pendientes |
+| 11 / XP4 | PF-HU11-02; 01/04 demo parcial | checkout/**/*.spec.ts, critical.integration.spec.ts | purchase-demo | No checkout servidor/idempotencia; PS pendiente |
+| 12 / XP5 | PF-HU12-01/02 demo parcial | orders/orders.page.spec.ts, demo-account-state.service.spec.ts | account-demo; API-HU12-01 solo deniega administración | No endpoint pedidos propios; aislamiento pendiente |
+| 13 / XP5 | PF-HU13-01/02 demo parcial | orders/order-detail/order-detail.page.spec.ts | account-demo | IDs del conjunto demo; autorización servidor pendiente |
+| 14 / XP5 | PF-HU14-02/03 parcial | profile/**/*.spec.ts, critical.integration.spec.ts, demo-account-state.service.spec.ts | account-demo; API-HU14-01/02 | Validación/copia local; persistencia/PS pendientes |
+
+**ANÁLISIS DE CÓDIGO ESTÁTICO:** transversal a HU-01–14 mediante lint/compiler y Security; aplica al código que existe, no demuestra funcionalidades ausentes.
+
+**PRUEBAS DE REGRESIÓN:** `test:regression` reutiliza auth/inicio/carrito/checkout/pedidos/perfil/servicios en ese orden de prioridad conceptual. Catálogo/búsqueda/favoritos se mantienen como brecha. Android reutiliza los tres flujos Maestro, sin copiar código.
+
+**PRUEBAS DE RENDIMIENTO / PRUEBAS DE ESFUERZO / ESTRÉS:** se agrupan HU-04/05/06 por el endpoint de catálogo real. No se asignan a login/pedido si eso implicara inventar endpoints o generar transacciones. Ampliar en XP4/5 después de validar contrato y permisos. Guardar requests, error rate, p90/p95 y fases recuperación; inspección sintáctica ≠ carga ejecutada.
+
+## REGISTRO DE EVIDENCIA
+
+Para cada ejecución: ID de prueba, criterio, HU, SHA, fecha, responsable, ambiente/fixture, comando, resultado PASÓ/FALLÓ/BLOQUEADO, run y artifact. Usar [VALIDATION_REPORT.md](VALIDATION_REPORT.md) para esta rama. PF/PS que dependen de servidor siguen PENDIENTES hasta ejecutarse contra el ambiente real autorizado. No inventar porcentaje de casos aprobados a partir de cobertura de código.
+
+En Word/PDF presentar actividades de prueba EN MAYÚSCULAS y con color de fuente diferente (azul #1F4E79).
+
+---
+
+## REGISTRO DE CRITERIOS PF/PS CONSERVADO
+
 # Matriz de Trazabilidad de Pruebas
 
 ## Casa de Música Castillo - Aplicación Móvil

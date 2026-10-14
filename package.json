@@ -9,7 +9,11 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "lint": "ng lint"
+    "lint": "ng lint",
+    "test:integration": "ng test --configuration=integration",
+    "test:regression": "ng test --configuration=regression",
+    "test:coverage": "ng test --configuration=ci",
+    "test:api": "node scripts/run-api-tests.mjs"
   },
   "private": true,
   "dependencies": {
@@ -39,6 +43,7 @@
     "@angular/language-service": "22.2.1",
     "@capacitor/cli": "8.5.2",
     "@ionic/angular-toolkit": "^13.0.0",
+    "@vitest/coverage-v8": "4.0.18",
     "angular-eslint": "22.0.0",
     "eslint": "^10.10.0",
     "jsdom": "^26.0.0",

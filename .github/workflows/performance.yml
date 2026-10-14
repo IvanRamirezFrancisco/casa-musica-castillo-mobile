@@ -1,0 +1,98 @@
+name: RENDIMIENTO Y ESFUERZO - k6 autorizado
+on:
+  pull_request:
+    branches: [develop, main]
+    paths: ['tests/performance/**', 'scripts/install-k6.sh', '.github/workflows/performance.yml']
+  workflow_dispatch:
+    inputs:
+      scenario:
+        description: Escenario autorizado (nunca producción)
+        type: choice
+        options: [load, stress]
+        default: load
+      authorized:
+        description: Confirmo autorización del ambiente testing y límite de 20 VUs
+        type: boolean
+        required: true
+        default: false
+permissions:
+  contents: read
+concurrency:
+  group: k6-testing
+  cancel-in-progress: false
+jobs:
+  validate:
+    name: Validar scripts sin carga remota
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v7
+      - run: bash scripts/install-k6.sh
+      - name: Inspeccionar escenarios (sin solicitudes HTTP)
+        run: |
+          k6 inspect -e K6_BASE_URL=https://example.invalid -e K6_AUTHORIZED_ORIGIN=https://example.invalid -e K6_TEST_AUTHORIZED=true tests/performance/load.js
+          k6 inspect -e K6_BASE_URL=https://example.invalid -e K6_AUTHORIZED_ORIGIN=https://example.invalid -e K6_TEST_AUTHORIZED=true tests/performance/stress.js
+  configuration:
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    environment: testing
+    outputs:
+      ready: ${{ steps.check.outputs.ready }}
+    steps:
+      - id: check
+        env:
+          BASE: ${{ vars.K6_BASE_URL }}
+          ORIGIN: ${{ vars.K6_AUTHORIZED_ORIGIN }}
+          AUTHORIZED: ${{ vars.K6_TEST_AUTHORIZED }}
+          CONFIRMED: ${{ inputs.authorized }}
+        run: |
+          if [[ -n "$BASE" && -n "$ORIGIN" && "$AUTHORIZED" == "true" && "$CONFIRMED" == "true" ]]; then
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+            echo "## NO EJECUTADO: falta ambiente k6 autorizado o confirmación manual. No se enviaron solicitudes." >> "$GITHUB_STEP_SUMMARY"
+          fi
+  performance:
+    name: PERFORMANCE / LOAD
+    needs: [validate, configuration]
+    if: inputs.scenario == 'load' && needs.configuration.outputs.ready == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment: testing
+    env:
+      K6_BASE_URL: ${{ vars.K6_BASE_URL }}
+      K6_AUTHORIZED_ORIGIN: ${{ vars.K6_AUTHORIZED_ORIGIN }}
+      K6_TEST_AUTHORIZED: ${{ vars.K6_TEST_AUTHORIZED }}
+    steps:
+      - uses: actions/checkout@v7
+      - run: bash scripts/install-k6.sh
+      - run: mkdir -p reports
+      - run: k6 run --out json=reports/k6-series.json tests/performance/load.js
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: performance-load
+          path: reports/
+          retention-days: 14
+  stress:
+    name: STRESS / ESFUERZO
+    needs: [validate, configuration]
+    if: inputs.scenario == 'stress' && needs.configuration.outputs.ready == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment: testing
+    env:
+      K6_BASE_URL: ${{ vars.K6_BASE_URL }}
+      K6_AUTHORIZED_ORIGIN: ${{ vars.K6_AUTHORIZED_ORIGIN }}
+      K6_TEST_AUTHORIZED: ${{ vars.K6_TEST_AUTHORIZED }}
+    steps:
+      - uses: actions/checkout@v7
+      - run: bash scripts/install-k6.sh
+      - run: mkdir -p reports
+      - run: k6 run --out json=reports/k6-series.json tests/performance/stress.js
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: performance-stress
+          path: reports/
+          retention-days: 14
