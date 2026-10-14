@@ -1,10 +1,10 @@
 <ion-header class="ion-no-border cmc-header-transparent">
   <ion-toolbar>
-    <ion-title class="cmc-title">Mis pedidos</ion-title>
+    <ion-title class="cmc-title" role="heading" aria-level="1">Mis pedidos</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="cmc-page orders-content">
+<ion-content class="cmc-page cmc-root-page orders-content">
   <div class="cmc-page-container">
     @if (orders().length === 0) {
       <cmc-empty-state

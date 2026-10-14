@@ -1,31 +1,37 @@
 ion-tab-bar {
-  position: absolute;
-  bottom: calc(var(--cmc-bubble-nav-bottom-margin) + env(safe-area-inset-bottom));
-  left: 16px;
-  right: 16px;
-  width: auto;
+  position: fixed;
+  bottom: calc(var(--cmc-bubble-nav-bottom-margin) + var(--cmc-safe-area-bottom));
+  left: 50%;
+  transform: translateX(-50%);
+  width: calc(100% - 2 * var(--cmc-space-4));
+  max-width: 448px;
   border-radius: var(--cmc-radius-full);
   --background: var(--cmc-surface);
   --border: none;
-  box-shadow: var(--cmc-shadow-medium);
-  padding: 4px 8px;
-  padding-bottom: 0 !important;
-  --padding-bottom: 0;
+  box-shadow: var(--cmc-shadow-medium), inset 0 0 0 1px var(--cmc-border);
+  /* Ionic forces content-box in its shadow host. Keep outer geometry exact:
+   * no layout border/padding; inset shadow and button margins draw the capsule. */
+  padding: 0;
+  /* Safe area is in the bottom position; Ionic must not add it inside. */
+  --ion-safe-area-bottom: 0px;
   height: var(--cmc-bubble-nav-height);
   contain: none; /* allows box-shadow to show outside */
   overflow: visible;
   z-index: 1000;
-  border: 1px solid rgba(231, 222, 213, 0.4); /* subtle border */
+  border: 0;
 
   ion-tab-button {
     --color: var(--cmc-text-secondary);
     --color-selected: var(--cmc-text-on-primary);
-    --background-focused: transparent;
+    --background-focused: var(--cmc-surface-alt);
     --background-hover: transparent;
     background: transparent;
-    transition: all var(--cmc-transition-fast);
+    min-width: 48px;
+    min-height: 48px;
+    transition: background-color var(--cmc-transition-fast);
     border-radius: var(--cmc-radius-full);
-    margin: 0 2px;
+    height: calc(var(--cmc-bubble-nav-height) - 2 * var(--cmc-space-1));
+    margin: var(--cmc-space-1) 0;
 
     ion-icon {
       font-size: 22px;
@@ -35,7 +41,7 @@ ion-tab-bar {
 
     ion-label {
       font-family: 'Roboto', sans-serif;
-      font-size: 11px;
+      font-size: 12px;
       font-weight: 500;
       z-index: 2;
     }
@@ -51,3 +57,9 @@ ion-tab-bar {
     }
   }
 }
+
+ion-tab-button::part(native):focus-visible { outline: 3px solid var(--cmc-primary); outline-offset: -3px; }
+ion-tab-button.tab-selected::part(native):focus-visible { outline-color: var(--cmc-text-on-primary); }
+
+ion-tab-button:first-child { margin-left: var(--cmc-space-1); }
+ion-tab-button:last-child { margin-right: var(--cmc-space-1); }

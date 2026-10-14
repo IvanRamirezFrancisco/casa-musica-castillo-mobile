@@ -1,0 +1,191 @@
+<ion-header class="ion-no-border cmc-header-transparent cmc-discovery-header">
+  <ion-toolbar class="catalog-toolbar">
+    <div class="header-content">
+      <div class="brand-title">
+        <ion-icon name="musical-notes-outline" class="brand-icon-small" aria-hidden="true"></ion-icon>
+        <h1 class="cmc-title">Catálogo</h1>
+      </div>
+      <span class="catalog-badge">Demostración</span>
+    </div>
+  </ion-toolbar>
+
+  <ion-toolbar class="search-toolbar">
+    <div class="search-container">
+      <ion-icon name="search-outline" class="search-icon" aria-hidden="true"></ion-icon>
+      <input
+        type="search"
+        class="cmc-search-input"
+        [ngModel]="busqueda()"
+        (ngModelChange)="onBusquedaChange($event)"
+        placeholder="Buscar por nombre, marca o categoría..."
+        aria-label="Buscar instrumentos en el catálogo"
+      />
+      @if (busqueda()) {
+        <button
+          type="button"
+          class="clear-search-btn"
+
+          (click)="busqueda.set('')"
+          aria-label="Borrar búsqueda"
+        >
+          <ion-icon name="close-outline" aria-hidden="true"></ion-icon>
+        </button>
+      }
+    </div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="cmc-page cmc-root-page cmc-discovery-content catalog-content">
+  <main class="cmc-page-container">
+
+    <!-- Hero / Colección informativa -->
+    <section class="catalog-hero" aria-labelledby="hero-title">
+      <span class="hero-eyebrow">COLECCIÓN CASTILLO</span>
+      <h2 id="hero-title" class="cmc-section-title">Encuentra tu sonido</h2>
+      <p class="cmc-body">Instrumentos seleccionados para cada etapa de tu aprendizaje musical.</p>
+    </section>
+
+    <!-- Filtro de Categorías -->
+    <section class="categories-section" aria-label="Filtro de categorías">
+      <h2 class="section-title cmc-section-title">Categorías</h2>
+      <div class="categories-scroll" role="group" aria-label="Categorías de instrumentos">
+        @for (cat of categorias; track cat) {
+          <button
+            type="button"
+            class="category-chip"
+            [class.category-chip--active]="categoriaActiva() === cat"
+            [attr.aria-pressed]="categoriaActiva() === cat"
+            (click)="seleccionarCategoria(cat)"
+          >
+            {{ cat }}
+          </button>
+        }
+      </div>
+    </section>
+
+    <!-- Lista de Productos -->
+    <section class="products-section" aria-label="Catálogo de productos">
+      <div class="products-header">
+        <div>
+          <h2 class="cmc-section-title">Instrumentos</h2>
+          <p class="cmc-caption">
+            {{ productosFiltrados().length }} {{ productosFiltrados().length === 1 ? 'resultado' : 'resultados' }}
+          </p>
+        </div>
+
+        <select
+          id="catalog-sort"
+          class="sort-select"
+          [ngModel]="orden()"
+          (ngModelChange)="onOrdenChange($event)"
+          aria-label="Ordenar productos"
+        >
+          <option value="destacados">Destacados</option>
+          <option value="precioAsc">Menor precio</option>
+          <option value="precioDesc">Mayor precio</option>
+          <option value="nombre">Nombre A-Z</option>
+        </select>
+      </div>
+
+      <!-- Cuadrícula de productos -->
+      @if (productosFiltrados().length > 0) {
+        <div class="products-grid">
+          @for (producto of productosFiltrados(); track producto.id) {
+            <article class="product-card" [attr.aria-label]="producto.nombre">
+              <div class="product-image">
+                <ion-icon [name]="producto.icono" class="placeholder-icon" aria-hidden="true"></ion-icon>
+                <span class="demo-tag">Demo</span>
+              </div>
+
+              <div class="product-info">
+                <span class="cmc-caption">{{ producto.marca }}</span>
+                <h3 class="product-name cmc-body">{{ producto.nombre }}</h3>
+                <p class="cmc-font-bold product-price">
+                  {{ producto.precio | currency:'MXN':'symbol':'1.0-0' }} MXN
+                </p>
+
+                <button
+                  type="button"
+                  class="detail-btn"
+                  (click)="mostrarDetalle(producto)"
+                  [attr.aria-label]="'Ver información de ' + producto.nombre"
+                >
+                  <span>Ver información</span>
+                  <ion-icon name="chevron-forward-outline" aria-hidden="true"></ion-icon>
+                </button>
+              </div>
+            </article>
+          }
+        </div>
+      } @else {
+        <!-- Estado vacío accesible -->
+        <div class="empty-results-wrapper">
+          <cmc-empty-state
+            heading="No encontramos instrumentos"
+            description="Prueba con otro término de búsqueda o selecciona otra categoría."
+            icon="musical-notes-outline"
+          />
+          <div class="empty-actions">
+            <button
+              type="button"
+              class="clear-filters-btn"
+              (click)="limpiarFiltros()"
+              aria-label="Limpiar filtros de búsqueda"
+            >
+              Limpiar filtros
+            </button>
+          </div>
+        </div>
+      }
+
+      <p class="cmc-caption catalog-note">
+        Los instrumentos, precios y marcas mostrados son de demostración. No representan inventario en tiempo real.
+      </p>
+    </section>
+
+  </main>
+
+</ion-content>
+
+  <!-- Modal Provisional de Detalle -->
+  @if (seleccionado(); as producto) {
+
+      <dialog
+        #detailDialog
+        class="modal-dialog"
+        role="dialog"
+        aria-modal="true"
+        [attr.aria-label]="'Información de ' + producto.nombre"
+        (cancel)="cerrarDetalle()"
+        (click)="onDialogClick($event)"
+      >
+        <button
+          type="button"
+          class="modal-close-btn" autofocus
+          aria-label="Cerrar detalle"
+          (click)="cerrarDetalle()"
+        >
+          <ion-icon name="close-outline" aria-hidden="true"></ion-icon>
+        </button>
+
+        <ion-icon [name]="producto.icono" class="modal-icon" aria-hidden="true"></ion-icon>
+
+        <span class="cmc-caption">{{ producto.categoria }} • {{ producto.marca }}</span>
+        <h2 class="cmc-section-title">{{ producto.nombre }}</h2>
+        <p class="cmc-body">{{ producto.descripcion }}</p>
+
+        <p class="cmc-title">{{ producto.precio | currency:'MXN':'symbol':'1.0-0' }} MXN</p>
+
+        <p class="cmc-caption">
+          Precio ilustrativo. Integración con inventario pendiente.
+        </p>
+
+        <button
+          type="button"
+          class="modal-action-btn"
+          (click)="cerrarDetalle()"
+        >
+          Volver al catálogo
+        </button>
+      </dialog>
+  }

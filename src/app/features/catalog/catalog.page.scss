@@ -1,0 +1,160 @@
+
+.catalog-badge {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--cmc-primary);
+  background: var(--cmc-surface-alt);
+  border: 1px solid var(--cmc-border);
+  padding: var(--cmc-space-1) var(--cmc-space-2);
+  border-radius: var(--cmc-radius-full);
+}
+.clear-search-btn {
+  display: grid;
+  place-items: center;
+  min-width: 44px;
+  min-height: 44px;
+  background: transparent;
+  border: 0;
+  color: var(--cmc-text-secondary);
+  font-size: 20px;
+}
+.catalog-hero {
+  margin-bottom: var(--cmc-space-5);
+  background: linear-gradient(135deg, var(--cmc-primary), var(--cmc-primary-dark));
+  border-radius: var(--cmc-radius-lg);
+  padding: var(--cmc-space-5);
+  color: var(--cmc-text-on-primary);
+}
+.hero-eyebrow {
+  font-size: 12px;
+  letter-spacing: 1px;
+  font-weight: 600;
+  color: var(--cmc-accent-gold);
+}
+.catalog-hero h2 {
+  color: var(--cmc-text-on-primary);
+  margin: var(--cmc-space-1) 0 var(--cmc-space-2);
+}
+.categories-section {
+  margin-bottom: var(--cmc-space-5);
+}
+.section-title {
+  margin-bottom: var(--cmc-space-3);
+}
+.products-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--cmc-space-3);
+  margin-bottom: var(--cmc-space-3);
+}
+.sort-select {
+  min-height: 48px;
+  padding: var(--cmc-space-2) var(--cmc-space-3);
+  border: 1px solid var(--cmc-border);
+  border-radius: var(--cmc-radius-sm);
+  background: var(--cmc-surface);
+  color: var(--cmc-text-primary);
+  font-size: 14px;
+}
+.placeholder-icon {
+  font-size: 40px;
+  color: var(--cmc-primary);
+}
+.demo-tag {
+  position: absolute;
+  top: var(--cmc-space-2);
+  left: var(--cmc-space-2);
+  font-size: 12px;
+  color: var(--cmc-primary);
+  background: var(--cmc-surface-overlay);
+  padding: var(--cmc-space-1) var(--cmc-space-2);
+  border-radius: var(--cmc-radius-xs);
+}
+.detail-btn, .clear-filters-btn, .modal-action-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  padding: var(--cmc-space-2) var(--cmc-space-3);
+  border: 0;
+  border-radius: var(--cmc-radius-sm);
+  background: var(--cmc-primary);
+  color: var(--cmc-text-on-primary);
+  font-size: 14px;
+  font-weight: 600;
+}
+.detail-btn {
+  margin-top: auto;
+  gap: var(--cmc-space-1);
+}
+.detail-btn:active, .clear-filters-btn:active, .modal-action-btn:active {
+  background: var(--cmc-primary-dark);
+}
+.empty-results-wrapper {
+  padding: var(--cmc-space-4);
+  background: var(--cmc-surface);
+  border: 1px solid var(--cmc-border);
+  border-radius: var(--cmc-radius-md);
+}
+.empty-actions {
+  display: flex;
+  justify-content: center;
+  margin-top: var(--cmc-space-3);
+}
+.catalog-note {
+  text-align: center;
+  margin-top: var(--cmc-space-5);
+}
+.modal-dialog {
+  width: calc(100% - 2 * var(--cmc-space-4));
+  max-width: 360px;
+  max-height: calc(100dvh - var(--cmc-safe-area-top) - var(--cmc-safe-area-bottom) - 2 * var(--cmc-space-4));
+  overflow-y: auto;
+  padding: var(--cmc-space-6);
+  padding-top: calc(var(--cmc-space-8) + var(--cmc-space-6));
+  border: 1px solid var(--cmc-border);
+  border-radius: var(--cmc-radius-lg);
+  background: var(--cmc-surface);
+  color: var(--cmc-text-primary);
+  text-align: center;
+}
+.modal-dialog::backdrop {
+  background: var(--cmc-overlay-backdrop);
+}
+.modal-close-btn {
+  position: absolute;
+  top: var(--cmc-space-2);
+  right: var(--cmc-space-2);
+  width: 48px;
+  height: 48px;
+  border: 0;
+  background: var(--cmc-surface-alt);
+  border-radius: var(--cmc-radius-full);
+  font-size: 20px;
+  color: var(--cmc-text-primary);
+}
+.modal-icon {
+  font-size: 48px;
+  color: var(--cmc-primary);
+  margin-bottom: var(--cmc-space-2);
+}
+.modal-dialog .cmc-caption {
+  display: block;
+  margin-bottom: var(--cmc-space-4);
+}
+.modal-dialog h2 {
+  margin-bottom: var(--cmc-space-2);
+}
+.modal-dialog .cmc-body {
+  margin-bottom: var(--cmc-space-3);
+  color: var(--cmc-text-secondary);
+}
+.modal-dialog .cmc-title {
+  color: var(--cmc-primary);
+  margin: var(--cmc-space-2) 0;
+}
+.modal-action-btn {
+  width: 100%;
+}

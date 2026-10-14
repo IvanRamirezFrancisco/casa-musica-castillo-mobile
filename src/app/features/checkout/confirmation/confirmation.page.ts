@@ -33,6 +33,12 @@ export class ConfirmationPage implements OnInit {
   }
 
   ngOnInit() {
+    // Direct navigation must not render a success state for incomplete demo data.
+    if (!this.checkoutService.deliveryMethod() || !this.checkoutService.paymentMethod() ||
+        this.checkoutService.cartItems().length === 0) {
+      void this.router.navigate(['/checkout'], { replaceUrl: true });
+      return;
+    }
     this.order.set(this.checkoutService.placeOrder());
     // In a real app we might clear checkout here, but let's clear it on leave
   }

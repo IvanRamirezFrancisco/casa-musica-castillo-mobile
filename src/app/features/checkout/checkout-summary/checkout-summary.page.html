@@ -1,19 +1,19 @@
 <ion-header class="ion-no-border cmc-header-minimal">
   <ion-toolbar>
     <ion-buttons slot="start">
-      <button class="nav-back-btn" (click)="goBack()">
+      <button type="button" aria-label="Volver" class="nav-back-btn" (click)="goBack()">
         <ion-icon name="arrow-back-outline"></ion-icon>
       </button>
     </ion-buttons>
-    <ion-title class="cmc-title">Finalizar compra</ion-title>
+    <ion-title class="cmc-title" role="heading" aria-level="1">Finalizar compra</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content class="cmc-page" [scrollY]="true">
   <div class="cmc-page-container">
     <div class="checkout-section">
-      <h3 class="cmc-title section-title">Método de entrega</h3>
-      <div class="selection-card" (click)="goToDelivery()" tabindex="0" role="button">
+      <h2 class="cmc-title section-title">Método de entrega</h2>
+      <button type="button" class="selection-card" (click)="goToDelivery()">
         <div class="card-content">
           <div class="icon-wrapper">
             <ion-icon name="cube-outline"></ion-icon>
@@ -28,12 +28,12 @@
           </div>
         </div>
         <ion-icon name="chevron-forward-outline" class="chevron"></ion-icon>
-      </div>
+      </button>
     </div>
 
     <div class="checkout-section">
-      <h3 class="cmc-title section-title">Método de pago</h3>
-      <div class="selection-card" (click)="goToPayment()" tabindex="0" role="button">
+      <h2 class="cmc-title section-title">Método de pago</h2>
+      <button type="button" class="selection-card" (click)="goToPayment()">
         <div class="card-content">
           <div class="icon-wrapper">
             <ion-icon name="card-outline"></ion-icon>
@@ -48,11 +48,11 @@
           </div>
         </div>
         <ion-icon name="chevron-forward-outline" class="chevron"></ion-icon>
-      </div>
+      </button>
     </div>
 
     <div class="checkout-section">
-      <h3 class="cmc-title section-title">Resumen de pedido</h3>
+      <h2 class="cmc-title section-title">Resumen de pedido</h2>
       <div class="order-summary-card">
         <div class="summary-items">
           <span class="cmc-text-secondary">{{ checkoutService.cartItems().length }} artículos</span>

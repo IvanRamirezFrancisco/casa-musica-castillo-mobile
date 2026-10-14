@@ -1,10 +1,10 @@
 <ion-header class="ion-no-border cmc-header-transparent">
   <ion-toolbar>
-    <ion-title class="cmc-title">Perfil</ion-title>
+    <ion-title class="cmc-title" role="heading" aria-level="1">Perfil</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="cmc-page profile-content">
+<ion-content class="cmc-page cmc-root-page profile-content">
   <div class="cmc-page-container">
     <section class="profile-card" aria-label="Datos de la cuenta">
       <div class="avatar" aria-hidden="true">{{ initial() }}</div>
@@ -14,10 +14,11 @@
       <cmc-button fullWidth (click)="editProfile()">Editar perfil</cmc-button>
     </section>
 
+    <p class="cmc-caption profile-demo-note" id="profile-demo-note">Configuraciones de demostración, próximamente disponibles.</p>
     <ul class="options" aria-label="Opciones de cuenta">
       @for (opt of options; track opt.label) {
         <li>
-          <button type="button" class="option" [class.danger]="opt.danger">
+          <button type="button" class="option" disabled aria-describedby="profile-demo-note" [class.danger]="opt.danger">
             <ion-icon [name]="opt.icon" aria-hidden="true"></ion-icon>
             <span>{{ opt.label }}</span>
             <ion-icon name="chevron-forward-outline" class="chevron" aria-hidden="true"></ion-icon>

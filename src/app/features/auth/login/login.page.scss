@@ -4,13 +4,13 @@
 
 .auth-hero {
   background: var(--cmc-primary);
-  height: 220px;
+  min-height: 220px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   text-align: center;
-  padding: 0 16px 40px 16px;
+  padding: var(--cmc-space-8) var(--cmc-space-4) calc(var(--cmc-space-8) + var(--cmc-space-2));
   position: relative;
   z-index: 0;
 
@@ -21,7 +21,7 @@
   .auth-brand-icon {
     font-size: 40px;
     color: var(--cmc-accent-gold);
-    margin-bottom: 8px;
+    margin-bottom: var(--cmc-space-2);
   }
 
   .auth-brand-title {
@@ -36,7 +36,7 @@
     font-family: 'Roboto', sans-serif;
     font-size: 0.875rem;
     color: var(--cmc-surface-alt);
-    margin-top: 4px;
+    margin-top: var(--cmc-space-1);
     opacity: 0.9;
   }
 }
@@ -45,21 +45,21 @@
   position: relative;
   z-index: 1;
   margin-top: -40px;
-  padding: 0 16px 32px;
+  padding: 0 var(--cmc-space-4) var(--cmc-space-8);
 }
 
 .auth-card {
   background: var(--cmc-surface);
-  border-radius: 28px;
-  padding: 32px 24px;
+  border-radius: var(--cmc-radius-xl);
+  padding: var(--cmc-space-6);
   box-shadow: var(--cmc-shadow-medium);
 
   .auth-card-header {
     text-align: center;
-    margin-bottom: 32px;
+    margin-bottom: var(--cmc-space-6);
 
     .cmc-title {
-      margin-bottom: 8px;
+      margin-bottom: var(--cmc-space-2);
       color: var(--cmc-text-primary);
     }
   }
@@ -67,14 +67,14 @@
   .auth-form {
     display: flex;
     flex-direction: column;
-    gap: 16px;
-    margin-bottom: 24px;
+    gap: var(--cmc-space-4);
+    margin-bottom: var(--cmc-space-6);
   }
 
   .forgot-password-link {
     text-align: right;
     margin-top: -8px;
-    margin-bottom: 8px;
+    margin-bottom: var(--cmc-space-2);
   }
 
   .cmc-link {
@@ -90,7 +90,7 @@
 .auth-separator {
   height: 1px;
   background-color: var(--cmc-border);
-  margin: 24px 0;
+  margin: var(--cmc-space-6) 0;
   width: 100%;
 }
 
@@ -102,3 +102,5 @@
   0% { opacity: 0; transform: translateY(10px); }
   100% { opacity: 1; transform: translateY(0); }
 }
+
+.auth-card-container { max-width: 480px; margin-inline: auto; }

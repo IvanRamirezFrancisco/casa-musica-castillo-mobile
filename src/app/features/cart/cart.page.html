@@ -1,22 +1,21 @@
 <ion-header class="ion-no-border cmc-header-transparent">
   <ion-toolbar>
-    <ion-title class="cmc-title">Carrito</ion-title>
+    <ion-title class="cmc-title" role="heading" aria-level="1">Carrito</ion-title>
     <ion-buttons slot="end">
       <ion-badge color="danger" class="cart-badge">{{ checkoutService.cartItems().length }}</ion-badge>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="cmc-page cart-content" [scrollY]="true">
+<ion-content class="cmc-page cmc-root-page cart-content" [scrollY]="true">
   <div class="cmc-page-container">
     @if (checkoutService.cartItems().length === 0) {
       <cmc-empty-state
         icon="cart-outline"
         heading="Tu carrito está vacío"
         description="Agrega productos desde el catálogo para continuar."
-        actionLabel="Explorar catálogo"
-        (action)="goToCatalog()"
       ></cmc-empty-state>
+      <cmc-button fullWidth (click)="goToCatalog()">Explorar catálogo</cmc-button>
     } @else {
       <div class="cart-items">
         @for (item of checkoutService.cartItems(); track item.id) {
@@ -30,25 +29,25 @@
                 </div>
               }
             </div>
-            
+
             <div class="item-details">
               <div class="item-header">
                 <h3 class="cmc-body">{{ item.name }}</h3>
-                <button class="remove-btn" (click)="removeItem(item.id)" aria-label="Eliminar producto">
+                <button type="button" class="remove-btn" (click)="removeItem(item.id)" [attr.aria-label]="'Eliminar ' + item.name">
                   <ion-icon name="trash-outline"></ion-icon>
                 </button>
               </div>
-              
+
               <div class="item-price cmc-font-bold">
                 {{ item.price | currency:'MXN' }}
               </div>
-              
+
               <div class="item-quantity">
-                <button class="qty-btn" (click)="updateQuantity(item.id, -1)" [disabled]="item.quantity <= 1">
+                <button type="button" class="qty-btn" [attr.aria-label]="'Reducir cantidad de ' + item.name" (click)="updateQuantity(item.id, -1)" [disabled]="item.quantity <= 1">
                   <ion-icon name="remove-outline"></ion-icon>
                 </button>
-                <span class="qty-value">{{ item.quantity }}</span>
-                <button class="qty-btn" (click)="updateQuantity(item.id, 1)">
+                <span class="qty-value" aria-live="polite">{{ item.quantity }}</span>
+                <button type="button" class="qty-btn" [attr.aria-label]="'Aumentar cantidad de ' + item.name" (click)="updateQuantity(item.id, 1)">
                   <ion-icon name="add-outline"></ion-icon>
                 </button>
               </div>

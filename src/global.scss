@@ -1,3 +1,4 @@
+@use './app/shared/ui/styles/discovery';
 /* =====================================================
  * Casa de Música Castillo
  * Global styles
@@ -131,7 +132,8 @@ a {
  * ===================================================== */
 
 .cmc-page {
-  min-height: 100%;
+  /* ion-content is a flex child: a viewport minimum would overflow its header. */
+  min-height: 0;
   background: var(--cmc-background);
 }
 
@@ -156,7 +158,7 @@ a {
  * ===================================================== */
 
 :focus-visible {
-  outline: 3px solid rgb(197 160 89 / 55%);
+  outline: 3px solid var(--cmc-primary);
   outline-offset: 2px;
 }
 
@@ -174,7 +176,70 @@ a {
 /* Bubble Navigation spacing */
 :root {
   --cmc-bubble-nav-height: 64px;
-  --cmc-bubble-nav-bottom-margin: 12px;
-  --cmc-bubble-nav-spacing: 16px;
-  --cmc-bubble-nav-offset: calc(var(--cmc-bubble-nav-height) + var(--cmc-bubble-nav-bottom-margin) + var(--cmc-bubble-nav-spacing) + env(safe-area-inset-bottom));
+  --cmc-bubble-nav-bottom-margin: var(--cmc-space-3);
+  --cmc-bubble-nav-spacing: var(--cmc-space-4);
+  --cmc-bubble-nav-offset: calc(var(--cmc-bubble-nav-height) + var(--cmc-bubble-nav-bottom-margin) + var(--cmc-bubble-nav-spacing) + var(--cmc-safe-area-bottom));
+}
+
+/* Ionic owns the top inset when a page has ion-header. Content padding is
+ * inside the actual scroll element; floating navigation never consumes layout. */
+ion-content.cmc-page {
+  --padding-top: var(--cmc-space-4);
+  --padding-bottom: calc(var(--cmc-space-6) + var(--cmc-safe-area-bottom));
+}
+ion-content.cmc-root-page {
+  --padding-bottom: var(--cmc-bubble-nav-offset);
+}
+ion-content.cmc-standalone-page {
+  --padding-top: var(--cmc-safe-area-top);
+}
+.cmc-header-transparent ion-toolbar,
+.cmc-header-minimal ion-toolbar {
+  --background: var(--cmc-background);
+  --border-width: 0;
+}
+ion-title.cmc-title {
+  font-size: 20px;
+  line-height: 28px;
+}
+.nav-back-btn,
+.auth-back-btn {
+  min-width: 48px;
+  min-height: 48px;
+  flex-shrink: 0;
+}
+.cmc-text-secondary {
+  color: var(--cmc-text-secondary);
+}
+.cmc-font-bold {
+  font-weight: 600;
+}
+.cmc-primary {
+  color: var(--cmc-primary);
+}
+.cmc-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+}
+button, a, input, select {
+  touch-action: manipulation;
+}
+button:not(:disabled) {
+  cursor: pointer;
+}
+.cmc-page-container {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.nav-back-btn {
+  border: 0; border-radius: var(--cmc-radius-full); background: transparent;
+  color: var(--cmc-text-primary); display: grid; place-items: center;
+}
+.nav-back-btn ion-icon {
+  font-size: 24px;
+}
+.nav-back-btn:active {
+  background: var(--cmc-surface-alt);
 }

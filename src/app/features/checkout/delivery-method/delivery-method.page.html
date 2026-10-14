@@ -1,28 +1,26 @@
 <ion-header class="ion-no-border cmc-header-minimal">
   <ion-toolbar>
     <ion-buttons slot="start">
-      <button class="nav-back-btn" (click)="goBack()">
+      <button type="button" aria-label="Volver" class="nav-back-btn" (click)="goBack()">
         <ion-icon name="arrow-back-outline"></ion-icon>
       </button>
     </ion-buttons>
-    <ion-title class="cmc-title">Método de entrega</ion-title>
+    <ion-title class="cmc-title" role="heading" aria-level="1">Método de entrega</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content class="cmc-page" [scrollY]="true">
   <div class="cmc-page-container">
     <div class="options-container" role="radiogroup" aria-label="Opciones de entrega">
-      
+
       <!-- Store Option -->
-      <div 
-        class="delivery-option-card" 
+      <label
+        class="delivery-option-card"
         [class.selected]="selectedMethod === 'store'"
-        (click)="selectMethod('store')"
-        role="radio"
-        [attr.aria-checked]="selectedMethod === 'store'"
-        tabindex="0"
+
       >
-        <div class="radio-indicator">
+        <input class="method-radio" type="radio" name="delivery-method" [checked]="selectedMethod === 'store'" (change)="selectMethod('store')" />
+        <div class="radio-indicator" aria-hidden="true">
           <div class="inner-circle"></div>
         </div>
         <div class="option-content">
@@ -40,18 +38,12 @@
             </div>
           }
         </div>
-      </div>
+      </label>
 
       <!-- Home Delivery Option -->
-      <div 
-        class="delivery-option-card" 
-        [class.selected]="selectedMethod === 'home'"
-        (click)="selectMethod('home')"
-        role="radio"
-        [attr.aria-checked]="selectedMethod === 'home'"
-        tabindex="0"
-      >
-        <div class="radio-indicator">
+      <label class="delivery-option-card" [class.selected]="selectedMethod === 'home'">
+        <input class="method-radio" type="radio" name="delivery-method" [checked]="selectedMethod === 'home'" (change)="selectMethod('home')" />
+        <div class="radio-indicator" aria-hidden="true">
           <div class="inner-circle"></div>
         </div>
         <div class="option-content">
@@ -72,7 +64,7 @@
             </div>
           }
         </div>
-      </div>
+      </label>
 
     </div>
 
