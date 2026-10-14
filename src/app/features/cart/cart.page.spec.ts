@@ -56,4 +56,13 @@ describe('CartPage', () => {
     component.removeItem(id);
     expect(component.checkoutService.cartItems().find(i => i.id === id)).toBeUndefined();
   });
+  it('offers a working catalog action when the cart is empty', () => {
+    component.checkoutService.cartItems().forEach(item => component.removeItem(item.id));
+    fixture.detectChanges();
+    const spy = vi.spyOn(component, 'goToCatalog').mockImplementation(() => undefined);
+    const button = (fixture.nativeElement as HTMLElement).querySelector('cmc-button button') as HTMLButtonElement;
+    expect(button).not.toBeNull();
+    button.click();
+    expect(spy).toHaveBeenCalledOnce();
+  });
 });

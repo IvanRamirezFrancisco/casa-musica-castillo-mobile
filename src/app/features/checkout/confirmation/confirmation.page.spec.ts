@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { provideRouter } from '@angular/router';
+import { vi } from 'vitest';
+import { Router, provideRouter } from '@angular/router';
 import { ConfirmationPage } from './confirmation.page';
 import { DemoCheckoutStateService } from '../../../core/services/demo-checkout-state.service';
 
@@ -40,5 +41,14 @@ describe('ConfirmationPage', () => {
 
   it('should display demo order id', () => {
     expect(component.order()?.id).toContain('DEMO-');
+  });
+  it('returns incomplete direct navigation to checkout without rendering an invalid order', () => {
+    TestBed.inject(DemoCheckoutStateService).clearCheckout();
+    const navigate = vi.spyOn(TestBed.inject(Router), 'navigate').mockResolvedValue(true);
+    const direct = TestBed.createComponent(ConfirmationPage);
+    expect(() => direct.detectChanges()).not.toThrow();
+    expect(direct.componentInstance.order()).toBeNull();
+    expect((direct.nativeElement as HTMLElement).querySelector('.confirmation-summary')).toBeNull();
+    expect(navigate).toHaveBeenCalledWith(['/checkout'], { replaceUrl: true });
   });
 });

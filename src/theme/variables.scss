@@ -85,6 +85,16 @@
   --cmc-transition-fast: 150ms ease;
   --cmc-transition-base: 220ms ease;
 
+  /* Shared overlays and readable semantic text on tinted surfaces. */
+  --cmc-overlay-backdrop: rgb(41 37 36 / 65%);
+  --cmc-surface-overlay: rgb(255 255 255 / 92%);
+  --cmc-on-primary-border: rgb(255 255 255 / 35%);
+  --cmc-warning-text: #914201;
+  --cmc-warning-surface: #fff1dc;
+  --cmc-success-text: #047857;
+  --cmc-safe-area-top: var(--ion-safe-area-top, env(safe-area-inset-top, 0px));
+  --cmc-safe-area-bottom: var(--ion-safe-area-bottom, env(safe-area-inset-bottom, 0px));
+
   /* ==================================================
    * Ionic mapping
    * ================================================== */

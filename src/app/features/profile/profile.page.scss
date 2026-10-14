@@ -1,20 +1,10 @@
-.cmc-header-transparent ion-toolbar {
-  --background: var(--cmc-background);
-  --border-width: 0;
-}
-
-.profile-content {
-  --background: var(--cmc-background);
-  --padding-bottom: var(--cmc-bubble-nav-offset);
-}
-
 .profile-card {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 4px;
-  padding: 24px 16px;
-  margin-bottom: 16px;
+  gap: var(--cmc-space-1);
+  padding: var(--cmc-space-6) var(--cmc-space-4);
+  margin-bottom: var(--cmc-space-4);
   background: var(--cmc-surface);
   border-radius: var(--cmc-radius-lg, 20px);
   box-shadow: var(--cmc-shadow-card);
@@ -24,7 +14,7 @@
   }
 
   cmc-button {
-    margin-top: 16px;
+    margin-top: var(--cmc-space-4);
   }
 }
 
@@ -40,7 +30,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 8px;
+  margin-bottom: var(--cmc-space-2);
 }
 
 .profile-name {
@@ -64,10 +54,10 @@
 .option {
   width: 100%;
   min-height: 52px;
-  padding: 0 16px;
+  padding: 0 var(--cmc-space-4);
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: var(--cmc-space-3);
   background: transparent;
   border: none;
   color: var(--cmc-text-primary);
@@ -96,3 +86,9 @@
     outline-offset: -2px;
   }
 }
+
+.profile-card { text-align: center; overflow-wrap: anywhere; }
+.option:disabled { cursor: default; color: var(--cmc-text-secondary); }
+.option:disabled .chevron { display: none; }
+
+.profile-demo-note { margin-bottom: var(--cmc-space-3); }
