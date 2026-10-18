@@ -37,7 +37,8 @@ describe('INTEGRACIÓN FRONTEND crítica DEMO (no API)', () => {
   it('HU10: los botones de la plantilla eliminan productos y muestran estado vacío', () => {
     const cart = TestBed.createComponent(CartPage);
     cart.detectChanges();
-    const buttons = cart.nativeElement.querySelectorAll('button[aria-label="Eliminar producto"]');
+    const buttons = cart.nativeElement.querySelectorAll('button.remove-btn');
+    expect(buttons).toHaveLength(2);
     buttons.forEach((button: HTMLButtonElement) => button.click());
     cart.detectChanges();
     expect(TestBed.inject(DemoCheckoutStateService).cartItems()).toEqual([]);
