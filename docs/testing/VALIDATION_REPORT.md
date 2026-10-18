@@ -121,3 +121,56 @@ API móvil real, guards/sesión/HTTP, catálogo/búsqueda/detalle/favoritos comp
 8. Issues TT-42–50 con referencia al PR/evidencia y estado abierto; Project con iteraciones reales.
 
 Descargar artifacts antes de su expiración. Ocultar secretos/tokens/correos reales al capturar. Fechar toda evidencia y conservar SHA.
+
+## CORRECCIÓN DOCENTE — QUALITY GATE Y RETROALIMENTACIÓN (18/10/2026)
+
+La rama `chore/test-pipelines-completion` se integró mediante merge sin reescritura con `develop` `c3d78a88fc68282598b6eb8869102a83da77b10f` (PR #74). No se modificaron main/develop ni PR #71 y no se cerraron Issues. El catálogo incorporado por develop se conserva y se sigue declarando DEMO.
+
+### Planeación en GitHub Project
+
+Se auditaron 69 elementos del Product Backlog: 14 HU, 50 TT y 5 PV. Los campos visibles aplicables —Responsable, Iteración XP, Status, Prioridad, Tipo, Módulo, Etapa DevOps y Story Points— estaban completos; no se inventaron reasignaciones. Se corrigió la vista **Cronograma XP** seleccionando `Iteración XP start` y `Iteración XP end`, se guardó como configuración compartida y se verificaron elementos sobre XP1–XP5. `CIERRE` se mantiene como periodo académico documental, no como iteración inexistente en el Project.
+
+### RETROALIMENTACIÓN DE PRUEBAS AUTOMATIZADAS
+
+Los ocho workflows usan `scripts/write-workflow-summary.mjs` para publicar en `$GITHUB_STEP_SUMMARY`: evento, SHA, rama, PR, controles ejecutados, datos/ambiente, resultado de cada control, métricas, artifacts, estado general y acción recomendada. `performance.yml` declara de forma separada `SCRIPT k6: PASS` de `LOAD REAL: SKIPPED` y `STRESS REAL: SKIPPED`; Integration declara API `BLOCKED` o `SKIPPED` cuando no existe ambiente. No se presenta un check verde de configuración como prueba remota aprobada.
+
+`ci.yml` incorpora el job **DEVOPS QUALITY GATE**, que consulta por API seis nombres exactos del mismo SHA: Lint/Tests/Build, integración frontend, audit producción, CodeQL, Android y Maestro. Genera JSON/Step Summary y actualiza un único comentario marcado del PR. El gate falla ante FAIL, BLOCKED, SKIPPED, ausencia o timeout. `staging-apk.yml` consulta el gate del mismo SHA y solo construye la entrega después de PASS; no duplica suites ni crea un noveno workflow.
+
+### Resultados locales sobre `fe552eb`
+
+| CONTROL | RESULTADO REAL |
+|---|---|
+| `npm ci` | PASS, 501 paquetes desde lock |
+| `npm run lint` | PASS |
+| Unitarias/coverage | PASS: 27 archivos, 127 pruebas |
+| Integración frontend | PASS: 1 archivo, 4 pruebas |
+| Regresión crítica | PASS: 16 archivos, 53 pruebas |
+| Coverage | PASS: statements 85.88%, branches 92.93%, functions 72.77%, lines 84.82% |
+| `npm run build` | PASS; ocho warnings SCSS de budget no bloqueantes |
+| actionlint 1.7.12 | PASS para ocho workflows |
+| Quality Gate con fixture | PASS; seis check-runs sintéticos, no sustituye PR real |
+| k6 inspect | PASS para LOAD/STRESS, cero tráfico; pruebas reales SKIPPED |
+| Postman CLI 1.75.0 + loopback | PASS: 8 requests/26 assertions; backend real BLOCKED |
+| YAML Maestro | PASS sintáctico; ejecución Android actual pendiente de Actions |
+
+La primera ejecución después de integrar develop detectó una regresión real en el test de carrito: el selector conservaba un `aria-label` anterior. Se sustituyó por la clase semántica estable del botón y se añadió la aserción de dos botones; las tres suites afectadas pasaron después. No se eliminó ni relajó ninguna prueba.
+
+### Annotations y decisiones
+
+| ORIGEN | OBSERVACIÓN | DECISIÓN |
+|---|---|---|
+| Runner GitHub | `ubuntu-latest` migra a Ubuntu 26.04 desde 19/10/2026 | Accionable: los ocho workflows quedaron fijados en `ubuntu-24.04` para reproducibilidad durante esta actividad |
+| Angular/Browserslist | Lista fija incluía navegadores fuera del soporte de Angular 22 | Accionable: `.browserslistrc` usa el Baseline oficial de Angular 22 (2026-05-07); el warning desapareció |
+| Postman CLI | 1.73.0 indicó que 1.75.0 estaba disponible | Accionable: 1.75.0 se instaló y validó con 8 requests/26 assertions sintéticas antes de actualizar workflow/documentación |
+| Angular build | Ocho estilos superan el warning de 2 kB, sin alcanzar error de 4 kB | Informativa y visible: no se aumentaron presupuestos ni se ocultó; optimización UI queda como deuda separada |
+| Gradle Wrapper | 8.14.3 puede mostrar versión más nueva disponible | Informativa: no se actualiza sin comprobar la matriz Android Gradle Plugin/Capacitor; el build del wrapper es el control aplicable |
+| Maestro/emulador | Mensajes de `colorbuffer`/archivos ini en runs aprobados | Informativa del runner AOSP si 3/3 flujos y JUnit pasan; un fallo de flujo sigue siendo bloqueante |
+| npm entorno local | `http-proxy` será desconocido en próximo npm mayor | Externo al repositorio; Node 22/lock siguen reproducibles y no se modifica configuración del runner anfitrión |
+
+Fuentes técnicas verificadas: Angular 22 define Baseline 2026-05-07; GitHub anunció la migración de `ubuntu-latest` a 26.04 entre octubre/noviembre de 2026; GitHub documenta `$GITHUB_STEP_SUMMARY` y que los required checks deben pasar. Las decisiones versionadas se comprobarán de nuevo en los runs del SHA publicado.
+
+### Checks y protección
+
+Candidatos obligatorios: `Lint, Tests y Build`, `frontend`, `Auditoria de dependencias`, `CodeQL JavaScript y TypeScript`, `Compilar APK Android Debug`, `ACEPTACIÓN móvil DEMO / maestro` y `DEVOPS QUALITY GATE`. Manuales/condicionales: API remota, regresión completa, k6 LOAD y k6 STRESS. El estado de branch protection se registrará después de que el nuevo nombre del gate exista en GitHub; no se configurará un required check que no aparezca siempre.
+
+Los resultados detallados están en TEST_RESULTS; la función, comando, datos y política PASS/FAIL de cada workflow están en PIPELINE_TEST_MATRIX y TEST_EXECUTION_STANDARD.

@@ -1,12 +1,12 @@
 # PLAN DE PRUEBAS — CASA DE MÚSICA CASTILLO
 
-Actualización: 12 de octubre de 2026. Alcance: app Ionic/Angular/Capacitor y contrato REST externo. TT-42, TT-44, TT-48 y TT-49.
+Actualización: 18 de octubre de 2026. Alcance: app Ionic/Angular/Capacitor y contrato REST externo. TT-42, TT-44, TT-48 y TT-49.
 
 ## Estado real y límites
 
-La base auditada es `develop` en `fc071671adea59d09776c0bc718a089ca3488327` (PR #72). Angular 22.2.1, TypeScript 6.0, Vitest 4.0.18, Ionic 9 y Capacitor 8.5.2. Existían 23 archivos de pruebas y 92 pruebas aprobadas. Los cuatro workflows de CI, seguridad, Android y staging habían pasado en ese commit.
+La rama de pruebas se actualizó mediante merge sin reescritura con `develop` en `c3d78a88fc68282598b6eb8869102a83da77b10f` (PR #74). Angular 22.2.1, TypeScript 6.0, Vitest 4.0.18, Ionic 9 y Capacitor 8.5.2. El catálogo UI incorporado en esa base sigue identificado como **Demostración** y usa datos locales. Los ocho workflows especializados se conservan; los resultados nuevos se registran en TEST_RESULTS y VALIDATION_REPORT.
 
-La app usa `DemoCheckoutStateService` y `DemoAccountStateService`; el login navega después de validar el formulario, sin autenticar en servidor. Catálogo apunta a `DummyPage`; búsqueda, detalle y favoritos no tienen recorridos completos. No hay HttpClient ni contrato móvil implementado. Los pedidos demo no se alimentan de los pedidos creados en checkout. Ninguna prueba DEMO demuestra autorización, cobros, persistencia o cumplimiento total de una HU.
+La app usa `DemoCheckoutStateService`, `DemoAccountStateService` y un catálogo UI con productos locales; el login navega después de validar el formulario, sin autenticar en servidor. Búsqueda del catálogo es local; detalle y favoritos no tienen recorridos completos. No hay HttpClient ni contrato móvil implementado. Los pedidos demo no se alimentan de los pedidos creados en checkout. Ninguna prueba DEMO demuestra autorización, cobros, persistencia o cumplimiento total de una HU.
 
 Se inspeccionó `IvanRamirezFrancisco/backend_` en `46bc32d8b0417370ab35e99866cabbeaaf830bba`, sin modificarlo. [API_CONTRACT.md](API_CONTRACT.md) identifica endpoints y brechas. No se ha autorizado una URL remota ni entregado una cuenta de pruebas: API, carga y estrés no se declaran ejecutados.
 
@@ -82,6 +82,10 @@ No cerrar TT/HU por esta entrega parcial. Registrar defectos con HU, pasos, espe
 
 - [TEST_TOOLS.md](TEST_TOOLS.md): herramienta, software, finalidad, justificación, responsable y momento.
 - [TEST_SCHEDULE.md](TEST_SCHEDULE.md): XP/HU/actividad/pipeline/evidencia.
+- [PIPELINE_TEST_MATRIX.md](PIPELINE_TEST_MATRIX.md): ocho workflows, controles, datos, gates y acciones.
+- [TEST_DATA.md](TEST_DATA.md): datos válidos, inválidos, límite, seguridad y DEMO.
+- [TEST_EXECUTION_STANDARD.md](TEST_EXECUTION_STANDARD.md): política PR/push/manual y modelo paralelo/secuencial.
+- [TEST_RESULTS.md](TEST_RESULTS.md): resultados reales, SHA, run y evidencia.
 - [TRACEABILITY_MATRIX.md](TRACEABILITY_MATRIX.md): criterios PF/PS y automatización real.
 - [CI_CD_PLAN.md](../devops/CI_CD_PLAN.md): disparadores y configuración.
 - [SECURITY_CRITERIA.md](../security/SECURITY_CRITERIA.md): requisitos de seguridad conservados.

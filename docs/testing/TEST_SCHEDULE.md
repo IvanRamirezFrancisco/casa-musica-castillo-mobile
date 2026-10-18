@@ -1,6 +1,8 @@
 # CALENDARIZACIÓN DE PRUEBAS XP
 
-Verificación del Project el 12/10/2026 por los campos expandidos de las 14 Issues. No se cambiaron sus responsables, estados, relaciones o iteraciones. La primera consulta usó los campos de las Issues; en la reauditoría de continuidad también se verificaron las asignaciones en Product Backlog.
+Reauditoría del GitHub Project el 18/10/2026: **69 elementos** del Product Backlog (HU-01–14, TT-01–50 y PV-01–05). Todos muestran responsable, Iteración XP, Status, Prioridad, Tipo, Módulo, Etapa DevOps y Story Points aplicables; no se reasignaron campos ya acordados. La vista **Cronograma XP** quedó guardada con `Iteración XP start` y `Iteración XP end`, de modo que XP1–XP5 y sus elementos se observan sobre la línea temporal.
+
+No se cambiaron responsables, estados, relaciones o iteraciones ya aprobadas. `CIERRE` permanece como periodo académico de consolidación; el Project actualmente planifica los elementos en XP1–XP5 y no se inventó una sexta iteración para llenar el calendario.
 
 | ITERACIÓN | FECHA ACADÉMICA 2026 | HU EN PROJECT |
 |---|---|---|

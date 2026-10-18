@@ -1,17 +1,19 @@
 # HERRAMIENTAS DE PRUEBA
 
-Selección verificada el 12/10/2026. Se mantienen las herramientas instaladas; no se migra framework ni se instala Newman. Los títulos de actividades irán EN MAYÚSCULAS y con fuente azul #1F4E79 en Word/PDF.
+Selección verificada el 18/10/2026. Se mantienen las herramientas instaladas; no se migra framework ni se instala Newman. Los títulos de actividades irán EN MAYÚSCULAS y con fuente azul #1F4E79 en Word/PDF.
 
 | TIPO | HERRAMIENTA / SOFTWARE | FINALIDAD Y JUSTIFICACIÓN | EVIDENCIA | RESPONSABLE | MOMENTO / DÓNDE SE EJECUTA |
 |---|---|---|---|---|---|
 | PRUEBAS UNITARIAS | Vitest 4.0.18 + Angular TestBed, jsdom; Node 22 CI | Lógica/validadores/estado Angular; conservar builder `@angular/build:unit-test` 22.2.1 | JUnit + text/HTML/lcov/json-summary con `@vitest/coverage-v8` 4.0.18 | Tackalay; revisión Ivan | Local y GitHub Actions; cada PR/push; XP1–5 |
 | ANÁLISIS DE CÓDIGO ESTÁTICO | ESLint 10, angular-eslint 22, TypeScript 6 / compilador Angular 22.2.1 | Reglas TS/HTML y tipos/plantillas/budgets, sin duplicar herramientas | Log lint/build y estado CI | IvanRamirezFrancisco | Local y GitHub Actions; cada PR/push; XP1–5 |
-| PRUEBAS DE INTEGRACIÓN | Vitest/TestBed; Postman CLI 1.73.0 | Interacción real entre componentes/servicios; contrato HTTP externo versionable local sin API key Postman | JUnit frontend y API, evidencia de ambiente/fixture | Tackalay frontend; Ivan API | GitHub Actions/local; PR frontend; API manual al cambiar contrato/cierre XP |
+| PRUEBAS DE INTEGRACIÓN | Vitest/TestBed; Postman CLI 1.75.0 | Interacción real entre componentes/servicios; contrato HTTP externo versionable local sin API key Postman | JUnit frontend y API, evidencia de ambiente/fixture | Tackalay frontend; Ivan API | GitHub Actions/local; PR frontend; API manual al cambiar contrato/cierre XP |
 | PRUEBAS DE ACEPTACIÓN | Maestro CLI 2.11.0, Java 21, Android Emulator API 34 x86_64, Capacitor 8.5.2 | Interacción de usuario en APK, CLI local sin Maestro Cloud; limita alcance a UI demo actual | JUnit, capturas, logs sanitizados y APK del mismo SHA | Tackalay; Ivan infraestructura | Cada Android Build y cierre XP |
 | PRUEBAS DE REGRESIÓN | Reutilización Vitest/TestBed y Maestro | Detectar regresión de recorridos críticos sin copiar suites | JUnit critical-regression + aceptación | Tackalay | Cada corrección; cierre XP; manual antes entrega |
 | PRUEBAS DE RENDIMIENTO | k6 OSS 2.3.0 | Carga moderada reproducible, percentiles, errores y thresholds versionados | Resumen/serie JSON, logs, SHA, ambiente | Ivan ejecución; Tackalay análisis | XP2 baseline; XP4/5 comparación, manual |
 | PRUEBAS DE ESFUERZO / ESTRÉS | k6 OSS 2.3.0 | Carga progresiva acotada y observación de recuperación; no requiere servicio de pago | Series por fase, p95/error, diagnóstico de aborto/recuperación | Ivan ejecución; Tackalay análisis | Diseño XP2, ejecución XP4/5 con permiso, manual |
 | PRUEBAS DE SEGURIDAD (complementarias) | npm audit y CodeQL JavaScript/TypeScript | Dependencias producción y análisis de código; conservar workflow exitoso | Logs audit, alertas CodeQL; PS requiere evidencia separada | Ivan pipeline, Tackalay casos PS | Cada PR/push y XP3–5 |
+| AUTOMATIZACIÓN / QUALITY GATE | GitHub Actions + scripts Node versionados | Ejecutar ocho workflows especializados, paralelizar controles independientes y consolidar seis checks del mismo SHA sin servicio de pago | Step Summaries, check-runs, comentario único del PR y JSON del gate | IvanRamirezFrancisco; revisión Tackalay | PR/push; antes de staging |
+| BUILD / ENTREGA ANDROID | Capacitor 8.5.2 + Gradle Wrapper + Java 21 | Sincronizar la app Angular con Android y producir un APK reproducible; usa el wrapper versionado del proyecto | APK Debug/Staging, logs de Gradle, tamaño y SHA | IvanRamirezFrancisco | PR/push para Debug; staging tras Quality Gate |
 
 GitHub Actions orquesta todos los jobs. Los servicios externos no sustituyen el resultado local. No se habilita ningún plan de pago; las ejecuciones están sujetas a la cuota disponible de GitHub del repositorio.
 
