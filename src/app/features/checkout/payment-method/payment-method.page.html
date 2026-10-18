@@ -1,28 +1,26 @@
 <ion-header class="ion-no-border cmc-header-minimal">
   <ion-toolbar>
     <ion-buttons slot="start">
-      <button class="nav-back-btn" (click)="goBack()">
+      <button type="button" aria-label="Volver" class="nav-back-btn" (click)="goBack()">
         <ion-icon name="arrow-back-outline"></ion-icon>
       </button>
     </ion-buttons>
-    <ion-title class="cmc-title">Método de pago</ion-title>
+    <ion-title class="cmc-title" role="heading" aria-level="1">Método de pago</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content class="cmc-page" [scrollY]="true">
   <div class="cmc-page-container">
     <div class="options-container" role="radiogroup" aria-label="Opciones de pago">
-      
+
       <!-- Transfer Option -->
-      <div 
-        class="delivery-option-card" 
+      <label
+        class="delivery-option-card"
         [class.selected]="selectedMethod === 'transfer'"
-        (click)="selectMethod('transfer')"
-        role="radio"
-        [attr.aria-checked]="selectedMethod === 'transfer'"
-        tabindex="0"
+
       >
-        <div class="radio-indicator">
+        <input class="method-radio" type="radio" name="payment-method" [checked]="selectedMethod === 'transfer'" (change)="selectMethod('transfer')" />
+        <div class="radio-indicator" aria-hidden="true">
           <div class="inner-circle"></div>
         </div>
         <div class="option-content">
@@ -39,18 +37,12 @@
             </div>
           }
         </div>
-      </div>
+      </label>
 
       <!-- Mercado Pago Option -->
-      <div 
-        class="delivery-option-card" 
-        [class.selected]="selectedMethod === 'mercadopago'"
-        (click)="selectMethod('mercadopago')"
-        role="radio"
-        [attr.aria-checked]="selectedMethod === 'mercadopago'"
-        tabindex="0"
-      >
-        <div class="radio-indicator">
+      <label class="delivery-option-card" [class.selected]="selectedMethod === 'mercadopago'">
+        <input class="method-radio" type="radio" name="payment-method" [checked]="selectedMethod === 'mercadopago'" (change)="selectMethod('mercadopago')" />
+        <div class="radio-indicator" aria-hidden="true">
           <div class="inner-circle"></div>
         </div>
         <div class="option-content">
@@ -67,7 +59,7 @@
             </div>
           }
         </div>
-      </div>
+      </label>
 
     </div>
 

@@ -1,27 +1,17 @@
-.cmc-header-transparent ion-toolbar {
-  --background: var(--cmc-background);
-  --border-width: 0;
-}
-
-.orders-content {
-  --background: var(--cmc-background);
-  --padding-bottom: var(--cmc-bubble-nav-offset);
-}
-
 .order-list {
   list-style: none;
   margin: 0;
   padding: 0;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: var(--cmc-space-3);
 }
 
 .order-card {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  padding: 16px;
+  gap: var(--cmc-space-2);
+  padding: var(--cmc-space-4);
   min-height: 48px;
   background: var(--cmc-surface);
   border-radius: var(--cmc-radius-md);
@@ -45,7 +35,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 8px;
+  gap: var(--cmc-space-2);
 }
 
 .order-id {
@@ -63,3 +53,5 @@
   font-weight: 700;
   color: var(--cmc-primary);
 }
+
+.order-top, .order-meta, .order-bottom { flex-wrap: wrap; }

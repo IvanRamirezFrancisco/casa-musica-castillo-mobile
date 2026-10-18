@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { IonContent, IonHeader, IonToolbar,   IonIcon } from '@ionic/angular';
 import { addIcons } from 'ionicons';
 import { searchOutline, notificationsOutline, musicalNoteOutline, keypadOutline, ellipseOutline, pulseOutline, heartOutline, imageOutline, musicalNotesOutline } from 'ionicons/icons';
@@ -17,6 +17,7 @@ interface Category {
   icon: string;
 }
 
+import { Router, RouterLink } from '@angular/router';
 import { CurrencyPipe } from '@angular/common';
 
 @Component({
@@ -28,14 +29,31 @@ import { CurrencyPipe } from '@angular/common';
     IonContent,
     IonHeader,
     IonToolbar,
-    
-    
+
+
     IonIcon,
+    RouterLink,
     CurrencyPipe
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HomePage {
+  private readonly router = inject(Router);
+  readonly searchTerm = signal('');
+
+  updateSearch(event: Event): void {
+    if (event.target instanceof HTMLInputElement) { this.searchTerm.set(event.target.value); }
+  }
+
+  searchCatalog(): void {
+    void this.router.navigate(['/main/catalog'], { queryParams: { q: this.searchTerm() } });
+  }
+
+  readonly favorites = signal<readonly string[]>([]);
+
+  toggleFavorite(id: string): void {
+    this.favorites.update(ids => ids.includes(id) ? ids.filter(value => value !== id) : [...ids, id]);
+  }
   categories = signal<Category[]>([
     { id: '1', name: 'Guitarras', icon: 'musical-note-outline' },
     { id: '2', name: 'Pianos', icon: 'keypad-outline' },

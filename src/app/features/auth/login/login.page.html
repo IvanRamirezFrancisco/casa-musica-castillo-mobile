@@ -1,4 +1,4 @@
-<ion-content class="cmc-page auth-page">
+<ion-content class="cmc-page cmc-standalone-page auth-page">
   <!-- Top Burgundy Area -->
   <div class="auth-hero">
     <div class="brand-info">
@@ -19,6 +19,7 @@
       <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="auth-form">
         <cmc-input
           formControlName="email"
+          autocomplete="email"
           label="Correo electrónico"
           type="email"
           placeholder="ejemplo@correo.com"
@@ -27,6 +28,7 @@
 
         <cmc-input
           formControlName="password"
+          autocomplete="current-password"
           label="Contraseña"
           type="password"
           placeholder="Ingresa tu contraseña"

@@ -1,17 +1,5 @@
-.cmc-header-transparent {
-  ion-toolbar {
-    --background: var(--cmc-background);
-    --border-width: 0;
-  }
-}
-
-.cart-content {
-  --background: var(--cmc-background);
-  --padding-bottom: var(--cmc-bubble-nav-offset);
-}
-
 .cart-badge {
-  margin-right: 16px;
+  margin-right: var(--cmc-space-4);
   background: var(--cmc-error);
   border-radius: var(--cmc-radius-full);
 }
@@ -19,18 +7,18 @@
 .cart-items {
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  margin-bottom: 24px;
+  gap: var(--cmc-space-4);
+  margin-bottom: var(--cmc-space-6);
 }
 
 .cart-item-card {
   display: flex;
-  gap: 16px;
+  gap: var(--cmc-space-4);
   background: var(--cmc-surface);
   border-radius: var(--cmc-radius-md);
-  padding: 16px;
+  padding: var(--cmc-space-4);
   box-shadow: var(--cmc-shadow-card);
-  
+
   .item-image {
     width: 80px;
     height: 80px;
@@ -56,6 +44,7 @@
 
   .item-details {
     flex: 1;
+    min-width: 0;
     display: flex;
     flex-direction: column;
 
@@ -73,9 +62,11 @@
       .remove-btn {
         background: transparent;
         border: none;
-        color: var(--cmc-text-disabled);
-        padding: 4px;
-        margin: -4px -4px 0 0;
+        color: var(--cmc-text-secondary);
+        padding: var(--cmc-space-1);
+        min-width: 44px;
+        min-height: 44px;
+        flex-shrink: 0;
         cursor: pointer;
 
         ion-icon {
@@ -89,20 +80,20 @@
     }
 
     .item-price {
-      margin-top: 4px;
+      margin-top: var(--cmc-space-1);
       color: var(--cmc-primary);
     }
 
     .item-quantity {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: var(--cmc-space-3);
       margin-top: auto;
-      padding-top: 8px;
+      padding-top: var(--cmc-space-2);
 
       .qty-btn {
-        width: 32px;
-        height: 32px;
+        width: 44px;
+        height: 44px;
         border-radius: 50%;
         border: 1px solid var(--cmc-border);
         background: var(--cmc-surface);
@@ -133,9 +124,9 @@
 
 .coupon-section {
   display: flex;
-  gap: 12px;
-  margin-bottom: 32px;
-  
+  gap: var(--cmc-space-3);
+  margin-bottom: var(--cmc-space-8);
+
   cmc-input {
     flex: 1;
   }
@@ -144,12 +135,12 @@
 .order-summary {
   background: var(--cmc-surface);
   border-radius: var(--cmc-radius-md);
-  padding: 16px;
+  padding: var(--cmc-space-4);
   box-shadow: var(--cmc-shadow-card);
-  margin-bottom: 24px;
+  margin-bottom: var(--cmc-space-6);
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: var(--cmc-space-3);
 
   .summary-row {
     display: flex;
@@ -160,7 +151,7 @@
   .summary-divider {
     height: 1px;
     background: var(--cmc-border);
-    margin: 4px 0;
+    margin: var(--cmc-space-1) 0;
   }
 
   .total-row {
@@ -171,5 +162,14 @@
 }
 
 .cart-actions {
-  margin-bottom: 32px;
+  margin-bottom: 0;
+}
+
+.coupon-section { align-items: flex-end; }
+.coupon-section cmc-input { min-width: 0; }
+.summary-row { gap: var(--cmc-space-3); flex-wrap: wrap; }
+@media (max-width: 375px) {
+  .cart-item-card { gap: var(--cmc-space-3); padding: var(--cmc-space-3); }
+  .cart-item-card .item-image { width: 64px; height: 64px; }
+  .coupon-section { flex-direction: column; align-items: stretch; }
 }

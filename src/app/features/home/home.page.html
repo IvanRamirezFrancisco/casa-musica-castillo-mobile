@@ -1,4 +1,4 @@
-<ion-header class="ion-no-border cmc-header-transparent">
+<ion-header class="ion-no-border cmc-header-transparent cmc-discovery-header">
   <ion-toolbar class="home-toolbar">
     <div class="header-content">
       <div class="brand-title">
@@ -6,20 +6,21 @@
         <h1 class="cmc-title">Casa de Música</h1>
       </div>
       <div class="header-actions">
-        <ion-icon name="heart-outline" class="action-icon"></ion-icon>
-        <ion-icon name="notifications-outline" class="action-icon"></ion-icon>
+        <span class="cmc-caption" aria-live="polite">{{ favorites().length }} favoritos</span>
+
       </div>
     </div>
   </ion-toolbar>
   <ion-toolbar class="search-toolbar">
     <div class="search-container">
       <ion-icon name="search-outline" class="search-icon"></ion-icon>
-      <input type="text" class="cmc-search-input" placeholder="Buscar guitarras, pianos..." />
+      <input type="search" class="cmc-search-input" aria-label="Buscar en el catálogo" placeholder="Buscar guitarras, pianos..." [value]="searchTerm()" (input)="updateSearch($event)" (keydown.enter)="searchCatalog()" />
+      <a class="search-submit" [routerLink]="['/main/catalog']" [queryParams]="{ q: searchTerm() }" aria-label="Buscar instrumentos">Buscar</a>
     </div>
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="cmc-page home-content">
+<ion-content class="cmc-page cmc-root-page cmc-discovery-content home-content">
   <div class="cmc-page-container">
 
     <!-- Promotion Banner -->
@@ -37,10 +38,10 @@
       </div>
       <div class="categories-scroll">
         @for (category of categories(); track category.id) {
-          <div class="category-chip">
+          <a class="category-chip" routerLink="/main/catalog">
             <ion-icon [name]="category.icon" class="category-icon"></ion-icon>
             <span class="category-name cmc-body">{{ category.name }}</span>
-          </div>
+          </a>
         }
       </div>
     </section>
@@ -49,13 +50,15 @@
     <section class="featured-section">
       <div class="section-header">
         <h2 class="section-title cmc-section-title">Novedades</h2>
-        <a class="cmc-link see-all">Ver más</a>
+        <a class="cmc-link see-all" routerLink="/main/catalog">Ver más</a>
       </div>
       <div class="products-grid">
         @for (product of featuredProducts(); track product.id) {
           <div class="product-card">
             <div class="product-image">
-              <ion-icon name="heart-outline" class="favorite-icon"></ion-icon>
+              <button type="button" class="favorite-icon" [attr.aria-label]="'Favorito: ' + product.name" [attr.aria-pressed]="favorites().includes(product.id)" (click)="toggleFavorite(product.id)">
+                <ion-icon name="heart-outline" aria-hidden="true"></ion-icon>
+              </button>
               @if (product.imageUrl) {
                 <img [src]="product.imageUrl" [alt]="product.name" />
               } @else {

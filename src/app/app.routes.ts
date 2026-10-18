@@ -32,7 +32,7 @@ export const routes: Routes = [
       },
       {
         path: 'catalog',
-        loadComponent: () => import('./features/dummy/dummy.page').then((m) => m.DummyPage),
+        loadComponent: () => import('./features/catalog/catalog.page').then((m) => m.CatalogPage),
       },
       {
         path: 'cart',
