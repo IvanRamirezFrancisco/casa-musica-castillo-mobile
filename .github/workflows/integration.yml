@@ -3,7 +3,7 @@ on:
   pull_request:
     branches: [develop, main]
   push:
-    branches: [develop]
+    branches: [develop, main]
   workflow_dispatch:
     inputs:
       suite:
@@ -15,7 +15,7 @@ permissions:
   contents: read
 jobs:
   frontend:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v7
@@ -24,20 +24,36 @@ jobs:
           node-version: '22'
           cache: npm
       - run: npm ci
-      - run: npm run test:integration
+      - id: integration
+        name: Ejecutar integración frontend
+        run: npm run test:integration
       - uses: actions/upload-artifact@v7
         if: always()
         with:
           name: frontend-integration
           path: reports/integration-tests.xml
           if-no-files-found: error
+      - name: Retroalimentación de integración frontend
+        if: always()
+        env:
+          SUMMARY_WORKFLOW: INTEGRACIÓN - Frontend
+          SUMMARY_PR: ${{ github.event.pull_request.number || 'No aplica' }}
+          SUMMARY_CONTROLS: |
+            TestBed integración|${{ steps.integration.outcome == 'success' && 'PASS' || 'FAIL' }}|Componentes, servicios DEMO y recorridos críticos implementados.
+            Contrato API remoto|SKIPPED|Solo se habilita por workflow_dispatch con ambiente testing autorizado.
+          SUMMARY_STATUS: ${{ steps.integration.outcome == 'success' && 'PASS' || 'FAIL' }}
+          SUMMARY_DATA: Fixtures y estado DEMO local; sin afirmar conexión móvil-backend.
+          SUMMARY_METRICS: JUnit de la suite *.integration.spec.ts.
+          SUMMARY_ARTIFACTS: frontend-integration.
+        run: node scripts/write-workflow-summary.mjs
   configuration:
     if: github.event_name == 'workflow_dispatch'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     environment: testing
     outputs:
       ready: ${{ steps.check.outputs.ready }}
     steps:
+      - uses: actions/checkout@v7
       - id: check
         env:
           BASE: ${{ vars.API_BASE_URL }}
@@ -55,12 +71,23 @@ jobs:
           if [[ "$SUITE" == "LOGIN_CONTRACT" && ( -z "$EMAIL" || -z "$PASSWORD" ) ]]; then ready=false; fi
           echo "ready=$ready" >> "$GITHUB_OUTPUT"
           if [[ "$ready" == "false" ]]; then
-            echo "## API NO EJECUTADA: falta configuración o fixture autorizada. Esto no acredita integración remota." >> "$GITHUB_STEP_SUMMARY"
+            echo "Configuración API incompleta; la prueba remota queda BLOCKED."
           fi
+      - name: Retroalimentación de configuración API
+        if: always()
+        env:
+          SUMMARY_WORKFLOW: INTEGRACIÓN - Configuración API
+          SUMMARY_CONTROLS: |
+            Ambiente autorizado|${{ steps.check.outputs.ready == 'true' && 'PASS' || 'BLOCKED' }}|Requiere URL/origen coincidentes, autorización explícita y fixture del escenario.
+          SUMMARY_STATUS: ${{ steps.check.outputs.ready == 'true' && 'PASS' || 'BLOCKED' }}
+          SUMMARY_ACTION: ${{ steps.check.outputs.ready == 'true' && 'PUEDE CONTINUAR' || 'BLOQUEADO POR AMBIENTE' }}
+          SUMMARY_DATA: GitHub Environment testing; URLs/IDs en Variables y credenciales/tokens en Secrets.
+          SUMMARY_ARTIFACTS: Ninguno; habilita o bloquea el job API.
+        run: node scripts/write-workflow-summary.mjs
   api:
     needs: configuration
     if: needs.configuration.outputs.ready == 'true'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 10
     environment: testing
     env:
@@ -78,12 +105,26 @@ jobs:
         with:
           node-version: '22'
       - name: Instalar Postman CLI oficial (sin login/cloud)
-        run: npm install --global postman-cli@1.73.0
-      - run: postman --version
-      - run: node scripts/run-api-tests.mjs
+        run: npm install --global postman-cli@1.75.0
+      - name: Mostrar versión Postman CLI
+        run: postman --version
+      - id: api-contract
+        name: Ejecutar contrato API autorizado
+        run: node scripts/run-api-tests.mjs
       - uses: actions/upload-artifact@v7
         if: always()
         with:
           name: api-contract-results
           path: reports/api-*.xml
           if-no-files-found: warn
+      - name: Retroalimentación de contrato API
+        if: always()
+        env:
+          SUMMARY_WORKFLOW: INTEGRACIÓN - Contrato API
+          SUMMARY_CONTROLS: |
+            Postman contrato real|${{ steps.api-contract.outcome == 'success' && 'PASS' || 'FAIL' }}|Colección versionada contra el ambiente explícitamente autorizado.
+          SUMMARY_STATUS: ${{ steps.api-contract.outcome == 'success' && 'PASS' || 'FAIL' }}
+          SUMMARY_DATA: Ambiente testing; secretos solo mediante GitHub Secrets.
+          SUMMARY_METRICS: Requests/aserciones reales se conservan en JUnit y logs.
+          SUMMARY_ARTIFACTS: api-contract-results.
+        run: node scripts/write-workflow-summary.mjs

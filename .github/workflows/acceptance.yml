@@ -5,7 +5,8 @@ permissions:
   contents: read
 jobs:
   maestro:
-    runs-on: ubuntu-latest
+    name: maestro
+    runs-on: ubuntu-24.04
     timeout-minutes: 30
     env:
       MAESTRO_CLI_NO_ANALYTICS: 1
@@ -31,6 +32,7 @@ jobs:
           sudo udevadm control --reload-rules
           sudo udevadm trigger --name-match=kvm
       - name: Ejecutar aceptación crítica local (sin Maestro Cloud)
+        id: maestro-tests
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: 34
@@ -52,3 +54,15 @@ jobs:
           path: reports/maestro/
           if-no-files-found: warn
           retention-days: 14
+      - name: Retroalimentación de aceptación móvil
+        if: always()
+        env:
+          SUMMARY_WORKFLOW: ACEPTACIÓN - Maestro Android DEMO
+          SUMMARY_PR: ${{ github.event.pull_request.number || 'No aplica' }}
+          SUMMARY_CONTROLS: |
+            Flujos Maestro DEMO|${{ steps.maestro-tests.outcome == 'success' && 'PASS' || 'FAIL' }}|Inicio/autenticación demo, compra demo y pedidos/perfil navegable; no acredita backend.
+          SUMMARY_STATUS: ${{ steps.maestro-tests.outcome == 'success' && 'PASS' || 'FAIL' }}
+          SUMMARY_DATA: APK Debug y estado DEMO reiniciado por flujo en emulador AOSP API 34.
+          SUMMARY_METRICS: Tres flujos; tiempos y casos reales en JUnit.
+          SUMMARY_ARTIFACTS: acceptance-maestro-demo (JUnit, capturas y logs), retención 14 días.
+        run: node scripts/write-workflow-summary.mjs

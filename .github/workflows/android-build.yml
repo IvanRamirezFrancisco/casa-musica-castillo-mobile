@@ -20,7 +20,7 @@ permissions:
 jobs:
   android-build:
     name: Compilar APK Android Debug
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 30
 
     steps:
@@ -52,19 +52,23 @@ jobs:
         run: npm ci
 
       - name: Compilar aplicacion Angular
+        id: angular-build
         run: npm run build
 
       - name: Sincronizar Capacitor con Android
+        id: capacitor-sync
         run: npx cap sync android
 
       - name: Dar permisos al Gradle Wrapper
         run: chmod +x android/gradlew
 
       - name: Compilar APK Debug
+        id: gradle-build
         working-directory: android
         run: ./gradlew assembleDebug --no-daemon
 
       - name: Verificar APK generado
+        id: verify-apk
         run: |
           test -f android/app/build/outputs/apk/debug/app-debug.apk
           ls -lh android/app/build/outputs/apk/debug/app-debug.apk
@@ -76,6 +80,22 @@ jobs:
           path: android/app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
           retention-days: 14
+
+      - name: Retroalimentación de Android Build
+        if: always()
+        env:
+          SUMMARY_WORKFLOW: Android - Build Debug APK
+          SUMMARY_PR: ${{ github.event.pull_request.number || 'No aplica' }}
+          SUMMARY_CONTROLS: |
+            Angular build|${{ steps.angular-build.outcome == 'success' && 'PASS' || 'FAIL' }}|Compila la aplicación web para Capacitor.
+            Capacitor sync|${{ steps.capacitor-sync.outcome == 'success' && 'PASS' || 'FAIL' }}|Sincroniza assets y plugins Android.
+            Gradle assembleDebug|${{ steps.gradle-build.outcome == 'success' && 'PASS' || 'FAIL' }}|Control BUILD; no se presenta como prueba unitaria.
+            Verificación APK|${{ steps.verify-apk.outcome == 'success' && 'PASS' || 'FAIL' }}|Confirma el artefacto esperado del mismo SHA.
+          SUMMARY_STATUS: ${{ (steps.angular-build.outcome == 'success' && steps.capacitor-sync.outcome == 'success' && steps.gradle-build.outcome == 'success' && steps.verify-apk.outcome == 'success') && 'PASS' || 'FAIL' }}
+          SUMMARY_DATA: Código y assets del SHA; build Debug sin secretos.
+          SUMMARY_METRICS: Tamaño del APK visible en el paso Verificar APK generado.
+          SUMMARY_ARTIFACTS: casa-musica-castillo-debug-apk, retención 14 días.
+        run: node scripts/write-workflow-summary.mjs
 
 
 

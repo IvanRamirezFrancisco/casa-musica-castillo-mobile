@@ -19,15 +19,15 @@ permissions:
 jobs:
   dependency-audit:
     name: Auditoria de dependencias
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 15
 
     steps:
       - name: Obtener codigo fuente
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Configurar Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
           node-version: "22"
           cache: "npm"
@@ -36,15 +36,31 @@ jobs:
         run: npm ci
 
       - name: Auditar dependencias de produccion
+        id: production-audit
         run: npm audit --omit=dev --audit-level=moderate
 
       - name: Auditar todas las dependencias
+        id: complete-audit
         continue-on-error: true
         run: npm audit --audit-level=moderate
 
+      - name: Retroalimentación de auditoría
+        if: always()
+        env:
+          SUMMARY_WORKFLOW: Security - Auditoría de dependencias
+          SUMMARY_PR: ${{ github.event.pull_request.number || 'No aplica' }}
+          SUMMARY_CONTROLS: |
+            npm audit producción|${{ steps.production-audit.outcome == 'success' && 'PASS' || 'FAIL' }}|Control obligatorio con severidad moderate.
+            npm audit completo|${{ steps.complete-audit.outcome == 'success' && 'PASS' || 'FAIL' }}|Control informativo de dependencias de desarrollo; su fallo no oculta ni reemplaza el audit de producción.
+          SUMMARY_STATUS: ${{ steps.production-audit.outcome == 'success' && 'PASS' || 'FAIL' }}
+          SUMMARY_DATA: package-lock.json; sin npm audit fix ni cambios automáticos.
+          SUMMARY_METRICS: El log conserva la cantidad y severidad real de vulnerabilidades.
+          SUMMARY_ARTIFACTS: Logs del job; alertas accionables se corrigen mediante PR.
+        run: node scripts/write-workflow-summary.mjs
+
   codeql:
     name: CodeQL JavaScript y TypeScript
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 20
 
     permissions:
@@ -55,12 +71,28 @@ jobs:
 
     steps:
       - name: Obtener codigo fuente
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Inicializar CodeQL
+        id: codeql-init
         uses: github/codeql-action/init@v4
         with:
           languages: javascript-typescript
 
       - name: Analizar codigo con CodeQL
+        id: codeql-analyze
         uses: github/codeql-action/analyze@v4
+
+      - name: Retroalimentación de CodeQL
+        if: always()
+        env:
+          SUMMARY_WORKFLOW: Security - CodeQL
+          SUMMARY_PR: ${{ github.event.pull_request.number || 'No aplica' }}
+          SUMMARY_CONTROLS: |
+            Inicialización CodeQL|${{ steps.codeql-init.outcome == 'success' && 'PASS' || 'FAIL' }}|Base JavaScript/TypeScript.
+            Análisis CodeQL|${{ steps.codeql-analyze.outcome == 'success' && 'PASS' || 'FAIL' }}|Análisis estático de seguridad y publicación SARIF.
+          SUMMARY_STATUS: ${{ (steps.codeql-init.outcome == 'success' && steps.codeql-analyze.outcome == 'success') && 'PASS' || 'FAIL' }}
+          SUMMARY_DATA: Código del SHA; no usa datos de producción.
+          SUMMARY_METRICS: Las alertas reales se consultan en Security/Code scanning; un job verde no afirma cero riesgos funcionales.
+          SUMMARY_ARTIFACTS: Resultado SARIF/Code scanning de GitHub.
+        run: node scripts/write-workflow-summary.mjs
