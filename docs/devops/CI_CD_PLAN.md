@@ -1,10 +1,10 @@
 # PLAN CI/CD Y EVIDENCIA DE PRUEBAS
 
-Actualizado 13/10/2026. TT-43–50. Plataforma GitHub Actions; XP + DevOps. Evidencia del PR #73 en docs/testing/VALIDATION_REPORT.md.
+Actualizado 18/10/2026. TT-43–50. Plataforma GitHub Actions; XP + DevOps. Evidencia del PR #73 en docs/testing/VALIDATION_REPORT.md.
 
 ## Base verificada
 
-`develop` inicial `fc071671adea59d09776c0bc718a089ca3488327`. Se conservan los pasos existentes de los cuatro pipelines; no se reescriben versiones de acciones ya exitosas. La rama de trabajo parte de develop actualizado: `chore/test-pipelines-completion`. Integración mediante PR hacia develop, sin merge automático y sin escribir directamente main/develop.
+Base original `fc071671adea59d09776c0bc718a089ca3488327`; actualización segura con `develop` `c3d78a88fc68282598b6eb8869102a83da77b10f` mediante merge sin force-push. La rama sigue siendo `chore/test-pipelines-completion` y el PR #73 conserva destino `develop`, sin merge automático ni escritura directa en main/develop.
 
 Runs iniciales exitosos del mismo SHA:
 
@@ -17,16 +17,16 @@ Runs iniciales exitosos del mismo SHA:
 
 | WORKFLOW | DISPARADOR | PASOS / TIPO DE PRUEBA | EVIDENCIA |
 |---|---|---|---|
-| `ci.yml` | PR/push develop/main, manual | npm ci, lint, UNITARIAS + cobertura V8, Angular build | `coverage-and-unit-tests`: HTML/lcov/JSON/JUnit |
+| `ci.yml` | PR/push develop/main, manual | npm ci, lint, UNITARIAS + cobertura V8, Angular build; Quality Gate consolidado en PR/push | `coverage-and-unit-tests`, `devops-quality-gate`, Step Summary/comentario único |
 | `security.yml` | PR/push develop/main, manual | audit producción bloqueante moderate, audit completo informativo; CodeQL JS/TS | Logs y Code scanning |
-| `integration.yml` | PR/push develop: frontend; manual: frontend + API | INTEGRACIÓN TestBed; Postman CLI local con ambiente testing | JUnit frontend/API |
+| `integration.yml` | PR/push develop/main: frontend; manual: frontend + API | INTEGRACIÓN TestBed; Postman CLI local con ambiente testing | JUnit frontend/API + Step Summary |
 | `android-build.yml` | PR/push develop/main, manual, workflow_call | Build web, cap sync, Gradle debug y artifact; llama aceptación después | APK debug + aceptación |
 | `acceptance.yml` | workflow_call desde Android | Descarga APK del mismo run, emulador KVM/API34, Maestro local | `acceptance-maestro-demo`: JUnit/capturas/debug |
 | `regression.yml` | Manual | REGRESIÓN crítica Vitest/TestBed y reutiliza Android→Acceptance | critical-regression + APK + Maestro |
-| `performance.yml` | PR solo valida scripts; carga exclusivamente manual | Job PERFORMANCE/LOAD o STRESS/ESFUERZO con k6 OSS, selección excluyente | Resumen y serie JSON |
-| `staging-apk.yml` | Push develop/manual | Conserva build y entrega APK staging original | APK staging con número de run |
+| `performance.yml` | Todo PR valida scripts; carga exclusivamente manual | Job PERFORMANCE/LOAD o STRESS/ESFUERZO con k6 OSS, selección excluyente | Step Summary explícito `LOAD/STRESS NO EJECUTADO` y serie JSON solo en ejecución real |
+| `staging-apk.yml` | Push develop/manual | Exige `DEVOPS QUALITY GATE` PASS del mismo SHA; después build y entrega APK staging | Gate JSON, Step Summary y APK staging con número de run |
 
-Android publica el APK antes de aceptación; si falla Maestro, el workflow falla aunque el artifact debug exista. No se afirma que staging dependa de CI/Security: actualmente son flujos paralelos. Descargar artifact no es desplegar backend ni publicar Play Store. Revisión humana debe comprobar gates del mismo SHA antes de entrega. No se alteran protecciones de rama ni relaciones del Project.
+Android publica el APK antes de aceptación; si falla Maestro, el workflow falla aunque el artifact debug exista. CI, Security, Integration, Android y k6 inspect se inician en paralelo. Dentro de Android la secuencia real es Build → APK → Acceptance. `DEVOPS QUALITY GATE` consulta seis checks obligatorios del mismo SHA; staging espera ese gate y falla/bloquea la entrega si falta o no es PASS. Descargar artifact no es desplegar backend ni publicar Play Store.
 
 ## Cobertura y automatización local
 
@@ -45,7 +45,7 @@ Angular 22 utiliza `@angular/build:unit-test`, no Karma. V8 4.0.18 coincide con 
 
 Configurar ambiente GitHub **testing** con restricciones/aprobaciones apropiadas según disponibilidad del repositorio, sin compartir secretos con PRs de forks. Ningún job remoto API/k6 se dispara en PR. No se crean secretos vacíos para simular éxito.
 
-API variables: `API_BASE_URL`, `API_AUTHORIZED_ORIGIN`, `API_TEST_AUTHORIZED=true`, `API_USER_ID` cuando corresponda. Secretos: `API_USER_TOKEN` (ROLE_USER fixture), `API_TEST_EMAIL`, `API_TEST_PASSWORD`. La opción manual elige PUBLIC_CONTRACT, AUTHENTICATED_CONTRACT o LOGIN_CONTRACT. Si falta configuración, el job remoto se omite y el resumen indica NO EJECUTADO; no cuenta como prueba aprobada. El runner local falla con mensaje BLOCKED. Ver [contrato](../testing/API_CONTRACT.md).
+API variables: `API_BASE_URL`, `API_AUTHORIZED_ORIGIN`, `API_TEST_AUTHORIZED=true`, `API_USER_ID` cuando corresponda. Secretos: `API_USER_TOKEN` (ROLE_USER fixture), `API_TEST_EMAIL`, `API_TEST_PASSWORD`. La opción manual elige PUBLIC_CONTRACT, AUTHENTICATED_CONTRACT o LOGIN_CONTRACT. Postman CLI 1.75.0 se validó contra el arnés loopback sin login/cloud; esa validación no acredita Spring Boot. Si falta configuración, el job remoto se omite y el resumen indica BLOCKED/NO EJECUTADO; no cuenta como prueba aprobada. Ver [contrato](../testing/API_CONTRACT.md).
 
 k6 variables: `K6_BASE_URL` HTTPS, `K6_AUTHORIZED_ORIGIN` idéntico al origen y `K6_TEST_AUTHORIZED=true`. El operador debe confirmar el permiso y la carga máxima 20 VUs en el input manual. Solo ambiente no productivo expresamente autorizado. El script rechaza configuración faltante y redirecciones; concurrencia única. Revisar métricas de servidor antes y después, abortar si hay impacto. Nunca usar credenciales embebidas en URLs.
 
@@ -85,6 +85,6 @@ Ver [TEST_SCHEDULE](../testing/TEST_SCHEDULE.md) y [TEST_TOOLS](../testing/TEST_
 
 PLAN se administra en GitHub Project (backlog, HU/TT, puntos, prioridades, responsables, XP, dependencias, sub-issues y PV). CODE usa ramas feature/* para funcionalidades, chore/* para infraestructura y fix/* para correcciones; develop integra trabajo revisado y main representa versiones estables. BUILD, TEST y SECURITY generan controles/evidencias; RELEASE requiere build y pruebas aprobados, ausencia de defectos bloqueantes y revisión del equipo. PV-01–05 siguen siendo los incrementos planificados.
 
-DEPLOY actualmente distribuye APK de prueba mediante artifacts. Publicación en Google Play, firma de release y versionado por tags `v0.x.y` están PLANIFICADOS y requieren configuración/credenciales propias; no se declaran implementados ni se crean tags en esta actividad. MONITOR actualmente revisa Actions, defectos, vulnerabilidades e Issues; observabilidad de producción sigue PENDIENTE. Protección de ramas/checks obligatorios es una decisión posterior del equipo, no una configuración acreditada por este documento.
+DEPLOY actualmente distribuye APK de prueba mediante artifacts. Publicación en Google Play, firma de release y versionado por tags `v0.x.y` están PLANIFICADOS y requieren configuración/credenciales propias; no se declaran implementados ni se crean tags en esta actividad. MONITOR actualmente revisa Actions, defectos, vulnerabilidades e Issues; observabilidad de producción sigue PENDIENTE. Los checks candidatos obligatorios y el estado real de protección de `develop` se registran en VALIDATION_REPORT. API remota, regresión completa y k6 LOAD/STRESS son manuales/condicionales y no deben convertirse en required checks cotidianos.
 
 El proceso exige que un PR corresponda a trabajo planificado, compile, pase controles obligatorios, no contenga secretos y tenga revisión antes de merge. En esta actividad se entrega el PR abierto y no se realiza merge. Un fallo se corrige en la rama con otro commit; nunca mediante cambios directos a main.
