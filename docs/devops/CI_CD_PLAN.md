@@ -28,6 +28,12 @@ Runs iniciales exitosos del mismo SHA:
 
 Android publica el APK antes de aceptación; si falla Maestro, el workflow falla aunque el artifact debug exista. CI, Security, Integration, Android y k6 inspect se inician en paralelo. Dentro de Android la secuencia real es Build → APK → Acceptance. `DEVOPS QUALITY GATE` consulta seis checks obligatorios del mismo SHA; staging espera ese gate y falla/bloquea la entrega si falta o no es PASS. Descargar artifact no es desplegar backend ni publicar Play Store.
 
+En PR, el SHA correcto del gate es `github.event.pull_request.head.sha`; el `github.sha` del evento puede ser un merge SHA temporal sin esos check-runs. En push y Staging se usa `github.sha`, que identifica el commit integrado. El reporte muestra SHA/evento/PR/rama, checks buscados/encontrados, estados, intentos y timeout.
+
+Los cinco workflows automáticos de PR (CI, Security, Integration, Android y k6 inspect) usan `concurrency` y cancelan únicamente runs obsoletos del mismo PR. Los dispatch manuales de regresión/API/LOAD/STRESS se conservan. Staging cancela una entrega aún en curso si llega un commit posterior a `develop`; no cancela dispatch manuales.
+
+Para un bloque exclusivamente documental (`docs/**` o `*.md`), cada workflow inicia, detecta el alcance y deja los jobs pesados como `SKIPPED / NO APLICA`; de este modo el check existe y no queda pendiente. El gate permite continuar con NO APLICA solo bajo esa regla explícita. Cualquier workflow/script/configuración/fixture/código activa el recorrido completo.
+
 ## Cobertura y automatización local
 
 ```
@@ -80,6 +86,8 @@ Artifacts de pruebas se suben con `if: always()` para diagnosticar fallos. Ausen
 En cada run registrar SHA, fecha, versión, comando, resultado y ambiente. Ante fallo, consultar job/log, corregir en rama, repetir checks del cambio y enlazar run final. Mantener historial de fallos relevante; no ocultarlos con continue-on-error en pruebas. Tras PR no hacer merge ni cerrar Issues sin cumplir sus criterios.
 
 Ver [TEST_SCHEDULE](../testing/TEST_SCHEDULE.md) y [TEST_TOOLS](../testing/TEST_TOOLS.md) para calendario, responsables y fuentes. En Word/PDF las actividades de prueba irán EN MAYÚSCULAS y con fuente de color diferente.
+
+La explicación operativa para personas no familiarizadas con Actions está en [WORKFLOWS_GUIDE](WORKFLOWS_GUIDE.md).
 
 ## Política de desarrollo y entrega conservada
 

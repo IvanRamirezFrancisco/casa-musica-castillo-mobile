@@ -30,7 +30,7 @@ Comandos: `npm run lint`, `npm run build`. Responsable: IvanRamirezFrancisco. Ev
 
 Frontend: `critical.integration.spec.ts` utiliza componentes reales, plantillas, formularios y servicios compartidos de TestBed. Verifica propagación carrito→resumen, eliminación vía DOM, perfil válido e inválido. Solo Router.navigate se espía; no se simula una API inexistente. `npm run test:integration` genera JUnit.
 
-API: Postman CLI oficial 1.73.0, colección local v2.1 sin vínculo cloud, secretos ni Newman. Contratos 200/400/401/403/404, token inválido y errores controlados. La ejecución manual requiere ambiente `testing` autorizado. Ver [API_CONTRACT.md](API_CONTRACT.md). Al implementar servicios HTTP móviles se añadirá `provideHttpClientTesting`/HttpTestingController compatible con Angular; actualmente no existe una integración HttpClient que probar.
+API: Postman CLI oficial 1.75.0, colección local v2.1 sin vínculo cloud, secretos ni Newman. Contratos 200/400/401/403/404, token inválido y errores controlados. La ejecución manual requiere ambiente `testing` autorizado. Ver [API_CONTRACT.md](API_CONTRACT.md). Al implementar servicios HTTP móviles se añadirá `provideHttpClientTesting`/HttpTestingController compatible con Angular; actualmente no existe una integración HttpClient que probar.
 
 Responsables: Tackalay (frontend), IvanRamirezFrancisco (contratos y ambiente). Momento: PR frontend; API antes de aceptar cada incremento y al cambiar contrato.
 
@@ -78,6 +78,8 @@ Entrada: alcance y criterios PF/PS revisados, commit identificable, datos sinté
 
 No cerrar TT/HU por esta entrega parcial. Registrar defectos con HU, pasos, esperado/observado, SHA/ambiente y evidencia sanitizada; ejecutar la regresión afectada tras corregir. Retener artifacts 14 días y descargar los de la entrega antes de su expiración. No publicar cuerpos de respuestas de login, tokens, contraseñas, cookies ni datos personales reales.
 
+Los workflows de PR se ejecutan por evento, no por función. Un `synchronize` cancela el run anterior del mismo PR en CI, Security, Integration, Android y k6 inspect; los dispatch manuales conservan su ejecución. Un bloque exclusivamente documental deja los jobs pesados `SKIPPED / NO APLICA` mediante una regla versionada, sin llamarlos PASS. El Quality Gate consulta el HEAD real en PR y el SHA integrado en push/Staging.
+
 ## Documentos relacionados
 
 - [TEST_TOOLS.md](TEST_TOOLS.md): herramienta, software, finalidad, justificación, responsable y momento.
@@ -88,6 +90,7 @@ No cerrar TT/HU por esta entrega parcial. Registrar defectos con HU, pasos, espe
 - [TEST_RESULTS.md](TEST_RESULTS.md): resultados reales, SHA, run y evidencia.
 - [TRACEABILITY_MATRIX.md](TRACEABILITY_MATRIX.md): criterios PF/PS y automatización real.
 - [CI_CD_PLAN.md](../devops/CI_CD_PLAN.md): disparadores y configuración.
+- [WORKFLOWS_GUIDE.md](../devops/WORKFLOWS_GUIDE.md): lectura humana de los ocho workflows, runs, concurrency y errores comunes.
 - [SECURITY_CRITERIA.md](../security/SECURITY_CRITERIA.md): requisitos de seguridad conservados.
 
 ## PRUEBAS SMOKE Y ANDROID (REQUISITOS CONSERVADOS)

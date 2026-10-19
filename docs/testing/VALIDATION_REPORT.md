@@ -136,7 +136,7 @@ Los ocho workflows usan `scripts/write-workflow-summary.mjs` para publicar en `$
 
 `ci.yml` incorpora el job **DEVOPS QUALITY GATE**, que consulta por API seis nombres exactos del mismo SHA: Lint/Tests/Build, integración frontend, audit producción, CodeQL, Android y Maestro. Genera JSON/Step Summary y actualiza un único comentario marcado del PR. El gate falla ante FAIL, BLOCKED, SKIPPED, ausencia o timeout. `staging-apk.yml` consulta el gate del mismo SHA y solo construye la entrega después de PASS; no duplica suites ni crea un noveno workflow.
 
-### Resultados locales sobre `fe552eb`
+### Resultados locales revalidados sobre `48b9af6`
 
 | CONTROL | RESULTADO REAL |
 |---|---|
@@ -145,7 +145,7 @@ Los ocho workflows usan `scripts/write-workflow-summary.mjs` para publicar en `$
 | Unitarias/coverage | PASS: 27 archivos, 127 pruebas |
 | Integración frontend | PASS: 1 archivo, 4 pruebas |
 | Regresión crítica | PASS: 16 archivos, 53 pruebas |
-| Coverage | PASS: statements 85.88%, branches 92.93%, functions 72.77%, lines 84.82% |
+| Coverage | PASS: statements 85.12%, branches 92.93%, functions 72.77%, lines 84.82% |
 | `npm run build` | PASS; ocho warnings SCSS de budget no bloqueantes |
 | actionlint 1.7.12 | PASS para ocho workflows |
 | Quality Gate con fixture | PASS; seis check-runs sintéticos, no sustituye PR real |
@@ -174,3 +174,21 @@ Fuentes técnicas verificadas: Angular 22 define Baseline 2026-05-07; GitHub anu
 Candidatos obligatorios: `Lint, Tests y Build`, `frontend`, `Auditoria de dependencias`, `CodeQL JavaScript y TypeScript`, `Compilar APK Android Debug`, `ACEPTACIÓN móvil DEMO / maestro` y `DEVOPS QUALITY GATE`. Manuales/condicionales: API remota, regresión completa, k6 LOAD y k6 STRESS. El estado de branch protection se registrará después de que el nuevo nombre del gate exista en GitHub; no se configurará un required check que no aparezca siempre.
 
 Los resultados detallados están en TEST_RESULTS; la función, comando, datos y política PASS/FAIL de cada workflow están en PIPELINE_TEST_MATRIX y TEST_EXECUTION_STANDARD.
+
+## CORRECCIÓN DE EJECUCIONES OBSOLETAS Y SHA DEL GATE
+
+El run CI 39169917805 conservó un fallo real: `Lint, Tests y Build`, Integration, Security, Android y Maestro finalizaron PASS sobre el HEAD `b8e13de18c8de9c6b18c922ae1f96ccf2f147984`, pero el gate consultó `GITHUB_SHA=e873be8e3d38b81edd22cae246dfe340f8d56151`, merge SHA temporal del evento `pull_request`. La API de workflows devolvió los cinco runs para el HEAD y ninguno para ese merge SHA. Tras 80 intentos, el comentario consolidado quedó PENDING y el gate falló. El historial se conserva; no se reetiqueta como transitorio ni se borra.
+
+La corrección selecciona explícitamente:
+
+- PR: `github.event.pull_request.head.sha`.
+- Push y Staging: `github.sha`.
+- Workflow reutilizable: el caller conserva el SHA del artefacto.
+
+El JSON/resumen del gate ahora registra SHA, evento, PR, rama, checks buscados/hallados, PASS/FAIL/BLOCKED/NO APLICA/PENDING, intentos, timeout y acción. Un check requerido `skipped` bloquea un cambio ejecutable; solo se clasifica `NO APLICA` cuando `detect-change-scope.mjs` demuestra que el bloque nuevo contiene exclusivamente `docs/**` o `*.md`.
+
+### Reducción de runs
+
+CI, Security, Integration, Android y k6 inspect cancelan únicamente runs obsoletos del mismo PR. Acceptance se cancela con su caller Android. Regression, API remota y k6 LOAD/STRESS manuales conservan su evidencia completa. Staging cancela un push anterior todavía en curso si llega otro commit a `develop`, pero no cancela dispatch manuales.
+
+Los cambios exclusivamente documentales siguen creando el workflow y el check, pero omiten como `SKIPPED / NO APLICA` npm/CodeQL/Gradle/emulador/k6 inspect. Esto evita checks ausentes en branch protection y no presenta una suite omitida como PASS. La guía completa está en `docs/devops/WORKFLOWS_GUIDE.md`.

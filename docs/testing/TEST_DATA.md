@@ -14,6 +14,7 @@ Los datos son sintéticos, reproducibles y no contienen secretos. URLs e IDs no 
 | DATOS DE SEGURIDAD | HU-01–14, PS aplicables | token ausente/inválido, ID inexistente `9223372036854775807`, respuesta 401/403/404 | Colección Postman / Integration manual | Backend testing autorizado | Token/cuenta se inyectan por Secrets; ID no sensible por Variable/valor por defecto |
 | DATOS VÁLIDOS | HU-01–14 según suite API | cuenta sintética ROLE_USER, `API_USER_ID`, email de testing | `PUBLIC_CONTRACT`, `AUTHENTICATED_CONTRACT`, `LOGIN_CONTRACT` | Backend testing autorizado | Nunca se versionan credenciales; colección no guarda cuerpos sensibles |
 | DATOS DE SEGURIDAD | Quality Gate | seis check-runs sintéticos exitosos | `tests/fixtures/quality-gate/all-success.json` | Validación local/CI | Verifica el evaluador sin llamar GitHub ni suplantar resultados reales |
+| DATOS LÍMITE | Quality Gate documental | seis check-runs con conclusión `skipped` | `tests/fixtures/quality-gate/docs-only.json` | Validación local/CI | Comprueba que solo una clasificación documental explícita produce `NO APLICA`; en un cambio ejecutable esos mismos estados bloquean |
 | DATOS VÁLIDOS / LÍMITE | HU-04–06 | endpoint real de catálogo, 2–5 VUs LOAD; 5→10→20 VUs STRESS | k6 / Performance manual | Solo testing autorizado | URL/origen por Variables; máximo 20 VUs; no producción |
 
 ## Reglas de mantenimiento

@@ -10,6 +10,7 @@ La política se aplica por evento y SHA, no por cada función o HU aislada. Las 
 | `workflow_dispatch` Integration | Integration | Contrato API real de la suite seleccionada | Configuración → API secuencial; frontend independiente | API bloqueante solo si fue habilitada | Resultado manual complementa, no reemplaza gate cotidiano | JUnit API | IvanRamirezFrancisco |
 | `workflow_dispatch` Regression | Regression→Android→Acceptance | Regresión crítica completa | Completamente secuencial entre etapas; pruebas internas administradas por Vitest/Maestro | Sí dentro del run | Evidencia adicional para cierre de XP/entrega | JUnit, APK y Maestro | Tackalay + IvanRamirezFrancisco |
 | `workflow_dispatch` Performance | Performance | LOAD o STRESS, nunca ambos accidentalmente | Validate/configuration → escenario seleccionado | Thresholds bloqueantes en la ejecución real | Manual/condicional; no required cotidiano | JSON de serie/resumen | IvanRamirezFrancisco ejecuta; Tackalay analiza |
+| Cambio exclusivamente documental | Detectores + Quality Gate | No ejecuta suites/build/emulador/k6 inspect | Detectores en paralelo; gate consolida `NO APLICA` | El detector y el gate sí deben aparecer | Acepta NO APLICA solo si todo el bloque es `docs/**` o `*.md` | Step Summary y gate JSON | Autor/revisor verifican la clasificación |
 
 ## Resultado y acción
 
@@ -17,6 +18,7 @@ La política se aplica por evento y SHA, no por cada función o HU aislada. Las 
 - **FAIL:** el control se ejecutó y no cumplió; el job falla y las etapas con `needs` no continúan.
 - **BLOCKED:** falta una condición externa identificada; no acredita prueba ni habilita entrega.
 - **SKIPPED:** el evento no debía ejecutar el control; no equivale a aprobación.
+- **NO APLICA:** una regla versionada comprobó que el bloque nuevo es exclusivamente documental; no equivale a ejecutar la prueba.
 
 El audit completo puede ser informativo mediante `continue-on-error`; el audit de producción continúa bloqueante y la diferencia aparece en el Step Summary. No se usa `continue-on-error` en unitarias, integración frontend, build Android, aceptación, gate, API habilitada ni k6 real.
 
@@ -39,8 +41,12 @@ flowchart TD
   GATE --> STG[Staging en develop]
 ```
 
-`Regression critical → Android critical → Acceptance` y `Configuration → API` son secuencias independientes/manuales. `k6 validate + configuration → LOAD o STRESS` es otra secuencia manual. No se describe una dependencia entre workflows que el código no implemente.
+`Regression critical → Android critical → Acceptance` y `Configuration → API` son secuencias independientes/manuales. `k6 validate + configuration → LOAD o STRESS` es otra secuencia manual. En PR el gate evalúa el HEAD real; en push/Staging evalúa el SHA integrado. No se describe una dependencia entre workflows que el código no implemente.
 
 ## Retroalimentación
 
 Cada workflow escribe en `$GITHUB_STEP_SUMMARY`: workflow, evento, SHA, rama, PR, controles, datos/ambiente, resultado, métricas, artifacts, estado general y acción recomendada. El gate publica JSON y mantiene un solo comentario marcado en el PR; se actualiza en cada SHA en vez de generar ocho comentarios. Los logs/annotations conservan el detalle técnico.
+
+## Política de ejecuciones obsoletas
+
+CI, Security, Integration, Android y k6 inspect comparten el patrón `workflow + número de PR` y cancelan el run anterior únicamente en `pull_request`. Acceptance forma parte del caller Android y se cancela con él. Regression, API remota y k6 LOAD/STRESS son manuales y conservan su ejecución completa. Staging cancela una entrega aún en curso si llega otro push a `develop`; un dispatch manual usa un grupo único.
