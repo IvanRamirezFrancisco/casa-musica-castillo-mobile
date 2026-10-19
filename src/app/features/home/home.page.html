@@ -38,8 +38,13 @@
       </div>
       <div class="categories-scroll">
         @for (category of categories(); track category.id) {
-          <a class="category-chip" routerLink="/main/catalog">
-            <ion-icon [name]="category.icon" class="category-icon"></ion-icon>
+          <a
+            class="category-chip"
+            [routerLink]="['/main/catalog']"
+            [queryParams]="{ categoria: category.name }"
+            [attr.aria-label]="'Ver ' + category.name + ' en el catálogo'"
+          >
+            <ion-icon [name]="category.icon" class="category-icon" aria-hidden="true"></ion-icon>
             <span class="category-name cmc-body">{{ category.name }}</span>
           </a>
         }

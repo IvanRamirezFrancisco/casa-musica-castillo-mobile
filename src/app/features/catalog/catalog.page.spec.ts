@@ -1,6 +1,7 @@
 import { vi } from 'vitest';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { provideRouter } from '@angular/router';
+import { ActivatedRoute, convertToParamMap, provideRouter } from '@angular/router';
+import { BehaviorSubject } from 'rxjs';
 import { CatalogPage, CatalogProduct } from './catalog.page';
 import { routes } from '../../app.routes';
 
@@ -225,4 +226,41 @@ describe('CatalogPage', () => {
     expect((fixture.nativeElement as HTMLElement).querySelector('dialog')).toBeNull();
   });
 
+});
+
+// TT-21: el catálogo aplica la categoría recibida desde Inicio
+describe('CatalogPage - filtro por parámetro de ruta', () => {
+  let component: CatalogPage;
+  const queryParams$ = new BehaviorSubject(convertToParamMap({}));
+
+  beforeEach(async () => {
+    queryParams$.next(convertToParamMap({}));
+    await TestBed.configureTestingModule({
+      imports: [CatalogPage],
+      providers: [{ provide: ActivatedRoute, useValue: { queryParamMap: queryParams$.asObservable() } }],
+    }).compileComponents();
+    const fixture = TestBed.createComponent(CatalogPage);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
+
+  it('aplica la categoría recibida en ?categoria', () => {
+    queryParams$.next(convertToParamMap({ categoria: 'Teclados' }));
+    expect(component.categoriaActiva()).toBe('Teclados');
+    expect(component.productosFiltrados().length).toBeGreaterThan(0);
+    expect(component.productosFiltrados().every(p => p.categoria === 'Teclados')).toBe(true);
+  });
+
+  it('ignora una categoría inexistente o manipulada y muestra Todos', () => {
+    queryParams$.next(convertToParamMap({ categoria: '<script>alert(1)</script>' }));
+    expect(component.categoriaActiva()).toBe('Todos');
+    expect(component.productosFiltrados().length).toBe(component.productos.length);
+  });
+
+  it('combina la búsqueda ?q con la categoría', () => {
+    queryParams$.next(convertToParamMap({ q: 'eléctrica', categoria: 'Guitarras' }));
+    const resultados = component.productosFiltrados();
+    expect(resultados.length).toBe(1);
+    expect(resultados[0].categoria).toBe('Guitarras');
+  });
 });

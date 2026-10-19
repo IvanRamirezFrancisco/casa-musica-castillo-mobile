@@ -45,4 +45,20 @@ describe('HomePage', () => {
     expect(root.querySelector('.search-submit')?.getAttribute('href')).toBe('/main/catalog?q=yamaha');
   });
 
+  // TT-21: navegación desde Inicio hacia el catálogo filtrado
+  it('usa solo categorías existentes en el filtro del catálogo', () => {
+    const categoriasCatalogo = ['Guitarras', 'Teclados', 'Percusión', 'Cuerdas', 'Audio'];
+    expect(component.categories().every(c => categoriasCatalogo.includes(c.name))).toBe(true);
+  });
+
+  it('enlaza cada categoría al catálogo filtrado por esa categoría', () => {
+    const chips = (fixture.nativeElement as HTMLElement).querySelectorAll('.category-chip');
+    expect(chips.length).toBe(component.categories().length);
+    chips.forEach((chip, i) => {
+      const nombre = component.categories()[i].name;
+      expect(chip.getAttribute('href')).toBe(`/main/catalog?categoria=${encodeURIComponent(nombre)}`);
+      expect(chip.getAttribute('aria-label')).toBe(`Ver ${nombre} en el catálogo`);
+    });
+  });
+
 });
