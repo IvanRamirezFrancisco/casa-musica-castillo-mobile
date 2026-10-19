@@ -13,8 +13,24 @@ on:
         default: PUBLIC_CONTRACT
 permissions:
   contents: read
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 jobs:
+  changes:
+    name: Alcance Integration
+    runs-on: ubuntu-24.04
+    outputs:
+      docs_only: ${{ steps.scope.outputs.docs_only }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - id: scope
+        run: node scripts/detect-change-scope.mjs
   frontend:
+    needs: changes
+    if: needs.changes.outputs.docs_only != 'true'
     runs-on: ubuntu-24.04
     timeout-minutes: 15
     steps:
@@ -47,6 +63,8 @@ jobs:
           SUMMARY_ARTIFACTS: frontend-integration.
         run: node scripts/write-workflow-summary.mjs
   configuration:
+    needs: changes
+    # La API remota nunca se invoca automáticamente desde un PR sin ambiente testing autorizado.
     if: github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-24.04
     environment: testing

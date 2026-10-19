@@ -16,9 +16,28 @@ on:
 permissions:
   contents: read
 
+# Un commit nuevo del mismo PR vuelve obsoleto el run anterior; push y dispatch conservan su evidencia.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
 jobs:
+  changes:
+    name: Alcance CI
+    runs-on: ubuntu-24.04
+    outputs:
+      docs_only: ${{ steps.scope.outputs.docs_only }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - id: scope
+        run: node scripts/detect-change-scope.mjs
+
   quality:
     name: Lint, Tests y Build
+    needs: changes
+    if: needs.changes.outputs.docs_only != 'true'
     runs-on: ubuntu-24.04
     timeout-minutes: 30
 
@@ -83,7 +102,7 @@ jobs:
 
   quality-gate:
     name: DEVOPS QUALITY GATE
-    needs: quality
+    needs: [changes, quality]
     if: always() && github.event_name != 'workflow_dispatch'
     runs-on: ubuntu-24.04
     timeout-minutes: 25
@@ -101,6 +120,11 @@ jobs:
         id: gate
         env:
           GITHUB_TOKEN: ${{ github.token }}
+          # En PR los checks pertenecen al HEAD real, no al merge SHA temporal de github.sha.
+          QUALITY_GATE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+          QUALITY_GATE_PR: ${{ github.event.pull_request.number || 'No aplica' }}
+          QUALITY_GATE_BRANCH: ${{ github.head_ref || github.ref_name }}
+          QUALITY_GATE_DOCS_ONLY: ${{ needs.changes.outputs.docs_only }}
           QUALITY_GATE_CHECKS: |
             Lint, Tests y Build
             frontend
@@ -132,14 +156,31 @@ jobs:
             try {
               report = JSON.parse(fs.readFileSync('reports/devops-quality-gate.json', 'utf8'));
             } catch (error) {
-              report = { status: 'BLOCKED', controls: [], sha: context.sha, error: error.message };
+              report = {
+                status: 'BLOCKED',
+                controls: [],
+                sha: context.payload.pull_request?.head?.sha || context.sha,
+                event: context.eventName,
+                pr: context.issue.number,
+                branch: context.payload.pull_request?.head?.ref || context.ref,
+                requiredChecks: [],
+                checksFound: [],
+                checksMissingOrPending: [],
+                timedOut: false,
+                attempts: 0,
+                action: 'DEBE CORREGIRSE',
+                error: error.message,
+              };
             }
             const rows = report.controls.map(control =>
               `| ${control.name} | **${control.status}** | ${control.detail} |`).join('\n');
-            const action = report.status === 'PASS' ? 'PUEDE CONTINUAR' : 'DEBE CORREGIRSE';
+            const action = report.action || (report.status === 'PASS' ? 'PUEDE CONTINUAR' : 'DEBE CORREGIRSE');
             const body = `${marker}\n## DEVOPS QUALITY GATE\n\n` +
-              `**SHA:** \`${report.sha}\`\n\n` +
+              `**SHA evaluado:** \`${report.sha}\`\n\n` +
+              `**Evento:** ${report.event || context.eventName} · **PR:** ${report.pr || context.issue.number} · **Rama:** ${report.branch || context.ref}\n\n` +
+              `**Checks buscados:** ${report.requiredChecks?.length || 0} · **Encontrados/terminales:** ${report.checksFound?.length || 0} · **Pendientes/ausentes:** ${report.checksMissingOrPending?.length || 0}\n\n` +
               `| Check obligatorio | Estado | Detalle |\n|---|---|---|\n${rows}\n\n` +
+              `**Timeout:** ${report.timedOut ? 'SÍ' : 'NO'} · **Intentos:** ${report.attempts || 0}\n\n` +
               `**ESTADO GENERAL: ${report.status}**\n\n` +
               `**ACCIÓN RECOMENDADA: ${action}**\n\n` +
               `API remota y k6 LOAD/STRESS son controles manuales/condicionales y no se convierten en PASS por este gate.`;

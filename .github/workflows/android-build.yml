@@ -17,9 +17,27 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.run_id }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
 jobs:
+  changes:
+    name: Alcance Android
+    runs-on: ubuntu-24.04
+    outputs:
+      docs_only: ${{ steps.scope.outputs.docs_only }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - id: scope
+        run: node scripts/detect-change-scope.mjs
+
   android-build:
     name: Compilar APK Android Debug
+    needs: changes
+    if: needs.changes.outputs.docs_only != 'true'
     runs-on: ubuntu-24.04
     timeout-minutes: 30
 
@@ -101,5 +119,7 @@ jobs:
 
   acceptance:
     name: ACEPTACIÓN móvil DEMO
-    needs: android-build
+    needs: [changes, android-build]
+    # Acceptance necesita exactamente el APK publicado por el build anterior del mismo run.
+    if: needs.changes.outputs.docs_only != 'true' && needs.android-build.result == 'success'
     uses: ./.github/workflows/acceptance.yml

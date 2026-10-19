@@ -1,4 +1,5 @@
 name: REGRESIÓN - Suite crítica
+# Es manual para no duplicar en cada PR las suites rápidas ya cubiertas por CI e Integration.
 on:
   workflow_dispatch:
 permissions:

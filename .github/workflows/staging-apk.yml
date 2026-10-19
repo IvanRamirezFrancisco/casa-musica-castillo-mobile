@@ -11,9 +11,27 @@ permissions:
   contents: read
   checks: read
 
+# Un push posterior a develop reemplaza la entrega pendiente; los dispatch manuales conservan su ejecución completa.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name == 'push' && github.ref || github.run_id }}
+  cancel-in-progress: ${{ github.event_name == 'push' }}
+
 jobs:
+  changes:
+    name: Alcance Staging
+    runs-on: ubuntu-24.04
+    outputs:
+      docs_only: ${{ steps.scope.outputs.docs_only }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - id: scope
+        run: node scripts/detect-change-scope.mjs
+
   quality-gate:
     name: Verificar DEVOPS QUALITY GATE
+    needs: changes
     runs-on: ubuntu-24.04
     timeout-minutes: 25
     steps:
@@ -22,6 +40,10 @@ jobs:
       - name: Exigir Quality Gate aprobado para el mismo SHA
         env:
           GITHUB_TOKEN: ${{ github.token }}
+          # En push/dispatch el APK y los checks corresponden a github.sha, nunca a un merge SHA temporal de PR.
+          QUALITY_GATE_SHA: ${{ github.sha }}
+          QUALITY_GATE_BRANCH: ${{ github.ref_name }}
+          QUALITY_GATE_DOCS_ONLY: ${{ needs.changes.outputs.docs_only }}
           QUALITY_GATE_CHECKS: DEVOPS QUALITY GATE
           QUALITY_GATE_MAX_ATTEMPTS: 80
           QUALITY_GATE_INTERVAL_MS: 15000
@@ -38,7 +60,8 @@ jobs:
 
   staging-apk:
     name: Generar APK de Staging
-    needs: quality-gate
+    needs: [changes, quality-gate]
+    if: needs.changes.outputs.docs_only != 'true' && needs.quality-gate.result == 'success'
     runs-on: ubuntu-24.04
     timeout-minutes: 30
 

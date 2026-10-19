@@ -17,11 +17,25 @@ on:
 permissions:
   contents: read
 concurrency:
-  group: k6-testing
-  cancel-in-progress: false
+  # En PR solo se cancela inspect obsoleto; los dispatch de LOAD/STRESS usan run_id y nunca se cancelan entre sí.
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.run_id }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 jobs:
+  changes:
+    name: Alcance Performance
+    runs-on: ubuntu-24.04
+    outputs:
+      docs_only: ${{ steps.scope.outputs.docs_only }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - id: scope
+        run: node scripts/detect-change-scope.mjs
   validate:
     name: Validar scripts sin carga remota
+    needs: changes
+    if: needs.changes.outputs.docs_only != 'true'
     runs-on: ubuntu-24.04
     timeout-minutes: 5
     steps:
@@ -49,6 +63,7 @@ jobs:
           SUMMARY_ARTIFACTS: Logs de k6 inspect.
         run: node scripts/write-workflow-summary.mjs
   configuration:
+    needs: changes
     if: github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-24.04
     environment: testing

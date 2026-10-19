@@ -1,7 +1,7 @@
 import { appendFile, mkdir, readFile, writeFile } from 'node:fs/promises';
 import { dirname } from 'node:path';
 
-const allowedStatuses = new Set(['PASS', 'FAIL', 'BLOCKED', 'SKIPPED']);
+const allowedStatuses = new Set(['PASS', 'FAIL', 'BLOCKED', 'SKIPPED', 'NO APLICA']);
 
 function normalizeStatus(value) {
   const status = String(value ?? '').trim().toUpperCase();
@@ -33,6 +33,7 @@ function defaultAction(status) {
     FAIL: 'DEBE CORREGIRSE',
     BLOCKED: 'BLOQUEADO POR AMBIENTE',
     SKIPPED: 'REQUIERE EJECUCIÓN MANUAL',
+    'NO APLICA': 'NO REQUIERE EJECUCIÓN PARA ESTE CAMBIO',
   }[status];
 }
 
