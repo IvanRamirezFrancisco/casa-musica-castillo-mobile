@@ -1,19 +1,24 @@
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { CurrencyPipe, DatePipe } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { IonButtons, IonContent, IonHeader, IonIcon, IonTitle, IonToolbar } from '@ionic/angular';
 import { addIcons } from 'ionicons';
 import { arrowBackOutline } from 'ionicons/icons';
 
-import { DemoOrderStatus } from '../../../core/models/account.model';
+import { DemoAccountOrder, DemoOrderStatus } from '../../../core/models/account.model';
 import {
-  DemoAccountStateService,
   ORDER_STATUS_LABEL,
   ORDER_STATUS_VARIANT,
   orderSubtotal,
 } from '../../../core/services/demo-account-state.service';
 import { CmcBadgeComponent } from '../../../shared/ui/badge/cmc-badge.component';
 import { CmcEmptyStateComponent } from '../../../shared/ui/empty-state/cmc-empty-state.component';
+import { CmcErrorStateComponent } from '../../../shared/ui/error-state/cmc-error-state.component';
+import { CmcLoadingComponent } from '../../../shared/ui/loading/cmc-loading.component';
+import { OrderDetailService } from '../../../core/services/order-detail.service';
+
+/** Estados de la consulta del detalle (HU-13). */
+export type OrderDetailStatus = 'loading' | 'ready' | 'not-found' | 'error';
 
 const TIMELINE: DemoOrderStatus[] = ['pending', 'paid', 'shipped', 'delivered'];
 
@@ -33,15 +38,18 @@ const TIMELINE: DemoOrderStatus[] = ['pending', 'paid', 'shipped', 'delivered'];
     DatePipe,
     CmcBadgeComponent,
     CmcEmptyStateComponent,
+    CmcErrorStateComponent,
+    CmcLoadingComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OrderDetailPage {
   private readonly router = inject(Router);
-  private readonly account = inject(DemoAccountStateService);
+  private readonly orderDetail = inject(OrderDetailService);
   private readonly orderId = inject(ActivatedRoute).snapshot.paramMap.get('id') ?? '';
 
-  readonly order = computed(() => this.account.orders().find((o) => o.id === this.orderId));
+  readonly status = signal<OrderDetailStatus>('loading');
+  readonly order = signal<DemoAccountOrder | null>(null);
   readonly statusLabel = computed(() => {
     const o = this.order();
     return o ? ORDER_STATUS_LABEL[o.status] : '';
@@ -62,6 +70,20 @@ export class OrderDetailPage {
 
   constructor() {
     addIcons({ arrowBackOutline });
+    void this.loadOrder();
+  }
+
+  /** Consulta el pedido y controla carga, inexistente y error. */
+  async loadOrder(): Promise<void> {
+    this.status.set('loading');
+    try {
+      const pedido = await this.orderDetail.getMyOrder(this.orderId);
+      this.order.set(pedido);
+      this.status.set(pedido ? 'ready' : 'not-found');
+    } catch {
+      // No se muestran detalles técnicos del error (HU-13, seguridad).
+      this.status.set('error');
+    }
   }
 
   goBack(): void {
