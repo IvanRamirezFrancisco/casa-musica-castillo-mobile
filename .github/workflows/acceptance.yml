@@ -1,0 +1,68 @@
+name: ACEPTACIÓN - Maestro Android DEMO
+on:
+  workflow_call:
+permissions:
+  contents: read
+jobs:
+  maestro:
+    name: maestro
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    env:
+      MAESTRO_CLI_NO_ANALYTICS: 1
+      MAESTRO_CLI_ANALYSIS_NOTIFICATION_DISABLED: true
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/download-artifact@v7
+        with:
+          name: casa-musica-castillo-debug-apk
+          path: apk
+      - uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: '21'
+      - name: Instalar Maestro CLI 2.11.0 oficial
+        run: |
+          curl --fail --location --retry 3 https://github.com/mobile-dev-inc/Maestro/releases/download/cli-2.11.0/maestro.zip -o "$RUNNER_TEMP/maestro.zip"
+          unzip -q "$RUNNER_TEMP/maestro.zip" -d "$RUNNER_TEMP/maestro-cli"
+          echo "$RUNNER_TEMP/maestro-cli/maestro/bin" >> "$GITHUB_PATH"
+      - name: Habilitar KVM del runner efímero
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+      - name: Ejecutar aceptación crítica local (sin Maestro Cloud)
+        id: maestro-tests
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 34
+          # AOSP avoids GMS FontsProvider process death observed in run 38400022024.
+          # SDK repository confirms android-34;default;x86_64 is available.
+          target: default
+          arch: x86_64
+          profile: pixel_6
+          disable-animations: true
+          script: |
+            adb install -r apk/app-debug.apk
+            mkdir -p reports/maestro
+            maestro --version
+            maestro test --format JUNIT --output reports/maestro/results.xml --test-output-dir reports/maestro --debug-output reports/maestro/debug .maestro
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: acceptance-maestro-demo
+          path: reports/maestro/
+          if-no-files-found: warn
+          retention-days: 14
+      - name: Retroalimentación de aceptación móvil
+        if: always()
+        env:
+          SUMMARY_WORKFLOW: ACEPTACIÓN - Maestro Android DEMO
+          SUMMARY_PR: ${{ github.event.pull_request.number || 'No aplica' }}
+          SUMMARY_CONTROLS: |
+            Flujos Maestro DEMO|${{ steps.maestro-tests.outcome == 'success' && 'PASS' || 'FAIL' }}|Inicio/autenticación demo, compra demo y pedidos/perfil navegable; no acredita backend.
+          SUMMARY_STATUS: ${{ steps.maestro-tests.outcome == 'success' && 'PASS' || 'FAIL' }}
+          SUMMARY_DATA: APK Debug y estado DEMO reiniciado por flujo en emulador AOSP API 34.
+          SUMMARY_METRICS: Tres flujos; tiempos y casos reales en JUnit.
+          SUMMARY_ARTIFACTS: acceptance-maestro-demo (JUnit, capturas y logs), retención 14 días.
+        run: node scripts/write-workflow-summary.mjs

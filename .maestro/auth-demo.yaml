@@ -1,0 +1,17 @@
+appId: com.casademusicacastillo.app
+name: ACEPTACIÓN DEMO - HU01 HU02 HU03 HU04
+tags: [critical, demo]
+---
+- launchApp:
+    clearState: true
+- extendedWaitUntil:
+    visible: "Bienvenido de nuevo"
+    timeout: 30000
+- tapOn: "Crear cuenta"
+- assertVisible: "Crea tu cuenta"
+- back
+- tapOn: "¿Olvidaste tu contraseña?"
+- assertVisible: "Recuperar acceso"
+- back
+- runFlow: shared/login-demo.yaml
+- takeScreenshot: reports/maestro/auth-demo

@@ -16,18 +16,37 @@ on:
 permissions:
   contents: read
 
+# Un commit nuevo del mismo PR vuelve obsoleto el run anterior; push y dispatch conservan su evidencia.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
 jobs:
+  changes:
+    name: Alcance CI
+    runs-on: ubuntu-24.04
+    outputs:
+      docs_only: ${{ steps.scope.outputs.docs_only }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - id: scope
+        run: node scripts/detect-change-scope.mjs
+
   quality:
     name: Lint, Tests y Build
-    runs-on: ubuntu-latest
+    needs: changes
+    if: needs.changes.outputs.docs_only != 'true'
+    runs-on: ubuntu-24.04
     timeout-minutes: 30
 
     steps:
       - name: Obtener código fuente
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Configurar Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
           node-version: "22"
           cache: "npm"
@@ -44,10 +63,147 @@ jobs:
         run: npx ng version
 
       - name: Ejecutar análisis estático
+        id: lint
         run: npm run lint
 
       - name: Ejecutar pruebas automatizadas
+        id: tests
         run: npm test -- --configuration=ci
 
       - name: Compilar aplicación
+        id: build
         run: npm run build
+
+      - name: Publicar cobertura y resultados
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: coverage-and-unit-tests
+          path: |
+            coverage/
+            reports/unit-tests.xml
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Retroalimentación de calidad
+        if: always()
+        env:
+          SUMMARY_WORKFLOW: CI - Calidad
+          SUMMARY_PR: ${{ github.event.pull_request.number || 'No aplica' }}
+          SUMMARY_CONTROLS: |
+            ESLint|${{ steps.lint.outcome == 'success' && 'PASS' || 'FAIL' }}|Análisis estático de TypeScript y plantillas.
+            Pruebas unitarias|${{ steps.tests.outcome == 'success' && 'PASS' || 'FAIL' }}|Vitest + Angular TestBed con baseline de cobertura.
+            Angular build|${{ steps.build.outcome == 'success' && 'PASS' || 'FAIL' }}|Compilación de producción y Angular compiler.
+          SUMMARY_STATUS: ${{ (steps.lint.outcome == 'success' && steps.tests.outcome == 'success' && steps.build.outcome == 'success') && 'PASS' || 'FAIL' }}
+          SUMMARY_DATA: Fixtures locales y servicios DEMO; no usa credenciales ni backend remoto.
+          SUMMARY_COVERAGE_FILE: coverage/app/coverage-summary.json
+          SUMMARY_ARTIFACTS: coverage-and-unit-tests (HTML, lcov y JUnit), retención 14 días.
+        run: node scripts/write-workflow-summary.mjs
+
+  quality-gate:
+    name: DEVOPS QUALITY GATE
+    needs: [changes, quality]
+    if: always() && github.event_name != 'workflow_dispatch'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    permissions:
+      contents: read
+      checks: read
+      pull-requests: write
+      issues: write
+
+    steps:
+      - name: Obtener código fuente
+        uses: actions/checkout@v7
+
+      - name: Consolidar checks obligatorios del mismo SHA
+        id: gate
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          # En PR los checks pertenecen al HEAD real, no al merge SHA temporal de github.sha.
+          QUALITY_GATE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+          QUALITY_GATE_PR: ${{ github.event.pull_request.number || 'No aplica' }}
+          QUALITY_GATE_BRANCH: ${{ github.head_ref || github.ref_name }}
+          QUALITY_GATE_DOCS_ONLY: ${{ needs.changes.outputs.docs_only }}
+          QUALITY_GATE_CHECKS: |
+            Lint, Tests y Build
+            frontend
+            Auditoria de dependencias
+            CodeQL JavaScript y TypeScript
+            Compilar APK Android Debug
+            ACEPTACIÓN móvil DEMO / maestro
+          QUALITY_GATE_MAX_ATTEMPTS: 80
+          QUALITY_GATE_INTERVAL_MS: 15000
+        run: node scripts/quality-gate.mjs
+
+      - name: Publicar evidencia del Quality Gate
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: devops-quality-gate
+          path: reports/devops-quality-gate.json
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Actualizar retroalimentación consolidada en el PR
+        if: always() && github.event_name == 'pull_request'
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const fs = require('fs');
+            const marker = '<!-- devops-quality-gate -->';
+            let report;
+            try {
+              report = JSON.parse(fs.readFileSync('reports/devops-quality-gate.json', 'utf8'));
+            } catch (error) {
+              report = {
+                status: 'BLOCKED',
+                controls: [],
+                sha: context.payload.pull_request?.head?.sha || context.sha,
+                event: context.eventName,
+                pr: context.issue.number,
+                branch: context.payload.pull_request?.head?.ref || context.ref,
+                requiredChecks: [],
+                checksFound: [],
+                checksMissingOrPending: [],
+                timedOut: false,
+                attempts: 0,
+                action: 'DEBE CORREGIRSE',
+                error: error.message,
+              };
+            }
+            const rows = report.controls.map(control =>
+              `| ${control.name} | **${control.status}** | ${control.detail} |`).join('\n');
+            const action = report.action || (report.status === 'PASS' ? 'PUEDE CONTINUAR' : 'DEBE CORREGIRSE');
+            const body = `${marker}\n## DEVOPS QUALITY GATE\n\n` +
+              `**SHA evaluado:** \`${report.sha}\`\n\n` +
+              `**Evento:** ${report.event || context.eventName} · **PR:** ${report.pr || context.issue.number} · **Rama:** ${report.branch || context.ref}\n\n` +
+              `**Checks buscados:** ${report.requiredChecks?.length || 0} · **Encontrados/terminales:** ${report.checksFound?.length || 0} · **Pendientes/ausentes:** ${report.checksMissingOrPending?.length || 0}\n\n` +
+              `| Check obligatorio | Estado | Detalle |\n|---|---|---|\n${rows}\n\n` +
+              `**Timeout:** ${report.timedOut ? 'SÍ' : 'NO'} · **Intentos:** ${report.attempts || 0}\n\n` +
+              `**ESTADO GENERAL: ${report.status}**\n\n` +
+              `**ACCIÓN RECOMENDADA: ${action}**\n\n` +
+              `API remota y k6 LOAD/STRESS son controles manuales/condicionales y no se convierten en PASS por este gate.`;
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              per_page: 100,
+            });
+            const previous = comments.find(comment =>
+              comment.user?.type === 'Bot' && comment.body?.includes(marker));
+            if (previous) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: previous.id,
+                body,
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body,
+              });
+            }

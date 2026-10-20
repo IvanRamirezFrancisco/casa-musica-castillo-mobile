@@ -1,0 +1,41 @@
+name: REGRESIÓN - Suite crítica
+# Es manual para no duplicar en cada PR las suites rápidas ya cubiertas por CI e Integration.
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  critical:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci
+      - name: Reutilizar unitarias e integración de recorridos críticos
+        id: regression
+        run: npm run test:regression
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: critical-regression
+          path: reports/regression-tests.xml
+          if-no-files-found: error
+      - name: Retroalimentación de regresión crítica
+        if: always()
+        env:
+          SUMMARY_WORKFLOW: REGRESIÓN - Suite crítica
+          SUMMARY_CONTROLS: |
+            Regresión frontend crítica|${{ steps.regression.outcome == 'success' && 'PASS' || 'FAIL' }}|Auth, inicio, catálogo/búsqueda, carrito, checkout, pedidos y perfil implementados.
+            Regresión Android/Maestro|SKIPPED|Se ejecuta y reporta secuencialmente después de este job mediante android-critical; este resumen no anticipa su resultado.
+          SUMMARY_STATUS: ${{ steps.regression.outcome == 'success' && 'PASS' || 'FAIL' }}
+          SUMMARY_DATA: Fixtures DEMO locales; backend remoto fuera de esta ejecución.
+          SUMMARY_METRICS: Casos reales en JUnit; no duplica automáticamente la suite en cada PR.
+          SUMMARY_ARTIFACTS: critical-regression; después APK y acceptance-maestro-demo.
+        run: node scripts/write-workflow-summary.mjs
+  android-critical:
+    needs: critical
+    uses: ./.github/workflows/android-build.yml

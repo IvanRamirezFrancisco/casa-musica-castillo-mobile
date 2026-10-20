@@ -85,3 +85,7 @@ android/local.properties
 *.keystore
 
 
+
+# Test reports and private runtime configuration
+/reports/
+/.maestro/tests/

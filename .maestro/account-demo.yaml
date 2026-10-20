@@ -1,0 +1,23 @@
+appId: com.casademusicacastillo.app
+name: ACEPTACIÓN DEMO - HU12 HU13 HU14
+tags: [critical, demo]
+---
+- launchApp:
+    clearState: true
+- extendedWaitUntil:
+    visible: "Bienvenido de nuevo"
+    timeout: 30000
+- runFlow: shared/login-demo.yaml
+- tapOn: "Pedidos"
+- assertVisible: "Mis pedidos"
+- tapOn: "Pedido DEMO-1004"
+- assertVisible: "DEMO-1004"
+- takeScreenshot: reports/maestro/order-demo
+- back
+- tapOn: "Perfil"
+- assertVisible: "Usuario Demo"
+- tapOn: "Editar perfil"
+- assertVisible: "Nombre completo"
+- tapOn: "Guardar cambios"
+- assertVisible: "Usuario Demo"
+- takeScreenshot: reports/maestro/profile-demo

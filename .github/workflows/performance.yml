@@ -1,0 +1,167 @@
+name: RENDIMIENTO Y ESFUERZO - k6 autorizado
+on:
+  pull_request:
+    branches: [develop, main]
+  workflow_dispatch:
+    inputs:
+      scenario:
+        description: Escenario autorizado (nunca producción)
+        type: choice
+        options: [load, stress]
+        default: load
+      authorized:
+        description: Confirmo autorización del ambiente testing y límite de 20 VUs
+        type: boolean
+        required: true
+        default: false
+permissions:
+  contents: read
+concurrency:
+  # En PR solo se cancela inspect obsoleto; los dispatch de LOAD/STRESS usan run_id y nunca se cancelan entre sí.
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.run_id }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+jobs:
+  changes:
+    name: Alcance Performance
+    runs-on: ubuntu-24.04
+    outputs:
+      docs_only: ${{ steps.scope.outputs.docs_only }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - id: scope
+        run: node scripts/detect-change-scope.mjs
+  validate:
+    name: Validar scripts sin carga remota
+    needs: changes
+    if: needs.changes.outputs.docs_only != 'true'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v7
+      - run: bash scripts/install-k6.sh
+      - name: Inspeccionar escenarios (sin solicitudes HTTP)
+        id: inspect
+        run: |
+          k6 inspect -e K6_BASE_URL=https://example.invalid -e K6_AUTHORIZED_ORIGIN=https://example.invalid -e K6_TEST_AUTHORIZED=true tests/performance/load.js
+          k6 inspect -e K6_BASE_URL=https://example.invalid -e K6_AUTHORIZED_ORIGIN=https://example.invalid -e K6_TEST_AUTHORIZED=true tests/performance/stress.js
+      - name: Retroalimentación k6 sin carga
+        if: always()
+        env:
+          SUMMARY_WORKFLOW: RENDIMIENTO - Validación k6
+          SUMMARY_PR: ${{ github.event.pull_request.number || 'No aplica' }}
+          SUMMARY_CONTROLS: |
+            SCRIPT k6 load|${{ steps.inspect.outcome == 'success' && 'PASS' || 'FAIL' }}|k6 inspect valida sintaxis/configuración; no envía solicitudes.
+            SCRIPT k6 stress|${{ steps.inspect.outcome == 'success' && 'PASS' || 'FAIL' }}|k6 inspect valida límite máximo de 20 VUs; no envía solicitudes.
+            LOAD REAL|SKIPPED|No ejecutado en PR; requiere workflow_dispatch y ambiente autorizado.
+            STRESS REAL|SKIPPED|No ejecutado en PR; requiere workflow_dispatch y ambiente autorizado.
+          SUMMARY_STATUS: ${{ steps.inspect.outcome == 'success' && 'SKIPPED' || 'FAIL' }}
+          SUMMARY_ACTION: ${{ steps.inspect.outcome == 'success' && 'REQUIERE EJECUCIÓN MANUAL' || 'DEBE CORREGIRSE' }}
+          SUMMARY_DATA: example.invalid solo para inspect; cero tráfico remoto.
+          SUMMARY_METRICS: Sin latencia/p90/p95/error rate porque no hubo carga real.
+          SUMMARY_ARTIFACTS: Logs de k6 inspect.
+        run: node scripts/write-workflow-summary.mjs
+  configuration:
+    needs: changes
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-24.04
+    environment: testing
+    outputs:
+      ready: ${{ steps.check.outputs.ready }}
+    steps:
+      - id: check
+        env:
+          BASE: ${{ vars.K6_BASE_URL }}
+          ORIGIN: ${{ vars.K6_AUTHORIZED_ORIGIN }}
+          AUTHORIZED: ${{ vars.K6_TEST_AUTHORIZED }}
+          CONFIRMED: ${{ inputs.authorized }}
+        run: |
+          if [[ -n "$BASE" && -n "$ORIGIN" && "$AUTHORIZED" == "true" && "$CONFIRMED" == "true" ]]; then
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+            echo "No se enviaron solicitudes: falta ambiente autorizado o confirmación manual."
+          fi
+      - uses: actions/checkout@v7
+      - name: Retroalimentación de configuración k6
+        if: always()
+        env:
+          SUMMARY_WORKFLOW: RENDIMIENTO - Configuración autorizada
+          SUMMARY_CONTROLS: |
+            Ambiente k6|${{ steps.check.outputs.ready == 'true' && 'PASS' || 'BLOCKED' }}|URL y origen deben coincidir con un entorno testing autorizado; confirmación manual obligatoria.
+          SUMMARY_STATUS: ${{ steps.check.outputs.ready == 'true' && 'PASS' || 'BLOCKED' }}
+          SUMMARY_ACTION: ${{ steps.check.outputs.ready == 'true' && 'PUEDE CONTINUAR' || 'BLOQUEADO POR AMBIENTE' }}
+          SUMMARY_DATA: Variables no sensibles en GitHub Variables; tokens, si aplican, en Secrets.
+          SUMMARY_ARTIFACTS: Ninguno; habilita exactamente un escenario manual.
+        run: node scripts/write-workflow-summary.mjs
+  performance:
+    name: PERFORMANCE / LOAD
+    needs: [validate, configuration]
+    if: inputs.scenario == 'load' && needs.configuration.outputs.ready == 'true'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    environment: testing
+    env:
+      K6_BASE_URL: ${{ vars.K6_BASE_URL }}
+      K6_AUTHORIZED_ORIGIN: ${{ vars.K6_AUTHORIZED_ORIGIN }}
+      K6_TEST_AUTHORIZED: ${{ vars.K6_TEST_AUTHORIZED }}
+    steps:
+      - uses: actions/checkout@v7
+      - run: bash scripts/install-k6.sh
+      - run: mkdir -p reports
+      - id: load-test
+        name: Ejecutar PERFORMANCE / LOAD autorizado
+        run: k6 run --out json=reports/k6-series.json tests/performance/load.js
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: performance-load
+          path: reports/
+          retention-days: 14
+      - name: Retroalimentación de PERFORMANCE / LOAD
+        if: always()
+        env:
+          SUMMARY_WORKFLOW: PRUEBAS DE RENDIMIENTO - LOAD
+          SUMMARY_CONTROLS: |
+            LOAD REAL|${{ steps.load-test.outcome == 'success' && 'PASS' || 'FAIL' }}|Carga moderada contra ambiente autorizado; thresholds son bloqueantes.
+          SUMMARY_STATUS: ${{ steps.load-test.outcome == 'success' && 'PASS' || 'FAIL' }}
+          SUMMARY_DATA: K6_BASE_URL y K6_AUTHORIZED_ORIGIN validados; nunca producción sin autorización.
+          SUMMARY_METRICS: requests, error rate, p90 y p95 en logs y serie JSON.
+          SUMMARY_ARTIFACTS: performance-load.
+        run: node scripts/write-workflow-summary.mjs
+  stress:
+    name: STRESS / ESFUERZO
+    needs: [validate, configuration]
+    if: inputs.scenario == 'stress' && needs.configuration.outputs.ready == 'true'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    environment: testing
+    env:
+      K6_BASE_URL: ${{ vars.K6_BASE_URL }}
+      K6_AUTHORIZED_ORIGIN: ${{ vars.K6_AUTHORIZED_ORIGIN }}
+      K6_TEST_AUTHORIZED: ${{ vars.K6_TEST_AUTHORIZED }}
+    steps:
+      - uses: actions/checkout@v7
+      - run: bash scripts/install-k6.sh
+      - run: mkdir -p reports
+      - id: stress-test
+        name: Ejecutar STRESS / ESFUERZO autorizado
+        run: k6 run --out json=reports/k6-series.json tests/performance/stress.js
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: performance-stress
+          path: reports/
+          retention-days: 14
+      - name: Retroalimentación de STRESS / ESFUERZO
+        if: always()
+        env:
+          SUMMARY_WORKFLOW: PRUEBAS DE ESFUERZO / ESTRÉS
+          SUMMARY_CONTROLS: |
+            STRESS REAL|${{ steps.stress-test.outcome == 'success' && 'PASS' || 'FAIL' }}|Carga progresiva hasta 20 VUs y recuperación; thresholds son bloqueantes para esta ejecución manual.
+          SUMMARY_STATUS: ${{ steps.stress-test.outcome == 'success' && 'PASS' || 'FAIL' }}
+          SUMMARY_DATA: K6_BASE_URL y K6_AUTHORIZED_ORIGIN validados; nunca producción sin autorización.
+          SUMMARY_METRICS: degradación, error rate, p90/p95 y recuperación en logs/serie JSON.
+          SUMMARY_ARTIFACTS: performance-stress.
+        run: node scripts/write-workflow-summary.mjs
