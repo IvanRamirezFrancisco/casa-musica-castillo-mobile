@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AbstractControl, NonNullableFormBuilder, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { IonButtons, IonContent, IonHeader, IonIcon, IonTitle, IonToolbar } from '@ionic/angular';
 import { addIcons } from 'ionicons';
@@ -8,6 +8,22 @@ import { arrowBackOutline } from 'ionicons/icons';
 import { DemoAccountStateService } from '../../../core/services/demo-account-state.service';
 import { CmcButtonComponent } from '../../../shared/ui/button/cmc-button.component';
 import { CmcInputComponent } from '../../../shared/ui/input/cmc-input.component';
+import { strictEmailValidator } from '../../../shared/validators/email.validator';
+import { mxPhoneValidator, normalizePhone } from '../../../shared/validators/phone.validator';
+
+/** Campos que el usuario puede modificar; solo estos se envían al guardar (PS-HU14-02). */
+type EditableField = 'name' | 'email' | 'phone';
+
+/** Letras (con acentos) separadas por un espacio, apóstrofo, punto o guion. */
+const NAME_PATTERN = /^\s*[A-Za-zÁÉÍÓÚÜÑáéíóúüñ]+(?:[ '.-]+[A-Za-zÁÉÍÓÚÜÑáéíóúüñ]+)*\.?\s*$/;
+const NAME_MIN = 3;
+const NAME_MAX = 80;
+
+/** Longitud del nombre medida sin los espacios de los extremos. */
+function nameLengthValidator(control: AbstractControl<string>): ValidationErrors | null {
+  const length = (control.value ?? '').trim().length;
+  return length === 0 || (length >= NAME_MIN && length <= NAME_MAX) ? null : { nameLength: true };
+}
 
 @Component({
   selector: 'app-edit-profile',
@@ -33,10 +49,33 @@ export class EditProfilePage {
   private readonly account = inject(DemoAccountStateService);
 
   readonly form = this.fb.group({
-    name: [this.account.profile().name, [Validators.required, Validators.pattern(/\S/)]],
-    email: [this.account.profile().email, [Validators.required, Validators.email]],
-    phone: [this.account.profile().phone, [Validators.required, Validators.pattern(/^[0-9]{10}$/)]],
+    name: [
+      this.account.profile().name,
+      [Validators.required, nameLengthValidator, Validators.pattern(NAME_PATTERN)],
+    ],
+    email: [this.account.profile().email, [Validators.required, strictEmailValidator]],
+    phone: [this.account.profile().phone, [Validators.required, mxPhoneValidator]],
   });
+
+  /** Mensaje de validación específico por campo (PF-HU14-03). */
+  fieldError(field: EditableField): string {
+    const control = this.form.controls[field];
+    if (!control.touched || control.valid) {
+      return '';
+    }
+    if (control.hasError('required') || (field === 'name' && !control.value.trim())) {
+      return {
+        name: 'Ingresa tu nombre completo.',
+        email: 'Ingresa tu correo electrónico.',
+        phone: 'Ingresa tu teléfono.',
+      }[field];
+    }
+    return {
+      name: `Usa solo letras y espacios (entre ${NAME_MIN} y ${NAME_MAX} caracteres).`,
+      email: 'Ingresa un correo válido, por ejemplo nombre@correo.com.',
+      phone: 'Ingresa un teléfono de 10 dígitos.',
+    }[field];
+  }
 
   constructor() {
     addIcons({ arrowBackOutline });
@@ -47,8 +86,13 @@ export class EditProfilePage {
       this.form.markAllAsTouched();
       return;
     }
+    // Lista explícita de campos permitidos y datos normalizados (PS-HU14-02).
     const { name, email, phone } = this.form.getRawValue();
-    this.account.updateProfile({ name: name.trim(), email: email.trim(), phone });
+    this.account.updateProfile({
+      name: name.trim().replace(/\s+/g, ' '),
+      email: email.trim().toLowerCase(),
+      phone: normalizePhone(phone),
+    });
     void this.router.navigate(['/main/profile']);
   }
 
