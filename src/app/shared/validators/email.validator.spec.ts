@@ -9,8 +9,12 @@ describe('strictEmailValidator', () => {
     expect(validate('nombre.apellido+promo@correo.com.mx')).toBeNull();
   });
 
-  it('acepta el correo aunque tenga espacios alrededor', () => {
+  it('normaliza con trim() los espacios al inicio y al final antes de validar', () => {
     expect(validate('  cliente@correo.com  ')).toBeNull();
+  });
+
+  it('rechaza los espacios internos aunque se normalicen los exteriores', () => {
+    expect(validate('  cliente @correo.com  ')).toEqual({ email: true });
   });
 
   it('deja el campo vacío a Validators.required', () => {

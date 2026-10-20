@@ -7,10 +7,13 @@ export const EMAIL_MAX_LENGTH = 254;
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@.]+(\.[^\s@.]+)*\.[A-Za-z]{2,}$/;
 
 /**
- * Validación de correo más estricta que `Validators.email` (TT-16):
- * rechaza correos sin dominio completo (p. ej. `usuario@correo`),
- * correos con espacios y valores mayores a 254 caracteres.
- * Un valor solo con espacios se reporta como `required`.
+ * Validación de correo más estricta que `Validators.email` (TT-16).
+ *
+ * - Los espacios al inicio y al final se ignoran: el valor se normaliza con
+ *   `trim()` antes de validar.
+ * - Se rechazan los espacios internos, los correos sin dominio completo
+ *   (p. ej. `usuario@correo`) y los valores de más de 254 caracteres.
+ * - Un valor compuesto solo por espacios se reporta como `required`.
  */
 export function strictEmailValidator(control: AbstractControl<string | null>): ValidationErrors | null {
   const raw = control.value ?? '';
