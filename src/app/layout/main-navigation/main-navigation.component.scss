@@ -1,3 +1,5 @@
+@use '../../shared/ui/styles/mixins';
+
 ion-tab-bar {
   position: fixed;
   bottom: calc(var(--cmc-bubble-nav-bottom-margin) + var(--cmc-safe-area-bottom));
@@ -44,6 +46,15 @@ ion-tab-bar {
       font-size: 12px;
       font-weight: 500;
       z-index: 2;
+    }
+
+    /* TT-36: indicador del carrito */
+    .cart-sr-only { @include mixins.cmc-visually-hidden; }
+    .cart-badge {
+      --background: var(--cmc-accent-gold);
+      --color: var(--cmc-primary-dark);
+      font-size: 10px;
+      z-index: 3;
     }
 
     /* Activo: Cápsula burdeos */
