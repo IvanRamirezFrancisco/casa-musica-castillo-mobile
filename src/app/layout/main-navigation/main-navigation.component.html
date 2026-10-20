@@ -13,6 +13,11 @@
     <ion-tab-button tab="cart">
       <ion-icon aria-hidden="true" name="cart-outline"></ion-icon>
       <ion-label>Carrito</ion-label>
+      <!-- Texto solo para lector de pantalla: el nombre accesible queda "Carrito, N productos". -->
+      <span class="cart-sr-only">{{ cartStatusText() }}</span>
+      @if (cartCount() > 0) {
+        <ion-badge class="cart-badge" aria-hidden="true">{{ cartBadgeText() }}</ion-badge>
+      }
     </ion-tab-button>
 
     <ion-tab-button tab="orders">

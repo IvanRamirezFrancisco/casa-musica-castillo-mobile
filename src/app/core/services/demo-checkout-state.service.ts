@@ -27,6 +27,11 @@ export class DemoCheckoutStateService {
   deliveryMethod = signal<DeliveryMethod | null>(null);
   paymentMethod = signal<PaymentMethod | null>(null);
 
+  /** Total de unidades en el carrito; alimenta el indicador de la navegación (TT-36). */
+  itemCount = computed(() => {
+    return this.cartItems().reduce((acc, item) => acc + item.quantity, 0);
+  });
+
   subtotal = computed(() => {
     return this.cartItems().reduce((acc, item) => acc + (item.price * item.quantity), 0);
   });
