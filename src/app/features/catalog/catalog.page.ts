@@ -189,6 +189,10 @@ export class CatalogPage {
   constructor() {
     this.route.queryParamMap.pipe(takeUntilDestroyed()).subscribe(params => {
       this.busqueda.set(params.get('q') ?? '');
+      // TT-21: Inicio puede abrir el catálogo filtrado (?categoria=Guitarras).
+      // Solo se aceptan categorías conocidas; cualquier otro valor se ignora.
+      const categoria = params.get('categoria');
+      this.categoriaActiva.set(this.esCategoriaValida(categoria) ? categoria : 'Todos');
     });
     effect(() => {
       const dialog = this.detailDialog()?.nativeElement;
@@ -208,6 +212,10 @@ export class CatalogPage {
       imageOutline,
       chevronForwardOutline,
     });
+  }
+
+  private esCategoriaValida(valor: string | null): valor is CatalogCategory {
+    return valor !== null && (this.categorias as readonly string[]).includes(valor);
   }
 
   onBusquedaChange(valor: string): void {

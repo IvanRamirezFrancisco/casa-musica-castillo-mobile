@@ -1,7 +1,8 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { IonContent, IonHeader, IonToolbar,   IonIcon } from '@ionic/angular';
 import { addIcons } from 'ionicons';
-import { searchOutline, notificationsOutline, musicalNoteOutline, keypadOutline, ellipseOutline, pulseOutline, heartOutline, imageOutline, musicalNotesOutline } from 'ionicons/icons';
+import { searchOutline, notificationsOutline, musicalNoteOutline, keypadOutline, ellipseOutline, pulseOutline, micOutline, heartOutline, imageOutline, musicalNotesOutline } from 'ionicons/icons';
+import type { CatalogCategory } from '../catalog/catalog.page';
 
 interface Product {
   id: string;
@@ -11,9 +12,11 @@ interface Product {
   category: string;
 }
 
+// Las categorías de Inicio usan los mismos valores que el filtro del Catálogo
+// para que la navegación (TT-21) abra el catálogo ya filtrado.
 interface Category {
   id: string;
-  name: string;
+  name: Exclude<CatalogCategory, 'Todos'>;
   icon: string;
 }
 
@@ -56,18 +59,19 @@ export class HomePage {
   }
   categories = signal<Category[]>([
     { id: '1', name: 'Guitarras', icon: 'musical-note-outline' },
-    { id: '2', name: 'Pianos', icon: 'keypad-outline' },
-    { id: '3', name: 'Baterías', icon: 'ellipse-outline' },
-    { id: '4', name: 'Vientos', icon: 'pulse-outline' },
+    { id: '2', name: 'Teclados', icon: 'keypad-outline' },
+    { id: '3', name: 'Percusión', icon: 'ellipse-outline' },
+    { id: '4', name: 'Cuerdas', icon: 'pulse-outline' },
+    { id: '5', name: 'Audio', icon: 'mic-outline' },
   ]);
 
   featuredProducts = signal<Product[]>([
     { id: 'p1', name: 'Guitarra Acústica Yamaha', price: 4500, imageUrl: '', category: 'Guitarras' },
-    { id: 'p2', name: 'Teclado Roland GO', price: 7200, imageUrl: '', category: 'Pianos' },
-    { id: 'p3', name: 'Batería Pearl Export', price: 15500, imageUrl: '', category: 'Baterías' },
+    { id: 'p2', name: 'Teclado Roland GO', price: 7200, imageUrl: '', category: 'Teclados' },
+    { id: 'p3', name: 'Batería Pearl Export', price: 15500, imageUrl: '', category: 'Percusión' },
   ]);
 
   constructor() {
-    addIcons({ searchOutline, notificationsOutline, musicalNoteOutline, keypadOutline, ellipseOutline, pulseOutline, heartOutline, imageOutline, musicalNotesOutline });
+    addIcons({ searchOutline, notificationsOutline, musicalNoteOutline, keypadOutline, ellipseOutline, pulseOutline, micOutline, heartOutline, imageOutline, musicalNotesOutline });
   }
 }
