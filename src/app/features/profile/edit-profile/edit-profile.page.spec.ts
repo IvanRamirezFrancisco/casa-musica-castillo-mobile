@@ -59,6 +59,21 @@ describe('EditProfilePage', () => {
     });
   });
 
+  it.each(["Ana O'Connor", 'Juan Pérez Jr.', 'María-José Núñez', '  Luis  Ángel  '])(
+    'acepta el nombre "%s" con los separadores documentados',
+    (nombre) => {
+      intentarGuardar({ name: nombre });
+      expect(component.form.controls.name.valid).toBe(true);
+    },
+  );
+
+  it('cuenta los espacios internos en la longitud del nombre', () => {
+    component.form.controls.name.setValue('A B');
+    expect(component.form.controls.name.hasError('nameLength')).toBe(false);
+    component.form.controls.name.setValue(`A${' '.repeat(79)}B`);
+    expect(component.form.controls.name.hasError('nameLength')).toBe(true);
+  });
+
   it('envía solo los campos permitidos (PS-HU14-02)', () => {
     const update = vi.spyOn(accountService, 'updateProfile');
     intentarGuardar({ name: 'Ana Pérez', email: 'ana@correo.com', phone: '5551112233' });
@@ -74,10 +89,10 @@ describe('EditProfilePage', () => {
   it.each([
     ['name', '', 'Ingresa tu nombre completo.'],
     ['name', '   ', 'Ingresa tu nombre completo.'],
-    ['name', 'J4n', 'Usa solo letras y espacios (entre 3 y 80 caracteres).'],
-    ['name', 'Al', 'Usa solo letras y espacios (entre 3 y 80 caracteres).'],
-    ['name', '   Al   ', 'Usa solo letras y espacios (entre 3 y 80 caracteres).'],
-    ['name', 'A'.repeat(81), 'Usa solo letras y espacios (entre 3 y 80 caracteres).'],
+    ['name', 'J4n', 'Usa letras, espacios, apóstrofo, punto o guion (entre 3 y 80 caracteres).'],
+    ['name', 'Al', 'Usa letras, espacios, apóstrofo, punto o guion (entre 3 y 80 caracteres).'],
+    ['name', '   Al   ', 'Usa letras, espacios, apóstrofo, punto o guion (entre 3 y 80 caracteres).'],
+    ['name', 'A'.repeat(81), 'Usa letras, espacios, apóstrofo, punto o guion (entre 3 y 80 caracteres).'],
     ['email', '', 'Ingresa tu correo electrónico.'],
     ['email', 'usuario@correo', 'Ingresa un correo válido, por ejemplo nombre@correo.com.'],
     ['phone', '', 'Ingresa tu teléfono.'],
