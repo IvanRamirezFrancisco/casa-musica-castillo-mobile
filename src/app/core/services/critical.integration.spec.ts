@@ -1,3 +1,4 @@
+import { NavController } from '@ionic/angular';
 import { TestBed } from '@angular/core/testing';
 import { provideRouter, Router } from '@angular/router';
 import { vi } from 'vitest';
@@ -15,6 +16,7 @@ describe('INTEGRACIÓN FRONTEND crítica DEMO (no API)', () => {
       providers: [provideRouter([])],
     }).compileComponents();
     vi.spyOn(TestBed.inject(Router), 'navigate').mockResolvedValue(true);
+    vi.spyOn(TestBed.inject(NavController), 'navigateBack').mockResolvedValue(true);
   });
 
   it('HU10-HU11: carrito y resumen comparten cantidades, importe y selección', () => {
@@ -53,7 +55,7 @@ describe('INTEGRACIÓN FRONTEND crítica DEMO (no API)', () => {
     profile.detectChanges();
     expect(profile.nativeElement.textContent).toContain('QA Local');
     expect(profile.nativeElement.textContent).toContain('qa@example.test');
-    expect(TestBed.inject(Router).navigate).toHaveBeenCalledWith(['/main/profile']);
+    expect(TestBed.inject(NavController).navigateBack).toHaveBeenCalledWith(['/main/profile']);
   });
 
   it('HU14: un formulario inválido no altera estado ni navega', () => {
@@ -65,5 +67,6 @@ describe('INTEGRACIÓN FRONTEND crítica DEMO (no API)', () => {
     expect(account.profile()).toEqual(original);
     expect(edit.componentInstance.form.touched).toBe(true);
     expect(TestBed.inject(Router).navigate).not.toHaveBeenCalled();
+    expect(TestBed.inject(NavController).navigateBack).not.toHaveBeenCalled();
   });
 });

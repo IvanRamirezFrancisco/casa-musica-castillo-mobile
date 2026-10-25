@@ -17,6 +17,12 @@ describe('HomePage', () => {
     fixture.detectChanges();
   });
 
+  it('ofrece acceso accesible a Favoritos sin modificar los productos destacados', () => {
+    const link = (fixture.nativeElement as HTMLElement).querySelector('a[aria-label="Abrir Favoritos"]');
+    expect(link?.getAttribute('href')).toBe('/favorites');
+    expect(component.featuredProducts()[0].id).toBe('p1');
+  });
+
   it('should create', () => {
     expect(component).toBeTruthy();
   });

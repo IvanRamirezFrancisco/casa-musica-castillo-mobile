@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { Router } from '@angular/router';
-import { IonContent, IonHeader, IonToolbar, IonTitle, IonButtons, IonIcon } from '@ionic/angular';
+import { IonContent, IonHeader, IonToolbar, IonTitle, NavController, IonButtons, IonIcon } from '@ionic/angular';
 import { addIcons } from 'ionicons';
 import { arrowBackOutline, informationCircleOutline, lockClosedOutline } from 'ionicons/icons';
 
@@ -26,7 +25,7 @@ import { PaymentMethodType } from '../../../core/models/checkout.model';
 })
 export class PaymentMethodPage {
   private checkoutService = inject(DemoCheckoutStateService);
-  private router = inject(Router);
+  private nav = inject(NavController);
 
   selectedMethod: PaymentMethodType | null = null;
 
@@ -57,10 +56,10 @@ export class PaymentMethodPage {
       });
     }
     
-    this.router.navigate(['/checkout']);
+    this.nav.navigateBack(['/checkout']);
   }
 
   goBack() {
-    this.router.navigate(['/checkout']);
+    this.nav.navigateBack(['/checkout']);
   }
 }

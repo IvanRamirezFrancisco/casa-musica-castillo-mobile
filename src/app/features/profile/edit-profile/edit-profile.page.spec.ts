@@ -1,3 +1,5 @@
+import { NavController } from '@ionic/angular';
+import { vi } from 'vitest';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 import { EditProfilePage } from './edit-profile.page';
@@ -40,5 +42,10 @@ describe('EditProfilePage', () => {
     component.save();
 
     expect(accountService.profile().name).toBe('Nuevo Nombre');
+  });
+  it('usa dirección Ionic back hacia /main/profile', () => {
+    const back = vi.spyOn(TestBed.inject(NavController), 'navigateBack').mockResolvedValue(true);
+    component.goBack();
+    expect(back).toHaveBeenCalledWith(['/main/profile']);
   });
 });

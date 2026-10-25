@@ -29,6 +29,12 @@ describe('MainNavigationComponent', () => {
     expect(component).toBeTruthy();
   });
 
+  it('conserva exactamente los cinco destinos de navegación principal', () => {
+    const tabs = Array.from((fixture.nativeElement as HTMLElement).querySelectorAll('ion-tab-button'));
+    expect(tabs.map(tab => tab.getAttribute('tab'))).toEqual(['home', 'catalog', 'cart', 'orders', 'profile']);
+    expect(tabs.map(tab => tab.querySelector('ion-label')?.textContent)).toEqual(['Inicio', 'Catálogo', 'Carrito', 'Pedidos', 'Perfil']);
+  });
+
   // TT-36: indicador del carrito
   it('muestra en el indicador las unidades del carrito DEMO', () => {
     expect(badge()?.textContent?.trim()).toBe('2');

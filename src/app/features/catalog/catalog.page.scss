@@ -72,7 +72,7 @@
   padding: var(--cmc-space-1) var(--cmc-space-2);
   border-radius: var(--cmc-radius-xs);
 }
-.detail-btn, .clear-filters-btn, .modal-action-btn {
+.detail-btn, .clear-filters-btn {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -86,10 +86,11 @@
   font-weight: 600;
 }
 .detail-btn {
+  text-decoration: none;
   margin-top: auto;
   gap: var(--cmc-space-1);
 }
-.detail-btn:active, .clear-filters-btn:active, .modal-action-btn:active {
+.detail-btn:active, .clear-filters-btn:active {
   background: var(--cmc-primary-dark);
 }
 .empty-results-wrapper {
@@ -106,55 +107,4 @@
 .catalog-note {
   text-align: center;
   margin-top: var(--cmc-space-5);
-}
-.modal-dialog {
-  width: calc(100% - 2 * var(--cmc-space-4));
-  max-width: 360px;
-  max-height: calc(100dvh - var(--cmc-safe-area-top) - var(--cmc-safe-area-bottom) - 2 * var(--cmc-space-4));
-  overflow-y: auto;
-  padding: var(--cmc-space-6);
-  padding-top: calc(var(--cmc-space-8) + var(--cmc-space-6));
-  border: 1px solid var(--cmc-border);
-  border-radius: var(--cmc-radius-lg);
-  background: var(--cmc-surface);
-  color: var(--cmc-text-primary);
-  text-align: center;
-}
-.modal-dialog::backdrop {
-  background: var(--cmc-overlay-backdrop);
-}
-.modal-close-btn {
-  position: absolute;
-  top: var(--cmc-space-2);
-  right: var(--cmc-space-2);
-  width: 48px;
-  height: 48px;
-  border: 0;
-  background: var(--cmc-surface-alt);
-  border-radius: var(--cmc-radius-full);
-  font-size: 20px;
-  color: var(--cmc-text-primary);
-}
-.modal-icon {
-  font-size: 48px;
-  color: var(--cmc-primary);
-  margin-bottom: var(--cmc-space-2);
-}
-.modal-dialog .cmc-caption {
-  display: block;
-  margin-bottom: var(--cmc-space-4);
-}
-.modal-dialog h2 {
-  margin-bottom: var(--cmc-space-2);
-}
-.modal-dialog .cmc-body {
-  margin-bottom: var(--cmc-space-3);
-  color: var(--cmc-text-secondary);
-}
-.modal-dialog .cmc-title {
-  color: var(--cmc-primary);
-  margin: var(--cmc-space-2) 0;
-}
-.modal-action-btn {
-  width: 100%;
 }

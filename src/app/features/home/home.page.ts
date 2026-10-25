@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/cor
 import { IonContent, IonHeader, IonToolbar,   IonIcon } from '@ionic/angular';
 import { addIcons } from 'ionicons';
 import { searchOutline, notificationsOutline, musicalNoteOutline, keypadOutline, ellipseOutline, pulseOutline, micOutline, heartOutline, imageOutline, musicalNotesOutline } from 'ionicons/icons';
-import type { CatalogCategory } from '../catalog/catalog.page';
+import type { CatalogCategory } from '../catalog/catalog-demo.data';
 
 interface Product {
   id: string;

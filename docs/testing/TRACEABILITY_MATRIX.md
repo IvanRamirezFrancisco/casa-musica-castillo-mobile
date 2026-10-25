@@ -2,6 +2,21 @@
 
 Los casos PF/PS del registro conservado abajo siguen siendo el contrato de aceptación. **PASS de una prueba DEMO no cambia su estado a APROBADO**. Los IDs `API-*` identifican verificaciones parciales del contrato externo; no reemplazan `PF-*`/`PS-*`. Ninguna HU se cierra por esta matriz.
 
+## TT-04 — TRAZABILIDAD DE NAVEGACIÓN (25/10/2026)
+
+| Criterio TT-04 | Evidencia automatizada | Límite |
+|---|---|---|
+| Entrada, splash y cinco tabs | `app.routes.integration.spec.ts`, `main-navigation.component.spec.ts` | Rutas/componentes reales; no autenticación |
+| Búsqueda/categoría y atrás/adelante | `catalog.page.spec.ts`, `app.routes.integration.spec.ts` | Filtrado DEMO, q/categoria públicos, replaceUrl |
+| Favoritos | `home.page.spec.ts`, `app.routes.integration.spec.ts` | Página informativa, sin colección compartida/persistida |
+| Producto | `app.routes.integration.spec.ts`, `catalog.page.spec.ts` | IDs enteros positivos seguros; datos DEMO; HU-07 pendiente |
+| Pedido | `order-detail.page.spec.ts`, servicio existente, integración de rutas | Validación existente; autorización real pendiente |
+| Perfil/checkout secundarios | Specs existentes ampliados e integración de rutas | Solo dirección de retorno; lógica funcional conservada |
+| Ruta desconocida | `app.routes.integration.spec.ts` | NotFound conserva URL, destino fijo a Inicio |
+| Android API 36 y botón físico | `.maestro/navigation-demo.yaml` y flujos previos | Resultado ejecutado en [TT04_NAVIGATION.md](TT04_NAVIGATION.md) |
+
+Fuera de alcance: autenticación, sesión, guards, APIs de producto/favoritos, persistencia, backend y App Links externos. Las pruebas no cierran HU-07/HU-08 ni demuestran seguridad de autorización.
+
 ## AUTOMATIZACIÓN ACTUAL Y BRECHAS
 
 Rutas de specs relativas a `src/app/`; JUnit/cobertura en CI. Maestro produce evidencia de UI DEMO. API/k6 requieren ambiente autorizado. Todos los tipos de prueba se definen en [TEST_PLAN](TEST_PLAN.md), herramientas en [TEST_TOOLS](TEST_TOOLS.md) e iteraciones en [TEST_SCHEDULE](TEST_SCHEDULE.md).
@@ -12,10 +27,10 @@ Rutas de specs relativas a `src/app/`; JUnit/cobertura en CI. Maestro produce ev
 | 02 / XP1 | PF-HU02-02/03 parcial | features/auth/register/register.page.spec.ts | auth-demo visita registro | No registro real ni logs/validación servidor comprobados |
 | 03 / XP1 | PF-HU03-02 | features/auth/forgot-password/forgot-password.page.spec.ts | auth-demo visita recuperación | No envío/token temporal/enumeración comprobados |
 | 04 / XP2 | PF-HU04-01/02 parcial | features/home/home.page.spec.ts, layout/main-navigation | auth-demo e Inicio | Contenido demo; PS de sesión/rutas pendientes |
-| 05 / XP2 | PF-HU05-01/03 contrato parcial | Catálogo es DummyPage; pruebas de catálogo pendientes | API-HU05-01; k6 LOAD/STRESS | Contrato preparado sin ejecutar; errores/sensible PS pendientes |
-| 06 / XP2 | PF-HU06-02 contrato parcial | Búsqueda UI sin implementación completa | API-HU06-01; k6 agrupado catálogo | Falta inyección/límites/búsqueda con fixture positiva |
-| 07 / XP3 | PF-HU07-02 contrato | Detalle UI pendiente | API-HU07-01/02 | 400/404 preparados; contenido remoto inseguro pendiente |
-| 08 / XP3 | PF-HU08-01–04 | Favoritos pendiente | Diseñar aceptación al implementar | PS autenticación/aislamiento usuarios pendiente |
+| 05 / XP2 | PF-HU05-01/03 contrato parcial | catalog.page.spec.ts; routing TT-04; catálogo DEMO | API-HU05-01; k6 LOAD/STRESS | Contrato preparado sin ejecutar; errores/sensible PS pendientes |
+| 06 / XP2 | PF-HU06-02 contrato parcial | Filtros DEMO q/categoria; integración routing TT-04 | API-HU06-01; k6 agrupado catálogo | Falta inyección/límites/búsqueda con fixture positiva |
+| 07 / XP3 | PF-HU07-02 contrato | Ruta /products/:id DEMO; integración TT-04 | API-HU07-01/02 | 400/404 preparados; contenido remoto inseguro pendiente |
+| 08 / XP3 | PF-HU08-01–04 | Ruta /favorites informativa; integración TT-04 | navigation-demo; funcionalidad pendiente | PS autenticación/aislamiento usuarios pendiente |
 | 09 / XP4 | PF-HU09-03 parcial; 01/02 pendientes | core/services/demo-checkout-state.service.spec.ts | purchase-demo usa carrito precargado; API-HU09-01/02 | No agregar real ni stock/precio servidor; PS pendiente |
 | 10 / XP4 | PF-HU10-01/02/03; 04 estado vacío parcial | cart.page.spec.ts, critical.integration.spec.ts, demo-checkout-state.service.spec.ts | purchase-demo | PASS solo cantidades/totales demo; límites/propiedad servidor pendientes |
 | 11 / XP4 | PF-HU11-02; 01/04 demo parcial | checkout/**/*.spec.ts, critical.integration.spec.ts | purchase-demo | No checkout servidor/idempotencia; PS pendiente |

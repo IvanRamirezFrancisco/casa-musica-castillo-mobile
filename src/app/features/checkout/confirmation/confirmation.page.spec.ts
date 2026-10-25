@@ -1,3 +1,4 @@
+import { NavController } from '@ionic/angular';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { vi } from 'vitest';
 import { Router, provideRouter } from '@angular/router';
@@ -50,5 +51,11 @@ describe('ConfirmationPage', () => {
     expect(direct.componentInstance.order()).toBeNull();
     expect((direct.nativeElement as HTMLElement).querySelector('.confirmation-summary')).toBeNull();
     expect(navigate).toHaveBeenCalledWith(['/checkout'], { replaceUrl: true });
+  });
+  it.each(['home', 'orders'])('sale de confirmación con raíz Ionic hacia %s', (destination) => {
+    const root = vi.spyOn(TestBed.inject(NavController), 'navigateRoot').mockResolvedValue(true);
+    if (destination === 'home') component.goToHome();
+    else component.goToOrders();
+    expect(root).toHaveBeenCalledWith([`/main/${destination}`], { replaceUrl: true });
   });
 });

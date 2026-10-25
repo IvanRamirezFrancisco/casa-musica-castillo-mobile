@@ -1,3 +1,5 @@
+import { NavController } from '@ionic/angular';
+import { vi } from 'vitest';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 import { PaymentMethodPage } from './payment-method.page';
@@ -40,4 +42,9 @@ describe('PaymentMethodPage', () => {
     expect(root.querySelectorAll('.selected').length).toBe(1);
   });
 
+  it('usa dirección Ionic back hacia /checkout', () => {
+    const back = vi.spyOn(TestBed.inject(NavController), 'navigateBack').mockResolvedValue(true);
+    component.goBack();
+    expect(back).toHaveBeenCalledWith(['/checkout']);
+  });
 });
