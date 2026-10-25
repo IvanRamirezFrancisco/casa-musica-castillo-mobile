@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { CurrencyPipe } from '@angular/common';
-import { IonContent, IonHeader, IonToolbar, IonTitle, IonButtons, IonIcon } from '@ionic/angular';
+import { NavController, IonContent, IonHeader, IonToolbar, IonTitle, IonButtons, IonIcon } from '@ionic/angular';
 import { addIcons } from 'ionicons';
 import { arrowBackOutline, chevronForwardOutline, cubeOutline, cardOutline } from 'ionicons/icons';
 
@@ -28,6 +28,7 @@ import { CmcButtonComponent } from '../../../shared/ui/button/cmc-button.compone
 export class CheckoutSummaryPage {
   checkoutService = inject(DemoCheckoutStateService);
   private router = inject(Router);
+  private nav = inject(NavController);
 
   constructor() {
     addIcons({ arrowBackOutline, chevronForwardOutline, cubeOutline, cardOutline });
@@ -38,7 +39,7 @@ export class CheckoutSummaryPage {
   }
 
   goBack() {
-    this.router.navigate(['/main/cart']);
+    this.nav.navigateBack(['/main/cart']);
   }
 
   goToDelivery() {

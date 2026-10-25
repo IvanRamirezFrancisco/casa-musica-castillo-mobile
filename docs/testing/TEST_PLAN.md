@@ -6,9 +6,23 @@ Actualización: 18 de octubre de 2026. Alcance: app Ionic/Angular/Capacitor y co
 
 La rama de pruebas se actualizó mediante merge sin reescritura con `develop` en `c3d78a88fc68282598b6eb8869102a83da77b10f` (PR #74). Angular 22.2.1, TypeScript 6.0, Vitest 4.0.18, Ionic 9 y Capacitor 8.5.2. El catálogo UI incorporado en esa base sigue identificado como **Demostración** y usa datos locales. Los ocho workflows especializados se conservan; los resultados nuevos se registran en TEST_RESULTS y VALIDATION_REPORT.
 
-La app usa `DemoCheckoutStateService`, `DemoAccountStateService` y un catálogo UI con productos locales; el login navega después de validar el formulario, sin autenticar en servidor. Búsqueda del catálogo es local; detalle y favoritos no tienen recorridos completos. No hay HttpClient ni contrato móvil implementado. Los pedidos demo no se alimentan de los pedidos creados en checkout. Ninguna prueba DEMO demuestra autorización, cobros, persistencia o cumplimiento total de una HU.
+La app usa `DemoCheckoutStateService`, `DemoAccountStateService` y un catálogo UI con productos locales; el login navega después de validar el formulario, sin autenticar en servidor. Búsqueda y detalle del catálogo usan datos locales; Favoritos tiene una pantalla de navegación pendiente de su HU. Existe infraestructura HttpClient de TT-03, sin integrar los recorridos DEMO. Los pedidos demo no se alimentan de los pedidos creados en checkout. Ninguna prueba DEMO demuestra autorización, cobros, persistencia o cumplimiento total de una HU.
 
 Se inspeccionó `IvanRamirezFrancisco/backend_` en `46bc32d8b0417370ab35e99866cabbeaaf830bba`, sin modificarlo. [API_CONTRACT.md](API_CONTRACT.md) identifica endpoints y brechas. No se ha autorizado una URL remota ni entregado una cuenta de pruebas: API, carga y estrés no se declaran ejecutados.
+
+## TT-04 — NAVEGACIÓN MÓVIL (25/10/2026)
+
+TT-04 conserva los cinco tabs y Bubble Navigation. Añade `/favorites`, `/products/:id`, `/not-found` y wildcard con página visible, sin redirección silenciosa. Búsqueda y categoría usan exclusivamente `q` y `categoria`; las ediciones reemplazan la entrada de historial. El ordenamiento permanece local.
+
+La base actual incorpora la infraestructura HTTP de TT-03 (PR #81); los recorridos de navegación de TT-04 usan datos DEMO. No cubren autenticación, sesión, guards, APIs de productos/favoritos, persistencia, backend ni App Links externos. No acreditan HU-07/HU-08 completas.
+
+- INTEGRACIÓN DE ROUTING: `src/app/app.routes.integration.spec.ts` activa las rutas de producción y sus páginas lazy reales mediante RouterTestingHarness, incluyendo Ionic Tabs. Comprueba entradas directas, filtros, codificación, limpieza, atrás/adelante esperando NavigationEnd, IDs, rutas inexistentes y retornos seguros. No sustituye animaciones ni pila nativa por assertions de URL.
+- REGRESIÓN DE COMPONENTES: specs de Inicio/Catálogo/tabs y retornos de pedido, perfil y checkout. Solo se reemplazan los casos del diálogo retirado por sus equivalentes de ruta; se conservan las pruebas funcionales restantes.
+- ACEPTACIÓN ANDROID: `.maestro/navigation-demo.yaml`, registrado en `.maestro/config.yaml`, recorre cinco tabs, filtros, Favoritos, producto, pedido, perfil y botón físico atrás. Ejecutar en API 36; el CI existente sigue configurado en API 34 y no se modifica dentro de TT-04.
+- REGRESIÓN CHECKOUT: `purchase-demo.yaml` mantiene entrega/pago/confirmación DEMO. Se debe comprobar además la salida de confirmación y los retornos mediante NavController.
+- ACCESIBILIDAD: nombres de enlaces/botones, encabezados y destinos seguros. Safe areas y foco visible existentes se conservan; la evaluación completa con TalkBack y múltiples tamaños requiere revisión manual adicional.
+
+Evidencia y límites de ejecución: [TT04_NAVIGATION.md](TT04_NAVIGATION.md). No declarar PASS de Android si solo se ejecutaron pruebas jsdom.
 
 ## Presentación académica
 

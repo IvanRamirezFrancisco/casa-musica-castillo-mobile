@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { CurrencyPipe, DatePipe } from '@angular/common';
-import { ActivatedRoute, Router } from '@angular/router';
-import { IonButtons, IonContent, IonHeader, IonIcon, IonTitle, IonToolbar } from '@ionic/angular';
+import { ActivatedRoute } from '@angular/router';
+import { NavController, IonButtons, IonContent, IonHeader, IonIcon, IonTitle, IonToolbar } from '@ionic/angular';
 import { addIcons } from 'ionicons';
 import { arrowBackOutline } from 'ionicons/icons';
 
@@ -44,7 +44,7 @@ const TIMELINE: DemoOrderStatus[] = ['pending', 'paid', 'shipped', 'delivered'];
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OrderDetailPage {
-  private readonly router = inject(Router);
+  private readonly nav = inject(NavController);
   private readonly orderDetail = inject(OrderDetailService);
   private readonly orderId = inject(ActivatedRoute).snapshot.paramMap.get('id') ?? '';
 
@@ -87,6 +87,6 @@ export class OrderDetailPage {
   }
 
   goBack(): void {
-    void this.router.navigate(['/main/orders']);
+    void this.nav.navigateBack(['/main/orders']);
   }
 }

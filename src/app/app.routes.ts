@@ -75,5 +75,21 @@ export const routes: Routes = [
   {
     path: 'profile/edit',
     loadComponent: () => import('./features/profile/edit-profile/edit-profile.page').then((m) => m.EditProfilePage),
-  }
+  },
+  {
+    path: 'favorites',
+    loadComponent: () => import('./features/favorites/favorites.page').then(m => m.FavoritesPage),
+  },
+  {
+    path: 'products/:id',
+    loadComponent: () => import('./features/catalog/product-detail/product-detail.page').then(m => m.ProductDetailPage),
+  },
+  {
+    path: 'not-found',
+    loadComponent: () => import('./features/not-found/not-found.page').then(m => m.NotFoundPage),
+  },
+  {
+    path: '**',
+    loadComponent: () => import('./features/not-found/not-found.page').then(m => m.NotFoundPage),
+  },
 ];

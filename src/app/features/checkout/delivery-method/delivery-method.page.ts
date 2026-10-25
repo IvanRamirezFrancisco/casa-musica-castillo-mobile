@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { Router } from '@angular/router';
-import { IonContent, IonHeader, IonToolbar, IonTitle, IonButtons, IonIcon } from '@ionic/angular';
+import { IonContent, IonHeader, IonToolbar, IonTitle, NavController, IonButtons, IonIcon } from '@ionic/angular';
 import { addIcons } from 'ionicons';
 import { arrowBackOutline, locationOutline, homeOutline } from 'ionicons/icons';
 
@@ -26,7 +25,7 @@ import { DeliveryMethodType } from '../../../core/models/checkout.model';
 })
 export class DeliveryMethodPage {
   private checkoutService = inject(DemoCheckoutStateService);
-  private router = inject(Router);
+  private nav = inject(NavController);
 
   selectedMethod: DeliveryMethodType | null = null;
 
@@ -59,10 +58,10 @@ export class DeliveryMethodPage {
       });
     }
     
-    this.router.navigate(['/checkout']);
+    this.nav.navigateBack(['/checkout']);
   }
 
   goBack() {
-    this.router.navigate(['/checkout']);
+    this.nav.navigateBack(['/checkout']);
   }
 }

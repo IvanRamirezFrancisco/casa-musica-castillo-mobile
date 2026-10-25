@@ -1,5 +1,6 @@
+import { NavController } from '@ionic/angular';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ActivatedRoute, provideRouter, Router } from '@angular/router';
+import { ActivatedRoute, provideRouter } from '@angular/router';
 import { vi } from 'vitest';
 import { OrderDetailPage } from './order-detail.page';
 import { OrderDetailService } from '../../../core/services/order-detail.service';
@@ -109,8 +110,8 @@ describe('OrderDetailPage', () => {
   it('regresa a Mis pedidos', async () => {
     getMyOrder.mockResolvedValue(pedidoDemo('DEMO-1004'));
     create();
-    const router = TestBed.inject(Router);
-    const navigate = vi.spyOn(router, 'navigate').mockResolvedValue(true);
+    const router = TestBed.inject(NavController);
+    const navigate = vi.spyOn(router, 'navigateBack').mockResolvedValue(true);
     component.goBack();
     expect(navigate).toHaveBeenCalledWith(['/main/orders']);
   });

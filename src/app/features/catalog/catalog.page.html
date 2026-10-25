@@ -13,6 +13,7 @@
     <div class="search-container">
       <ion-icon name="search-outline" class="search-icon" aria-hidden="true"></ion-icon>
       <input
+        id="catalog-search"
         type="search"
         class="cmc-search-input"
         [ngModel]="busqueda()"
@@ -25,7 +26,7 @@
           type="button"
           class="clear-search-btn"
 
-          (click)="busqueda.set('')"
+          (click)="onBusquedaChange('')"
           aria-label="Borrar búsqueda"
         >
           <ion-icon name="close-outline" aria-hidden="true"></ion-icon>
@@ -104,15 +105,14 @@
                   {{ producto.precio | currency:'MXN':'symbol':'1.0-0' }} MXN
                 </p>
 
-                <button
-                  type="button"
+                <a
                   class="detail-btn"
-                  (click)="mostrarDetalle(producto)"
+                  [routerLink]="['/products', producto.id]"
                   [attr.aria-label]="'Ver información de ' + producto.nombre"
                 >
                   <span>Ver información</span>
                   <ion-icon name="chevron-forward-outline" aria-hidden="true"></ion-icon>
-                </button>
+                </a>
               </div>
             </article>
           }
@@ -146,46 +146,3 @@
   </main>
 
 </ion-content>
-
-  <!-- Modal Provisional de Detalle -->
-  @if (seleccionado(); as producto) {
-
-      <dialog
-        #detailDialog
-        class="modal-dialog"
-        role="dialog"
-        aria-modal="true"
-        [attr.aria-label]="'Información de ' + producto.nombre"
-        (cancel)="cerrarDetalle()"
-        (click)="onDialogClick($event)"
-      >
-        <button
-          type="button"
-          class="modal-close-btn" autofocus
-          aria-label="Cerrar detalle"
-          (click)="cerrarDetalle()"
-        >
-          <ion-icon name="close-outline" aria-hidden="true"></ion-icon>
-        </button>
-
-        <ion-icon [name]="producto.icono" class="modal-icon" aria-hidden="true"></ion-icon>
-
-        <span class="cmc-caption">{{ producto.categoria }} • {{ producto.marca }}</span>
-        <h2 class="cmc-section-title">{{ producto.nombre }}</h2>
-        <p class="cmc-body">{{ producto.descripcion }}</p>
-
-        <p class="cmc-title">{{ producto.precio | currency:'MXN':'symbol':'1.0-0' }} MXN</p>
-
-        <p class="cmc-caption">
-          Precio ilustrativo. Integración con inventario pendiente.
-        </p>
-
-        <button
-          type="button"
-          class="modal-action-btn"
-          (click)="cerrarDetalle()"
-        >
-          Volver al catálogo
-        </button>
-      </dialog>
-  }

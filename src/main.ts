@@ -10,7 +10,8 @@ bootstrapApplication(AppComponent, {
   providers: [
     provideHttpClient(),
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
-    provideIonicAngular(),
+    // TT-04: API 36 exposed focus retained inside the hidden Home view.
+    provideIonicAngular({ focusManagerPriority: ['heading', 'content'] }),
     provideRouter(routes, withPreloading(PreloadAllModules), withComponentInputBinding()),
   ],
 });

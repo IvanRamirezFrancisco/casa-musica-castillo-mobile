@@ -1,3 +1,5 @@
+import { NavController } from '@ionic/angular';
+import { vi } from 'vitest';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 import { CheckoutSummaryPage } from './checkout-summary.page';
@@ -42,5 +44,10 @@ describe('CheckoutSummaryPage', () => {
       description: 'Test'
     });
     expect(component.canProceed()).toBe(true);
+  });
+  it('usa dirección Ionic back hacia /main/cart', () => {
+    const back = vi.spyOn(TestBed.inject(NavController), 'navigateBack').mockResolvedValue(true);
+    component.goBack();
+    expect(back).toHaveBeenCalledWith(['/main/cart']);
   });
 });

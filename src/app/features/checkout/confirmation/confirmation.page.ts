@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject, signal, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { CurrencyPipe } from '@angular/common';
-import { IonContent, IonIcon } from '@ionic/angular';
+import { NavController, IonContent, IonIcon } from '@ionic/angular';
 import { addIcons } from 'ionicons';
 import { checkmarkCircle, warningOutline } from 'ionicons/icons';
 
@@ -25,6 +25,7 @@ import { DemoOrder } from '../../../core/models/checkout.model';
 export class ConfirmationPage implements OnInit {
   private checkoutService = inject(DemoCheckoutStateService);
   private router = inject(Router);
+  private nav = inject(NavController);
 
   order = signal<DemoOrder | null>(null);
 
@@ -45,11 +46,11 @@ export class ConfirmationPage implements OnInit {
 
   goToHome() {
     this.checkoutService.clearCheckout();
-    this.router.navigate(['/main/home']);
+    this.nav.navigateRoot(['/main/home'], { replaceUrl: true });
   }
 
   goToOrders() {
     this.checkoutService.clearCheckout();
-    this.router.navigate(['/main/orders']);
+    this.nav.navigateRoot(['/main/orders'], { replaceUrl: true });
   }
 }

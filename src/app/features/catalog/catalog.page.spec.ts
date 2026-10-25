@@ -1,8 +1,8 @@
 import { vi } from 'vitest';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ActivatedRoute, convertToParamMap, provideRouter } from '@angular/router';
+import { ActivatedRoute, convertToParamMap, provideRouter, Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
-import { CatalogPage, CatalogProduct } from './catalog.page';
+import { CatalogPage } from './catalog.page';
 import { routes } from '../../app.routes';
 
 describe('CatalogPage', () => {
@@ -10,13 +10,12 @@ describe('CatalogPage', () => {
   let fixture: ComponentFixture<CatalogPage>;
 
   beforeEach(async () => {
-    vi.spyOn(HTMLDialogElement.prototype, 'showModal').mockImplementation(function(this: HTMLDialogElement) { this.open = true; });
-    vi.spyOn(HTMLDialogElement.prototype, 'close').mockImplementation(function(this: HTMLDialogElement) { this.open = false; });
     await TestBed.configureTestingModule({
       imports: [CatalogPage],
       providers: [provideRouter(routes)],
     }).compileComponents();
 
+    vi.spyOn(TestBed.inject(Router), 'navigate').mockResolvedValue(true);
     fixture = TestBed.createComponent(CatalogPage);
     component = fixture.componentInstance;
     fixture.detectChanges();
@@ -139,32 +138,12 @@ describe('CatalogPage', () => {
     }
   });
 
-  // 12. Interacción para abrir detalle provisional
-  it('12. debe seleccionar y mostrar el diálogo modal de detalle al solicitar ver información', () => {
-    const prod: CatalogProduct = component.productos[0];
-    component.mostrarDetalle(prod);
-    fixture.detectChanges();
-
-    expect(component.seleccionado()).toEqual(prod);
-    const compiled = fixture.nativeElement as HTMLElement;
-    const dialog = compiled.querySelector('.modal-dialog');
-    expect(dialog).toBeTruthy();
-    expect(dialog?.getAttribute('role')).toBe('dialog');
-    expect(dialog?.textContent).toContain(prod.nombre);
-  });
-
-  // 13. Cerrar detalle
-  it('13. debe cerrar el diálogo modal de detalle al invocar cerrarDetalle', () => {
-    const prod: CatalogProduct = component.productos[0];
-    component.mostrarDetalle(prod);
-    fixture.detectChanges();
-
-    component.cerrarDetalle();
-    fixture.detectChanges();
-
-    expect(component.seleccionado()).toBeNull();
-    const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('.modal-dialog')).toBeNull();
+  it('enlaza cada producto a su detalle con ID numérico', () => {
+    const links = (fixture.nativeElement as HTMLElement).querySelectorAll('.detail-btn');
+    expect(links.length).toBe(component.productos.length);
+    links.forEach((link, index) => {
+      expect(link.getAttribute('href')).toBe(`/products/${component.productos[index].id}`);
+    });
   });
 
   // 14. Ruta /main/catalog carga CatalogPage
@@ -197,35 +176,6 @@ describe('CatalogPage', () => {
     fixture.detectChanges();
     expect(component.productosFiltrados().length).toBe(component.productos.length);
   });
-  it('opens a native modal with an accessible name and closes on cancellation', () => {
-    const root = fixture.nativeElement as HTMLElement;
-    (root.querySelector('.detail-btn') as HTMLButtonElement).click(); fixture.detectChanges();
-    const dialog = root.querySelector('dialog') as HTMLDialogElement;
-    expect(dialog.open).toBe(true);
-    expect(dialog.getAttribute('aria-modal')).toBe('true');
-    expect(dialog.getAttribute('aria-label')).toContain(component.productos[0].nombre);
-    dialog.dispatchEvent(new Event('cancel')); fixture.detectChanges();
-    expect(component.seleccionado()).toBeNull();
-    expect(root.querySelector('dialog')).toBeNull();
-  });
-
-  it('keeps the detail open on content clicks and closes on backdrop clicks', () => {
-    component.mostrarDetalle(component.productos[0]); fixture.detectChanges();
-    const dialog = (fixture.nativeElement as HTMLElement).querySelector('dialog') as HTMLDialogElement;
-    vi.spyOn(dialog, 'getBoundingClientRect').mockReturnValue({ left: 10, right: 300, top: 10, bottom: 400 } as DOMRect);
-    dialog.dispatchEvent(new MouseEvent('click', { clientX: 100, clientY: 100, bubbles: true }));
-    expect(component.seleccionado()).not.toBeNull();
-    dialog.dispatchEvent(new MouseEvent('click', { clientX: 0, clientY: 0, bubbles: true }));
-    expect(component.seleccionado()).toBeNull();
-  });
-
-  it('closes the modal before leaving the cached Ionic page', () => {
-    component.mostrarDetalle(component.productos[0]); fixture.detectChanges();
-    component.ionViewWillLeave(); fixture.detectChanges();
-    expect(component.seleccionado()).toBeNull();
-    expect((fixture.nativeElement as HTMLElement).querySelector('dialog')).toBeNull();
-  });
-
 });
 
 // TT-21: el catálogo aplica la categoría recibida desde Inicio
@@ -237,7 +187,7 @@ describe('CatalogPage - filtro por parámetro de ruta', () => {
     queryParams$.next(convertToParamMap({}));
     await TestBed.configureTestingModule({
       imports: [CatalogPage],
-      providers: [{ provide: ActivatedRoute, useValue: { queryParamMap: queryParams$.asObservable() } }],
+      providers: [provideRouter([]), { provide: ActivatedRoute, useValue: { queryParamMap: queryParams$.asObservable() } }],
     }).compileComponents();
     const fixture = TestBed.createComponent(CatalogPage);
     component = fixture.componentInstance;

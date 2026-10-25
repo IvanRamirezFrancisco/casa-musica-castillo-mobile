@@ -1,0 +1,68 @@
+appId: com.casademusicacastillo.app
+name: TT-04 - Navegación móvil DEMO
+tags: [critical, demo, navigation]
+---
+- launchApp:
+    clearState: true
+- extendedWaitUntil:
+    visible: "Bienvenido de nuevo"
+    timeout: 30000
+- runFlow: shared/login-demo.yaml
+- tapOn: "Abrir Favoritos"
+- assertVisible: "Tus favoritos, próximamente"
+- tapOn: "Explorar catálogo"
+- assertVisible: "Encuentra tu sonido"
+- tapOn: "Inicio"
+- assertVisible: "Novedades"
+- tapOn: "Abrir Favoritos"
+- back
+- assertVisible: "Novedades"
+- tapOn: "Ver Teclados en el catálogo"
+- assertVisible: "Teclado de 61 teclas sensitivo"
+- assertNotVisible: "Guitarra acústica de estudio"
+- scrollUntilVisible:
+    element: "Ver información de Teclado de 61 teclas sensitivo"
+    direction: DOWN
+    centerElement: true
+- tapOn: "Ver información de Teclado de 61 teclas sensitivo"
+- assertVisible: "Detalle del producto"
+- assertVisible: ".*Roland Go Series.*"
+- back
+- assertVisible: "Encuentra tu sonido"
+- assertNotVisible: "Guitarra acústica de estudio"
+- scrollUntilVisible:
+    element: "Todos"
+    direction: UP
+    centerElement: true
+- tapOn: "Todos"
+- tapOn:
+    id: "catalog-search"
+- inputText: "Yamaha"
+- hideKeyboard
+- assertVisible: "Guitarra acústica de estudio"
+- assertNotVisible: "Teclado de 61 teclas sensitivo"
+- scrollUntilVisible:
+    element: "Ver información de Guitarra acústica de estudio"
+    direction: DOWN
+    centerElement: true
+- tapOn: "Ver información de Guitarra acústica de estudio"
+- assertVisible: "Detalle del producto"
+- tapOn: "Volver al catálogo"
+- assertVisible: "Encuentra tu sonido"
+- assertNotVisible: "Teclado de 61 teclas sensitivo"
+- tapOn: "Carrito.*"
+- assertVisible: "Guitarra Acústica Yamaha"
+- tapOn: "Pedidos"
+- assertVisible: "Mis pedidos"
+- tapOn: "Pedido DEMO-1004"
+- assertVisible: "Detalle del pedido"
+- back
+- assertVisible: "Mis pedidos"
+- tapOn: "Perfil"
+- tapOn: "Editar perfil"
+- assertVisible: "Nombre completo"
+- back
+- assertVisible: "Usuario Demo"
+- tapOn: "Inicio"
+- assertVisible: "Novedades"
+- takeScreenshot: reports/maestro/tt04-navigation
