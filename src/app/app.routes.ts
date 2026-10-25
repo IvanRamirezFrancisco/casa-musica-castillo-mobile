@@ -2,6 +2,10 @@ import { Routes } from '@angular/router';
 
 export const routes: Routes = [
   {
+    path: 'api-connection',
+    loadComponent: () => import('./features/api-connection/api-connection.page').then((m) => m.ApiConnectionPage),
+  },
+  {
     path: '',
     redirectTo: 'splash',
     pathMatch: 'full',
