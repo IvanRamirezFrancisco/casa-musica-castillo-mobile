@@ -1,6 +1,6 @@
 # Etapa 1B — consolidación y publicación del incremento móvil
 
-Fecha: **3 de noviembre de 2026**, America/Mexico_City. Este informe corresponde a la consolidación del trabajo local de octubre. No agrega funcionalidades de producto. El registro de publicación y CI se completa en [PUBLICATION.json](PUBLICATION.json) después de publicar el Draft PR.
+Fecha: **3 de noviembre de 2026**, America/Mexico_City. Este informe corresponde a la consolidación del trabajo local de octubre. No agrega funcionalidades de producto. **Draft PR publicado: [#83](https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/pull/83), hacia `develop`, abierto y en Draft.** Upstream configurado y primer HEAD remoto verificado: `af6592082eceba82b2404da8b596cc4a70f8dc25`. El registro de publicación y la observación de CI están en [PUBLICATION.json](PUBLICATION.json). El commit documental de cierre conserva las mismas fuentes validadas; su SHA final se comprueba nuevamente en GitHub.
 
 ## Respaldo y punto de partida
 
@@ -19,7 +19,7 @@ Se usaron listas explícitas de rutas, revisión de `git diff --cached`, escaneo
 | `6ac78a0` | Componentes compartidos, controles, estilos y pruebas de UI | 12 |
 | `9145ddf` | Módulos móviles, navegación pública/protegida y pruebas de integración | 79 |
 | `d03d0a5` | Ejecutores y matriz de caja blanca, utilidades de evidencia y Maestro | 14 |
-| Commit documental que contiene este informe | Documentación, capturas y evidencias históricas, validación y trazabilidad de Etapa 1B | Inventario del PR |
+| `af65920` | Documentación, capturas y evidencias históricas, validación y trazabilidad de Etapa 1B | Inventario del PR |
 
 Los contratos del núcleo preceden a componentes y vistas; las pruebas de cada módulo se conservan junto a su implementación. El commit de herramientas no duplica especificaciones. La relación exacta por ruta y hashes inicial/final está en [INVENTORY.json](INVENTORY.json).
 
@@ -73,9 +73,15 @@ El Draft PR se dirige exclusivamente a `develop`. La instrucción de Etapa 1B pe
 
 Project existente: [Casa de Música Castillo — App Móvil](https://github.com/users/IvanRamirezFrancisco/projects/1). Se consultaron **69 tarjetas y 19 campos**, incluidos responsables, Story Points, estados, Iteración XP y Etapa DevOps. [PROJECT_TRACEABILITY.json](PROJECT_TRACEABILITY.json) enlaza los commits de producto/herramientas y evidencias con las HU/TT/PV existentes.
 
-Se conservan las 69 tarjetas, sus responsables, estados, iteraciones y estimaciones. Ninguna HU/TT/PV pasa a Done por esta intervención. Se agrega el Draft PR al mismo Project como entrega verificable **En pruebas / TEST**; no se asigna una única iteración a un incremento que abarca varias ni se duplican Story Points de las HU. La confirmación del alta y las invariantes posteriores se registra en `PUBLICATION.json`.
+Se conservan las 69 tarjetas, sus responsables, estados, iteraciones y estimaciones. Ninguna HU/TT/PV pasa a Done por esta intervención. Se agrega el Draft PR al mismo Project como entrega verificable **En pruebas / TEST**; no se asigna una única iteración a un incremento que abarca varias ni se duplican Story Points de las HU. **Alta confirmada: 70 tarjetas en total; las 69 preexistentes permanecen idénticas.** La comparación posterior y el ID de la tarjeta del PR se registran en `PUBLICATION.json`.
 
 Las HU-01 a HU-14 conservan aceptación pendiente. TT-05 (#19) sigue En proceso y sin persistencia segura; TT-06 (#20) conserva su estado hasta validar el manejo global de errores. TT-03/#17 y TT-04/#18 mantienen sus estados históricos, sin reinterpretarlos como aceptación de todos los módulos. No se crean Issues, no se editan criterios ni se cierran tareas de otros integrantes.
+
+## Estado de publicación y CI
+
+Antes del registro documental final: seis commits publicados, 290 rutas del incremento (67 modificadas y 223 añadidas), árbol limpio y upstream en la rama autorizada. Con el registro final quedan siete commits, **291 rutas del incremento y 474 archivos versionados en total**. Las cinco adiciones documentales de la consolidación y `PUBLICATION.json` se suman a las 285 rutas originales. Ningún archivo original fue omitido.
+
+GitHub Actions se consultó sobre el HEAD publicado, sin confundir los resultados locales con CI: a las 14:23:22 de Mexico City, Rendimiento había concluido `success`; Calidad, Android, Integración y Seguridad seguían `in_progress`. Un workflow exitoso con tareas omitidas no demuestra ejecución de esas pruebas. El registro documental final puede sustituir esas ejecuciones por las de su nuevo HEAD; la descripción de #83 y el informe final comunican la última consulta. No se presenta aprobación global mientras haya checks pendientes.
 
 ## Límites y próxima acción
 

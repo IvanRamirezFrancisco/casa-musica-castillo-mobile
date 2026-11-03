@@ -4,7 +4,12 @@
   "projectId": "PVT_kwHOCAIt6M4BjgQ6",
   "itemsBefore": 69,
   "fieldsVerified": 19,
-  "draftPr": null,
+  "draftPr": {
+    "number": 83,
+    "url": "https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/pull/83",
+    "base": "develop",
+    "draft": true
+  },
   "statusPolicy": "Conservar todas las tarjetas existentes. Agregar el Draft PR como entrega en revisión; no crear Issues ni modificar responsables, estimaciones, iteraciones o estados de HU/TT.",
   "sourceCommits": {
     "configuration": "1c5fdbe33eeae392be0d59495469739e4ade454a",
@@ -2457,5 +2462,33 @@
       ],
       "acceptanceRemaining": "Evidencia local disponible; revisar CI del HEAD publicado y criterios completos. No se altera el trabajo asignado a otros integrantes."
     }
-  ]
+  ],
+  "projectVerification": {
+    "observedAtUtc": "2026-11-03T20:22:49.174555+00:00",
+    "itemsBefore": 69,
+    "itemsAfter": 70,
+    "existingItemsChanged": [],
+    "allExistingItemsPreserved": true,
+    "issuesCreated": 0,
+    "issuesClosed": 0,
+    "existingAssignmentsChanged": false,
+    "existingStoryPointsChanged": false,
+    "existingIterationsChanged": false,
+    "existingStatusesChanged": false
+  },
+  "projectPrItem": {
+    "content": {
+      "number": 83,
+      "repository": "IvanRamirezFrancisco/casa-musica-castillo-mobile",
+      "title": "feat(mobile): consolidar integración móvil de octubre y evidencias de Etapa 1B",
+      "type": "PullRequest",
+      "url": "https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/pull/83"
+    },
+    "etapa DevOps": "TEST",
+    "id": "PVTI_lAHOCAIt6M4BjgQ6zhFypjg",
+    "repository": "https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile",
+    "status": "En pruebas",
+    "tipo": "Entrega verificable",
+    "title": "feat(mobile): consolidar integración móvil de octubre y evidencias de Etapa 1B"
+  }
 }
