@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { DemoAccountOrder } from '../models/account.model';
-import { DemoAccountStateService } from './demo-account-state.service';
+import { DEMO_ORDER_REPOSITORY } from '../repositories/demo-order.repository';
 
 /** Formato permitido para el identificador de pedido que llega por la URL. */
 export const ORDER_ID_PATTERN = /^[A-Z0-9-]{1,32}$/;
@@ -16,7 +16,7 @@ export const ORDER_ID_PATTERN = /^[A-Z0-9-]{1,32}$/;
 @Injectable({ providedIn: 'root' })
 export class OrderDetailService {
   private static readonly DEMO_DELAY_MS = 400;
-  private readonly account = inject(DemoAccountStateService);
+  private readonly repository = inject(DEMO_ORDER_REPOSITORY);
 
   getMyOrder(id: string): Promise<DemoAccountOrder | null> {
     if (!ORDER_ID_PATTERN.test(id)) {
@@ -24,7 +24,7 @@ export class OrderDetailService {
     }
     return new Promise((resolve) =>
       setTimeout(() => {
-        const order = this.account.getOrder(id);
+        const order = this.repository.findById(id);
         resolve(order ? { ...order, items: [...order.items] } : null);
       }, OrderDetailService.DEMO_DELAY_MS),
     );
