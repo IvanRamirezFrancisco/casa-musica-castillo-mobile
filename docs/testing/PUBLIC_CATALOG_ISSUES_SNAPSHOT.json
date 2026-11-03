@@ -1,0 +1,356 @@
+{
+  "checkedAt": "2026-10-27",
+  "source": "GitHub REST read-only via connected GitHub fetch; issue state is not Project Status",
+  "projectFields": "Not verified: Project returns 404 in current browser session",
+  "issues": [
+    {
+      "number": 69,
+      "title": "TT-50 | Documentar CI/CD, pruebas y evidencias",
+      "url": "https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/issues/69",
+      "state": "open",
+      "assignees": [
+        "Tackalay"
+      ],
+      "labels": [],
+      "milestone": null,
+      "body": "## Tarea técnica\n\n**Objetivo:** Consolidar documentación y evidencias del flujo CI/CD, pruebas, seguridad y productos verificables.\n\n## Criterios de finalización\n\n- [ ] El entregable definido por la tarea está implementado o documentado.\n- [ ] Existe evidencia verificable del resultado.\n- [ ] No se introducen secretos ni credenciales en el repositorio.\n- [ ] Se respetan las ramas, Pull Requests y controles de calidad del proyecto cuando corresponda.\n- [ ] La tarea queda vinculada a la etapa DevOps y a la iteración planificada.\n\n## Evidencia esperada\n\n- Captura, documento, resultado de prueba, workflow o artefacto correspondiente a la tarea.\n- Referencia a Pull Request/commit cuando aplique."
+    },
+    {
+      "number": 68,
+      "title": "TT-49 | Ejecutar y documentar pruebas de seguridad",
+      "url": "https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/issues/68",
+      "state": "open",
+      "assignees": [
+        "Tackalay"
+      ],
+      "labels": [],
+      "milestone": null,
+      "body": "## Tarea técnica\n\n**Objetivo:** Ejecutar los casos PS-HUXX-* y documentar resultados y evidencias; Ivan revisará los hallazgos de seguridad.\n\n## Criterios de finalización\n\n- [ ] El entregable definido por la tarea está implementado o documentado.\n- [ ] Existe evidencia verificable del resultado.\n- [ ] No se introducen secretos ni credenciales en el repositorio.\n- [ ] Se respetan las ramas, Pull Requests y controles de calidad del proyecto cuando corresponda.\n- [ ] La tarea queda vinculada a la etapa DevOps y a la iteración planificada.\n\n## Evidencia esperada\n\n- Captura, documento, resultado de prueba, workflow o artefacto correspondiente a la tarea.\n- Referencia a Pull Request/commit cuando aplique."
+    },
+    {
+      "number": 67,
+      "title": "TT-48 | Implementar pruebas funcionales y regresión",
+      "url": "https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/issues/67",
+      "state": "open",
+      "assignees": [
+        "Tackalay"
+      ],
+      "labels": [],
+      "milestone": null,
+      "body": "## Tarea técnica\n\n**Objetivo:** Construir y mantener la suite de pruebas funcionales y de regresión asociada a las HU.\n\n## Criterios de finalización\n\n- [ ] El entregable definido por la tarea está implementado o documentado.\n- [ ] Existe evidencia verificable del resultado.\n- [ ] No se introducen secretos ni credenciales en el repositorio.\n- [ ] Se respetan las ramas, Pull Requests y controles de calidad del proyecto cuando corresponda.\n- [ ] La tarea queda vinculada a la etapa DevOps y a la iteración planificada.\n\n## Evidencia esperada\n\n- Captura, documento, resultado de prueba, workflow o artefacto correspondiente a la tarea.\n- Referencia a Pull Request/commit cuando aplique."
+    },
+    {
+      "number": 66,
+      "title": "TT-47 | Implementar entrega de APK de staging",
+      "url": "https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/issues/66",
+      "state": "open",
+      "assignees": [
+        "IvanRamirezFrancisco"
+      ],
+      "labels": [],
+      "milestone": null,
+      "body": "## Tarea técnica\n\n**Objetivo:** Publicar automáticamente un APK de staging como artefacto verificable para pruebas.\n\n## Criterios de finalización\n\n- [ ] El entregable definido por la tarea está implementado o documentado.\n- [ ] Existe evidencia verificable del resultado.\n- [ ] No se introducen secretos ni credenciales en el repositorio.\n- [ ] Se respetan las ramas, Pull Requests y controles de calidad del proyecto cuando corresponda.\n- [ ] La tarea queda vinculada a la etapa DevOps y a la iteración planificada.\n\n## Evidencia esperada\n\n- Captura, documento, resultado de prueba, workflow o artefacto correspondiente a la tarea.\n- Referencia a Pull Request/commit cuando aplique."
+    },
+    {
+      "number": 65,
+      "title": "TT-46 | Automatizar compilación Android",
+      "url": "https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/issues/65",
+      "state": "open",
+      "assignees": [
+        "IvanRamirezFrancisco"
+      ],
+      "labels": [],
+      "milestone": null,
+      "body": "## Tarea técnica\n\n**Objetivo:** Automatizar build web, sincronización Capacitor y compilación Android reproducible.\n\n## Criterios de finalización\n\n- [ ] El entregable definido por la tarea está implementado o documentado.\n- [ ] Existe evidencia verificable del resultado.\n- [ ] No se introducen secretos ni credenciales en el repositorio.\n- [ ] Se respetan las ramas, Pull Requests y controles de calidad del proyecto cuando corresponda.\n- [ ] La tarea queda vinculada a la etapa DevOps y a la iteración planificada.\n\n## Evidencia esperada\n\n- Captura, documento, resultado de prueba, workflow o artefacto correspondiente a la tarea.\n- Referencia a Pull Request/commit cuando aplique."
+    },
+    {
+      "number": 64,
+      "title": "TT-45 | Implementar pipeline de análisis de seguridad",
+      "url": "https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/issues/64",
+      "state": "open",
+      "assignees": [
+        "IvanRamirezFrancisco"
+      ],
+      "labels": [],
+      "milestone": null,
+      "body": "## Tarea técnica\n\n**Objetivo:** Automatizar análisis de dependencias y código para detectar vulnerabilidades y problemas de seguridad.\n\n## Criterios de finalización\n\n- [ ] El entregable definido por la tarea está implementado o documentado.\n- [ ] Existe evidencia verificable del resultado.\n- [ ] No se introducen secretos ni credenciales en el repositorio.\n- [ ] Se respetan las ramas, Pull Requests y controles de calidad del proyecto cuando corresponda.\n- [ ] La tarea queda vinculada a la etapa DevOps y a la iteración planificada.\n\n## Evidencia esperada\n\n- Captura, documento, resultado de prueba, workflow o artefacto correspondiente a la tarea.\n- Referencia a Pull Request/commit cuando aplique."
+    },
+    {
+      "number": 63,
+      "title": "TT-44 | Automatizar pruebas unitarias e integración con cobertura",
+      "url": "https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/issues/63",
+      "state": "open",
+      "assignees": [
+        "Tackalay"
+      ],
+      "labels": [],
+      "milestone": null,
+      "body": "## Tarea técnica\n\n**Objetivo:** Ampliar y automatizar pruebas unitarias/integración y generar cobertura en CI.\n\n## Criterios de finalización\n\n- [ ] El entregable definido por la tarea está implementado o documentado.\n- [ ] Existe evidencia verificable del resultado.\n- [ ] No se introducen secretos ni credenciales en el repositorio.\n- [ ] Se respetan las ramas, Pull Requests y controles de calidad del proyecto cuando corresponda.\n- [ ] La tarea queda vinculada a la etapa DevOps y a la iteración planificada.\n\n## Evidencia esperada\n\n- Captura, documento, resultado de prueba, workflow o artefacto correspondiente a la tarea.\n- Referencia a Pull Request/commit cuando aplique."
+    },
+    {
+      "number": 62,
+      "title": "TT-43 | Implementar pipeline CI de calidad",
+      "url": "https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/issues/62",
+      "state": "open",
+      "assignees": [
+        "IvanRamirezFrancisco"
+      ],
+      "labels": [],
+      "milestone": null,
+      "body": "## Tarea técnica\n\n**Objetivo:** Implementar CI para instalación reproducible, lint, pruebas y build en Pull Requests.\n\n## Criterios de finalización\n\n- [ ] El entregable definido por la tarea está implementado o documentado.\n- [ ] Existe evidencia verificable del resultado.\n- [ ] No se introducen secretos ni credenciales en el repositorio.\n- [ ] Se respetan las ramas, Pull Requests y controles de calidad del proyecto cuando corresponda.\n- [ ] La tarea queda vinculada a la etapa DevOps y a la iteración planificada.\n\n## Evidencia esperada\n\n- Captura, documento, resultado de prueba, workflow o artefacto correspondiente a la tarea.\n- Referencia a Pull Request/commit cuando aplique."
+    },
+    {
+      "number": 61,
+      "title": "TT-42 | Definir Plan de Pruebas y matriz de trazabilidad",
+      "url": "https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/issues/61",
+      "state": "open",
+      "assignees": [
+        "Tackalay"
+      ],
+      "labels": [],
+      "milestone": null,
+      "body": "## Tarea técnica\n\n**Objetivo:** Definir el plan de pruebas del proyecto y una matriz HU → criterio → prueba → evidencia.\n\n## Criterios de finalización\n\n- [ ] El entregable definido por la tarea está implementado o documentado.\n- [ ] Existe evidencia verificable del resultado.\n- [ ] No se introducen secretos ni credenciales en el repositorio.\n- [ ] Se respetan las ramas, Pull Requests y controles de calidad del proyecto cuando corresponda.\n- [ ] La tarea queda vinculada a la etapa DevOps y a la iteración planificada.\n\n## Evidencia esperada\n\n- Captura, documento, resultado de prueba, workflow o artefacto correspondiente a la tarea.\n- Referencia a Pull Request/commit cuando aplique."
+    },
+    {
+      "number": 46,
+      "title": "TT-30 | Integrar acciones de carrito y favoritos",
+      "url": "https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/issues/46",
+      "state": "open",
+      "assignees": [
+        "Tackalay"
+      ],
+      "labels": [],
+      "milestone": null,
+      "body": "## Tarea técnica\n\n**Objetivo:** TT-30 | Integrar acciones de carrito y favoritos\n\nActividad técnica necesaria para soportar las funcionalidades de Casa de Música Castillo - Aplicación Móvil.\n\n## Criterios de finalización\n\n- [ ] La implementación o configuración técnica está completada.\n- [ ] La solución se integra correctamente con Ionic, Angular y/o Capacitor según corresponda.\n- [ ] No se incorporan secretos, credenciales ni archivos locales al repositorio.\n- [ ] No existen errores bloqueantes relacionados con esta tarea.\n- [ ] Se realizaron las validaciones técnicas correspondientes.\n- [ ] Los cambios de código, cuando existan, se integran mediante Pull Request."
+    },
+    {
+      "number": 43,
+      "title": "TT-29 | Consultar producto por identificador",
+      "url": "https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/issues/43",
+      "state": "open",
+      "assignees": [
+        "IvanRamirezFrancisco"
+      ],
+      "labels": [],
+      "milestone": null,
+      "body": "## Tarea técnica\n\n**Objetivo:** TT-29 | Consultar producto por identificador\n\nActividad técnica necesaria para soportar las funcionalidades de Casa de Música Castillo - Aplicación Móvil.\n\n## Criterios de finalización\n\n- [ ] La implementación o configuración técnica está completada.\n- [ ] La solución se integra correctamente con Ionic, Angular y/o Capacitor según corresponda.\n- [ ] No se incorporan secretos, credenciales ni archivos locales al repositorio.\n- [ ] No existen errores bloqueantes relacionados con esta tarea.\n- [ ] Se realizaron las validaciones técnicas correspondientes.\n- [ ] Los cambios de código, cuando existan, se integran mediante Pull Request."
+    },
+    {
+      "number": 42,
+      "title": "TT-28 | Implementar vista de detalle",
+      "url": "https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/issues/42",
+      "state": "open",
+      "assignees": [
+        "Tackalay"
+      ],
+      "labels": [],
+      "milestone": null,
+      "body": "## Tarea técnica\n\n**Objetivo:** TT-28 | Implementar vista de detalle\n\nActividad técnica necesaria para soportar las funcionalidades de Casa de Música Castillo - Aplicación Móvil.\n\n## Criterios de finalización\n\n- [ ] La implementación o configuración técnica está completada.\n- [ ] La solución se integra correctamente con Ionic, Angular y/o Capacitor según corresponda.\n- [ ] No se incorporan secretos, credenciales ni archivos locales al repositorio.\n- [ ] No existen errores bloqueantes relacionados con esta tarea.\n- [ ] Se realizaron las validaciones técnicas correspondientes.\n- [ ] Los cambios de código, cuando existan, se integran mediante Pull Request."
+    },
+    {
+      "number": 41,
+      "title": "TT-27 | Implementar estados sin resultados y errores",
+      "url": "https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/issues/41",
+      "state": "open",
+      "assignees": [
+        "IvanRamirezFrancisco"
+      ],
+      "labels": [],
+      "milestone": null,
+      "body": "## Tarea técnica\n\n**Objetivo:** TT-27 | Implementar estados sin resultados y errores\n\nActividad técnica necesaria para soportar las funcionalidades de Casa de Música Castillo - Aplicación Móvil.\n\n## Criterios de finalización\n\n- [ ] La implementación o configuración técnica está completada.\n- [ ] La solución se integra correctamente con Ionic, Angular y/o Capacitor según corresponda.\n- [ ] No se incorporan secretos, credenciales ni archivos locales al repositorio.\n- [ ] No existen errores bloqueantes relacionados con esta tarea.\n- [ ] Se realizaron las validaciones técnicas correspondientes.\n- [ ] Los cambios de código, cuando existan, se integran mediante Pull Request."
+    },
+    {
+      "number": 40,
+      "title": "TT-26 | Integrar búsqueda con API",
+      "url": "https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/issues/40",
+      "state": "open",
+      "assignees": [
+        "IvanRamirezFrancisco"
+      ],
+      "labels": [],
+      "milestone": null,
+      "body": "## Tarea técnica\n\n**Objetivo:** TT-26 | Integrar búsqueda con API\n\nActividad técnica necesaria para soportar las funcionalidades de Casa de Música Castillo - Aplicación Móvil.\n\n## Criterios de finalización\n\n- [ ] La implementación o configuración técnica está completada.\n- [ ] La solución se integra correctamente con Ionic, Angular y/o Capacitor según corresponda.\n- [ ] No se incorporan secretos, credenciales ni archivos locales al repositorio.\n- [ ] No existen errores bloqueantes relacionados con esta tarea.\n- [ ] Se realizaron las validaciones técnicas correspondientes.\n- [ ] Los cambios de código, cuando existan, se integran mediante Pull Request."
+    },
+    {
+      "number": 39,
+      "title": "TT-25 | Implementar componente de búsqueda",
+      "url": "https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/issues/39",
+      "state": "open",
+      "assignees": [
+        "IvanRamirezFrancisco"
+      ],
+      "labels": [],
+      "milestone": null,
+      "body": "## Tarea técnica\n\n**Objetivo:** TT-25 | Implementar componente de búsqueda\n\nActividad técnica necesaria para soportar las funcionalidades de Casa de Música Castillo - Aplicación Móvil.\n\n## Criterios de finalización\n\n- [ ] La implementación o configuración técnica está completada.\n- [ ] La solución se integra correctamente con Ionic, Angular y/o Capacitor según corresponda.\n- [ ] No se incorporan secretos, credenciales ni archivos locales al repositorio.\n- [ ] No existen errores bloqueantes relacionados con esta tarea.\n- [ ] Se realizaron las validaciones técnicas correspondientes.\n- [ ] Los cambios de código, cuando existan, se integran mediante Pull Request."
+    },
+    {
+      "number": 38,
+      "title": "TT-24 | Implementar carga, paginación y estados",
+      "url": "https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/issues/38",
+      "state": "open",
+      "assignees": [
+        "Tackalay"
+      ],
+      "labels": [],
+      "milestone": null,
+      "body": "## Tarea técnica\n\n**Objetivo:** TT-24 | Implementar carga, paginación y estados\n\nActividad técnica necesaria para soportar las funcionalidades de Casa de Música Castillo - Aplicación Móvil.\n\n## Criterios de finalización\n\n- [ ] La implementación o configuración técnica está completada.\n- [ ] La solución se integra correctamente con Ionic, Angular y/o Capacitor según corresponda.\n- [ ] No se incorporan secretos, credenciales ni archivos locales al repositorio.\n- [ ] No existen errores bloqueantes relacionados con esta tarea.\n- [ ] Se realizaron las validaciones técnicas correspondientes.\n- [ ] Los cambios de código, cuando existan, se integran mediante Pull Request."
+    },
+    {
+      "number": 37,
+      "title": "TT-23 | Integrar ProductService",
+      "url": "https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/issues/37",
+      "state": "open",
+      "assignees": [
+        "IvanRamirezFrancisco"
+      ],
+      "labels": [],
+      "milestone": null,
+      "body": "## Tarea técnica\n\n**Objetivo:** TT-23 | Integrar ProductService\n\nActividad técnica necesaria para soportar las funcionalidades de Casa de Música Castillo - Aplicación Móvil.\n\n## Criterios de finalización\n\n- [ ] La implementación o configuración técnica está completada.\n- [ ] La solución se integra correctamente con Ionic, Angular y/o Capacitor según corresponda.\n- [ ] No se incorporan secretos, credenciales ni archivos locales al repositorio.\n- [ ] No existen errores bloqueantes relacionados con esta tarea.\n- [ ] Se realizaron las validaciones técnicas correspondientes.\n- [ ] Los cambios de código, cuando existan, se integran mediante Pull Request."
+    },
+    {
+      "number": 36,
+      "title": "TT-22 | Implementar listado de productos",
+      "url": "https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/issues/36",
+      "state": "open",
+      "assignees": [
+        "Tackalay"
+      ],
+      "labels": [],
+      "milestone": null,
+      "body": "## Tarea técnica\n\n**Objetivo:** TT-22 | Implementar listado de productos\n\nActividad técnica necesaria para soportar las funcionalidades de Casa de Música Castillo - Aplicación Móvil.\n\n## Criterios de finalización\n\n- [ ] La implementación o configuración técnica está completada.\n- [ ] La solución se integra correctamente con Ionic, Angular y/o Capacitor según corresponda.\n- [ ] No se incorporan secretos, credenciales ni archivos locales al repositorio.\n- [ ] No existen errores bloqueantes relacionados con esta tarea.\n- [ ] Se realizaron las validaciones técnicas correspondientes.\n- [ ] Los cambios de código, cuando existan, se integran mediante Pull Request."
+    },
+    {
+      "number": 35,
+      "title": "TT-21 | Implementar navegación desde Inicio",
+      "url": "https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/issues/35",
+      "state": "open",
+      "assignees": [
+        "Tackalay"
+      ],
+      "labels": [],
+      "milestone": null,
+      "body": "## Tarea técnica\n\n**Objetivo:** TT-21 | Implementar navegación desde Inicio\n\nActividad técnica necesaria para soportar las funcionalidades de Casa de Música Castillo - Aplicación Móvil.\n\n## Criterios de finalización\n\n- [ ] La implementación o configuración técnica está completada.\n- [ ] La solución se integra correctamente con Ionic, Angular y/o Capacitor según corresponda.\n- [ ] No se incorporan secretos, credenciales ni archivos locales al repositorio.\n- [ ] No existen errores bloqueantes relacionados con esta tarea.\n- [ ] Se realizaron las validaciones técnicas correspondientes.\n- [ ] Los cambios de código, cuando existan, se integran mediante Pull Request."
+    },
+    {
+      "number": 34,
+      "title": "TT-20 | Integrar contenido destacado",
+      "url": "https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/issues/34",
+      "state": "open",
+      "assignees": [
+        "Tackalay"
+      ],
+      "labels": [],
+      "milestone": null,
+      "body": "## Tarea técnica\n\n**Objetivo:** TT-20 | Integrar contenido destacado\n\nActividad técnica necesaria para soportar las funcionalidades de Casa de Música Castillo - Aplicación Móvil.\n\n## Criterios de finalización\n\n- [ ] La implementación o configuración técnica está completada.\n- [ ] La solución se integra correctamente con Ionic, Angular y/o Capacitor según corresponda.\n- [ ] No se incorporan secretos, credenciales ni archivos locales al repositorio.\n- [ ] No existen errores bloqueantes relacionados con esta tarea.\n- [ ] Se realizaron las validaciones técnicas correspondientes.\n- [ ] Los cambios de código, cuando existan, se integran mediante Pull Request."
+    },
+    {
+      "number": 33,
+      "title": "TT-19 | Implementar estructura de pantalla Inicio",
+      "url": "https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/issues/33",
+      "state": "open",
+      "assignees": [
+        "Tackalay"
+      ],
+      "labels": [],
+      "milestone": null,
+      "body": "## Tarea técnica\n\n**Objetivo:** TT-19 | Implementar estructura de pantalla Inicio\n\nActividad técnica necesaria para soportar las funcionalidades de Casa de Música Castillo - Aplicación Móvil.\n\n## Criterios de finalización\n\n- [ ] La implementación o configuración técnica está completada.\n- [ ] La solución se integra correctamente con Ionic, Angular y/o Capacitor según corresponda.\n- [ ] No se incorporan secretos, credenciales ni archivos locales al repositorio.\n- [ ] No existen errores bloqueantes relacionados con esta tarea.\n- [ ] Se realizaron las validaciones técnicas correspondientes.\n- [ ] Los cambios de código, cuando existan, se integran mediante Pull Request."
+    },
+    {
+      "number": 20,
+      "title": "TT-06 | Implementar manejo global de errores de API",
+      "url": "https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/issues/20",
+      "state": "open",
+      "assignees": [
+        "IvanRamirezFrancisco"
+      ],
+      "labels": [],
+      "milestone": null,
+      "body": "Implementar un mecanismo centralizado para gestionar los errores producidos durante la comunicación entre la aplicación móvil y la API de Casa de Música Castillo.\n\nEl objetivo es evitar que cada pantalla maneje los errores de manera diferente y ofrecer al usuario mensajes claros cuando existan problemas de conexión, autenticación, validación o errores del servidor.\n"
+    },
+    {
+      "number": 19,
+      "title": "TT-05 | Implementar almacenamiento seguro de sesión",
+      "url": "https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/issues/19",
+      "state": "open",
+      "assignees": [
+        "IvanRamirezFrancisco"
+      ],
+      "labels": [],
+      "milestone": null,
+      "body": "Implementar un mecanismo seguro para almacenar la información necesaria de la sesión del usuario en el dispositivo móvil, evitando guardar credenciales o información sensible directamente en almacenamiento inseguro.\n\nLa solución deberá permitir conservar la sesión cuando corresponda y recuperar de manera controlada los datos necesarios para autenticar las solicitudes realizadas al backend."
+    },
+    {
+      "number": 18,
+      "title": "TT-04 | Implementar navegación móvil",
+      "url": "https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/issues/18",
+      "state": "closed",
+      "assignees": [
+        "IvanRamirezFrancisco",
+        "Tackalay"
+      ],
+      "labels": [],
+      "milestone": null,
+      "body": "Implementar la estructura principal de navegación de la aplicación móvil, permitiendo el desplazamiento entre las diferentes pantallas y módulos definidos para Casa de Música Castillo Mobile.\n\nLa navegación deberá permitir integrar de manera organizada secciones como Inicio, Catálogo, Búsqueda, Favoritos, Carrito, Pedidos y Perfil, considerando además las pantallas secundarias como detalle de producto y detalle de pedido."
+    },
+    {
+      "number": 5,
+      "title": "HU-05 | Consultar catálogo de productos",
+      "url": "https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/issues/5",
+      "state": "open",
+      "assignees": [
+        "Tackalay"
+      ],
+      "labels": [],
+      "milestone": null,
+      "body": "## Historia de usuario\n\nComo cliente, quiero consultar el catálogo de productos para explorar los instrumentos y accesorios disponibles.\n\n## Criterios de aceptación funcionales\n\n- [ ] El catálogo muestra los productos devueltos por la API.\n- [ ] Cada elemento presenta la información básica definida para el listado.\n- [ ] La carga, paginación o mecanismo equivalente funciona según el diseño.\n- [ ] Se muestran estados de carga, lista vacía y error.\n- [ ] El usuario puede seleccionar un producto para continuar al detalle.\n\n## Criterios de aceptación de seguridad\n\n- [ ] La respuesta del catálogo no debe exponer datos administrativos o sensibles innecesarios.\n- [ ] Errores de API se presentan sin stack traces ni información interna.\n- [ ] Identificadores y parámetros enviados desde el cliente se validan en backend.\n- [ ] El contenido proveniente de la API se presenta como datos y no como código ejecutable.\n\n## Pruebas asociadas\n\n### Pruebas funcionales\n\n- [ ] **PF-HU05-01** — Cargar catálogo con productos disponibles.\n- [ ] **PF-HU05-02** — Verificar comportamiento sin productos.\n- [ ] **PF-HU05-03** — Verificar paginación/carga y selección de producto.\n- [ ] **PF-HU05-04** — Simular error de API y validar manejo.\n\n### Pruebas de seguridad\n\n- [ ] **PS-HU05-01** — Inspeccionar respuesta y comprobar ausencia de datos sensibles innecesarios.\n- [ ] **PS-HU05-02** — Verificar errores sin detalles internos.\n- [ ] **PS-HU05-03** — Probar identificadores/parámetros inválidos y comprobar rechazo controlado.\n\n## Dependencias técnicas\n\n- TT-03 Conexión con API Spring Boot\n- TT-04 Navegación móvil\n- TT-06 Manejo global de errores de API\n\n## Evidencia esperada\n\n- Capturas del catálogo y estados alternos.\n- Resultados PF-HU05-* y PS-HU05-*.\n\n## Definición de terminado\n\n- [ ] Todos los criterios de aceptación funcionales aplicables están satisfechos.\n- [ ] Todos los criterios de aceptación de seguridad aplicables están satisfechos.\n- [ ] Las pruebas `PF-*` asociadas fueron ejecutadas y documentadas.\n- [ ] Las pruebas `PS-*` asociadas fueron ejecutadas y documentadas.\n- [ ] Los errores se gestionan de forma controlada.\n- [ ] No se introducen secretos, credenciales o datos sensibles en código o logs.\n- [ ] El código relacionado se integra mediante Pull Request cuando corresponda.\n- [ ] Existe evidencia verificable del resultado.\n"
+    },
+    {
+      "number": 4,
+      "title": "HU-04 | Visualizar pantalla de inicio",
+      "url": "https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/issues/4",
+      "state": "open",
+      "assignees": [
+        "Tackalay"
+      ],
+      "labels": [],
+      "milestone": null,
+      "body": "## Historia de usuario\n\nComo cliente, quiero visualizar la pantalla de inicio para acceder rápidamente al contenido destacado y a las principales secciones de la aplicación.\n\n## Criterios de aceptación funcionales\n\n- [ ] La pantalla de inicio carga sin errores bloqueantes.\n- [ ] El contenido destacado configurado se muestra correctamente.\n- [ ] La navegación desde Inicio dirige a las secciones previstas.\n- [ ] Se muestran estados de carga y error cuando corresponda.\n- [ ] La interfaz mantiene una presentación usable en dispositivos móviles soportados.\n\n## Criterios de aceptación de seguridad\n\n- [ ] El contenido que requiera autenticación no se expone a usuarios sin sesión válida.\n- [ ] Una sesión expirada provoca la respuesta definida y redirección/autenticación cuando corresponde.\n- [ ] Los errores mostrados no contienen detalles internos de la API.\n- [ ] Los enlaces y rutas internas no permiten omitir controles de autorización.\n\n## Pruebas asociadas\n\n### Pruebas funcionales\n\n- [ ] **PF-HU04-01** — Cargar Inicio y verificar contenido esperado.\n- [ ] **PF-HU04-02** — Navegar desde Inicio a las secciones disponibles.\n- [ ] **PF-HU04-03** — Simular estado de carga/error y verificar UI.\n\n### Pruebas de seguridad\n\n- [ ] **PS-HU04-01** — Acceder sin sesión a contenido privado y comprobar protección.\n- [ ] **PS-HU04-02** — Simular sesión expirada y comprobar manejo seguro.\n- [ ] **PS-HU04-03** — Verificar que los errores no expongan detalles internos.\n\n## Dependencias técnicas\n\n- TT-04 Navegación móvil\n- TT-06 Manejo global de errores de API\n\n## Evidencia esperada\n\n- Capturas de Inicio, navegación y estados de error.\n- Resultados PF-HU04-* y PS-HU04-*.\n\n## Definición de terminado\n\n- [ ] Todos los criterios de aceptación funcionales aplicables están satisfechos.\n- [ ] Todos los criterios de aceptación de seguridad aplicables están satisfechos.\n- [ ] Las pruebas `PF-*` asociadas fueron ejecutadas y documentadas.\n- [ ] Las pruebas `PS-*` asociadas fueron ejecutadas y documentadas.\n- [ ] Los errores se gestionan de forma controlada.\n- [ ] No se introducen secretos, credenciales o datos sensibles en código o logs.\n- [ ] El código relacionado se integra mediante Pull Request cuando corresponda.\n- [ ] Existe evidencia verificable del resultado.\n"
+    },
+    {
+      "number": 7,
+      "title": "HU-07 | Consultar detalle de un producto",
+      "url": "https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/issues/7",
+      "state": "open",
+      "assignees": [
+        "Tackalay"
+      ],
+      "labels": [],
+      "milestone": null,
+      "body": "## Historia de usuario\n\nComo cliente, quiero consultar el detalle de un producto para conocer su información antes de decidir agregarlo a favoritos o al carrito.\n\n## Criterios de aceptación funcionales\n\n- [ ] El detalle se carga usando un identificador válido.\n- [ ] Se muestran los datos definidos del producto.\n- [ ] Las acciones disponibles se presentan según el estado del producto.\n- [ ] Un producto inexistente muestra un estado de error/no encontrado.\n- [ ] Se gestionan correctamente carga y errores de API.\n\n## Criterios de aceptación de seguridad\n\n- [ ] El identificador recibido desde navegación se valida antes de utilizarlo.\n- [ ] Un identificador inválido o inexistente no produce exposición de información interna.\n- [ ] Contenido textual remoto se representa como datos y no se interpreta como HTML inseguro.\n- [ ] Los enlaces o recursos remotos se manejan únicamente desde orígenes esperados según la configuración.\n\n## Pruebas asociadas\n\n### Pruebas funcionales\n\n- [ ] **PF-HU07-01** — Abrir detalle de producto válido.\n- [ ] **PF-HU07-02** — Abrir producto inexistente/identificador inválido.\n- [ ] **PF-HU07-03** — Verificar acciones disponibles desde el detalle.\n\n### Pruebas de seguridad\n\n- [ ] **PS-HU07-01** — Probar identificador manipulado y comprobar rechazo controlado.\n- [ ] **PS-HU07-02** — Verificar que contenido remoto no ejecute HTML/script.\n- [ ] **PS-HU07-03** — Comprobar errores sin información interna.\n\n## Dependencias técnicas\n\n- TT-03 Conexión con API Spring Boot\n- TT-04 Navegación móvil\n- TT-06 Manejo global de errores de API\n\n## Evidencia esperada\n\n- Capturas del detalle válido y error/no encontrado.\n- Resultados PF-HU07-* y PS-HU07-*.\n\n## Definición de terminado\n\n- [ ] Todos los criterios de aceptación funcionales aplicables están satisfechos.\n- [ ] Todos los criterios de aceptación de seguridad aplicables están satisfechos.\n- [ ] Las pruebas `PF-*` asociadas fueron ejecutadas y documentadas.\n- [ ] Las pruebas `PS-*` asociadas fueron ejecutadas y documentadas.\n- [ ] Los errores se gestionan de forma controlada.\n- [ ] No se introducen secretos, credenciales o datos sensibles en código o logs.\n- [ ] El código relacionado se integra mediante Pull Request cuando corresponda.\n- [ ] Existe evidencia verificable del resultado.\n"
+    },
+    {
+      "number": 6,
+      "title": "HU-06 | Buscar productos",
+      "url": "https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/issues/6",
+      "state": "open",
+      "assignees": [
+        "IvanRamirezFrancisco"
+      ],
+      "labels": [],
+      "milestone": null,
+      "body": "## Historia de usuario\n\nComo cliente, quiero buscar productos para localizar rápidamente instrumentos o accesorios de mi interés.\n\n## Criterios de aceptación funcionales\n\n- [ ] El usuario puede introducir un término de búsqueda.\n- [ ] El término se envía a la API usando el mecanismo definido.\n- [ ] Los resultados coincidentes se muestran correctamente.\n- [ ] Se presenta un estado claro cuando no existen resultados.\n- [ ] Errores de búsqueda se manejan sin bloquear la aplicación.\n\n## Criterios de aceptación de seguridad\n\n- [ ] La entrada de búsqueda se limita a una longitud razonable y se valida antes del envío.\n- [ ] El texto introducido se trata como datos y no se ejecuta como HTML, JavaScript o código.\n- [ ] Caracteres especiales o entradas maliciosas no deben alterar consultas del backend.\n- [ ] Los errores no deben revelar consultas, stack traces o información interna.\n\n## Pruebas asociadas\n\n### Pruebas funcionales\n\n- [ ] **PF-HU06-01** — Buscar un término con resultados.\n- [ ] **PF-HU06-02** — Buscar un término sin resultados.\n- [ ] **PF-HU06-03** — Verificar manejo de error de API.\n\n### Pruebas de seguridad\n\n- [ ] **PS-HU06-01** — Introducir caracteres especiales y verificar respuesta segura.\n- [ ] **PS-HU06-02** — Introducir payload de HTML/script como texto y comprobar que no se ejecuta.\n- [ ] **PS-HU06-03** — Enviar una entrada excesivamente larga y comprobar límite/validación.\n- [ ] **PS-HU06-04** — Verificar que errores no revelen detalles internos.\n\n## Dependencias técnicas\n\n- TT-03 Conexión con API Spring Boot\n- TT-06 Manejo global de errores de API\n\n## Evidencia esperada\n\n- Capturas de resultados, sin resultados y errores.\n- Resultados PF-HU06-* y PS-HU06-*.\n\n## Definición de terminado\n\n- [ ] Todos los criterios de aceptación funcionales aplicables están satisfechos.\n- [ ] Todos los criterios de aceptación de seguridad aplicables están satisfechos.\n- [ ] Las pruebas `PF-*` asociadas fueron ejecutadas y documentadas.\n- [ ] Las pruebas `PS-*` asociadas fueron ejecutadas y documentadas.\n- [ ] Los errores se gestionan de forma controlada.\n- [ ] No se introducen secretos, credenciales o datos sensibles en código o logs.\n- [ ] El código relacionado se integra mediante Pull Request cuando corresponda.\n- [ ] Existe evidencia verificable del resultado.\n"
+    },
+    {
+      "number": 17,
+      "title": "TT-03 | Configurar conexión con API Spring Boot",
+      "url": "https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/issues/17",
+      "state": "closed",
+      "assignees": [
+        "IvanRamirezFrancisco"
+      ],
+      "labels": [],
+      "milestone": null,
+      "body": "## Tarea técnica\n\n**Objetivo:** TT-03 | Configurar conexión con API Spring Boot\n\nActividad técnica necesaria para soportar las funcionalidades de Casa de Música Castillo - Aplicación Móvil.\n\n## Criterios de finalización\n\n- [x] La implementación o configuración técnica está completada.\n- [x] La solución se integra correctamente con Ionic, Angular y/o Capacitor según corresponda.\n- [x] No se incorporan secretos, credenciales ni archivos locales al repositorio.\n- [x] No existen errores bloqueantes relacionados con esta tarea.\n- [x] Se realizaron las validaciones técnicas correspondientes.\n- [x] Los cambios de código, cuando existan, se integran mediante Pull Request."
+    }
+  ]
+}

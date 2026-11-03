@@ -1,0 +1,133 @@
+{
+  "checkedOn": "2026-10-29",
+  "source": "GitHub read-only issue connector",
+  "projectFieldsVerified": false,
+  "issues": [
+    {
+      "number": 1,
+      "title": "HU-01 | Iniciar sesión desde la aplicación móvil",
+      "state": "open",
+      "url": "https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/issues/1",
+      "assignees": [
+        "IvanRamirezFrancisco"
+      ]
+    },
+    {
+      "number": 2,
+      "title": "HU-02 | Registrarse como cliente",
+      "state": "open",
+      "url": "https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/issues/2",
+      "assignees": [
+        "Tackalay"
+      ]
+    },
+    {
+      "number": 3,
+      "title": "HU-03 | Recuperar contraseña",
+      "state": "open",
+      "url": "https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/issues/3",
+      "assignees": [
+        "Tackalay"
+      ]
+    },
+    {
+      "number": 4,
+      "title": "HU-04 | Visualizar pantalla de inicio",
+      "state": "open",
+      "url": "https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/issues/4",
+      "assignees": [
+        "Tackalay"
+      ]
+    },
+    {
+      "number": 5,
+      "title": "HU-05 | Consultar catálogo de productos",
+      "state": "open",
+      "url": "https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/issues/5",
+      "assignees": [
+        "Tackalay"
+      ]
+    },
+    {
+      "number": 6,
+      "title": "HU-06 | Buscar productos",
+      "state": "open",
+      "url": "https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/issues/6",
+      "assignees": [
+        "IvanRamirezFrancisco"
+      ]
+    },
+    {
+      "number": 7,
+      "title": "HU-07 | Consultar detalle de un producto",
+      "state": "open",
+      "url": "https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/issues/7",
+      "assignees": [
+        "Tackalay"
+      ]
+    },
+    {
+      "number": 8,
+      "title": "HU-08 | Agregar o eliminar productos de favoritos",
+      "state": "open",
+      "url": "https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/issues/8",
+      "assignees": [
+        "IvanRamirezFrancisco"
+      ]
+    },
+    {
+      "number": 9,
+      "title": "HU-09 | Agregar productos al carrito",
+      "state": "open",
+      "url": "https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/issues/9",
+      "assignees": [
+        "IvanRamirezFrancisco"
+      ]
+    },
+    {
+      "number": 10,
+      "title": "HU-10 | Administrar productos del carrito",
+      "state": "open",
+      "url": "https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/issues/10",
+      "assignees": [
+        "IvanRamirezFrancisco"
+      ]
+    },
+    {
+      "number": 11,
+      "title": "HU-11 | Realizar proceso de checkout",
+      "state": "open",
+      "url": "https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/issues/11",
+      "assignees": [
+        "IvanRamirezFrancisco"
+      ]
+    },
+    {
+      "number": 12,
+      "title": "HU-12 | Consultar mis pedidos",
+      "state": "open",
+      "url": "https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/issues/12",
+      "assignees": [
+        "Tackalay"
+      ]
+    },
+    {
+      "number": 13,
+      "title": "HU-13 | Consultar detalle de un pedido",
+      "state": "open",
+      "url": "https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/issues/13",
+      "assignees": [
+        "Tackalay"
+      ]
+    },
+    {
+      "number": 14,
+      "title": "HU-14 | Consultar y modificar perfil",
+      "state": "open",
+      "url": "https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/issues/14",
+      "assignees": [
+        "Tackalay"
+      ]
+    }
+  ]
+}
