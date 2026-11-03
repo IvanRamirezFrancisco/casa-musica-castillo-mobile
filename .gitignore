@@ -83,6 +83,12 @@ android/local.properties
 # Signing keys
 *.jks
 *.keystore
+key.properties
+keystore.properties
+*.p12
+*.pfx
+*.pem
+*.key
 
 
 

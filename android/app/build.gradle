@@ -1,5 +1,12 @@
 apply plugin: 'com.android.application'
 
+// Optional upload identity is supplied outside Git. Never fall back to the debug key for Release.
+def uploadNames = ['CMC_UPLOAD_STORE_FILE', 'CMC_UPLOAD_STORE_PASSWORD', 'CMC_UPLOAD_KEY_ALIAS', 'CMC_UPLOAD_KEY_PASSWORD']
+def uploadValues = uploadNames.collect { System.getenv(it) }
+if (uploadValues.any { it } && !uploadValues.every { it }) {
+    throw new GradleException('Upload signing configuration is incomplete; supply all four CMC_UPLOAD_* variables privately.')
+}
+
 android {
     namespace = "com.casademusicacastillo.app"
     compileSdk = rootProject.ext.compileSdkVersion
@@ -16,10 +23,24 @@ android {
             ignoreAssetsPattern = '!.svn:!.git:!.ds_store:!*.scc:.*:!CVS:!thumbs.db:!picasa.ini:!*~'
         }
     }
+    signingConfigs {
+        if (uploadValues.every { it }) {
+            upload {
+                storeFile file(uploadValues[0])
+                storePassword uploadValues[1]
+                keyAlias uploadValues[2]
+                keyPassword uploadValues[3]
+            }
+        }
+    }
     buildTypes {
         release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            debuggable false
+            jniDebuggable false
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            if (uploadValues.every { it }) signingConfig signingConfigs.upload
         }
     }
 }
@@ -43,6 +64,50 @@ dependencies {
 }
 
 apply from: 'capacitor.build.gradle'
+
+// Protect direct Gradle invocations too: optimized Release must never package DEMO/local assets.
+def verifyReleaseWebAssets = tasks.register('verifyReleaseWebAssets') {
+    doLast {
+        def assets = file('src/main/assets/public')
+        def marker = new File(assets, 'cmc-build.json')
+        if (!marker.isFile()) throw new GradleException('Build assets with npm run android:release before packaging Release.')
+        def build = new groovy.json.JsonSlurper().parse(marker)
+        def capacitor = new groovy.json.JsonSlurper().parse(file('src/main/assets/capacitor.config.json'))
+        if (capacitor.loggingBehavior != 'debug' || capacitor.android?.allowMixedContent != false ||
+            capacitor.android?.webContentsDebuggingEnabled == true || capacitor.server?.url || capacitor.server?.cleartext == true) {
+            throw new GradleException('Capacitor Release configuration must disable debugging, mixed content, live reload and production logging.')
+        }
+        def settings = rootProject.file('../src/environments/environment-settings.ts').text
+        def expectedProduction = (settings =~ /PRODUCTION_API_BASE_URL = '([^']+)'/)[0][1]
+        if (!(build.environment in ['production', 'staging']) || build.variant != 'release') {
+            throw new GradleException('Release requires production or explicitly isolated staging web assets.')
+        }
+        def endpoint = new URI(build.apiBaseUrl as String)
+        if (endpoint.scheme != 'https' || endpoint.userInfo || endpoint.query || endpoint.fragment || !(endpoint.path in ['', '/'])) {
+            throw new GradleException('Release requires an HTTPS API origin without credentials or URL parameters.')
+        }
+        if ((build.environment == 'production' && build.apiBaseUrl != expectedProduction) ||
+            (build.environment == 'staging' && (!build.isolated || endpoint.host == new URI(expectedProduction).host ||
+                endpoint.host.endsWith('.' + new URI(expectedProduction).host)))) {
+            throw new GradleException('Release environment and API origin do not match the selected build.')
+        }
+        def actualFiles = fileTree(assets).files.collect { assets.toPath().relativize(it.toPath()).toString().replace('\\', '/') }.findAll { it != 'cmc-build.json' }.sort()
+        if (!build.webFiles || actualFiles != build.webFiles.keySet().toList().sort()) {
+            throw new GradleException('Web asset inventory is incomplete or stale; rebuild and sync it.')
+        }
+        def digest = java.security.MessageDigest.getInstance('SHA-256')
+        build.webFiles.each { relative, expected ->
+            def asset = new File(assets, relative)
+            if (!asset.isFile() || digest.digest(asset.bytes).encodeHex().toString() != expected) {
+                throw new GradleException('Web assets changed after environment selection; rebuild and sync them.')
+            }
+        }
+        if (!fileTree(assets).matching { include '**/*.map' }.isEmpty()) {
+            throw new GradleException('Release assets must not contain source maps.')
+        }
+    }
+}
+tasks.matching { it.name == 'preReleaseBuild' }.configureEach { dependsOn verifyReleaseWebAssets }
 
 try {
     def servicesJSON = file('google-services.json')
