@@ -13,6 +13,7 @@
     "test:integration": "ng test --configuration=integration",
     "test:regression": "ng test --configuration=regression",
     "test:coverage": "ng test --configuration=ci",
+    "test:white-box": "node test/run-white-box.mjs",
     "test:api": "node scripts/run-api-tests.mjs"
   },
   "private": true,

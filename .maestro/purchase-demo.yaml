@@ -5,8 +5,10 @@ tags: [critical, demo]
 - launchApp:
     clearState: true
 - extendedWaitUntil:
-    visible: "Bienvenido de nuevo"
+    visible: "Novedades"
     timeout: 30000
+- tapOn: "Iniciar sesión"
+- assertVisible: "Bienvenido de nuevo"
 - runFlow: shared/login-demo.yaml
 - tapOn: "Carrito"
 - assertVisible: "Guitarra Acústica Yamaha"
@@ -22,9 +24,9 @@ tags: [critical, demo]
 - tapOn: "Transferencia bancaria.*"
 - tapOn: "Confirmar método"
 - scrollUntilVisible:
-    element: "Confirmar pago"
+    element: "Confirmar pedido DEMO"
     direction: DOWN
-- tapOn: "Confirmar pago"
+- tapOn: "Confirmar pedido DEMO"
 - assertVisible: "¡Pedido Confirmado!"
 - assertVisible: "Este es un pedido demostrativo. No se realizaron cobros reales."
 - takeScreenshot: reports/maestro/purchase-demo
