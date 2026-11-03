@@ -1,0 +1,23 @@
+import { TestBed } from '@angular/core/testing';
+import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClientTesting,HttpTestingController } from '@angular/common/http/testing';
+import { provideRouter } from '@angular/router';
+import { Subject } from 'rxjs';
+import { beforeEach,afterEach,describe,it,expect } from 'vitest';
+import { ConnectedFavoritesComponent } from './connected-favorites.view';
+import { HttpWishlistRepository,parseWishlistItem } from '../../core/infrastructure/http-wishlist.repository';
+import { API_BASE_URL } from '../../core/api/api-base-url.token';
+import { AuthService } from '../../core/services/auth.service';
+const item={wishlistId:10,productId:313,productName:'Jarana de prueba',currentPrice:6500,availableStock:3,available:true,productImage:null};
+describe('Favoritos conectados (HTTP simulado)',()=>{
+ let http:HttpTestingController;let repo:HttpWishlistRepository;const ended=new Subject<void>();
+ beforeEach(()=>{TestBed.configureTestingModule({providers:[provideRouter([]),provideHttpClient(),provideHttpClientTesting(),{provide:API_BASE_URL,useValue:'https://api.test'},{provide:AuthService,useValue:{sessionEnded$:ended}}]});http=TestBed.inject(HttpTestingController);repo=TestBed.inject(HttpWishlistRepository);});
+ afterEach(()=>http.verify());
+ it('consulta, presenta precio/stock y elimina por wishlistId, después recarga',()=>{const f=TestBed.createComponent(ConnectedFavoritesComponent);http.expectOne('https://api.test/api/wishlist').flush({items:[item],totalItems:1});f.detectChanges();expect(f.nativeElement.textContent).toContain('Jarana de prueba');expect(f.nativeElement.textContent).toContain('6,500.00');f.nativeElement.querySelector('button').click();const del=http.expectOne('https://api.test/api/wishlist/10');expect(del.request.method).toBe('DELETE');f.componentInstance.remove(10);http.expectNone('https://api.test/api/wishlist/10');del.flush({message:'ok'});http.expectOne('https://api.test/api/wishlist').flush({items:[],totalItems:0});f.detectChanges();expect(f.nativeElement.textContent).toContain('No tienes favoritos');f.destroy();});
+ it('no anuncia disponibilidad por stock cuando el servidor deshabilitó el producto',()=>{const f=TestBed.createComponent(ConnectedFavoritesComponent);http.expectOne('https://api.test/api/wishlist').flush({items:[{...item,available:false}],totalItems:1});f.detectChanges();expect(f.nativeElement.textContent).toContain('No disponible');f.destroy();});
+ it('error recuperable y cancelación de datos al cerrar sesión',()=>{const f=TestBed.createComponent(ConnectedFavoritesComponent);http.expectOne('https://api.test/api/wishlist').flush({}, {status:503,statusText:'Unavailable'});f.detectChanges();expect(f.nativeElement.querySelector('[role=alert]')).toBeTruthy();f.nativeElement.querySelector('button').click();const pending=http.expectOne('https://api.test/api/wishlist');ended.next();expect(pending.cancelled).toBe(true);expect(f.componentInstance.items()).toEqual([]);f.destroy();});
+ it('agrega exclusivamente productId real y valida respuesta',()=>{repo.add(313).subscribe(v=>expect(v.wishlistId).toBe(10));const req=http.expectOne('https://api.test/api/wishlist');expect(req.request.body).toEqual({productId:313});req.flush(item);expect(()=>repo.add(0)).toThrow();expect(()=>repo.remove(-1)).toThrow();});
+ it.each([null,{}, {...item,currentPrice:-1},{...item,currentPrice:'50'},{...item,availableStock:-1},{...item,productId:1.2},{...item,productImage:4}])('rechaza JSON inválido %#',v=>expect(()=>parseWishlistItem(v,'https://api.test')).toThrow());
+ it('no interpreta HTML remoto y filtra imágenes externas inseguras',()=>{const mapped=parseWishlistItem({...item,productName:'<script>test</script>',productImage:'javascript:test'},'https://api.test');expect(mapped.productImage).toBeNull();expect(mapped.productName).toContain('<script>');});
+ it('rechaza totales incoherentes y no oculta un error de eliminación',()=>{repo.list().subscribe({error:e=>expect(e.kind).toBe('invalid-response')});http.expectOne('https://api.test/api/wishlist').flush({items:[item],totalItems:0});const f=TestBed.createComponent(ConnectedFavoritesComponent);http.expectOne('https://api.test/api/wishlist').flush({items:[item],totalItems:1});f.componentInstance.remove(10);http.expectOne('https://api.test/api/wishlist/10').flush({}, {status:403,statusText:'Forbidden'});expect(f.componentInstance.items()).toHaveLength(1);expect(f.componentInstance.loading()).toBe(false);f.destroy();});
+});

@@ -11,6 +11,7 @@
 
 <ion-content class="cmc-page" [scrollY]="true">
   <div class="cmc-page-container">
+    <p class="cmc-caption" role="note">Selección de demostración. No se realizan pagos ni entregas reales.</p>
     <div class="options-container" role="radiogroup" aria-label="Opciones de pago">
 
       <!-- Transfer Option -->
@@ -28,12 +29,12 @@
             <span class="cmc-font-bold title">Transferencia bancaria</span>
           </div>
           <p class="cmc-body cmc-text-secondary description">
-            Realiza el pago directamente a nuestra cuenta.
+            Método ilustrativo, sin transferencia de dinero.
           </p>
           @if (selectedMethod === 'transfer') {
             <div class="store-info">
               <ion-icon name="information-circle-outline"></ion-icon>
-              <span class="cmc-text-secondary">Los datos se enviarán al confirmar tu pedido.</span>
+              <span class="cmc-text-secondary">No se enviarán instrucciones bancarias en esta demostración.</span>
             </div>
           }
         </div>
@@ -55,7 +56,7 @@
           @if (selectedMethod === 'mercadopago') {
             <div class="store-info">
               <ion-icon name="lock-closed-outline"></ion-icon>
-              <span class="cmc-text-secondary">Serás redirigido para pagar de forma segura.</span>
+              <span class="cmc-text-secondary">No se abrirá ninguna pasarela de pago en esta demostración.</span>
             </div>
           }
         </div>

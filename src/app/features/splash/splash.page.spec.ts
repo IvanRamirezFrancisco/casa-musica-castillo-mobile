@@ -30,10 +30,20 @@ describe('SplashPage', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should navigate to login after timeout', () => {
+  it('cancels delayed navigation after leaving Splash', () => {
+    vi.useFakeTimers(); fixture.detectChanges(); fixture.destroy(); vi.advanceTimersByTime(2500);
+    expect(routerSpy.navigate).not.toHaveBeenCalled();
+  });
+
+  it('does not override another destination when Ionic caches Splash', () => {
+    vi.useFakeTimers(); fixture.detectChanges(); component.ionViewWillLeave(); vi.advanceTimersByTime(2500);
+    expect(routerSpy.navigate).not.toHaveBeenCalled();
+  });
+
+  it('should navigate to public home after timeout', () => {
     vi.useFakeTimers();
     fixture.detectChanges(); // triggers ngOnInit
     vi.advanceTimersByTime(2500);
-    expect(routerSpy.navigate).toHaveBeenCalledWith(['/login'], { replaceUrl: true });
+    expect(routerSpy.navigate).toHaveBeenCalledWith(['/main/home'], { replaceUrl: true });
   });
 });

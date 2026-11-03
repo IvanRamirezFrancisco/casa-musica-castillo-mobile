@@ -1,3 +1,6 @@
+@if (connected) {
+  <app-connected-checkout-view></app-connected-checkout-view>
+} @else {
 <ion-header class="ion-no-border cmc-header-minimal">
   <ion-toolbar>
     <ion-buttons slot="start">
@@ -11,6 +14,7 @@
 
 <ion-content class="cmc-page" [scrollY]="true">
   <div class="cmc-page-container">
+    <p class="cmc-caption" role="note">Demostración en memoria. No se realizan compras ni cobros reales.</p>
     <div class="checkout-section">
       <h2 class="cmc-title section-title">Método de entrega</h2>
       <button type="button" class="selection-card" (click)="goToDelivery()">
@@ -55,7 +59,7 @@
       <h2 class="cmc-title section-title">Resumen de pedido</h2>
       <div class="order-summary-card">
         <div class="summary-items">
-          <span class="cmc-text-secondary">{{ checkoutService.cartItems().length }} artículos</span>
+          <span class="cmc-text-secondary">{{ checkoutService.itemCount() }} unidades</span>
         </div>
         <div class="summary-row">
           <span class="cmc-text-secondary">Subtotal</span>
@@ -63,7 +67,7 @@
         </div>
         <div class="summary-row">
           <span class="cmc-text-secondary">Envío</span>
-          <span class="cmc-font-bold">{{ checkoutService.shippingCost() === 0 ? 'Por calcular' : (checkoutService.shippingCost() | currency:'MXN') }}</span>
+          <span class="cmc-font-bold">{{ !checkoutService.deliveryMethod() ? 'Por calcular' : (checkoutService.shippingCost() | currency:'MXN') }}</span>
         </div>
         <div class="summary-divider"></div>
         <div class="summary-row total-row">
@@ -75,7 +79,7 @@
 
     <div class="checkout-actions">
       <cmc-button fullWidth [disabled]="!canProceed()" (click)="confirmOrder()">
-        Confirmar pago
+        Confirmar pedido DEMO
       </cmc-button>
       @if (!canProceed()) {
         <p class="cmc-body cmc-text-secondary text-center error-hint">
@@ -85,3 +89,4 @@
     </div>
   </div>
 </ion-content>
+}

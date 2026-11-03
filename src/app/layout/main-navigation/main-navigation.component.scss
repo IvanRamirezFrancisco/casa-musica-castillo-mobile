@@ -7,7 +7,7 @@ ion-tab-bar {
   transform: translateX(-50%);
   width: calc(100% - 2 * var(--cmc-space-4));
   max-width: 448px;
-  border-radius: var(--cmc-radius-full);
+  border-radius: var(--cmc-radius-xl);
   --background: var(--cmc-surface);
   --border: none;
   box-shadow: var(--cmc-shadow-medium), inset 0 0 0 1px var(--cmc-border);
@@ -27,16 +27,18 @@ ion-tab-bar {
     --color-selected: var(--cmc-text-on-primary);
     --background-focused: var(--cmc-surface-alt);
     --background-hover: transparent;
+    --padding-start: 0px;
+    --padding-end: 0px;
     background: transparent;
     min-width: 48px;
     min-height: 48px;
     transition: background-color var(--cmc-transition-fast);
-    border-radius: var(--cmc-radius-full);
+    border-radius: var(--cmc-radius-lg);
     height: calc(var(--cmc-bubble-nav-height) - 2 * var(--cmc-space-1));
     margin: var(--cmc-space-1) 0;
 
     ion-icon {
-      font-size: 22px;
+      font-size: 21px;
       margin-bottom: 2px;
       z-index: 2;
     }
@@ -44,7 +46,7 @@ ion-tab-bar {
     ion-label {
       font-family: 'Roboto', sans-serif;
       font-size: 12px;
-      font-weight: 500;
+      font-weight: 600;
       z-index: 2;
     }
 

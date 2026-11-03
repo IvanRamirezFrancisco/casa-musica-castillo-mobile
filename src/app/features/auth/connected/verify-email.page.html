@@ -1,0 +1,69 @@
+<ion-content class="cmc-page cmc-standalone-page recovery-page" [scrollY]="true">
+  <div class="recovery-header">
+    <button type="button" aria-label="Volver a iniciar sesión" class="auth-back-btn" (click)="goBackToLogin()">
+      <ion-icon name="arrow-back-outline" aria-hidden="true"></ion-icon>
+    </button>
+    <h1 class="recovery-title">Verificar cuenta</h1>
+  </div>
+
+  <div class="recovery-container">
+    <div class="auth-card">
+      @if (errorMessage()) {
+        <p class="auth-alert auth-alert--error" role="alert">{{ errorMessage() }}</p>
+      }
+      @if (notice()) {
+        <p class="auth-alert auth-alert--success" role="status">{{ notice() }}</p>
+      }
+
+      @if (verified()) {
+        <div class="success-message">
+          <h2 class="cmc-title">Cuenta verificada</h2>
+          <p class="cmc-body cmc-text-secondary" role="status">Ya puedes iniciar sesión.</p>
+        </div>
+      } @else {
+        <div class="auth-card-header">
+          <h2 class="cmc-title">Ingresa tu código</h2>
+          <p class="cmc-body cmc-text-secondary instruction-text">
+            Copia el código (token) del correo de verificación y pégalo aquí.
+          </p>
+        </div>
+        <form [formGroup]="form" (ngSubmit)="verify()" class="auth-form" novalidate>
+          <cmc-input
+            formControlName="token"
+            autocomplete="one-time-code"
+            label="Código de verificación"
+            type="text"
+            [error]="tokenError()"
+           required></cmc-input>
+          <cmc-button type="submit" fullWidth [loading]="submitting()" loadingLabel="Verificando">
+            Verificar cuenta
+          </cmc-button>
+        </form>
+
+        <div class="step-actions">
+          @if (showResend()) {
+            <form [formGroup]="resendForm" (ngSubmit)="resend()" class="auth-form" novalidate>
+              <cmc-input
+                formControlName="email"
+                autocomplete="email"
+                label="Correo de la cuenta"
+                type="email"
+                [error]="emailError()"
+               required></cmc-input>
+              <cmc-button type="submit" variant="secondary" fullWidth [loading]="submitting()" loadingLabel="Enviando">
+                Reenviar código
+              </cmc-button>
+            </form>
+          } @else {
+            <button type="button" class="cmc-link cmc-font-bold" (click)="showResend.set(true)">No recibí el código</button>
+          }
+        </div>
+      }
+
+      <div class="auth-separator"></div>
+      <div class="auth-footer">
+        <button type="button" class="cmc-link cmc-font-bold recovery-return" (click)="goBackToLogin()">Volver a iniciar sesión</button>
+      </div>
+    </div>
+  </div>
+</ion-content>

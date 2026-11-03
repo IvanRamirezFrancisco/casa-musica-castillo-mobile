@@ -28,19 +28,31 @@ export class ConfirmationPage implements OnInit {
   private nav = inject(NavController);
 
   order = signal<DemoOrder | null>(null);
+  readonly error = signal('');
 
   constructor() {
     addIcons({ checkmarkCircle, warningOutline });
   }
 
-  ngOnInit() {
+  ngOnInit() { this.prepareOrder(); }
+
+  // Ionic may retain this secondary page when returning through checkout.
+  ionViewWillEnter(): void { this.prepareOrder(); }
+
+  private prepareOrder(): void {
+    this.order.set(null);
+    this.error.set('');
     // Direct navigation must not render a success state for incomplete demo data.
     if (!this.checkoutService.deliveryMethod() || !this.checkoutService.paymentMethod() ||
         this.checkoutService.cartItems().length === 0) {
       void this.router.navigate(['/checkout'], { replaceUrl: true });
       return;
     }
-    this.order.set(this.checkoutService.placeOrder());
+    try {
+      this.order.set(this.checkoutService.placeOrder());
+    } catch {
+      this.error.set('No pudimos crear el pedido DEMO. Revisa el carrito y vuelve a intentarlo.');
+    }
     // In a real app we might clear checkout here, but let's clear it on leave
   }
 

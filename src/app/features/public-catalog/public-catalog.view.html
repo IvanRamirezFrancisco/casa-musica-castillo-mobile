@@ -1,0 +1,24 @@
+<ion-header class="cmc-store-header ion-no-border"><ion-toolbar><div class="store-header-row"><div class="store-brand"><div><h1>Catálogo</h1><small>Encuentra tu sonido</small></div></div><button class="icon-action" aria-label="Abrir filtros y ordenamiento" (click)="openFilters()"><cmc-icon name="filters"/></button></div></ion-toolbar></ion-header>
+<ion-content class="cmc-page cmc-root-page"><main class="cmc-store">
+  <div class="store-search" role="search"><cmc-icon name="search"/><input id="catalog-search" type="search" maxlength="100" aria-label="Buscar instrumentos en el catálogo" placeholder="Nombre, instrumento o marca" [ngModel]="keyword()" (ngModelChange)="search($event)"/>@if(keyword()){<button aria-label="Limpiar búsqueda" (click)="search('')"><cmc-icon name="close"/></button>}</div>
+  <div class="catalog-controls"><button class="store-button" (click)="openFilters()"><cmc-icon name="filters"/>Filtros y orden</button><p class="muted" role="status">@if(service.page().data;as page){ {{page.totalElements}} resultados }@else{Explora nuestros instrumentos}</p></div>
+  @if(categoryId() || sort()!=='featured') {<div class="active-filters">@if(categoryId()){<button (click)="category('')" aria-label="Quitar filtro de categoría">{{categoryName()}} <cmc-icon name="close"/></button>}@if(sort()!=='featured'){<button (click)="order('featured')" aria-label="Quitar orden seleccionado">{{sortLabel()}} <cmc-icon name="close"/></button>}<button (click)="clear()">Limpiar filtros</button></div>}
+  @if(keyword().trim()){<p class="muted">Resultados ordenados por relevancia del servidor.</p>}
+  @if(service.categories().status==='error'){<aside class="category-error"><p role="alert">No pudimos cargar las categorías.</p><button class="store-button" (click)="service.loadCategories()">Reintentar categorías</button></aside>}
+  @switch(service.page().status){
+    @case('loading'){<cmc-loading message="Consultando el catálogo"/><div class="catalog-skeleton" aria-hidden="true">@for(card of [1,2,3,4];track card){<div></div>}</div>}
+    @case('error'){<cmc-error-state heading="No pudimos cargar el catálogo" description="Revisa tu conexión y vuelve a intentarlo." (retry)="service.retry()"/>}
+    @case('ready'){@if(service.page().data;as page){
+      @if(page.content.length){<cmc-public-product-grid [products]="page.content"/>}@else{<cmc-empty-state heading="No encontramos instrumentos" description="Prueba otra búsqueda o categoría."/><button class="store-button" (click)="clear()">Limpiar filtros</button>}
+      <nav class="paging" aria-label="Paginación del catálogo"><button class="store-button" [disabled]="page.number===0" (click)="goPage(page.number-1)">Anterior</button><span>Página {{page.number+1}} de {{page.totalPages||1}}</span><button class="store-button" [disabled]="page.last" (click)="goPage(page.number+1)">Siguiente</button></nav>
+    }}
+  }
+</main></ion-content>
+<ion-modal [isOpen]="filtersOpen()" [initialBreakpoint]="0.85" [breakpoints]="[0,0.85,1]" (didDismiss)="filtersOpen.set(false)" aria-label="Filtros y ordenamiento"><ng-template>
+  <ion-header><ion-toolbar><ion-title>Filtros y orden</ion-title><ion-buttons slot="end"><button class="sheet-close" aria-label="Cerrar filtros" (click)="filtersOpen.set(false)"><cmc-icon name="close"/></button></ion-buttons></ion-toolbar></ion-header>
+  <ion-content><div class="filter-sheet"><fieldset><legend>Categoría</legend><label><input type="radio" name="category" [checked]="!draftCategory()" (change)="draftCategory.set('')"/>Todas las categorías</label>@for(cat of service.categories().data??[];track cat.id){<label><input type="radio" name="category" [checked]="draftCategory()===cat.id.toString()" (change)="draftCategory.set(cat.id.toString())"/>{{cat.name}}</label>}</fieldset>
+    <fieldset [disabled]="!!keyword().trim()"><legend>Ordenar por</legend>@for(option of sortOptions;track option.id){<label><input type="radio" name="sort" [checked]="draftSort()===option.id" (change)="draftSort.set(option.id)"/>{{option.label}}</label>}</fieldset>
+    @if(keyword().trim()){<p>La búsqueda usa la relevancia del servidor.</p>}
+    <div class="sheet-actions"><button class="store-button" (click)="resetDraft()">Limpiar</button><button class="store-button primary" (click)="applyFilters()">Aplicar filtros</button></div>
+  </div></ion-content>
+</ng-template></ion-modal>

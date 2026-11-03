@@ -6,6 +6,8 @@ import { addIcons } from 'ionicons';
 import { arrowBackOutline } from 'ionicons/icons';
 import { CmcInputComponent } from '../../../shared/ui/input/cmc-input.component';
 import { CmcButtonComponent } from '../../../shared/ui/button/cmc-button.component';
+import { BACKEND_SESSION_ENABLED } from '../../../core/config/backend-session.token';
+import { ConnectedRegisterPage } from '../connected/connected-register.page';
 
 @Component({
   selector: 'app-register',
@@ -13,6 +15,7 @@ import { CmcButtonComponent } from '../../../shared/ui/button/cmc-button.compone
   styleUrls: ['./register.page.scss'],
   standalone: true,
   imports: [
+    ConnectedRegisterPage,
     IonContent,
     IonIcon,
     RouterLink,
@@ -23,6 +26,7 @@ import { CmcButtonComponent } from '../../../shared/ui/button/cmc-button.compone
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RegisterPage {
+  readonly connected = inject(BACKEND_SESSION_ENABLED);
   constructor() { addIcons({ arrowBackOutline }); }
 
   private fb = inject(NonNullableFormBuilder);

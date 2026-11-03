@@ -1,10 +1,11 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal, viewChild } from '@angular/core';
 import { CurrencyPipe, DatePipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { IonContent, IonHeader, IonIcon, IonTitle, IonToolbar } from '@ionic/angular';
 import { addIcons } from 'ionicons';
 import { chevronForwardOutline, receiptOutline } from 'ionicons/icons';
 
+import { BACKEND_SESSION_ENABLED } from '../../core/config/backend-session.token';
 import { DemoAccountOrder, DemoOrderStatus } from '../../core/models/account.model';
 import {
   ORDER_STATUS_LABEL,
@@ -17,6 +18,7 @@ import { CmcEmptyStateComponent } from '../../shared/ui/empty-state/cmc-empty-st
 import { CmcErrorStateComponent } from '../../shared/ui/error-state/cmc-error-state.component';
 import { CmcLoadingComponent } from '../../shared/ui/loading/cmc-loading.component';
 import { OrdersService } from '../../core/services/orders.service';
+import { ConnectedOrdersComponent } from './connected-orders.view';
 
 /** Estados de la consulta de pedidos (HU-12). */
 export type OrdersStatus = 'loading' | 'ready' | 'error';
@@ -27,6 +29,7 @@ export type OrdersStatus = 'loading' | 'ready' | 'error';
   styleUrls: ['./orders.page.scss'],
   standalone: true,
   imports: [
+    ConnectedOrdersComponent,
     IonContent,
     IonHeader,
     IonIcon,
@@ -43,24 +46,40 @@ export type OrdersStatus = 'loading' | 'ready' | 'error';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OrdersPage {
+  readonly connected = inject(BACKEND_SESSION_ENABLED);
+  private readonly connectedView = viewChild(ConnectedOrdersComponent);
   private readonly ordersService = inject(OrdersService);
 
+  private request = 0;
   readonly status = signal<OrdersStatus>('loading');
   readonly orders = signal<DemoAccountOrder[]>([]);
 
   constructor() {
     addIcons({ chevronForwardOutline, receiptOutline });
+    if (!this.connected) void this.loadOrders();
+  }
+
+  // Ionic caches tab pages: refresh history each time the user returns.
+  ionViewWillEnter(): void {
+    if (this.connected) {
+      this.connectedView()?.load(this.connectedView()?.pageNumber() ?? 0);
+      return;
+    }
     void this.loadOrders();
   }
 
+
   /** Carga los pedidos (más recientes primero) y controla carga y error. */
   async loadOrders(): Promise<void> {
+    const request = ++this.request;
     this.status.set('loading');
     try {
       const pedidos = await this.ordersService.listMyOrders();
+      if (request !== this.request) return;
       this.orders.set([...pedidos].sort((a, b) => b.date.localeCompare(a.date)));
       this.status.set('ready');
     } catch {
+      if (request !== this.request) return;
       // No se muestran detalles técnicos del error (HU-12, seguridad).
       this.status.set('error');
     }

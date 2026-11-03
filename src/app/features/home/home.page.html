@@ -1,3 +1,4 @@
+@if (publicCatalogEnabled) { <app-public-home /> } @else {
 <ion-header class="ion-no-border cmc-header-transparent cmc-discovery-header">
   <ion-toolbar class="home-toolbar">
     <div class="header-content">
@@ -22,6 +23,7 @@
 
 <ion-content class="cmc-page cmc-root-page cmc-discovery-content home-content">
   <div class="cmc-page-container">
+    <p><a routerLink="/login" class="cmc-link">Iniciar sesión</a></p>
 
     <!-- Promotion Banner -->
     <section class="promo-banner">
@@ -84,3 +86,5 @@
 
   </div>
 </ion-content>
+
+}

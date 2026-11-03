@@ -1,3 +1,6 @@
+@if (connected) {
+  <app-connected-profile-view></app-connected-profile-view>
+} @else {
 <ion-header class="ion-no-border cmc-header-transparent">
   <ion-toolbar>
     <ion-title class="cmc-title" role="heading" aria-level="1">Perfil</ion-title>
@@ -28,3 +31,4 @@
     </ul>
   </div>
 </ion-content>
+}

@@ -6,6 +6,8 @@ import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angula
 import { IonContent, IonIcon } from '@ionic/angular';
 import { CmcInputComponent } from '../../../shared/ui/input/cmc-input.component';
 import { CmcButtonComponent } from '../../../shared/ui/button/cmc-button.component';
+import { BACKEND_SESSION_ENABLED } from '../../../core/config/backend-session.token';
+import { ConnectedLoginPage } from '../connected/connected-login.page';
 
 @Component({
   selector: 'app-login',
@@ -13,6 +15,7 @@ import { CmcButtonComponent } from '../../../shared/ui/button/cmc-button.compone
   styleUrls: ['./login.page.scss'],
   standalone: true,
   imports: [
+    ConnectedLoginPage,
     IonContent, IonIcon,
     ReactiveFormsModule,
     RouterLink,
@@ -22,6 +25,7 @@ import { CmcButtonComponent } from '../../../shared/ui/button/cmc-button.compone
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LoginPage {
+  readonly connected = inject(BACKEND_SESSION_ENABLED);
   constructor() { addIcons({ musicalNotesOutline }); }
 
   private fb = inject(NonNullableFormBuilder);

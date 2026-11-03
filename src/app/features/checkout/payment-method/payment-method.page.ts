@@ -46,13 +46,13 @@ export class PaymentMethodPage {
       this.checkoutService.setPaymentMethod({
         type: 'transfer',
         title: 'Transferencia bancaria',
-        description: 'Pago manual a cuenta'
+        description: 'Transferencia DEMO, sin cobro'
       });
     } else if (this.selectedMethod === 'mercadopago') {
       this.checkoutService.setPaymentMethod({
         type: 'mercadopago',
         title: 'Mercado Pago',
-        description: 'Tarjetas, saldo o efectivo'
+        description: 'Mercado Pago DEMO, sin pasarela'
       });
     }
     

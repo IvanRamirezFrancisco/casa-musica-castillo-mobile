@@ -46,6 +46,12 @@ describe('TT-04 routing real', () => {
     await settle();
   };
 
+  it('arranque completo Splash → Inicio conserva navegación pública',async()=>{
+    const arrival=firstValueFrom(router.events.pipe(filter(event=>event instanceof NavigationEnd && event.urlAfterRedirects==='/main/home'),timeout(5000)));
+    await harness.navigateByUrl('/');await arrival;harness.detectChanges();
+    expect(router.url).toBe('/main/home');expect(rendered()).toContain('Casa de Música');
+  });
+
   it.each([
     ['/', '/splash', 'Casa de Música'],
     ['/splash', '/splash', 'Casa de Música'],

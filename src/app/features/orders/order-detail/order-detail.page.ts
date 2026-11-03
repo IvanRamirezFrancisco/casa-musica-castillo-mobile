@@ -5,6 +5,7 @@ import { NavController, IonButtons, IonContent, IonHeader, IonIcon, IonTitle, Io
 import { addIcons } from 'ionicons';
 import { arrowBackOutline } from 'ionicons/icons';
 
+import { BACKEND_SESSION_ENABLED } from '../../../core/config/backend-session.token';
 import { DemoAccountOrder, DemoOrderStatus } from '../../../core/models/account.model';
 import {
   ORDER_STATUS_LABEL,
@@ -16,6 +17,7 @@ import { CmcEmptyStateComponent } from '../../../shared/ui/empty-state/cmc-empty
 import { CmcErrorStateComponent } from '../../../shared/ui/error-state/cmc-error-state.component';
 import { CmcLoadingComponent } from '../../../shared/ui/loading/cmc-loading.component';
 import { OrderDetailService } from '../../../core/services/order-detail.service';
+import { ConnectedOrderDetailComponent } from './connected-order-detail.view';
 
 /** Estados de la consulta del detalle (HU-13). */
 export type OrderDetailStatus = 'loading' | 'ready' | 'not-found' | 'error';
@@ -28,6 +30,7 @@ const TIMELINE: DemoOrderStatus[] = ['pending', 'paid', 'shipped', 'delivered'];
   styleUrls: ['./order-detail.page.scss'],
   standalone: true,
   imports: [
+    ConnectedOrderDetailComponent,
     IonButtons,
     IonContent,
     IonHeader,
@@ -44,6 +47,7 @@ const TIMELINE: DemoOrderStatus[] = ['pending', 'paid', 'shipped', 'delivered'];
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OrderDetailPage {
+  readonly connected = inject(BACKEND_SESSION_ENABLED);
   private readonly nav = inject(NavController);
   private readonly orderDetail = inject(OrderDetailService);
   private readonly orderId = inject(ActivatedRoute).snapshot.paramMap.get('id') ?? '';
@@ -70,7 +74,7 @@ export class OrderDetailPage {
 
   constructor() {
     addIcons({ arrowBackOutline });
-    void this.loadOrder();
+    if (!this.connected) void this.loadOrder();
   }
 
   /** Consulta el pedido y controla carga, inexistente y error. */
