@@ -1,0 +1,23 @@
+@mixin shell {
+  .auth-page{--background:var(--cmc-background);}
+  .auth-hero{display:flex;flex-direction:column;align-items:center;text-align:center;gap:8px;padding:24px 20px 8px;}
+  .auth-brand-icon{font-size:32px;color:var(--cmc-accent-gold);margin-bottom:8px;}
+  .auth-brand-title{font-size:1.1rem;line-height:1.3;color:var(--cmc-primary);font-weight:700;margin:0;}
+  .auth-brand-subtitle{font-size:.8rem;line-height:1.5;color:var(--cmc-text-secondary);margin:6px 0 0;}
+  .auth-card-container{width:100%;max-width:500px;margin:0 auto;padding:16px 16px 32px;box-sizing:border-box;}
+  .auth-card{padding:24px;background:var(--cmc-surface);border:1px solid var(--cmc-border);border-radius:var(--cmc-radius-xl);box-shadow:var(--cmc-shadow-subtle);}
+  .auth-card-header{text-align:left;margin-top:16px;margin-bottom:24px;}
+  .auth-card-header .cmc-title{font-size:1.6rem;line-height:1.2;letter-spacing:-.03em;margin-bottom:8px;}
+  .auth-card-header p{font-size:.875rem;line-height:1.6;}
+  .auth-form{display:grid;gap:20px;margin-block:20px;}
+  .forgot-password-link{text-align:right;}.forgot-password-link a{display:inline-flex;align-items:center;min-height:44px;font-size:.8rem;}
+  .auth-separator{height:1px;background:var(--cmc-border);margin-block:20px;}
+  .auth-footer{text-align:center;font-size:.875rem;line-height:1.6;}
+  .auth-footer a{display:inline-flex;align-items:center;min-height:44px;font-weight:650;}
+  .auth-help{margin-top:16px;border-top:1px solid var(--cmc-border);padding-top:12px;text-align:left;color:var(--cmc-text-secondary);font-size:.8rem;}
+  .auth-help summary{cursor:pointer;min-height:44px;display:list-item;align-content:center;}.auth-help p{line-height:1.6;}
+  .cmc-link{color:var(--cmc-primary);text-decoration:none;}
+  .auth-back-btn{display:grid;place-items:center;min-width:48px;min-height:48px;border:1px solid var(--cmc-border);border-radius:50%;background:var(--cmc-surface);color:var(--cmc-primary);font-size:20px;}
+  .auth-hero>.auth-back-btn{align-self:flex-start;}
+  @media(max-width:359px){.auth-card{padding:20px;}.auth-hero{padding-top:16px;}}
+}
