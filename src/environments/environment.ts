@@ -5,6 +5,7 @@
 import { Capacitor } from '@capacitor/core';
 
 export const environment = {
+  publicCatalogEnabled: true,
   production: false,
   apiBaseUrl: Capacitor.getPlatform() === 'android'
     ? 'http://10.0.2.2:8080'

@@ -99,6 +99,23 @@ jobs:
           if-no-files-found: error
           retention-days: 14
 
+      # Separate artifact: offline DEMO acceptance must never masquerade as HTTP catalog evidence.
+      - name: Compilar APK separado para aceptación DEMO
+        id: demo-build
+        run: |
+          npm run build -- --configuration=demo
+          npx cap sync android
+          cd android
+          ./gradlew assembleDebug --no-daemon
+
+      - name: Publicar APK DEMO separado
+        uses: actions/upload-artifact@v7
+        with:
+          name: casa-musica-castillo-demo-debug-apk
+          path: android/app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error
+          retention-days: 14
+
       - name: Retroalimentación de Android Build
         if: always()
         env:
@@ -108,11 +125,12 @@ jobs:
             Angular build|${{ steps.angular-build.outcome == 'success' && 'PASS' || 'FAIL' }}|Compila la aplicación web para Capacitor.
             Capacitor sync|${{ steps.capacitor-sync.outcome == 'success' && 'PASS' || 'FAIL' }}|Sincroniza assets y plugins Android.
             Gradle assembleDebug|${{ steps.gradle-build.outcome == 'success' && 'PASS' || 'FAIL' }}|Control BUILD; no se presenta como prueba unitaria.
+            Build APK DEMO separado|${{ steps.demo-build.outcome == 'success' && 'PASS' || 'FAIL' }}|Sólo aceptación offline; no acredita catálogo HTTP.
             Verificación APK|${{ steps.verify-apk.outcome == 'success' && 'PASS' || 'FAIL' }}|Confirma el artefacto esperado del mismo SHA.
-          SUMMARY_STATUS: ${{ (steps.angular-build.outcome == 'success' && steps.capacitor-sync.outcome == 'success' && steps.gradle-build.outcome == 'success' && steps.verify-apk.outcome == 'success') && 'PASS' || 'FAIL' }}
+          SUMMARY_STATUS: ${{ (steps.angular-build.outcome == 'success' && steps.capacitor-sync.outcome == 'success' && steps.gradle-build.outcome == 'success' && steps.verify-apk.outcome == 'success' && steps.demo-build.outcome == 'success') && 'PASS' || 'FAIL' }}
           SUMMARY_DATA: Código y assets del SHA; build Debug sin secretos.
           SUMMARY_METRICS: Tamaño del APK visible en el paso Verificar APK generado.
-          SUMMARY_ARTIFACTS: casa-musica-castillo-debug-apk, retención 14 días.
+          SUMMARY_ARTIFACTS: casa-musica-castillo-debug-apk (real) y casa-musica-castillo-demo-debug-apk (DEMO), retención 14 días.
         run: node scripts/write-workflow-summary.mjs
 
 
@@ -120,6 +138,6 @@ jobs:
   acceptance:
     name: ACEPTACIÓN móvil DEMO
     needs: [changes, android-build]
-    # Acceptance necesita exactamente el APK publicado por el build anterior del mismo run.
+    # Acceptance usa el APK DEMO explícito del mismo run y SHA; el APK real queda separado.
     if: needs.changes.outputs.docs_only != 'true' && needs.android-build.result == 'success'
     uses: ./.github/workflows/acceptance.yml
