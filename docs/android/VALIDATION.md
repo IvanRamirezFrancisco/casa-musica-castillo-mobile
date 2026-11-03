@@ -29,3 +29,5 @@ Advertencias: nueve selectores CSS omitidos por el optimizador Angular y avisos 
 No había emulador ni Galaxy A55 conectado (`adb devices -l` vacío) ni Maestro local equivalente. Maestro DEMO se comprueba en Actions; no demuestra operación real del backend. Release no se instaló porque no hay firma autorizada ni dispositivo disponible. El certificado TLS del catálogo público fue válido; no hubo escrituras comerciales ni E2E PostgreSQL.
 
 No se certifican Play readiness, sesión persistente cifrada, pinning o eliminación de cuenta. Firma/custodia, prueba funcional Release, staging y privacidad permanecen pendientes explícitos.
+
+La primera ejecución del nuevo workflow Release (run 41728578234, SHA `1ec3468`) falló antes de compilar: el valor predeterminado de setup-android v3 intentó instalar el paquete retirado `tools`. Se sustituye por una lista explícita de platform-tools, platform 36 y build-tools 36.0.0. No se omite el control ni se cambia su criterio de aprobación; la comprobación válida será la ejecución posterior del nuevo HEAD.
