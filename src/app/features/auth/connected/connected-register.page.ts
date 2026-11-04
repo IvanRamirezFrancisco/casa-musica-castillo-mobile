@@ -53,6 +53,7 @@ export class ConnectedRegisterPage {
     const control = this.form.controls[name];
     if (!control.touched || control.valid) return '';
     const key = Object.keys(control.errors ?? {})[0];
+    if (name === 'password' && key === 'minlength') return `Usa al menos ${FIELD_LIMITS.passwordMin} caracteres.`;
     if (name === 'email' && key === 'pattern') return 'Ingresa un correo válido.';
     if (name === 'phone') return 'Ingresa 10 dígitos o deja el campo vacío.';
     if (name === 'username' && key === 'pattern') return 'Usa solo letras, números, punto, guion y guion bajo.';

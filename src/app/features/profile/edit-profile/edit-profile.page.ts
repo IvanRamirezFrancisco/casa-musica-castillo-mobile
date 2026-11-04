@@ -1,5 +1,7 @@
+import { emailValidator, requiredPhoneValidator, normalizePersonName, normalizePhone } from '../../../core/validation/auth-fields.validation';
+import { demoFullNameValidator } from '../../../core/validation/demo-profile.validation';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { NonNullableFormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { NavController, IonButtons, IonContent, IonHeader, IonIcon, IonTitle, IonToolbar } from '@ionic/angular';
 import { addIcons } from 'ionicons';
 import { arrowBackOutline } from 'ionicons/icons';
@@ -34,10 +36,22 @@ export class EditProfilePage {
   private readonly account = inject(DemoAccountStateService);
 
   readonly form = this.fb.group({
-    name: [this.account.profile().name, [Validators.required, Validators.pattern(/\S/)]],
-    email: [this.account.profile().email, [Validators.required, Validators.email]],
-    phone: [this.account.profile().phone, [Validators.required, Validators.pattern(/^[0-9]{10}$/)]],
+    name: [this.account.profile().name, [demoFullNameValidator]],
+    email: [this.account.profile().email, [emailValidator]],
+    phone: [this.account.profile().phone, [requiredPhoneValidator]],
   });
+
+  /** Solo edición DEMO; la rama conectada continúa sin escritura remota. */
+  fieldError(field: 'name' | 'email' | 'phone'): string {
+    const control = this.form.controls[field];
+    if (!control.touched || control.valid) return '';
+    if (!control.value.trim()) return { name: 'Ingresa tu nombre completo.', email: 'Ingresa tu correo electrónico.', phone: 'Ingresa tu teléfono.' }[field];
+    return {
+      name: 'Usa letras y separadores simples (3 a 80 caracteres).',
+      email: 'Ingresa un correo válido, por ejemplo nombre@correo.com (máximo 100 caracteres).',
+      phone: 'Ingresa 10 dígitos, continuos o agrupados en 3-3-4 o 2-4-4.',
+    }[field];
+  }
 
   constructor() {
     addIcons({ arrowBackOutline });
@@ -52,7 +66,7 @@ export class EditProfilePage {
       return;
     }
     const { name, email, phone } = this.form.getRawValue();
-    this.account.updateProfile({ name: name.trim(), email: email.trim(), phone });
+    this.account.updateProfile({ name: normalizePersonName(name), email: email.trim().toLowerCase(), phone: normalizePhone(phone) });
     void this.nav.navigateBack(['/main/profile']);
   }
 

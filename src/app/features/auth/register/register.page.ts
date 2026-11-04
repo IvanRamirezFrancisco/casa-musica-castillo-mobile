@@ -1,3 +1,4 @@
+import { emailValidator } from '../../../core/validation/auth-fields.validation';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { AbstractControl, NonNullableFormBuilder, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
@@ -34,7 +35,7 @@ export class RegisterPage {
 
   registerForm = this.fb.group({
     name: ['', [Validators.required, Validators.minLength(3)]],
-    email: ['', [Validators.required, Validators.email]],
+    email: ['', [emailValidator]],
     phone: ['', [Validators.required, Validators.pattern('^[0-9]{10}$')]],
     password: ['', [Validators.required, Validators.minLength(6)]],
     confirmPassword: ['', [Validators.required]]

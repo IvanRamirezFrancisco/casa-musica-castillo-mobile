@@ -167,6 +167,10 @@ describe('autenticación conectada (integración)', () => {
       email: 'ana@gmail.com', phone: '5512345678', password: 'Cl4ve-Segura', confirmPassword: 'otra',
     });
     expect(page.componentInstance['confirmError']()).toContain('no coinciden');
+    page.componentInstance['form'].controls.password.setValue('x');
+    page.componentInstance['form'].controls.password.markAsTouched();
+    expect(page.componentInstance['fieldError']('password')).toBe('Usa al menos 8 caracteres.');
+    page.componentInstance['form'].controls.password.setValue('Cl4ve-Segura');
     page.componentInstance['form'].controls.confirmPassword.setValue('Cl4ve-Segura');
 
     page.componentInstance['submit']();
@@ -192,7 +196,7 @@ describe('autenticación conectada (integración)', () => {
     const page = TestBed.createComponent(ConnectedForgotPasswordPage);
     page.detectChanges();
     page.componentInstance['request']();
-    expect(page.componentInstance['emailError']()).toContain('correo válido');
+    expect(page.componentInstance['emailError']()).toBe('Ingresa tu correo electrónico.');
 
     page.componentInstance['requestForm'].setValue({ email: 'ana@gmail.com' });
     page.componentInstance['request']();
@@ -268,6 +272,77 @@ describe('autenticación conectada (integración)', () => {
     expect(alerts.some(a => a.textContent?.includes('almacenamiento seguro'))).toBe(true);
     expect(page.nativeElement.textContent).not.toContain('private-device-details');
     expect(auth.user()).toBeNull(); expect(router.url).not.toBe('/main/home');
+  });
+
+  it.each(['.usuario@dominio.com', 'usuario..doble@dominio.com', 'usuario.@dominio.com',
+    'usuario@dom_inio.com', 'usuario@-dominio.com', 'a'.repeat(65) + '@correo.com'])('ningún formulario conectado envía correo inválido %s', (email) => {
+    const register = TestBed.createComponent(ConnectedRegisterPage).componentInstance;
+    register['form'].setValue({ username: 'ana_perez', firstName: 'Ana', lastName: 'Pérez', email,
+      phone: '', password: 'Cl4ve-Segura', confirmPassword: 'Cl4ve-Segura' });
+    register['submit']();
+    expect(register['form'].controls.email.invalid).toBe(true);
+    const forgot = TestBed.createComponent(ConnectedForgotPasswordPage).componentInstance;
+    forgot['requestForm'].setValue({ email }); forgot['request']();
+    const login = TestBed.createComponent(ConnectedLoginPage).componentInstance;
+    login['form'].setValue({ email, password: 'Cl4ve-Segura' }); login['submit']();
+    const verify = TestBed.createComponent(VerifyEmailPage).componentInstance;
+    verify['resendForm'].setValue({ email }); verify['resend']();
+    http.expectNone(() => true, 'Los formularios inválidos no emiten solicitudes HTTP');
+  });
+
+  it('registro normaliza nombres y teléfono validado antes de enviar; mantiene DTO y bloqueo doble', () => {
+    const page = TestBed.createComponent(ConnectedRegisterPage); page.detectChanges();
+    page.componentInstance['form'].setValue({ username: ' ana_perez ', firstName: ' Ana   María ', lastName: " O'Brien-Ñúñez ",
+      email: ' ana@gmail.com ', phone: ' 55-1234 5678 ', password: 'Cl4ve-Segura', confirmPassword: 'Cl4ve-Segura' });
+    page.componentInstance['submit'](); page.componentInstance['submit']();
+    const req = http.expectOne(`${base}/api/auth/register`);
+    expect(req.request.body).toEqual({ username: 'ana_perez', firstName: 'Ana María', lastName: "O'Brien-Ñúñez",
+      email: 'ana@gmail.com', phone: '5512345678', password: 'Cl4ve-Segura' });
+    req.flush({ success: true }); expect(auth.hasValidSession()).toBe(false);
+    expect(page.componentInstance['form'].controls.password.value).toBe('');
+  });
+
+  it('recuperación preserva neutralidad, recorte, exclusión de envíos dobles y errores sin detalles', () => {
+    const page = TestBed.createComponent(ConnectedForgotPasswordPage); page.detectChanges();
+    page.componentInstance['requestForm'].setValue({ email: '  cliente@correo.com  ' });
+    page.componentInstance['request'](); page.componentInstance['request']();
+    const first = http.expectOne(`${base}/api/auth/password-reset/request`);
+    expect(first.request.body).toEqual({ email: 'cliente@correo.com' });
+    first.flush({ message: 'private-server-debug' }, { status: 500, statusText: 'Server Error' }); page.detectChanges();
+    expect(page.nativeElement.textContent).not.toContain('private-server-debug');
+    expect(page.componentInstance['step']()).toBe('request');
+    page.componentInstance['request']();
+    http.expectOne(`${base}/api/auth/password-reset/request`).flush({ success: true }); page.detectChanges();
+    expect(page.nativeElement.textContent).toContain('Si tu correo está registrado');
+    expect(page.nativeElement.textContent).not.toContain('Hemos enviado');
+  });
+
+  it('recuperación presenta errores de límite y campo vacío asociados al input accesible', () => {
+    const page = TestBed.createComponent(ConnectedForgotPasswordPage); page.detectChanges();
+    expect(page.componentInstance['emailError']()).toBe('');
+    page.componentInstance['requestForm'].controls.email.setValue('a'.repeat(101) + '@correo.com');
+    page.componentInstance['request'](); page.detectChanges();
+    expect(page.componentInstance['emailError']()).toContain('100');
+    const input = page.nativeElement.querySelector('input[type=email]') as HTMLInputElement;
+    expect(input.getAttribute('aria-invalid')).toBe('true');
+    const error = page.nativeElement.querySelector('[role=alert]') as HTMLElement;
+    expect(input.getAttribute('aria-describedby')).toBe(error.id);
+    http.expectNone(`${base}/api/auth/password-reset/request`);
+  });
+
+  it('usar otro correo limpia el token y contraseñas; no cambia de solicitud mientras HTTP está pendiente', () => {
+    const page = TestBed.createComponent(ConnectedForgotPasswordPage); page.detectChanges();
+    page.componentInstance['requestForm'].setValue({ email: 'ana@gmail.com' }); page.componentInstance['request']();
+    page.componentInstance['useAnotherEmail']();
+    expect(page.componentInstance['requestForm'].controls.email.value).toBe('ana@gmail.com');
+    http.expectOne(`${base}/api/auth/password-reset/request`).flush({ success: true }); page.detectChanges();
+    expect(page.nativeElement.textContent).toContain('Usar otro correo');
+    page.componentInstance['confirmForm'].setValue({ token: 'synthetic-reset-token', password: 'Cl4ve-Segura', confirmPassword: 'Cl4ve-Segura' });
+    page.componentInstance['useAnotherEmail'](); page.detectChanges();
+    expect(page.componentInstance['step']()).toBe('request');
+    expect(page.componentInstance['requestForm'].controls.email.value).toBe('');
+    expect(Object.values(page.componentInstance['confirmForm'].getRawValue())).toEqual(['', '', '']);
+    expect(page.nativeElement.textContent).not.toContain('synthetic-reset-token');
   });
 
 });

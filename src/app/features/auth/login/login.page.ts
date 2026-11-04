@@ -1,3 +1,4 @@
+import { emailValidator } from '../../../core/validation/auth-fields.validation';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { addIcons } from 'ionicons';
@@ -32,7 +33,7 @@ export class LoginPage {
   private router = inject(Router);
 
   loginForm = this.fb.group({
-    email: ['', [Validators.required, Validators.email]],
+    email: ['', [emailValidator]],
     password: ['', [Validators.required, Validators.minLength(6)]],
   });
 

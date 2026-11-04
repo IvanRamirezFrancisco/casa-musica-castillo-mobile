@@ -12,9 +12,16 @@ export const FIELD_LIMITS = {
 } as const;
 
 const USERNAME = /^[A-Za-z0-9._-]+$/;
-const PERSON_NAME = /^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ' -]+$/;
-const EMAIL = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
-const MX_PHONE = /^[0-9]{10}$/;
+// Adaptación de las reglas revisadas de Tackalay en #77/#80; límites del contrato Spring.
+const PERSON_NAME = /^[A-Za-zÁÉÍÓÚÜÑáéíóúüñÀÈÌÒÙàèìòùÂÊÎÔÛâêîôûÇç]+(?:[ '-][A-Za-zÁÉÍÓÚÜÑáéíóúüñÀÈÌÒÙàèìòùÂÊÎÔÛâêîôûÇç]+)*$/;
+const EMAIL_LOCAL = /^[A-Za-z0-9_%+-]+(?:\.[A-Za-z0-9_%+-]+)*$/;
+const DOMAIN_LABEL = /^[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?$/;
+const TLD = /^[A-Za-z]{2,}$/;
+const MX_PHONE = /^(?:[0-9]{10}|[0-9]{3}[ -][0-9]{3}[ -][0-9]{4}|[0-9]{2}[ -][0-9]{4}[ -][0-9]{4})$/;
+
+export const normalizePersonName = (value: string): string => value.trim().replace(/\s+/g, ' ');
+/** Aplicar únicamente después de validar el formato; no convierte entradas malformadas en válidas. */
+export const normalizePhone = (value: string): string => value.trim().replace(/[ -]/g, '');
 const OTP = /^[0-9]{6}$/;
 const SPECIAL = /[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/;
 
@@ -30,11 +37,11 @@ export const usernameError = (value: string): string | null => {
 };
 
 export const personNameError = (value: string): string | null => {
-  const v = value.trim().replace(/\s+/g, ' ');
+  const v = normalizePersonName(value);
   if (!v) return 'required';
   if (v.length < FIELD_LIMITS.nameMin) return 'minlength';
   if (v.length > FIELD_LIMITS.nameMax) return 'maxlength';
-  if (!PERSON_NAME.test(v) || /^[\s'-]|[\s'-]$/.test(v)) return 'pattern';
+  if (!PERSON_NAME.test(v)) return 'pattern';
   return null;
 };
 
@@ -42,7 +49,13 @@ export const emailError = (value: string): string | null => {
   const v = value.trim();
   if (!v) return 'required';
   if (v.length > FIELD_LIMITS.emailMax) return 'maxlength';
-  return EMAIL.test(v) ? null : 'pattern';
+  const parts = v.split('@');
+  if (parts.length !== 2) return 'pattern';
+  const [local, domain] = parts;
+  if (local.length > 64 || !EMAIL_LOCAL.test(local)) return 'pattern';
+  const labels = domain.split('.');
+  return labels.length >= 2 && TLD.test(labels[labels.length - 1]) &&
+    labels.every((label) => label.length <= 63 && DOMAIN_LABEL.test(label)) ? null : 'pattern';
 };
 
 export const passwordError = (value: string): string | null => {
@@ -84,6 +97,7 @@ export const personNameValidator = asValidator(personNameError);
 export const emailValidator = asValidator(emailError);
 export const passwordValidator = asValidator(passwordError);
 export const optionalPhoneValidator = asValidator(optionalPhoneError);
+export const requiredPhoneValidator = asValidator((value) => !value.trim() ? 'required' : optionalPhoneError(value));
 export const resetTokenValidator = asValidator(resetTokenError);
 export const otpValidator = (method: () => TwoFactorMethod): ValidatorFn =>
   asValidator((value) => twoFactorCodeError(method(), value));
