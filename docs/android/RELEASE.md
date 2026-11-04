@@ -34,6 +34,8 @@ El manifiesto fusionado conserva INTERNET, VIBRATE del plugin Haptics existente 
 
 ## Firma pendiente
 
+Etapa 2B detalla el procedimiento privado de creación/importación, custodia y verificación APK/AAB en [UPLOAD_KEY_RUNBOOK.md](UPLOAD_KEY_RUNBOOK.md). Preparado, no ejecutado.
+
 Sin las cuatro variables privadas siguientes solo se generan artefactos técnicos sin firma de distribución: `CMC_UPLOAD_STORE_FILE`, `CMC_UPLOAD_STORE_PASSWORD`, `CMC_UPLOAD_KEY_ALIAS`, `CMC_UPLOAD_KEY_PASSWORD`. Una configuración parcial falla; nunca se usa debug key para Release.
 
 Una sesión futura autorizada debe acordar titular, alias, ubicación fuera de Git, custodia, respaldo y recuperación de la upload key. Entonces generar/importar manualmente y suministrar variables desde un gestor seguro o entrada privada. No escribir valores en comandos compartidos/logs/archivos versionados. Aquí no se genera clave ni se configuran secretos remotos.

@@ -1,5 +1,7 @@
 # Privacidad y Google Play: preparación técnica
 
+Actualización 2B (3 de noviembre): [matriz factual y checklist vigente](../privacy/FACTUAL_MATRIX.md) y [procedimiento privado de firma](UPLOAD_KEY_RUNBOOK.md). El titular confirmó responsable legal/representación/contacto y URL públicas pendientes; esta preparación 2A no sustituye esas confirmaciones. La nueva preferencia local solo guarda versión/booleano de presentación, no JWT ni consentimiento comercial.
+
 Documento de trabajo, no política legal publicada. No se interactuó con Play Console ni se creó aplicación remota. Identidad/documentos, teléfono y dispositivo permanecen pendientes de confirmación por Google según lo informado por el titular.
 
 ## Inventario y límites

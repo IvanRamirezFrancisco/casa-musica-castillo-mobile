@@ -6,6 +6,7 @@ on:
       - develop
       - main
       - feature/actividad-4-integracion-movil
+      - feature/android-release-google-play
 
   push:
     branches:

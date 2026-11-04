@@ -31,3 +31,7 @@ Seleccionar explícitamente el proveedor SMTP existente hacia captura local/aisl
 | Eliminación/ARCO | Flujo autenticado y vía web, alcance, retención y excepciones por acordar; sin aceptación móvil verificada |
 
 Formularios y mocks no acreditan operación del servicio desplegado. Etapa 3 requiere backend aislado y contratos comprobados.
+
+## Contratos revisados en Etapa 2B
+
+Publicado main `46bc32d8b0417370ab35e99866cabbeaaf830bba`; checkout original `44df7468` con cambios pendientes y PR backend #2/#3 abiertos. Se encontró GET propio de perfil, sin PATCH propio/consentimientos/solicitudes ARCO/eliminación publicados. El móvil solo reutiliza GET con comprobación de identidad, sin endpoints inventados. La propuesta independiente del repositorio backend está en `docs/privacy/ARCO_CONTRACT_PROPOSAL.md`, rama `feature/privacy-contract-proposal`; ninguna de sus rutas se presenta como implementada. Responsable, representación, contacto y URL públicas siguen pendientes según el titular.
