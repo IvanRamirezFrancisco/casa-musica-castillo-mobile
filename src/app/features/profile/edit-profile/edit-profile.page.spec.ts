@@ -67,6 +67,36 @@ describe('EditProfilePage', () => {
     },
   );
 
+  it.each(['Ana M. López', 'Ana M.  López', 'Ana'])('acepta también el nombre "%s"', (nombre) => {
+    intentarGuardar({ name: nombre });
+    expect(component.form.controls.name.valid).toBe(true);
+  });
+
+  it.each([
+    'Ana...--María',
+    'Ana--María',
+    'Ana..María',
+    'Ana-.María',
+    "Ana-'María",
+    "Ana''María",
+    'Ana .María',
+    'Ana. -María',
+    'Ana.. ',
+    '-Ana María',
+    "'Ana María",
+    '.Ana María',
+    'Ana María-',
+    "Ana María'",
+    'Ana María..',
+    'Ana\tMaría',
+  ])('rechaza el nombre "%s" por separadores combinados, repetidos o mal colocados', (nombre) => {
+    intentarGuardar({ name: nombre });
+    expect(component.form.controls.name.hasError('pattern')).toBe(true);
+    expect(component.fieldError('name')).toBe(
+      'Usa letras, espacios, apóstrofo, punto o guion (entre 3 y 80 caracteres).',
+    );
+  });
+
   it('cuenta los espacios internos en la longitud del nombre', () => {
     component.form.controls.name.setValue('A B');
     expect(component.form.controls.name.hasError('nameLength')).toBe(false);

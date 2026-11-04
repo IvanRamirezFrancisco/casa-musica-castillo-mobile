@@ -15,14 +15,17 @@ import { mxPhoneValidator, normalizePhone } from '../../../shared/validators/pho
 type EditableField = 'name' | 'email' | 'phone';
 
 /**
- * Caracteres permitidos en el nombre:
+ * Formato permitido en el nombre:
  * - Letras A-Z y a-z, incluidas vocales acentuadas, ü y ñ.
- * - Entre palabras, uno o más separadores: espacio, apóstrofo ('), punto (.) o guion (-).
+ * - Entre dos palabras va exactamente UN separador, de este conjunto: espacios
+ *   (se normalizan a uno solo al guardar), apóstrofo ('), guion (-) o un punto
+ *   seguido de espacios (p. ej. "Ana M. López").
  * - Un punto final opcional (p. ej. "Juan Pérez Jr.") y espacios al inicio o al final,
  *   que se eliminan al guardar.
- * Se rechazan dígitos y cualquier otro símbolo.
+ * Se rechazan los separadores combinados o repetidos ("Ana...--María", "Ana-'María"),
+ * los dígitos y cualquier otro símbolo.
  */
-const NAME_PATTERN = /^\s*[A-Za-zÁÉÍÓÚÜÑáéíóúüñ]+(?:[ '.-]+[A-Za-zÁÉÍÓÚÜÑáéíóúüñ]+)*\.?\s*$/;
+const NAME_PATTERN = /^\s*[A-Za-zÁÉÍÓÚÜÑáéíóúüñ]+(?:(?: +|-|'|\. +)[A-Za-zÁÉÍÓÚÜÑáéíóúüñ]+)*\.?\s*$/;
 const NAME_MIN = 3;
 const NAME_MAX = 80;
 
