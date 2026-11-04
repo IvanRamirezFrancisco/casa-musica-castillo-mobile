@@ -13,6 +13,8 @@ jobs:
       MAESTRO_CLI_ANALYSIS_NOTIFICATION_DISABLED: true
     steps:
       - uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
       - name: Probar control de integridad de evidencia Maestro
         run: python -B -m unittest discover -s test -p test_maestro_evidence.py
       - uses: actions/download-artifact@v7
