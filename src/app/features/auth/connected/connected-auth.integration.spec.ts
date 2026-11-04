@@ -287,7 +287,7 @@ describe('autenticación conectada (integración)', () => {
     login['form'].setValue({ email, password: 'Cl4ve-Segura' }); login['submit']();
     const verify = TestBed.createComponent(VerifyEmailPage).componentInstance;
     verify['resendForm'].setValue({ email }); verify['resend']();
-    http.expectNone((req) => req.url.startsWith(base));
+    http.expectNone(() => true, 'Los formularios inválidos no emiten solicitudes HTTP');
   });
 
   it('registro normaliza nombres y teléfono validado antes de enviar; mantiene DTO y bloqueo doble', () => {
