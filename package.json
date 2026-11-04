@@ -29,6 +29,7 @@
     "@angular/forms": "22.2.1",
     "@angular/platform-browser": "22.2.1",
     "@angular/router": "22.2.1",
+    "@aparajita/capacitor-secure-storage": "8.0.1",
     "@capacitor/android": "8.5.2",
     "@capacitor/app": "8.1.1",
     "@capacitor/core": "8.5.2",
@@ -57,5 +58,11 @@
     "typescript-eslint": "^8.61.0",
     "vitest": "4.1.12"
   },
-  "description": "An Ionic project"
+  "description": "An Ionic project",
+  "overrides": {
+    "@aparajita/capacitor-secure-storage": {
+      "@capacitor/core": "$@capacitor/core",
+      "@capacitor/ios": "8.5.2"
+    }
+  }
 }

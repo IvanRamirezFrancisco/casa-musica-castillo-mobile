@@ -2,8 +2,7 @@ import type { AuthSession, SessionStore } from '../models/auth.model';
 
 /**
  * Almacén VOLÁTIL: la sesión vive solo en la memoria del proceso y se pierde al cerrar la app.
- * Es deliberadamente NO persistente. La persistencia segura (Android Keystore) de TT-05 requiere un
- * plugin nativo aprobado; hasta entonces, nunca se usa localStorage/sessionStorage/Preferences.
+ * Se utiliza en navegador y DEMO. Nunca usa localStorage/sessionStorage/Preferences.
  */
 export class MemorySessionStore implements SessionStore {
   readonly persistent = false;

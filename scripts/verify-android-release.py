@@ -58,7 +58,7 @@ for kind,package in packages.items():
         assert 'http://10.0.2.2:8080' not in js and 'http://localhost:8080' not in js and 'https://demo.invalid' not in js
         if kind=='.aab' and report['signing']=='unsigned':assert not any(re.match(r'META-INF/.*\.(?:RSA|DSA|EC|SF)$',n) for n in names)
         config=json.loads(archive.read('assets/capacitor.config.json' if kind=='.apk' else 'base/assets/capacitor.config.json'))
-        assert config['loggingBehavior']=='debug' and config['android']['allowMixedContent'] is False
+        assert config['loggingBehavior']=='none' and config['android']['allowMixedContent'] is False
         assert not config.get('android',{}).get('webContentsDebuggingEnabled',False)
         assert not config.get('server',{}).get('url') and not config.get('server',{}).get('cleartext',False)
         native=[n for n in names if re.search(r'(?:^|/)lib/.*\.so$',n)]
@@ -73,6 +73,10 @@ text=mapping.read_text(encoding='utf-8')
 bridge=text.split('com.getcapacitor.MessageHandler -> ',1)[1]
 bridge=re.split(r'\n[^ #\s][^\n]* -> [^\n]*:\n',bridge,maxsplit=1)[0]
 assert re.search(r'postMessage\(.* -> postMessage',bridge),'WebView bridge entry point must retain its JS method name.'
+plugin=text.split('com.aparajita.capacitor.securestorage.SecureStorage -> ',1)[1]
+plugin=re.split(r'\n[^ #\s][^\n]* -> [^\n]*:\n',plugin,maxsplit=1)[0]
+for method in ['internalSetItem','internalGetItem','internalRemoveItem']:
+    assert re.search(method+r'\(.* -> '+method,plugin),'Secure storage bridge method lost to R8: '+method
 legacy=ET.parse(root/'android/app/src/main/res/xml/backup_rules.xml').getroot()
 modern=ET.parse(root/'android/app/src/main/res/xml/data_extraction_rules.xml').getroot()
 domains={'root','file','database','sharedpref','external','device_root','device_file','device_database','device_sharedpref'}
@@ -82,6 +86,6 @@ for name,count in [('backup_rules',9),('data_extraction_rules',18)]:
     compiled=resource_xml(name)
     assert compiled.count('E: exclude ')==count
     assert all('="'+domain+'"' in compiled for domain in domains)
-result={'status':'PASS','environment':args.environment,'signing':report['signing'],'packages':inventory,'permissions':permissions,'debuggable':False,'allowBackup':False,'releaseCleartext':False,'r8MappingSha256':hashlib.sha256(mapping.read_bytes()).hexdigest(),'r8BridgeMethodPreserved':True,'sourceMaps':False,'installedOrRuntimeValidated':False,'limitations':'Unsigned technical APK/AAB are not installable or ready for Play. Static packaging/R8 proof is not runtime, certificate pinning or JavaScript confidentiality.'}
+result={'status':'PASS','environment':args.environment,'signing':report['signing'],'packages':inventory,'permissions':permissions,'debuggable':False,'allowBackup':False,'releaseCleartext':False,'r8MappingSha256':hashlib.sha256(mapping.read_bytes()).hexdigest(),'r8BridgeMethodPreserved':True,'r8SecureStorageMethodsPreserved':True,'sourceMaps':False,'installedOrRuntimeValidated':False,'limitations':'Unsigned technical APK/AAB are not installable or ready for Play. Static packaging/R8 proof is not runtime, certificate pinning or JavaScript confidentiality.'}
 (folder/'verification.json').write_text(json.dumps(result,indent=2)+'\n',encoding='utf-8')
 print(json.dumps(result,indent=2))

@@ -169,4 +169,19 @@ describe('sesión, interceptor y guard (integración)', () => {
     req.flush({ message: 'Sesión cerrada exitosamente' });
     expect(auth.user()).toBeNull();
   });
+  it.each([200, 401])('una respuesta privada tardía (%i) se descarta sin cerrar la sesión posterior', async (status) => {
+    const { auth, api, http, store } = configure();
+    await store.save(testSession()); await auth.restore();
+    const error = vi.fn(); const next = vi.fn();
+    api.get('/api/users/profile', undefined, { auth: true }).subscribe({ error, next });
+    const previous = http.expectOne(`${base}/api/users/profile`);
+    auth.login({ email: 'b@example.test', password: 'test' }).subscribe();
+    const token = fakeJwt(Math.floor(Date.now() / 1000) + 3600, { sub: '99' });
+    http.expectOne(`${base}/api/auth/login`).flush({ success: true, data: { jwtResponse: { accessToken: token,
+      user: { ...testSession().user, id: 99 } } } });
+    previous.flush({ id: 7, email: 'previous@example.test' }, { status, statusText: status === 200 ? 'OK' : 'Unauthorized' });
+    expect(next).not.toHaveBeenCalled(); expect(error).toHaveBeenCalled();
+    expect(auth.user()?.id).toBe(99); expect(auth.validToken()).toBe(token); http.verify();
+  });
+
 });

@@ -2,7 +2,7 @@ name: Android - Verificación Release
 
 on:
   pull_request:
-    branches: [develop, main, feature/actividad-4-integracion-movil, feature/android-release-google-play]
+    branches: [develop, main, feature/actividad-4-integracion-movil, feature/android-release-google-play, feature/privacidad-play-compliance]
   push:
     branches: [develop, main]
   workflow_dispatch:
@@ -22,6 +22,7 @@ jobs:
     steps:
       - uses: actions/checkout@v7
         with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
           fetch-depth: 0
       - id: scope
         run: node scripts/detect-change-scope.mjs

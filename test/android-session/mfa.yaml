@@ -1,0 +1,27 @@
+appId: com.casademusicacastillo.app
+name: TT05 - Logout conservado y MFA antes de persistir
+---
+- launchApp
+- extendedWaitUntil:
+    visible: "Catálogo"
+    timeout: 30000
+- tapOn: "Perfil"
+- assertVisible: "Bienvenido de nuevo"
+- tapOn:
+    id: "cmc-input-0"
+- inputText: "mfa@example.test"
+- tapOn:
+    id: "cmc-input-1"
+- inputText: "Only-Local-123"
+- hideKeyboard
+- tapOn: "Iniciar sesión"
+- assertVisible: "Verificación en dos pasos"
+- tapOn: "Enviar código por correo"
+- tapOn:
+    id: "cmc-input-2"
+- inputText: "123456"
+- hideKeyboard
+- tapOn: "Verificar y entrar"
+- assertVisible: "MFA Sesion"
+- assertVisible: "2FA activo"
+- takeScreenshot: reports/android-session/mfa-native

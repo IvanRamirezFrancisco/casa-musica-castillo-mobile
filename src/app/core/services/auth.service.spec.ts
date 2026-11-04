@@ -1,8 +1,9 @@
 import { TestBed } from '@angular/core/testing';
 import { Router, provideRouter } from '@angular/router';
-import { of, throwError } from 'rxjs';
+import { Subject, firstValueFrom, of, throwError } from 'rxjs';
 import { ApiError } from '../api/api-error';
 import { CHALLENGE, testSession } from '../api/auth.testing';
+import { SessionStorageError } from '../infrastructure/native-session.store';
 import { MemorySessionStore } from '../infrastructure/memory-session.store';
 import type { SessionStore } from '../models/auth.model';
 import { AUTH_REPOSITORY, AuthRepository } from '../repositories/auth.repository';
@@ -13,7 +14,7 @@ function setup(store: SessionStore = new MemorySessionStore()) {
   const repo = {
     login: vi.fn(), sendTwoFactorEmailCode: vi.fn(), verifyTwoFactor: vi.fn(), register: vi.fn(),
     resendVerification: vi.fn(), verifyEmail: vi.fn(), requestPasswordReset: vi.fn(),
-    confirmPasswordReset: vi.fn(), logout: vi.fn(),
+    confirmPasswordReset: vi.fn(), logout: vi.fn(), restoreUser: vi.fn().mockReturnValue(of(testSession().user)),
   } satisfies Record<keyof AuthRepository, ReturnType<typeof vi.fn>>;
   TestBed.configureTestingModule({ providers: [
     provideRouter([]), { provide: AUTH_REPOSITORY, useValue: repo }, { provide: SESSION_STORE, useValue: store },
@@ -91,11 +92,11 @@ describe('AuthService', () => {
     expect(service.hasValidSession(Date.now() - 60_000)).toBe(true);
   });
 
-  it('un token sin exp se considera vigente hasta que el servidor responda 401', () => {
+  it('un token sin exp no concede una sesión indefinida', () => {
     const { repo, service } = setup();
     repo.login.mockReturnValue(of({ kind: 'authenticated', session: testSession({ expiresAt: null }) }));
     service.login({ email: 'a@gmail.com', password: 'x' }).subscribe();
-    expect(service.hasValidSession(Date.now() + 10 * 365 * 24 * 3_600_000)).toBe(true);
+    expect(service.hasValidSession(Date.now() + 10 * 365 * 24 * 3_600_000)).toBe(false);
   });
 
   it('logout revoca en servidor y limpia siempre', async () => {
@@ -196,10 +197,179 @@ describe('AuthService', () => {
     await service.restore();
     expect(service.user()).toBeNull();
     repo.login.mockReturnValue(of({ kind: 'authenticated', session: testSession() }));
-    service.login({ email: 'a@gmail.com', password: 'x' }).subscribe();
-    await Promise.resolve();
-    expect(service.hasValidSession()).toBe(true);
+    const error = vi.fn();
+    service.login({ email: 'a@gmail.com', password: 'x' }).subscribe({ error });
+    await vi.waitFor(() => expect(error).toHaveBeenCalled());
+    expect(service.hasValidSession()).toBe(false);
+    expect(service.storageFailure()).toBe(true);
     service.handleUnauthorized(false);
     expect(service.user()).toBeNull();
   });
+  it('restauración persistente consulta /me y utiliza roles actuales del servidor', async () => {
+    const stored: SessionStore = { persistent: true, save: vi.fn().mockResolvedValue(undefined),
+      load: vi.fn().mockResolvedValue(testSession()), clear: vi.fn().mockResolvedValue(undefined) };
+    const { repo, service } = setup(stored);
+    const serverUser = { ...testSession().user, roles: ['ROLE_CUSTOMER'] };
+    repo.restoreUser.mockReturnValue(of(serverUser));
+    await service.restore();
+    expect(repo.restoreUser).toHaveBeenCalledWith(testSession().token);
+    expect(service.user()).toEqual(serverUser);
+  });
+
+  it.each([401, 403, 0])('no concede una sesión restaurada si Spring rechaza /me o no hay red (%i)', async (status) => {
+    const stored: SessionStore = { persistent: true, save: vi.fn(),
+      load: vi.fn().mockResolvedValue(testSession()), clear: vi.fn().mockResolvedValue(undefined) };
+    const { repo, service } = setup(stored);
+    repo.restoreUser.mockReturnValue(throwError(() => new ApiError('http', status)));
+    await service.restore();
+    expect(service.user()).toBeNull();
+    expect(service.validToken()).toBeNull();
+    expect(stored.clear).toHaveBeenCalled();
+  });
+
+  it('rechaza una identidad distinta al revalidar /me', async () => {
+    const stored: SessionStore = { persistent: true, save: vi.fn(),
+      load: vi.fn().mockResolvedValue(testSession()), clear: vi.fn().mockResolvedValue(undefined) };
+    const { repo, service } = setup(stored);
+    repo.restoreUser.mockReturnValue(of({ ...testSession().user, id: 99 }));
+    await service.restore();
+    expect(service.user()).toBeNull();
+    expect(service.storageFailure()).toBe(true);
+    expect(stored.clear).toHaveBeenCalled();
+  });
+
+  it('espera al cifrado antes de comunicar login exitoso', async () => {
+    let release!: () => void;
+    const stored: SessionStore = { persistent: true, save: vi.fn().mockImplementation(() => new Promise<void>(resolve => { release = resolve; })),
+      load: vi.fn().mockResolvedValue(null), clear: vi.fn().mockResolvedValue(undefined) };
+    const { repo, service } = setup(stored);
+    repo.login.mockReturnValue(of({ kind: 'authenticated', session: testSession() }));
+    const next = vi.fn(); service.login({ email: 'a@gmail.com', password: 'x' }).subscribe(next);
+    expect(next).not.toHaveBeenCalled(); expect(service.user()).toBeNull();
+    release(); await vi.waitFor(() => expect(next).toHaveBeenCalled());
+    expect(service.hasValidSession()).toBe(true);
+  });
+
+  it('MFA no escribe credenciales hasta verificar el segundo factor y completar el cifrado', async () => {
+    const stored: SessionStore = { persistent: true, save: vi.fn().mockResolvedValue(undefined),
+      load: vi.fn().mockResolvedValue(null), clear: vi.fn().mockResolvedValue(undefined) };
+    const { repo, service } = setup(stored);
+    repo.login.mockReturnValue(of({ kind: 'two-factor', challenge: { preAuthChallenge: CHALLENGE, methods: ['EMAIL'] } }));
+    await firstValueFrom(service.login({ email: 'a@gmail.com', password: 'x' }));
+    expect(stored.save).not.toHaveBeenCalled();
+    repo.verifyTwoFactor.mockReturnValue(of(testSession()));
+    await firstValueFrom(service.completeTwoFactor({ preAuthChallenge: CHALLENGE, method: 'EMAIL', code: '123456' }));
+    expect(stored.save).toHaveBeenCalledTimes(1);
+    expect(service.hasValidSession()).toBe(true);
+  });
+
+  it('logout impide que una restauración lenta recupere la sesión cerrada', async () => {
+    let release!: (value: ReturnType<typeof testSession>) => void;
+    const stored: SessionStore = { persistent: true, save: vi.fn(),
+      load: vi.fn().mockImplementation(() => new Promise(resolve => { release = resolve; })), clear: vi.fn().mockResolvedValue(undefined) };
+    const { service } = setup(stored);
+    const restoration = service.restore();
+    service.logout().subscribe(); release(testSession()); await restoration;
+    expect(service.user()).toBeNull();
+  });
+
+  it('una respuesta lenta de /me no sustituye una sesión posterior', async () => {
+    const stored: SessionStore = { persistent: true, save: vi.fn().mockResolvedValue(undefined),
+      load: vi.fn().mockResolvedValue(testSession()), clear: vi.fn().mockResolvedValue(undefined) };
+    const { repo, service } = setup(stored);
+    const pending = new Subject<ReturnType<typeof testSession>['user']>(); repo.restoreUser.mockReturnValue(pending);
+    const restoration = service.restore(); await Promise.resolve();
+    repo.login.mockReturnValue(of({ kind: 'authenticated', session: testSession({ user: { ...testSession().user, id: 99 } }) }));
+    await firstValueFrom(service.login({ email: 'b@gmail.com', password: 'x' }));
+    pending.next(testSession().user); pending.complete(); await restoration;
+    expect(service.user()?.id).toBe(99);
+  });
+
+  it('un login tardío no vuelve a autenticar después de logout', () => {
+    const { repo, service } = setup();
+    const pending = new Subject(); repo.login.mockReturnValue(pending);
+    const error = vi.fn(); service.login({ email: 'a@gmail.com', password: 'x' }).subscribe({ error });
+    service.logout().subscribe(); pending.next({ kind: 'authenticated', session: testSession() });
+    expect(service.user()).toBeNull(); expect(error).toHaveBeenCalled();
+  });
+
+  it('un guardado pendiente no vuelve a autenticar después de logout', async () => {
+    let release!: () => void;
+    const stored: SessionStore = { persistent: true, save: vi.fn().mockImplementation(() => new Promise<void>(resolve => { release = resolve; })),
+      load: vi.fn(), clear: vi.fn().mockResolvedValue(undefined) };
+    const { repo, service } = setup(stored);
+    repo.login.mockReturnValue(of({ kind: 'authenticated', session: testSession() }));
+    const error = vi.fn(); service.login({ email: 'a@gmail.com', password: 'x' }).subscribe({ error });
+    service.logout().subscribe(); release(); await vi.waitFor(() => expect(error).toHaveBeenCalled());
+    expect(service.user()).toBeNull();
+  });
+
+  it('logout elimina el estado local sin esperar una revocación de red pendiente', () => {
+    const { repo, service } = setup();
+    repo.login.mockReturnValue(of({ kind: 'authenticated', session: testSession() }));
+    service.login({ email: 'a@gmail.com', password: 'x' }).subscribe();
+    const pending = new Subject<void>(); repo.logout.mockReturnValue(pending);
+    const next = vi.fn(); service.logout().subscribe(next);
+    expect(service.user()).toBeNull(); expect(next).not.toHaveBeenCalled();
+    pending.next(); pending.complete();
+    expect(next).toHaveBeenCalledWith({ remoteRevoked: true });
+  });
+
+  it('la expiración programada limpia el usuario, sus datos y el almacén', async () => {
+    vi.useFakeTimers();
+    const { repo, service, router, store } = setup();
+    vi.spyOn(router, 'navigate').mockResolvedValue(true);
+    repo.login.mockReturnValue(of({ kind: 'authenticated', session: testSession({ expiresAt: Date.now() + 20_000 }) }));
+    service.login({ email: 'a@gmail.com', password: 'x' }).subscribe();
+    const ended = vi.fn(); service.sessionEnded$.subscribe(ended);
+    await vi.advanceTimersByTimeAsync(15_000);
+    expect(service.user()).toBeNull(); expect(service.sessionExpired()).toBe(true);
+    expect(ended).toHaveBeenCalledOnce(); await expect(store.load()).resolves.toBeNull();
+  });
+
+  it('logout persistente espera a confirmar el borrado nativo, sin conservar identidad mientras tanto', async () => {
+    let release!: () => void;
+    const stored: SessionStore = { persistent: true, save: vi.fn().mockResolvedValue(undefined), load: vi.fn(),
+      clear: vi.fn().mockImplementation(() => new Promise<void>(resolve => { release = resolve; })) };
+    const { repo, service } = setup(stored);
+    repo.login.mockReturnValue(of({ kind: 'authenticated', session: testSession() }));
+    repo.logout.mockReturnValue(of(undefined));
+    await firstValueFrom(service.login({ email: 'a@gmail.com', password: 'x' }));
+    const next = vi.fn(); service.logout().subscribe(next);
+    expect(service.user()).toBeNull(); expect(next).not.toHaveBeenCalled();
+    release(); await vi.waitFor(() => expect(next).toHaveBeenCalledWith({ remoteRevoked: true }));
+  });
+
+  it('un borrado nativo fallido se informa; nunca se afirma que las credenciales se borraron', async () => {
+    const stored: SessionStore = { persistent: true, save: vi.fn().mockResolvedValue(undefined), load: vi.fn(),
+      clear: vi.fn().mockRejectedValue(new Error('private-os-details')) };
+    const { repo, service } = setup(stored);
+    repo.login.mockReturnValue(of({ kind: 'authenticated', session: testSession() }));
+    repo.logout.mockReturnValue(throwError(() => new ApiError('connection', 0)));
+    await firstValueFrom(service.login({ email: 'a@gmail.com', password: 'x' }));
+    await expect(firstValueFrom(service.logout())).resolves.toEqual({ remoteRevoked: false });
+    expect(service.user()).toBeNull(); expect(service.storageFailure()).toBe(true);
+  });
+
+  it('un fallo al volver a cifrar la misma identidad descarta también sus datos privados en memoria', async () => {
+    const stored: SessionStore = { persistent: true, load: vi.fn(), clear: vi.fn().mockResolvedValue(undefined),
+      save: vi.fn().mockResolvedValueOnce(undefined).mockRejectedValueOnce(new Error('keystore')) };
+    const { service, repo } = setup(stored);
+    repo.login.mockReturnValue(of({ kind: 'authenticated', session: testSession() }));
+    await firstValueFrom(service.login({ email: 'a@gmail.com', password: 'x' }));
+    const ended = vi.fn(); service.sessionEnded$.subscribe(ended);
+    await expect(firstValueFrom(service.login({ email: 'a@gmail.com', password: 'x' }))).rejects.toThrow();
+    expect(service.user()).toBeNull(); expect(ended).toHaveBeenCalledOnce();
+    expect(service.storageFailure()).toBe(true);
+  });
+
+  it('una credencial nativa vencida solicita login sin afirmar un fallo del Keystore', async () => {
+    const stored: SessionStore = { persistent: true, save: vi.fn(), clear: vi.fn().mockResolvedValue(undefined),
+      load: vi.fn().mockRejectedValue(new SessionStorageError('expired')) };
+    const { service } = setup(stored);
+    await service.restore();
+    expect(service.user()).toBeNull(); expect(service.sessionExpired()).toBe(true);
+    expect(service.storageFailure()).toBe(false); expect(stored.clear).toHaveBeenCalled();
+  });
+
 });

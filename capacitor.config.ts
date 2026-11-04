@@ -4,7 +4,7 @@ const config: CapacitorConfig = {
   appId: 'com.casademusicacastillo.app',
   appName: 'Casa de Música Castillo',
   webDir: 'www',
-  loggingBehavior: 'debug',
+  loggingBehavior: 'none',
   android: { allowMixedContent: false },
   plugins: { SystemBars: { insetsHandling: 'css', initialViewportFitValueHint: 'cover', style: 'LIGHT' } }
 };

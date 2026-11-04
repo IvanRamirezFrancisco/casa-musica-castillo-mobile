@@ -1,6 +1,6 @@
-import { Injectable, computed, inject, signal } from '@angular/core';
+import { DestroyRef, Injectable, computed, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
-import { Observable, Subject, catchError, finalize, map, of, tap } from 'rxjs';
+import { Observable, Subject, catchError, defer, firstValueFrom, from, map, of, switchMap } from 'rxjs';
 import type {
   AuthSession,
   AuthUser,
@@ -11,6 +11,7 @@ import type {
 } from '../models/auth.model';
 import { AUTH_REPOSITORY } from '../repositories/auth.repository';
 import { SESSION_STORE } from '../security/session-store.token';
+import { SessionStorageError } from '../infrastructure/native-session.store';
 
 /** Margen para no enviar un token a punto de vencer. */
 const EXPIRY_SKEW_MS = 5_000;
@@ -35,6 +36,18 @@ export class AuthService {
   private readonly ended = new Subject<void>();
   private restoration: Promise<void> | null = null;
   private redirecting = false;
+  private revision = 0;
+  private attempt = 0;
+  private expiryTimer: ReturnType<typeof setTimeout> | undefined;
+  private readonly storageFailed = signal(false);
+
+  constructor() {
+    inject(DestroyRef).onDestroy(() => { clearTimeout(this.expiryTimer); });
+  }
+
+  /** Opaque identity for rejecting late responses from a previous session. */
+  get sessionVersion(): number { return this.revision; }
+  readonly storageFailure = this.storageFailed.asReadonly();
 
   readonly user = computed(() => this.current()?.user ?? null);
   /** Hubo una sesión que terminó por expiración o 401; la pantalla de inicio debe informarlo. */
@@ -45,7 +58,7 @@ export class AuthService {
 
   hasValidSession(now = Date.now()): boolean {
     const session = this.current();
-    return session !== null && (session.expiresAt === null || session.expiresAt - EXPIRY_SKEW_MS > now);
+    return session !== null && (session.expiresAt !== null && session.expiresAt - EXPIRY_SKEW_MS > now);
   }
 
   /** JWT vigente o `null`. Solo para el interceptor HTTP. */
@@ -55,14 +68,28 @@ export class AuthService {
 
   /** Restaura la sesión del almacén (una sola vez). Sin persistencia nativa solo existe memoria. */
   restore(): Promise<void> {
+    const revision = this.revision;
     this.restoration ??= (async () => {
       try {
         const stored = await this.store.load();
-        if (stored && this.current() === null) {
-          this.current.set(stored);
-          if (!this.hasValidSession()) this.endSession(true);
+        if (!stored || revision !== this.revision || this.current() !== null) return;
+        if (stored.expiresAt === null || stored.expiresAt - EXPIRY_SKEW_MS <= Date.now()) {
+          this.endSession(true);
+          return;
         }
-      } catch {
+        // Native persistence does not prove that the server still accepts the token or its roles.
+        const user = this.store.persistent ? await firstValueFrom(this.repository.restoreUser(stored.token)) : stored.user;
+        if (revision !== this.revision) return;
+        if (user.id !== stored.user.id) throw new SessionStorageError();
+        this.current.set({ ...stored, user });
+        this.armExpiry();
+      } catch (error) {
+        if (revision !== this.revision) return;
+        if (error instanceof SessionStorageError) {
+          if (error.reason === 'expired') this.expired.set(true);
+          else this.storageFailed.set(true);
+        }
+        if (typeof error === 'object' && error !== null && 'status' in error && error.status === 401) this.expired.set(true);
         await this.safeClear();
       }
     })();
@@ -70,13 +97,17 @@ export class AuthService {
   }
 
   login(credentials: LoginCredentials): Observable<LoginResult> {
-    return this.repository.login(credentials).pipe(
-      map((outcome): LoginResult => {
-        if (outcome.kind === 'two-factor') return outcome;
-        this.establish(outcome.session);
-        return { kind: 'authenticated', user: outcome.session.user };
-      }),
-    );
+    return defer(() => {
+      const attempt = ++this.attempt;
+      return this.repository.login(credentials).pipe(switchMap((outcome): Observable<LoginResult> => {
+        if (attempt !== this.attempt) throw new SessionStorageError();
+        if (outcome.kind === 'two-factor') {
+          if (this.current()) this.endSession(false);
+          return of(outcome);
+        }
+        return this.establish(outcome.session).pipe(map(() => ({ kind: 'authenticated', user: outcome.session.user })));
+      }));
+    });
   }
 
   sendTwoFactorEmailCode(challenge: TwoFactorChallenge): Observable<void> {
@@ -84,10 +115,13 @@ export class AuthService {
   }
 
   completeTwoFactor(verification: TwoFactorVerification): Observable<AuthUser> {
-    return this.repository.verifyTwoFactor(verification).pipe(
-      tap((session) => this.establish(session)),
-      map((session) => session.user),
-    );
+    return defer(() => {
+      const attempt = ++this.attempt;
+      return this.repository.verifyTwoFactor(verification).pipe(switchMap((session) => {
+        if (attempt !== this.attempt) throw new SessionStorageError();
+        return this.establish(session).pipe(map(() => session.user));
+      }));
+    });
   }
 
   register(input: RegisterInput): Observable<void> { return this.repository.register(input); }
@@ -103,14 +137,16 @@ export class AuthService {
    * (sin red, 401...), para informarlo sin fingir que el token quedó invalidado.
    */
   logout(): Observable<{ readonly remoteRevoked: boolean }> {
-    const hadToken = this.validToken() !== null;
-    const remote$: Observable<boolean> = hadToken
-      ? this.repository.logout().pipe(map(() => true), catchError(() => of(false)))
-      : of(false);
-    return remote$.pipe(
-      finalize(() => this.endSession(false)),
-      map((remoteRevoked) => ({ remoteRevoked })),
-    );
+    return defer(() => {
+      const token = this.validToken();
+      const clearing = this.endSession(false);
+      const remote$ = token !== null
+        ? this.repository.logout(token).pipe(map(() => true), catchError(() => of(false)))
+        : of(false);
+      return remote$.pipe(switchMap((remoteRevoked) => this.store.persistent
+        ? from(clearing).pipe(map(() => ({ remoteRevoked })))
+        : of({ remoteRevoked })));
+    });
   }
 
   /** HTTP 401 o token vencido: limpia credenciales y vuelve a Iniciar sesión. 403 no pasa por aquí. */
@@ -118,7 +154,7 @@ export class AuthService {
     this.endSession(true);
     if (navigate && !this.redirecting && !this.router.url.startsWith('/login')) {
       this.redirecting = true;
-      void this.router.navigate(['/login'], { replaceUrl: true }).finally(() => { this.redirecting = false; });
+      void this.router.navigate(['/login'], { replaceUrl: true }).catch(() => false).finally(() => { this.redirecting = false; });
     }
   }
 
@@ -126,23 +162,65 @@ export class AuthService {
     this.expired.set(false);
   }
 
-  private establish(session: AuthSession): void {
+  private establish(session: AuthSession): Observable<void> {
     const previous = this.current();
+    const revision = ++this.revision;
+    clearTimeout(this.expiryTimer);
     if (previous && previous.user.id !== session.user.id) this.ended.next();
-    this.current.set(session);
-    this.expired.set(false);
-    void this.store.save(session).catch(() => undefined);
+    const accept = (): void => {
+      if (revision !== this.revision) throw new SessionStorageError();
+      this.current.set(session);
+      this.expired.set(false);
+      this.storageFailed.set(false);
+      this.armExpiry();
+    };
+    if (!this.store.persistent) {
+      accept();
+      void this.store.save(session).catch(() => undefined);
+      return of(undefined);
+    }
+    this.current.set(null);
+    // Reauthentication suspends the previous native session even when the identity is unchanged.
+    if (previous && previous.user.id === session.user.id) this.ended.next();
+    return from((async () => {
+      try { await this.store.save(session); accept(); }
+      catch (error) {
+        if (revision === this.revision) {
+          const expired = error instanceof SessionStorageError && error.reason === 'expired';
+          this.storageFailed.set(!expired);
+          this.endSession(expired);
+        }
+        throw error instanceof SessionStorageError ? error : new SessionStorageError();
+      }
+    })());
   }
 
-  private endSession(expiredNotice: boolean): void {
+  private armExpiry(): void {
+    clearTimeout(this.expiryTimer);
+    const expiresAt = this.current()?.expiresAt;
+    if (expiresAt === null || expiresAt === undefined) return;
+    const revision = this.revision;
+    this.expiryTimer = setTimeout(() => {
+      if (revision !== this.revision) return;
+      if (!this.hasValidSession()) this.handleUnauthorized();
+      else this.armExpiry();
+    }, Math.max(0, Math.min(expiresAt - Date.now() - EXPIRY_SKEW_MS, 2_147_483_647)));
+  }
+
+  private endSession(expiredNotice: boolean): Promise<void> {
+    ++this.revision;
+    ++this.attempt;
+    clearTimeout(this.expiryTimer);
     const had = this.current() !== null;
     this.current.set(null);
     this.expired.set(expiredNotice);
-    void this.safeClear();
+    const clearing = this.safeClear();
     if (had) this.ended.next();
+    return clearing;
   }
 
   private async safeClear(): Promise<void> {
-    try { await this.store.clear(); } catch { /* el estado en memoria ya fue descartado */ }
+    try { await this.store.clear(); }
+    catch { this.storageFailed.set(true); }
   }
 }

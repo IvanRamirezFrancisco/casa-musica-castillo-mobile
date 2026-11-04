@@ -26,7 +26,7 @@ El verificador comprueba mapping R8, método puente `MessageHandler.postMessage`
 
 R8 transforma bytecode Java/Kotlin; no cifra Angular ni protege por sí solo los datos del WebView. HTTPS no acredita certificate pinning. Esta fase no implementa pinning ni TT-05. Se requiere aceptación funcional del Release firmado, puente y plugins antes de distribuirlo. [Optimización Android](https://developer.android.com/topic/performance/app-optimization/enable-app-optimization).
 
-Release desactiva depuración nativa/WebView y mixed content. `loggingBehavior: debug` limita logs Capacitor al estado debuggable; no garantiza que cualquier futura telemetría o console propia sea inocua. No registrar tokens ni datos personales.
+Release desactiva depuración nativa/WebView y mixed content. `loggingBehavior: none` desactiva los logs del puente Capacitor también en Debug: sus argumentos pueden incluir credenciales antes del cifrado. No garantiza que cualquier futura telemetría o console propia sea inocua. No registrar tokens ni datos personales.
 
 Backup se deshabilita y se excluyen archivos, bases y preferencias en backup antiguo, nube y transferencia moderna. Algunos fabricantes pueden tratar distinto la transferencia con `allowBackup=false`; las exclusiones explícitas cubren también ese caso y deben probarse en dispositivos soportados. No sustituyen almacenamiento cifrado de sesión. [Backup Android](https://developer.android.com/identity/data/autobackup).
 
