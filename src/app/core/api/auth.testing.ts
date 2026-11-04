@@ -5,7 +5,7 @@ const encode = (value: unknown): string =>
 
 /** JWT sintético (sin firma válida) solo para pruebas; nunca se usa en la aplicación. */
 export const fakeJwt = (expSeconds: number | null = Math.floor(Date.now() / 1000) + 3600, extra: Record<string, unknown> = {}): string =>
-  `${encode({ alg: 'HS256', typ: 'JWT' })}.${encode({ sub: 'test@example.test', ...(expSeconds === null ? {} : { exp: expSeconds }), ...extra })}.c2lnbmF0dXJl`;
+  `${encode({ alg: 'HS256', typ: 'JWT' })}.${encode({ sub: '7', ...(expSeconds === null ? {} : { exp: expSeconds }), ...extra })}.c2lnbmF0dXJl`;
 
 export const userDto = (patch: Record<string, unknown> = {}) => ({
   id: 7, firstName: 'Ana', lastName: 'Pérez', email: 'ana@gmail.com', phone: '5512345678', enabled: true,

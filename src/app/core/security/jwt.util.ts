@@ -25,3 +25,15 @@ export function readJwtExpiry(token: string): number | null {
     return null;
   }
 }
+
+/** Structural identity check only; authentication and signature verification belong to Spring Boot. */
+export function readJwtSubject(token: string): string | null {
+  if (!looksLikeJwt(token)) return null;
+  try {
+    const payload = token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
+    const claims: unknown = JSON.parse(atob(payload + '='.repeat((4 - payload.length % 4) % 4)));
+    if (typeof claims !== 'object' || claims === null) return null;
+    const sub = (claims as Record<string, unknown>)['sub'];
+    return typeof sub === 'string' ? sub : null;
+  } catch { return null; }
+}

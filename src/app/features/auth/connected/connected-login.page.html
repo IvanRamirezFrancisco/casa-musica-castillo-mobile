@@ -9,6 +9,9 @@
 
   <div class="auth-card-container">
     <div class="auth-card">
+      @if (auth.storageFailure()) {
+        <p class="auth-alert auth-alert--error" role="alert">No se pudo acceder al almacenamiento seguro de la sesión. No se pudo confirmar su conservación o borrado. Reintenta; si el problema continúa, borra los datos de la aplicación desde Ajustes de Android.</p>
+      }
       @if (step() === 'credentials') {
         <a class="cmc-link" routerLink="/main/home">Volver a Inicio</a>
         <div class="auth-card-header">

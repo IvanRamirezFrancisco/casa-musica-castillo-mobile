@@ -119,6 +119,9 @@ import { CmcIconComponent } from '../../shared/ui/icon/cmc-icon.component';
             <cmc-button variant="secondary" fullWidth (click)="goToSecurity()"><cmc-icon name="security"/> Seguridad de la cuenta</cmc-button>
           </section>
 
+          @if (auth.storageFailure()) {
+            <p class="session-note" role="alert">No se pudo acceder al almacenamiento seguro de la sesión. No se pudo confirmar su conservación o borrado. Reintenta; si el problema continúa, borra los datos de la aplicación desde Ajustes de Android.</p>
+          }
           @if (!auth.persistent) {
             <div class="session-note" role="note">
               <ion-icon name="shield-checkmark-outline" aria-hidden="true"></ion-icon>

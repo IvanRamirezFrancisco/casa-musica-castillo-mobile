@@ -2,6 +2,7 @@ import { InjectionToken, inject } from '@angular/core';
 import type { Observable } from 'rxjs';
 import type {
   AuthSession,
+  AuthUser,
   LoginCredentials,
   LoginOutcome,
   RegisterInput,
@@ -23,7 +24,8 @@ export interface AuthRepository {
   verifyEmail(token: string): Observable<void>;
   requestPasswordReset(email: string): Observable<void>;
   confirmPasswordReset(token: string, newPassword: string): Observable<void>;
-  logout(): Observable<void>;
+  logout(token: string): Observable<void>;
+  restoreUser(token: string): Observable<AuthUser>;
 }
 
 export const AUTH_REPOSITORY = new InjectionToken<AuthRepository>('AUTH_REPOSITORY', {
