@@ -6,6 +6,7 @@ on:
       - develop
       - main
       - feature/actividad-4-integracion-movil
+      - feature/android-release-google-play
 
   push:
     branches:
@@ -63,6 +64,10 @@ jobs:
         continue-on-error: true
         run: npm audit --audit-level=moderate
 
+      - name: Bloquear alertas altas o críticas también en herramientas
+        id: tooling-audit
+        run: npm audit --audit-level=high
+
       - name: Retroalimentación de auditoría
         if: always()
         env:
@@ -71,7 +76,8 @@ jobs:
           SUMMARY_CONTROLS: |
             npm audit producción|${{ steps.production-audit.outcome == 'success' && 'PASS' || 'FAIL' }}|Control obligatorio con severidad moderate.
             npm audit completo|${{ steps.complete-audit.outcome == 'success' && 'PASS' || 'FAIL' }}|Control informativo de dependencias de desarrollo; su fallo no oculta ni reemplaza el audit de producción.
-          SUMMARY_STATUS: ${{ steps.production-audit.outcome == 'success' && 'PASS' || 'FAIL' }}
+            npm audit herramientas altas/críticas|${{ steps.tooling-audit.outcome == 'success' && 'PASS' || 'FAIL' }}|Control obligatorio adicional; no permite regresión de alertas altas/críticas en desarrollo.
+          SUMMARY_STATUS: ${{ (steps.production-audit.outcome == 'success' && steps.tooling-audit.outcome == 'success') && 'PASS' || 'FAIL' }}
           SUMMARY_DATA: package-lock.json; sin npm audit fix ni cambios automáticos.
           SUMMARY_METRICS: El log conserva la cantidad y severidad real de vulnerabilidades.
           SUMMARY_ARTIFACTS: Logs del job; alertas accionables se corrigen mediante PR.

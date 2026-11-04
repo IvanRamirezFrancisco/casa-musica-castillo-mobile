@@ -31,6 +31,7 @@ describe('EditProfilePage', () => {
   });
 
   it('should validate form and update profile', () => {
+    const back = vi.spyOn(TestBed.inject(NavController), 'navigateBack').mockResolvedValue(true);
     component.form.patchValue({
       name: 'Nuevo Nombre',
       email: 'nuevo@correo.com',
@@ -42,6 +43,7 @@ describe('EditProfilePage', () => {
     component.save();
 
     expect(accountService.profile().name).toBe('Nuevo Nombre');
+    expect(back).toHaveBeenCalledWith(['/main/profile']);
   });
   it('usa dirección Ionic back hacia /main/profile', () => {
     const back = vi.spyOn(TestBed.inject(NavController), 'navigateBack').mockResolvedValue(true);
