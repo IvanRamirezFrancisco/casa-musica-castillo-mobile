@@ -12,11 +12,12 @@
     <section class="profile-card" aria-label="Datos de la cuenta">
       <div class="avatar" aria-hidden="true">{{ initial() }}</div>
       <h2 class="cmc-title profile-name">{{ profile().name }}</h2>
-      <p class="cmc-text-secondary">{{ profile().email }}</p>
-      <p class="cmc-text-secondary">{{ profile().phone }}</p>
+      <p class="cmc-text-secondary">{{ privacy.hideContact() ? 'Correo oculto' : profile().email }}</p>
+      <p class="cmc-text-secondary">{{ privacy.hideContact() ? 'Teléfono oculto' : profile().phone }}</p>
       <cmc-button fullWidth (click)="editProfile()">Editar perfil</cmc-button>
     </section>
 
+    <a routerLink="/privacy" class="cmc-link">Privacidad y mis datos</a>
     <p class="cmc-caption profile-demo-note" id="profile-demo-note">Configuraciones de demostración, próximamente disponibles.</p>
     <ul class="options" aria-label="Opciones de cuenta">
       @for (opt of options; track opt.label) {

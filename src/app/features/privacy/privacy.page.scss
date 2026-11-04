@@ -1,0 +1,8 @@
+.privacy-shell { display: grid; gap: 18px; padding-bottom: 32px; }
+.privacy-card { border: 1px solid rgba(114, 47, 55, .16); border-radius: 14px; padding: 18px; background: var(--cmc-surface, #fff); }
+.privacy-card h2 { font-size: 1.2rem; margin-top: 0; }
+.privacy-card p { line-height: 1.6; }
+.privacy-choice { display: flex; align-items: center; gap: 12px; min-height: 48px; cursor: pointer; }
+.privacy-choice input { width: 24px; height: 24px; accent-color: var(--cmc-primary, #722f37); flex-shrink: 0; }
+.privacy-shell a { display: inline-block; padding: 12px 0; }
+.privacy-shell a:focus-visible, .privacy-choice input:focus-visible { outline: 3px solid var(--cmc-primary, #722f37); outline-offset: 3px; }
