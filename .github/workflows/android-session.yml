@@ -1,7 +1,7 @@
 name: Android - Sesión segura TT05
 on:
   pull_request:
-    branches: [develop, main, feature/actividad-4-integracion-movil, feature/android-release-google-play, feature/privacidad-play-compliance]
+    branches: [develop, main, feature/actividad-4-integracion-movil, feature/android-release-google-play, feature/privacidad-play-compliance, feature/tt05-sesion-segura]
   push:
     branches: [develop, main]
   workflow_dispatch:
