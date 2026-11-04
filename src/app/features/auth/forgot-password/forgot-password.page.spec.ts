@@ -33,6 +33,10 @@ describe('ForgotPasswordPage', () => {
     component.forgotForm.controls.email.setValue('test@test.com');
     component.onSubmit();
     expect(component.isSubmitted()).toBe(true);
+    fixture.detectChanges();
+    expect(fixture.nativeElement.textContent).toContain('Si existe una cuenta');
+    expect(fixture.nativeElement.textContent).toContain('Esta demostración no envía correo.');
+    expect(fixture.nativeElement.textContent).not.toContain('Hemos enviado');
   });
 
   it('should navigate back to login', () => {

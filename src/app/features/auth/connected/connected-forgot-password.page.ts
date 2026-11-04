@@ -51,7 +51,9 @@ export class ConnectedForgotPasswordPage {
 
   protected emailError(): string {
     const control = this.requestForm.controls.email;
-    return control.invalid && control.touched ? 'Ingresa un correo válido.' : '';
+    if (!control.touched || control.valid) return '';
+    if (control.hasError('required')) return 'Ingresa tu correo electrónico.';
+    return control.hasError('maxlength') ? 'El correo admite como máximo 100 caracteres.' : 'Ingresa un correo válido, por ejemplo nombre@correo.com.';
   }
 
   protected tokenError(): string {
@@ -83,6 +85,14 @@ export class ConnectedForgotPasswordPage {
         this.errorMessage.set(describeApiError(error, 'form'));
       },
     });
+  }
+
+  protected useAnotherEmail(): void {
+    if (this.submitting()) return;
+    this.requestForm.reset();
+    this.confirmForm.reset();
+    this.errorMessage.set('');
+    this.step.set('request');
   }
 
   protected confirm(): void {
