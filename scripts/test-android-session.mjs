@@ -26,6 +26,7 @@ const artifact = build.packages[0];
 assert.equal(createHash('sha256').update(fs.readFileSync(artifact.path)).digest('hex'), artifact.sha256);
 result.apk = { sha256: artifact.sha256, sourceSha: build.sourceSha, sourceTreeDirty: build.sourceTreeDirty };
 const fixture = await startFixture();
+const appLogs = [];
 const stop = () => run(adb, ['shell', 'am', 'force-stop', app]);
 const inspect = async present => {
   // Only synthetic test credentials. Never export plaintext/session data to reports or Logcat.
@@ -37,6 +38,7 @@ const inspect = async present => {
   result.storage.push({ present, plaintext: false, sha256: createHash('sha256').update(xml).digest('hex') });
 };
 try {
+  assert.equal((await run(adb, ['shell', 'getprop', 'ro.kernel.qemu'], true)).toString().trim(), '1', 'Use an isolated emulator; this runner clears app data.');
   const installedPath = (await run(adb, ['shell', 'pm', 'path', app], true)).toString().trim().replace(/^package:/, '');
   assert.match(installedPath, /^\/data\/app\/[A-Za-z0-9_./=+~-]+\/base\.apk$/);
   const installedHash = (await run(adb, ['shell', 'sha256sum', installedPath], true)).toString().split(/\s/)[0];
@@ -51,12 +53,15 @@ try {
     const evidence = fs.readFileSync(junit, 'utf8');
     assert.equal((evidence.match(/<testcase\b/g) ?? []).length, 1, 'Phase must execute exactly once.');
     assert.ok(evidence.includes('status="SUCCESS"') && !/<(?:failure|error|skipped)\b/.test(evidence), 'Phase did not pass.');
+    const pid = (await run(adb, ['shell', 'pidof', app], true)).toString().trim();
+    assert.match(pid, /^[0-9]+$/);
+    appLogs.push((await run(adb, ['logcat', '-d', `--pid=${pid}`], true)).toString());
     await inspect(['login', 'mfa'].includes(phase));
     result.flows.push({ phase, status: 'PASS' });
   }
   assert.equal(fixture.state.logins, 2); assert.equal(fixture.state.me, 1);
   assert.equal(fixture.state.logout, 1); assert.equal(fixture.state.mfa, 1); assert.equal(fixture.state.emails, 1);
-  const logs = (await run(adb, ['logcat', '-d'], true)).toString();
+  const logs = appLogs.join('\n');
   for (const token of fixture.state.allTokens) assert.ok(!logs.includes(token), 'JWT leaked to Logcat.');
   assert.ok(!logs.includes('Only-Local-123'), 'Password leaked to Logcat.');
   result.logcatContainsCredential = false; result.status = 'PASS';

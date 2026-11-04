@@ -59,6 +59,7 @@ try:
     build=json.loads((root/'reports/android-packages/device-debug/build-report.json').read_text())
     check(build['environment']=='device' and build['apiBaseUrl']=='http://127.0.0.1:18181' and build['variant']=='debug','APK exclusivo de desarrollo local')
     artifact=build['packages'][0];apk=root/artifact['path'];check(hashlib.sha256(apk.read_bytes()).hexdigest()==artifact['sha256'],'Integridad del APK')
+    check(adb_read('shell','getprop','ro.kernel.qemu')=='1','Emulador aislado; no se permite limpiar un dispositivo físico')
     installed=adb_read('shell','pm','path',app).removeprefix('package:')
     if not re.fullmatch(r'/data/app/[A-Za-z0-9_./=+~-]+/base\.apk',installed):raise AssertionError('Unexpected installed APK path')
     check(adb_read('shell','sha256sum',installed).split()[0]==artifact['sha256'],'APK instalado coincide con el artefacto local')
@@ -75,6 +76,10 @@ try:
         xml=adb_read('shell','run-as',app,'cat','shared_prefs/WSSecureStorageSharedPreferences.xml')
         check(('capacitor-storage_cmc.session.v1' in xml)==(phase=='login') and 'qa@example.test' not in xml,'Credencial cifrada presente/borrada: '+phase)
         check(sql(active)==('1' if phase=='login' else '0'),'Sesión real en PostgreSQL: '+phase)
+        pid=adb_read('shell','pidof',app)
+        if not pid.isdigit():raise AssertionError('One application process is required.')
+        logs=adb_read('logcat','-d','--pid='+pid)
+        check(not re.search(r'eyJ[A-Za-z0-9_-]+[.]eyJ[A-Za-z0-9_-]+[.][A-Za-z0-9_-]+',logs) and 'Only-Local-123' not in logs,'Sin credenciales en Logcat de la aplicación: '+phase)
     token=login()['jwtResponse']['accessToken'];tokens.append(token);last_token=token
     check(request('POST','/api/2fa/email/enable',{},token)[0]==200,'Activación EMAIL MFA solo en cuenta sintética')
     request('POST','/api/auth/logout',{},token)
@@ -100,8 +105,6 @@ try:
     check(request('GET','/api/auth/me',token=token)[0]==200,'JWT emitido tras MFA funciona con PostgreSQL real')
     check(request('POST','/api/2fa/email/disable',{},token)[0]==200,'Cuenta sintética vuelve a su configuración inicial')
     check(request('POST','/api/auth/logout',{},token)[0]==200 and request('GET','/api/auth/me',token=token)[0]==401,'Revocación final de sesión MFA')
-    logs=adb_read('logcat','-d')
-    check(not re.search(r'eyJ[A-Za-z0-9_-]+[.]eyJ[A-Za-z0-9_-]+[.][A-Za-z0-9_-]+',logs) and 'Only-Local-123' not in logs,'Sin JWT ni contraseña en Logcat durante el recorrido real')
     result['status']='PASS'
 finally:
     subprocess.run([adb,'reverse','--remove','tcp:18181'],stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL)
