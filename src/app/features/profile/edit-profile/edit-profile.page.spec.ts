@@ -1,6 +1,7 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { provideRouter, Router } from '@angular/router';
+import { NavController } from '@ionic/angular';
 import { vi } from 'vitest';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
 import { EditProfilePage } from './edit-profile.page';
 import { DemoAccountStateService } from '../../../core/services/demo-account-state.service';
 
@@ -111,9 +112,9 @@ describe('EditProfilePage', () => {
   });
 
   it('regresa al perfil después de guardar', () => {
-    const navigate = vi.spyOn(TestBed.inject(Router), 'navigate').mockResolvedValue(true);
+    const back = vi.spyOn(TestBed.inject(NavController), 'navigateBack').mockResolvedValue(true);
     intentarGuardar({ name: 'Ana Pérez' });
-    expect(navigate).toHaveBeenCalledWith(['/main/profile']);
+    expect(back).toHaveBeenCalledWith(['/main/profile']);
   });
 
   it.each([
@@ -129,15 +130,21 @@ describe('EditProfilePage', () => {
     ['phone', '12345', 'Ingresa un teléfono de 10 dígitos.'],
   ] as const)('muestra un mensaje específico para %s = "%s" y no guarda (PF-HU14-03)', (campo, valor, mensaje) => {
     const original = { ...accountService.profile() };
-    const navigate = vi.spyOn(TestBed.inject(Router), 'navigate').mockResolvedValue(true);
+    const back = vi.spyOn(TestBed.inject(NavController), 'navigateBack').mockResolvedValue(true);
     intentarGuardar({ [campo]: valor });
     expect(component.fieldError(campo)).toBe(mensaje);
     expect(accountService.profile()).toEqual(original);
-    expect(navigate).not.toHaveBeenCalled();
+    expect(back).not.toHaveBeenCalled();
   });
 
   it('muestra los mensajes en la pantalla', () => {
     intentarGuardar({ phone: '12' });
     expect((fixture.nativeElement as HTMLElement).textContent).toContain('Ingresa un teléfono de 10 dígitos.');
+  });
+
+  it('usa dirección Ionic back hacia /main/profile', () => {
+    const back = vi.spyOn(TestBed.inject(NavController), 'navigateBack').mockResolvedValue(true);
+    component.goBack();
+    expect(back).toHaveBeenCalledWith(['/main/profile']);
   });
 });

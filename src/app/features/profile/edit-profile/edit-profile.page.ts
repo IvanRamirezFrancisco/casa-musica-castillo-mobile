@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { AbstractControl, NonNullableFormBuilder, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
-import { IonButtons, IonContent, IonHeader, IonIcon, IonTitle, IonToolbar } from '@ionic/angular';
+import { NavController, IonButtons, IonContent, IonHeader, IonIcon, IonTitle, IonToolbar } from '@ionic/angular';
 import { addIcons } from 'ionicons';
 import { arrowBackOutline } from 'ionicons/icons';
 
@@ -58,7 +57,7 @@ function nameLengthValidator(control: AbstractControl<string>): ValidationErrors
 })
 export class EditProfilePage {
   private readonly fb = inject(NonNullableFormBuilder);
-  private readonly router = inject(Router);
+  private readonly nav = inject(NavController);
   private readonly account = inject(DemoAccountStateService);
 
   readonly form = this.fb.group({
@@ -106,10 +105,10 @@ export class EditProfilePage {
       email: email.trim().toLowerCase(),
       phone: normalizePhone(phone),
     });
-    void this.router.navigate(['/main/profile']);
+    void this.nav.navigateBack(['/main/profile']);
   }
 
   goBack(): void {
-    void this.router.navigate(['/main/profile']);
+    void this.nav.navigateBack(['/main/profile']);
   }
 }
