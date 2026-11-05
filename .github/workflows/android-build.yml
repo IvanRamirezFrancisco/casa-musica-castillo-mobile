@@ -9,6 +9,7 @@ on:
       - feature/android-release-google-play
       - feature/privacidad-play-compliance
       - feature/tt05-sesion-segura
+      - feature/conciliacion-validadores-equipo
 
   push:
     branches:
