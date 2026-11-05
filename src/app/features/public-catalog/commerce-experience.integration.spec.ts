@@ -90,6 +90,19 @@ describe('Experiencia comercial móvil: HTTP controlado, nunca backend real',()=
  it('cambio rápido de producto cancela reseñas fuera de orden y renderiza texto como datos',()=>{
   const f=reviews();f.componentInstance.load();const pending=http.expectOne(r=>r.url.includes('/api/reviews'));f.componentRef.setInput('productId',314);f.detectChanges();expect(pending.cancelled).toBe(true);f.componentInstance.load();http.expectOne(r=>r.url.endsWith('/314')).flush(reviewPage([{...review,comment:'<script>alert(1)</script>'}]));f.detectChanges();expect(f.nativeElement.querySelector('script')).toBeNull();expect(f.nativeElement.textContent).toContain('<script>');
  });
+ it.each([
+  [1.3, '1.3 kg'],
+  [0, '0 kg'],
+  [1.23456, '1.23456 kg'],
+  [null, null],
+ ] as const)('representa el peso del DTO %s sin inventar datos', (weight, expected) => {
+  const f = detail([], { weight });
+  const labels = Array.from(f.nativeElement.querySelectorAll('.spec-list dt')) as HTMLElement[];
+  const label = labels.find((element) => element.textContent?.trim() === 'Peso registrado');
+  if (expected === null) expect(label).toBeUndefined();
+  else expect(label?.nextElementSibling?.textContent?.trim().replace(/\s+/g, ' ')).toBe(expected);
+ });
+
  it('mapper conserva calificación, modelo y descripción completa reales',()=>{const mapped=mapPublicProduct(parseProduct(productDto({detailedDescription:'Detalle completo',model:'M1',weight:2,dimensions:'10x20',averageRating:4.5,reviewCount:2})),base);expect(mapped).toMatchObject({description:'Detalle completo',model:'M1',weight:2,dimensions:'10x20',averageRating:4.5,reviewCount:2});});
  it('repositorio rechaza IDs, borradores y elegibilidad malformada antes de confiar en ellos',()=>{const repo=TestBed.inject(HttpReviewRepository);expect(()=>repo.list(0,0)).toThrow();expect(()=>repo.list(313,-1)).toThrow();expect(()=>repo.eligibility(-1)).toThrow();for(const draft of [{productId:313,rating:6,title:'',comment:review.comment},{productId:313,rating:0,title:'',comment:review.comment},{productId:313,rating:5,title:'a'.repeat(121),comment:review.comment},{productId:313,rating:5,title:'',comment:'short'},{productId:313,rating:5,title:'',comment:'a'.repeat(1001)}])expect(()=>repo.create(draft)).toThrow();});
  it.each([{canReview:'true',hasPurchased:true,alreadyReviewed:false},{canReview:true,hasPurchased:false,alreadyReviewed:false},{canReview:true,hasPurchased:true,alreadyReviewed:true}])('no confía en una elegibilidad incoherente %#',async value=>{await signIn();const f=reviews();f.componentInstance.checkEligibility();http.expectOne(r=>r.url.endsWith('/eligibility')).flush(value);expect(f.componentInstance.eligibility()).toBeNull();expect(f.componentInstance.editing()).toBe(false);});
