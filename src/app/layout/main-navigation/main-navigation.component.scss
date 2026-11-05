@@ -1,12 +1,13 @@
 @use '../../shared/ui/styles/mixins';
 
 ion-tab-bar {
-  position: fixed;
-  bottom: calc(var(--cmc-bubble-nav-bottom-margin) + var(--cmc-safe-area-bottom));
-  left: 50%;
-  transform: translateX(-50%);
-  width: calc(100% - 2 * var(--cmc-space-4));
-  max-width: 448px;
+  // The bottom slot participates in ion-tabs layout and reserves its measured height.
+  flex: 0 0 auto;
+  align-self: center;
+  margin-block: var(--cmc-space-2) calc(var(--cmc-space-3) + var(--cmc-safe-area-bottom));
+  --capsule-gutter: max(var(--cmc-space-4), var(--ion-safe-area-left, 0px), var(--ion-safe-area-right, 0px));
+  width: calc(100% - 2 * var(--capsule-gutter));
+  max-width: 28rem;
   border-radius: var(--cmc-radius-xl);
   --background: var(--cmc-surface);
   --border: none;
@@ -14,9 +15,9 @@ ion-tab-bar {
   /* Ionic forces content-box in its shadow host. Keep outer geometry exact:
    * no layout border/padding; inset shadow and button margins draw the capsule. */
   padding: 0;
-  /* Safe area is in the bottom position; Ionic must not add it inside. */
+  // The margin includes the safe area for the capsule.
   --ion-safe-area-bottom: 0px;
-  height: var(--cmc-bubble-nav-height);
+  min-height: var(--cmc-bubble-nav-height);
   contain: none; /* allows box-shadow to show outside */
   overflow: visible;
   z-index: 1000;
@@ -30,11 +31,12 @@ ion-tab-bar {
     --padding-start: 0px;
     --padding-end: 0px;
     background: transparent;
-    min-width: 48px;
+    min-width: 44px;
     min-height: 48px;
     transition: background-color var(--cmc-transition-fast);
     border-radius: var(--cmc-radius-lg);
-    height: calc(var(--cmc-bubble-nav-height) - 2 * var(--cmc-space-1));
+    height: auto;
+    padding-block: var(--cmc-space-1);
     margin: var(--cmc-space-1) 0;
 
     ion-icon {
@@ -45,8 +47,11 @@ ion-tab-bar {
 
     ion-label {
       font-family: 'Roboto', sans-serif;
-      font-size: 12px;
+      font-size: .75rem;
       font-weight: 600;
+      line-height: 1.2;
+      white-space: normal;
+      overflow-wrap: anywhere;
       z-index: 2;
     }
 
