@@ -111,11 +111,7 @@ try {
     const id = ++sequence;
     return new Promise((resolve, reject) => {
       const timer = setTimeout(() => { pending.delete(id); reject(new Error('CDP timeout: ' + method)); }, 15000);
-      pending.set(id, (message) => {
-        clearTimeout(timer);
-        if (message.error) reject(new Error(message.error.message));
-        else resolve(message.result);
-      });
+      pending.set(id, { resolve, reject, timer });
       ws.send(JSON.stringify({ id, method, params }));
     });
   }
@@ -151,8 +147,16 @@ try {
   }
   ws.addEventListener('message', ({ data }) => {
     const message = JSON.parse(data);
-    const receiver = pending.get(message.id);
-    if (receiver) { pending.delete(message.id); receiver(message); }
+    const { id } = message;
+    if (typeof id === 'number' && Number.isSafeInteger(id)) {
+      const reply = pending.get(id);
+      if (!reply) return;
+      pending.delete(id);
+      clearTimeout(reply.timer);
+      if (message.error) reply.reject(new Error(message.error.message));
+      else reply.resolve(message.result);
+      return;
+    }
     if (message.method === 'Fetch.requestPaused') {
       void requestPaused(message.params).catch((error) => {
         // A navigation can cancel an intercepted request before Chrome receives the response.
