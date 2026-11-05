@@ -21,7 +21,7 @@
       </div>}@else{<p class="muted" role="note">Agregar productos reales al carrito requiere la próxima etapa de integración. Este producto no se enviará al carrito DEMO.</p>}
     </section></div>
     <section class="surface"><h2>Descripción</h2><div class="description" [class.expanded]="descriptionExpanded()||product.description.length<=400"><p>{{product.description||'Descripción no disponible.'}}</p></div>@if(product.description.length>400){<button class="store-button" [attr.aria-expanded]="descriptionExpanded()" (click)="descriptionExpanded.update(invert)">{{descriptionExpanded()?'Leer menos':'Leer descripción completa'}} <cmc-icon name="down"/></button>}</section>
-    <section class="surface"><h2>Especificaciones</h2><dl class="spec-list"><dt>Marca</dt><dd>{{product.brand}}</dd>@if(product.model){<dt>Modelo</dt><dd>{{product.model}}</dd>}@if(product.dimensions){<dt>Dimensiones</dt><dd>{{product.dimensions}}</dd>}@if(product.weight!==null && product.weight!==undefined){<dt>Peso registrado</dt><dd>{{product.weight}}</dd>}@for(attribute of product.attributes;track $index){<dt>{{attribute.name}}</dt><dd>{{attribute.value}}</dd>}</dl></section>
+    <section class="surface"><h2>Especificaciones</h2><dl class="spec-list"><dt>Marca</dt><dd>{{product.brand}}</dd>@if(product.model){<dt>Modelo</dt><dd>{{product.model}}</dd>}@if(product.dimensions){<dt>Dimensiones</dt><dd>{{product.dimensions}}</dd>}@if(product.weight!==null && product.weight!==undefined){<dt>Peso registrado</dt><dd>{{weightFormat.format(product.weight)}}</dd>}@for(attribute of product.attributes;track $index){<dt>{{attribute.name}}</dt><dd>{{attribute.value}}</dd>}</dl></section>
     <section class="surface"><cmc-product-reviews [productId]="product.id"/></section>
   }}
 }

@@ -54,6 +54,11 @@
   --cmc-space-2: 8px;
   --cmc-space-3: 12px;
   --cmc-space-4: 16px;
+
+  --cmc-store-max-width: 70rem;
+  --cmc-store-gutter: clamp(var(--cmc-space-4), 3vw, 2rem);
+  --cmc-product-gap: var(--cmc-space-4);
+  --cmc-product-columns: repeat(auto-fill, minmax(min(100%, 10rem), 1fr));
   --cmc-space-5: 20px;
   --cmc-space-6: 24px;
   --cmc-space-8: 32px;

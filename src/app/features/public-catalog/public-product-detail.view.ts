@@ -22,6 +22,9 @@ import { ProductReviewsComponent } from './product-reviews.component';
  imports:[RouterLink,CmcMoneyPipe,CmcIconComponent,CmcQuantityComponent,IonBackButton,IonButtons,IonContent,IonHeader,IonTitle,IonToolbar,PublicImageComponent,CmcButtonComponent,CmcLoadingComponent,CmcErrorStateComponent,CmcEmptyStateComponent,ProductReviewsComponent],
  templateUrl:'./public-product-detail.view.html',styleUrl:'./public-product-detail.view.scss'})
 export class PublicProductDetailComponent {
+ readonly weightFormat = new Intl.NumberFormat('es-MX', {
+  style: 'unit', unit: 'kilogram', maximumSignificantDigits: 21,
+ });
  readonly service=inject(PublicCatalogService);readonly connected=inject(BACKEND_SESSION_ENABLED);readonly cart=inject(CartService);
  private readonly wishlist=inject(WISHLIST_REPOSITORY);private readonly auth=inject(AuthService);private readonly router=inject(Router);private readonly intent=inject(PurchaseIntentService);private readonly destroyRef=inject(DestroyRef);private readonly cancelled=new Subject<void>();
  readonly quantity=signal(1);readonly preparing=signal(false);readonly added=signal(false);readonly selectedImage=signal<string|null>(null);readonly savingFavorite=signal(false);readonly favoriteNotice=signal('');readonly favoriteId=signal<number|null>(null);readonly actionNotice=signal('');readonly descriptionExpanded=signal(false);readonly invert=(value:boolean)=>!value;
