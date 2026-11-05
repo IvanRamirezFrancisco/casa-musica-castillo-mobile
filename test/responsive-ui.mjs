@@ -67,7 +67,10 @@ async function measure(isVisible, selector) {
   const content = [...(modal || document).querySelectorAll('ion-content')].filter(isVisible).at(-1);
   const scroll = await content?.getScrollElement?.();
   const last = selector && [...document.querySelectorAll(selector)].filter(isVisible).at(-1);
-  if (last && scroll) scroll.scrollTop = scroll.scrollHeight;
+  // Let Ionic and the browser settle reflow after a viewport or inset change.
+  await new Promise(requestAnimationFrame);
+  await new Promise(requestAnimationFrame);
+  if (last && scroll) scroll.scrollTo({ top: scroll.scrollHeight, behavior: 'instant' });
   await new Promise(requestAnimationFrame);
   const image = [...document.querySelectorAll('img')].find((element) =>
     isVisible(element) && element.src.includes('/cmc-ui-fixture/'));
@@ -269,6 +272,7 @@ try {
     assert.ok(rows.at(-1).barBottom <= 829 - 24);
     await resize(375, 667);
     await read("document.documentElement.style.setProperty('--ion-safe-area-left','28px')");
+    await wait("innerWidth === 375 && innerHeight === 667");
     await capture('inset-28px', 'catalogo', '.paging button:last-child');
     assert.ok(rows.at(-1).barLeft >= 28);
     await resize(320, 350);
