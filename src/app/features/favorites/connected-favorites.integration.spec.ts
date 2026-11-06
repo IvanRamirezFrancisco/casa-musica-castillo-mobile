@@ -14,6 +14,25 @@ describe('Favoritos conectados (HTTP simulado)',()=>{
  beforeEach(()=>{TestBed.configureTestingModule({providers:[provideRouter([]),provideHttpClient(),provideHttpClientTesting(),{provide:API_BASE_URL,useValue:'https://api.test'},{provide:AuthService,useValue:{sessionEnded$:ended}}]});http=TestBed.inject(HttpTestingController);repo=TestBed.inject(HttpWishlistRepository);});
  afterEach(()=>http.verify());
  it('consulta, presenta precio/stock y elimina por wishlistId, después recarga',()=>{const f=TestBed.createComponent(ConnectedFavoritesComponent);http.expectOne('https://api.test/api/wishlist').flush({items:[item],totalItems:1});f.detectChanges();expect(f.nativeElement.textContent).toContain('Jarana de prueba');expect(f.nativeElement.textContent).toContain('6,500.00');f.nativeElement.querySelector('button').click();const del=http.expectOne('https://api.test/api/wishlist/10');expect(del.request.method).toBe('DELETE');f.componentInstance.remove(10);http.expectNone('https://api.test/api/wishlist/10');del.flush({message:'ok'});http.expectOne('https://api.test/api/wishlist').flush({items:[],totalItems:0});f.detectChanges();expect(f.nativeElement.textContent).toContain('No tienes favoritos');f.destroy();});
+ it('usa un fallback compacto accesible y limpia el aviso de retiro al cerrar sesión', () => {
+   const fixture = TestBed.createComponent(ConnectedFavoritesComponent);
+   http.expectOne('https://api.test/api/wishlist').flush({items:[{...item,productImage:null}],totalItems:1});
+   fixture.detectChanges();
+   const root = fixture.nativeElement as HTMLElement;
+   const image = root.querySelector('[role="img"]');
+   expect(image?.getAttribute('aria-label')).toContain('imagen no disponible');
+   expect(image?.textContent).not.toContain('Imagen no disponible');
+   const remove = root.querySelector<HTMLButtonElement>('button[aria-label^="Quitar"]')!;
+   remove.click();
+   http.expectOne('https://api.test/api/wishlist/10').flush({message:'ok'});
+   http.expectOne('https://api.test/api/wishlist').flush({items:[],totalItems:0});
+   fixture.detectChanges();
+   expect(root.querySelector('[role="status"]')?.textContent).toContain('retirado');
+   ended.next();
+   fixture.detectChanges();
+   expect(root.querySelector('[role="status"]')?.textContent?.trim()).toBe('');
+   fixture.destroy();
+ });
  it('no anuncia disponibilidad por stock cuando el servidor deshabilitó el producto',()=>{const f=TestBed.createComponent(ConnectedFavoritesComponent);http.expectOne('https://api.test/api/wishlist').flush({items:[{...item,available:false}],totalItems:1});f.detectChanges();expect(f.nativeElement.textContent).toContain('No disponible');f.destroy();});
  it('error recuperable y cancelación de datos al cerrar sesión',()=>{const f=TestBed.createComponent(ConnectedFavoritesComponent);http.expectOne('https://api.test/api/wishlist').flush({}, {status:503,statusText:'Unavailable'});f.detectChanges();expect(f.nativeElement.querySelector('[role=alert]')).toBeTruthy();f.nativeElement.querySelector('button').click();const pending=http.expectOne('https://api.test/api/wishlist');ended.next();expect(pending.cancelled).toBe(true);expect(f.componentInstance.items()).toEqual([]);f.destroy();});
  it('agrega exclusivamente productId real y valida respuesta',()=>{repo.add(313).subscribe(v=>expect(v.wishlistId).toBe(10));const req=http.expectOne('https://api.test/api/wishlist');expect(req.request.body).toEqual({productId:313});req.flush(item);expect(()=>repo.add(0)).toThrow();expect(()=>repo.remove(-1)).toThrow();});

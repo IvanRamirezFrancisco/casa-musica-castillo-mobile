@@ -1,6 +1,6 @@
 <ion-header class="ion-no-border cmc-header-transparent">
   <ion-toolbar>
-    <ion-buttons slot="start"><ion-back-button defaultHref="/main/profile" text="Perfil" aria-label="Volver al perfil" /></ion-buttons>
+    <ion-buttons slot="start"><ion-back-button defaultHref="/main/profile" text="" aria-label="Volver al perfil" /></ion-buttons>
     <ion-title>Seguridad</ion-title>
   </ion-toolbar>
 </ion-header>
@@ -25,15 +25,24 @@
     @if (notice()) { <p class="auth-alert auth-alert--success" role="status">{{notice()}}</p> }
 
     @if (methods(); as m) {
-      <p class="security-summary">
+      <section class="security-summary" aria-labelledby="security-summary-title">
+        <h2 id="security-summary-title">Configuración de seguridad</h2>
+        <dl class="security-checks">
+          <div><dt>Verificación de cuenta por correo</dt><dd>Sin dato en esta pantalla</dd></div>
+          <div><dt>Segundo factor por correo</dt><dd>{{m.EMAIL ? 'Activo' : 'Inactivo'}}</dd></div>
+          <div><dt>Google Authenticator</dt><dd>{{m.GOOGLE_AUTHENTICATOR ? 'Activo' : 'Inactivo'}}</dd></div>
+          <div><dt>Códigos de recuperación</dt><dd>{{m.BACKUP_CODES ? 'Activos' : 'Sin códigos activos'}}</dd></div>
+        </dl>
+        <p>
         @if (m.GOOGLE_AUTHENTICATOR) {
           El autenticador está activo. Guarda códigos de recuperación para cuando pierdas acceso a él.
         } @else if (m.EMAIL) {
-          La verificación por correo está activa. Puedes configurar un autenticador para usar códigos sin esperar el correo.
+          El segundo factor por correo está activo. Puedes configurar un autenticador para usar códigos sin esperar el correo.
         } @else {
           Correo y autenticador están desactivados. Configura un método para añadir un paso al inicio de sesión.
         }
-      </p>
+        </p>
+      </section>
       <div class="security-grid">
         <section class="security-card" aria-labelledby="security-email">
           <h2 id="security-email">Correo electrónico</h2>
