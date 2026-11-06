@@ -17,9 +17,10 @@ import { CmcLoadingComponent } from '../../shared/ui/loading/cmc-loading.compone
 import { CmcErrorStateComponent } from '../../shared/ui/error-state/cmc-error-state.component';
 import { CmcEmptyStateComponent } from '../../shared/ui/empty-state/cmc-empty-state.component';
 import { PublicImageComponent } from './public-product-grid.component';
+import { ProductDescriptionComponent } from './product-description.component';
 import { ProductReviewsComponent } from './product-reviews.component';
 @Component({selector:'app-public-product-detail',standalone:true,providers:[PublicCatalogService],host:{class:'ion-page'},changeDetection:ChangeDetectionStrategy.OnPush,
- imports:[RouterLink,CmcMoneyPipe,CmcIconComponent,CmcQuantityComponent,IonBackButton,IonButtons,IonContent,IonHeader,IonTitle,IonToolbar,PublicImageComponent,CmcButtonComponent,CmcLoadingComponent,CmcErrorStateComponent,CmcEmptyStateComponent,ProductReviewsComponent],
+ imports:[RouterLink,CmcMoneyPipe,CmcIconComponent,CmcQuantityComponent,IonBackButton,IonButtons,IonContent,IonHeader,IonTitle,IonToolbar,PublicImageComponent,CmcButtonComponent,CmcLoadingComponent,CmcErrorStateComponent,CmcEmptyStateComponent,ProductReviewsComponent,ProductDescriptionComponent],
  templateUrl:'./public-product-detail.view.html',styleUrl:'./public-product-detail.view.scss'})
 export class PublicProductDetailComponent {
  readonly weightFormat = new Intl.NumberFormat('es-MX', {

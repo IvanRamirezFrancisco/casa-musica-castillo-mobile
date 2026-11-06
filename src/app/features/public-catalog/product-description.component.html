@@ -1,0 +1,20 @@
+@if (nodes().length) {
+  <ng-container *ngTemplateOutlet="formatted; context: { $implicit: nodes() }" />
+} @else {
+  <p>Descripción no disponible.</p>
+}
+
+<ng-template #formatted let-parts>
+  @for (part of parts; track $index) {
+    @switch (part.tag) {
+      @case ('p') { <p><ng-container *ngTemplateOutlet="formatted; context: { $implicit: part.children }" /></p> }
+      @case ('strong') { <strong><ng-container *ngTemplateOutlet="formatted; context: { $implicit: part.children }" /></strong> }
+      @case ('em') { <em><ng-container *ngTemplateOutlet="formatted; context: { $implicit: part.children }" /></em> }
+      @case ('ul') { <ul><ng-container *ngTemplateOutlet="formatted; context: { $implicit: part.children }" /></ul> }
+      @case ('ol') { <ol><ng-container *ngTemplateOutlet="formatted; context: { $implicit: part.children }" /></ol> }
+      @case ('li') { <li><ng-container *ngTemplateOutlet="formatted; context: { $implicit: part.children }" /></li> }
+      @case ('br') { <br> }
+      @default { <ng-container>{{ part }}</ng-container> }
+    }
+  }
+</ng-template>
