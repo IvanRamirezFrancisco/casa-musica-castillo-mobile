@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, computed, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, ElementRef, computed, inject, signal, viewChild } from '@angular/core';
 import { Router, RouterLink, ActivatedRoute } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { EMPTY, Subject, finalize, switchMap, takeUntil } from 'rxjs';
@@ -17,10 +17,12 @@ import { CmcLoadingComponent } from '../../shared/ui/loading/cmc-loading.compone
 import { CmcErrorStateComponent } from '../../shared/ui/error-state/cmc-error-state.component';
 import { CmcEmptyStateComponent } from '../../shared/ui/empty-state/cmc-empty-state.component';
 import { PublicImageComponent } from './public-product-grid.component';
+import { ProductPhotoViewerComponent } from './product-photo-viewer.component';
+import { animateCartTransfer } from './cart-transfer';
 import { ProductDescriptionComponent } from './product-description.component';
 import { ProductReviewsComponent } from './product-reviews.component';
 @Component({selector:'app-public-product-detail',standalone:true,providers:[PublicCatalogService],host:{class:'ion-page'},changeDetection:ChangeDetectionStrategy.OnPush,
- imports:[RouterLink,CmcMoneyPipe,CmcIconComponent,CmcQuantityComponent,IonBackButton,IonButtons,IonContent,IonHeader,IonTitle,IonToolbar,PublicImageComponent,CmcButtonComponent,CmcLoadingComponent,CmcErrorStateComponent,CmcEmptyStateComponent,ProductReviewsComponent,ProductDescriptionComponent],
+ imports:[RouterLink,CmcMoneyPipe,CmcIconComponent,CmcQuantityComponent,IonBackButton,IonButtons,IonContent,IonHeader,IonTitle,IonToolbar,PublicImageComponent,CmcButtonComponent,CmcLoadingComponent,CmcErrorStateComponent,CmcEmptyStateComponent,ProductReviewsComponent,ProductDescriptionComponent,ProductPhotoViewerComponent],
  templateUrl:'./public-product-detail.view.html',styleUrl:'./public-product-detail.view.scss'})
 export class PublicProductDetailComponent {
  readonly weightFormat = new Intl.NumberFormat('es-MX', {
@@ -31,15 +33,33 @@ export class PublicProductDetailComponent {
  readonly quantity=signal(1);readonly preparing=signal(false);readonly added=signal(false);readonly selectedImage=signal<string|null>(null);readonly savingFavorite=()=>this.favorites.busy();
  readonly favoriteNotice=()=>this.favorites.notice(this.service.product().data?.id);
  readonly favoriteId=()=>this.favorites.id(this.service.product().data?.id??0);readonly actionNotice=signal('');readonly descriptionExpanded=signal(false);readonly invert=(value:boolean)=>!value;
+ readonly cartPulse=signal(false);
+ private readonly viewer=viewChild<ProductPhotoViewerComponent>('viewer');
+ private readonly purchaseTarget=viewChild('purchaseTarget',{read:ElementRef<HTMLElement>});
+ private readonly cartTarget=viewChild<ElementRef<HTMLElement>>('cartTarget');
+ private stopTransfer: (() => void) | undefined;
  private cartFeedbackTimer: ReturnType<typeof setTimeout> | undefined;
  invalidId=false;
  readonly maximum=computed(()=>Math.max(1,Math.min(100,this.service.product().data?.stock??1)));
- imageNumber():number{const p=this.service.product().data;return p?Math.max(1,p.images.indexOf(this.selectedImage()??p.imageUrl??'')+1):1;}
+ readonly galleryImages=computed(() => {
+  const product=this.service.product().data;
+  if(!product) return [];
+  return [...new Set([product.imageUrl, ...product.images].filter((image): image is string => Boolean(image)))];
+ });
+ readonly activeImage=computed(() => {
+  const selected=this.selectedImage();
+  return selected && this.galleryImages().includes(selected) ? selected : this.galleryImages()[0] ?? null;
+ });
+ imageNumber(): number { return Math.max(1, this.galleryImages().indexOf(this.activeImage() ?? '') + 1); }
+ selectImage(photo: string): void {
+  if (!this.galleryImages().includes(photo)) return;
+  this.selectedImage.set(photo);
+ }
  constructor(){
   this.destroyRef.onDestroy(() => this.clearCartFeedback());
-  this.auth.sessionEnded$.pipe(takeUntilDestroyed()).subscribe(()=>{this.cancelled.next();this.clearCartFeedback();this.actionNotice.set('');});
+  this.auth.sessionEnded$.pipe(takeUntilDestroyed()).subscribe(()=>{this.cancelled.next();this.viewer()?.close();this.clearCartFeedback();this.actionNotice.set('');});
   inject(ActivatedRoute).paramMap.pipe(takeUntilDestroyed()).subscribe(params=>{
-   this.cancelled.next();const raw=params.get('id')??'';const id=Number(raw);this.invalidId=!/^[1-9][0-9]*$/.test(raw)||!Number.isSafeInteger(id);
+   this.cancelled.next();this.viewer()?.close();const raw=params.get('id')??'';const id=Number(raw);this.invalidId=!/^[1-9][0-9]*$/.test(raw)||!Number.isSafeInteger(id);
    this.quantity.set(this.auth.hasValidSession()?this.intent.take(id)??1:1);this.clearCartFeedback();this.selectedImage.set(null);this.actionNotice.set('');this.descriptionExpanded.set(false);
    this.service.loadProduct(this.invalidId?0:id);
    if(!this.invalidId&&this.connected&&this.auth.hasValidSession())this.favorites.load();
@@ -48,6 +68,9 @@ export class PublicProductDetailComponent {
  private clearCartFeedback(): void {
   clearTimeout(this.cartFeedbackTimer);
   this.cartFeedbackTimer=undefined;
+  this.stopTransfer?.();
+  this.stopTransfer=undefined;
+  this.cartPulse.set(false);
   this.added.set(false);
  }
  addFavorite(id:number):void{
@@ -65,6 +88,9 @@ export class PublicProductDetailComponent {
    if(fresh.price!==product.price){this.actionNotice.set('El precio cambió. Revisa el importe actualizado y vuelve a agregar si estás de acuerdo.');return EMPTY;}
    return this.cart.addProduct(productId,quantity);
   }),takeUntil(this.cancelled),takeUntilDestroyed(this.destroyRef),finalize(()=>this.preparing.set(false))).subscribe({next:()=>{this.intent.take(productId);this.added.set(true);
+   const origin=this.purchaseTarget()?.nativeElement;
+   const destination=this.cartTarget()?.nativeElement;
+   if(origin && destination) this.stopTransfer=animateCartTransfer(origin,destination,()=>this.cartPulse.set(true));
    this.cartFeedbackTimer=setTimeout(()=>this.clearCartFeedback(),3000);},error:()=>this.actionNotice.set('No pudimos agregar el producto. Revisa tu conexión y vuelve a intentarlo.')});
  }
 }

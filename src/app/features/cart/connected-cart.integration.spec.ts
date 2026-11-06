@@ -18,8 +18,11 @@ import { AuthService } from '../../core/services/auth.service';
 import { CartService } from '../../core/services/cart.service';
 import { PurchaseIntentService } from '../../core/services/purchase-intent.service';
 import { MainNavigationComponent } from '../../layout/main-navigation/main-navigation.component';
+import * as transfer from '../public-catalog/cart-transfer';
 import { PublicProductDetailComponent } from '../public-catalog/public-product-detail.view';
 import { CartPage } from './cart.page';
+
+vi.mock('../public-catalog/cart-transfer', () => ({ animateCartTransfer: vi.fn() }));
 
 const base = 'https://api.example.test';
 
@@ -44,6 +47,7 @@ describe('carrito real conectado (integración)', () => {
   });
 
   it('detalle público: sin sesión redirige a login; con sesión agrega por productId y actualiza el badge', async () => {
+    const animate = vi.mocked(transfer.animateCartTransfer);
     const navigate = vi.spyOn(TestBed.inject(Router), 'navigate').mockResolvedValue(true);
     const detail = TestBed.createComponent(PublicProductDetailComponent);
     detail.detectChanges();
@@ -68,7 +72,10 @@ describe('carrito real conectado (integración)', () => {
     const post = http.expectOne(`${base}/api/cart/items`);
     expect(post.request.body).toEqual({ productId: 313, quantity: 1 });
     vi.useFakeTimers();
+    expect(animate).not.toHaveBeenCalled();
     post.flush(cartDto());
+    expect(animate).toHaveBeenCalledTimes(1);
+    animate.mockClear();
     expect(TestBed.inject(PurchaseIntentService).take(313)).toBeNull();
     detail.detectChanges();
     nav.detectChanges();
