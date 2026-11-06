@@ -26,7 +26,12 @@ export class PublicImageComponent {
   template: `<div class="products-grid">@for (product of products(); track product.id) {
     <article class="product-card">
       <a class="detail-btn" [routerLink]="['/products', product.id]" [attr.aria-label]="product.name">
-        <div class="product-image"><cmc-public-image [src]="product.imageUrl" [alt]="product.name" /></div>
+        <div class="product-image">
+          <cmc-public-image [src]="product.imageUrl" [alt]="product.name" />
+          @if (product.originalPrice !== null && product.originalPrice > product.price) {
+            <span class="product-offer">Oferta</span>
+          }
+        </div>
         <div class="product-info">
           <span class="cmc-caption">{{ product.category }} · {{ product.brand }}</span>
           <h3 class="product-name cmc-body">{{ product.name }}</h3>
@@ -35,7 +40,7 @@ export class PublicImageComponent {
           }
           <p class="product-price">@if (product.originalPrice !== null) { <del>{{ product.originalPrice | cmcMoney }}</del> }
             {{ product.price | cmcMoney }}</p>
-          <p class="cmc-caption stock-badge" [attr.data-status]="product.availability">{{ product.availability === 'available' ? 'Disponible' : product.availability === 'unavailable' ? 'Agotado' : 'Disponibilidad por confirmar' }}</p>
+          <p class="cmc-caption stock-badge" [attr.data-status]="product.availability"><cmc-icon [name]="product.availability === 'available' ? 'available' : product.availability === 'unavailable' ? 'close' : 'music'"/>{{ product.availability === 'available' ? 'Disponible' : product.availability === 'unavailable' ? 'Agotado' : 'Disponibilidad por confirmar' }}</p>
         </div>
       </a>
       @if (connected) {

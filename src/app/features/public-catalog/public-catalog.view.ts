@@ -1,3 +1,4 @@
+import { NgTemplateOutlet } from '@angular/common';
 import { CmcIconComponent } from '../../shared/ui/icon/cmc-icon.component';
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -14,7 +15,7 @@ import { CmcEmptyStateComponent } from '../../shared/ui/empty-state/cmc-empty-st
 
 @Component({
   selector: 'app-public-catalog', standalone: true, providers: [PublicCatalogService],
-  imports: [CmcIconComponent, FormsModule, IonContent, IonHeader, IonTitle, IonToolbar, IonModal, IonButtons, PublicProductGridComponent, CmcLoadingComponent, CmcErrorStateComponent, CmcEmptyStateComponent],
+  imports: [NgTemplateOutlet, CmcIconComponent, FormsModule, IonContent, IonHeader, IonTitle, IonToolbar, IonModal, IonButtons, PublicProductGridComponent, CmcLoadingComponent, CmcErrorStateComponent, CmcEmptyStateComponent],
   host: { class: 'ion-page' }, changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl:'./public-catalog.view.html',styleUrl:'./public-catalog.view.scss',
 })
@@ -38,6 +39,10 @@ export class PublicCatalogComponent {
       const requestedSort = params.get('sortBy') as PublicSort;
       const sort = ['featured','price_asc','price_desc','name_asc'].includes(requestedSort) ? requestedSort : 'featured';
       this.keyword.set(keyword); this.categoryId.set(category); this.sort.set(keyword.trim() ? 'featured' : sort);
+      if (!this.filtersOpen()) {
+        this.draftCategory.set(category);
+        this.draftSort.set(this.sort());
+      }
       return { keyword, categoryId: /^[1-9][0-9]*$/.test(category) && Number.isSafeInteger(Number(category)) ? Number(category) : undefined,
         page: Number.isSafeInteger(rawPage) && rawPage >= 0 ? rawPage : 0, size: 12, sortBy: keyword.trim() ? 'featured' : sort } satisfies CatalogQuery;
     }), debounceTime(200), distinctUntilChanged((a,b) => JSON.stringify(a) === JSON.stringify(b)), takeUntilDestroyed())
