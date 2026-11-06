@@ -1,7 +1,8 @@
 <ion-content class="cmc-page cmc-standalone-page auth-page" [scrollY]="true">
   <div class="auth-hero">
-    <button type="button" aria-label="Volver a iniciar sesión" class="auth-back-btn" (click)="goBack()">
+    <button type="button" aria-label="Volver a iniciar sesión" class="auth-back-pill" (click)="goBack()">
       <ion-icon name="arrow-back-outline" aria-hidden="true"></ion-icon>
+      Volver al inicio de sesión
     </button>
 
     <div class="brand-info">
@@ -78,7 +79,7 @@
             autocomplete="new-password"
             label="Contraseña"
             type="password"
-            hint="Mínimo 8 caracteres con al menos 3 tipos: minúsculas, mayúsculas, números o símbolos. Evita secuencias como 123 o abc."
+            hint="Evita secuencias fáciles de adivinar como 123 o abc."
             [error]="fieldError('password')"
            required></cmc-input>
 
@@ -90,6 +91,20 @@
             placeholder="Repite tu contraseña"
             [error]="confirmError()"
            required></cmc-input>
+
+          @let checks = passwordChecklist();
+          <section class="password-guide" aria-labelledby="password-guide-title">
+            <h3 id="password-guide-title">Requisitos de contraseña</h3>
+            <meter min="0" max="3" [value]="+checks.length + +checks.bytes + +checks.variety"
+              aria-label="Requisitos locales de contraseña cumplidos"></meter>
+            <ul>
+              <li>{{checks.length ? 'Cumplido' : 'Pendiente'}} · Al menos {{limits.passwordMin}} caracteres</li>
+              <li>{{checks.variety ? 'Cumplido' : 'Pendiente'}} · Tres tipos entre minúsculas, mayúsculas, números y símbolos</li>
+              <li>{{checks.bytes ? 'Cumplido' : 'Pendiente'}} · Máximo {{limits.passwordMaxBytes}} bytes</li>
+              <li>{{checks.matches ? 'Cumplido' : 'Pendiente'}} · Las contraseñas coinciden</li>
+            </ul>
+            <p>El indicador es orientativo. La validación final se realiza al enviar.</p>
+          </section>
 
           <cmc-button type="submit" fullWidth [loading]="submitting()" loadingLabel="Creando cuenta">
             Crear cuenta

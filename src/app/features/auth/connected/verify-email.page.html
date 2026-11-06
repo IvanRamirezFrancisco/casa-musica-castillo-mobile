@@ -24,14 +24,14 @@
         <div class="auth-card-header">
           <h2 class="cmc-title">Ingresa tu código</h2>
           <p class="cmc-body cmc-text-secondary instruction-text">
-            Copia el código (token) del correo de verificación y pégalo aquí.
+            Pega el enlace de verificación completo o el código que aparece después de token=.
           </p>
         </div>
         <form [formGroup]="form" (ngSubmit)="verify()" class="auth-form" novalidate>
           <cmc-input
             formControlName="token"
             autocomplete="one-time-code"
-            label="Código de verificación"
+            label="Enlace o código de verificación"
             type="text"
             [error]="tokenError()"
            required></cmc-input>

@@ -7,6 +7,7 @@ import { arrowBackOutline, mailOutline } from 'ionicons/icons';
 import { CmcInputComponent } from '../../../shared/ui/input/cmc-input.component';
 import { CmcButtonComponent } from '../../../shared/ui/button/cmc-button.component';
 import { describeApiError } from '../../../core/api/api-error-message';
+import { emailActionToken } from '../../../core/validation/email-action-token';
 import { AuthService } from '../../../core/services/auth.service';
 import {
   FIELD_MESSAGES, emailValidator, passwordValidator, passwordsMatch, resetTokenValidator,
@@ -58,7 +59,7 @@ export class ConnectedForgotPasswordPage {
 
   protected tokenError(): string {
     const control = this.confirmForm.controls.token;
-    return control.invalid && control.touched ? 'Pega el código completo, sin espacios.' : '';
+    return control.invalid && control.touched ? 'Pega el enlace de este trámite o el código completo, sin espacios.' : '';
   }
 
   protected passwordError(): string {
@@ -99,9 +100,15 @@ export class ConnectedForgotPasswordPage {
     if (this.submitting()) return;
     if (this.confirmForm.invalid) { this.confirmForm.markAllAsTouched(); return; }
     const value = this.confirmForm.getRawValue();
+    const token = emailActionToken(this.confirmForm.controls.token.value, 'reset-password');
+    if (token === null) {
+      this.confirmForm.controls.token.setErrors({ pattern: true });
+      this.confirmForm.controls.token.markAsTouched();
+      return;
+    }
     this.submitting.set(true);
     this.errorMessage.set('');
-    this.auth.confirmPasswordReset(value.token, value.password).subscribe({
+    this.auth.confirmPasswordReset(token, value.password).subscribe({
       next: () => {
         this.submitting.set(false);
         this.confirmForm.reset();
