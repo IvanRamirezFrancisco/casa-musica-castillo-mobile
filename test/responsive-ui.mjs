@@ -235,7 +235,7 @@ try {
       assert.ok(geometry.minTabWidth >= 44, label + ': touch target width');
     }
     if (geometry.targetBottom !== null && geometry.scrollBottom !== null) {
-      assert.ok(geometry.targetBottom <= geometry.scrollBottom + 1, label + ' ' + screen + ': last control unreachable');
+      assert.ok(geometry.targetBottom <= geometry.scrollBottom + 1, label + ' ' + screen + ': last control unreachable (' + geometry.targetBottom + ' > ' + geometry.scrollBottom + ')');
     }
     if (geometry.image) {
       assert.deepEqual(geometry.image.slice(0, 2), [160, 80], label + ': fixture image dimensions');
@@ -352,7 +352,9 @@ try {
     await resize(320, 350);
     await go('/register', 'app-connected-register input[type=email]');
     await read("document.documentElement.style.fontSize='200%'");
-    await capture('texto-200-ventana-baja', 'registro', '.auth-form cmc-button[type=submit]');
+    await read('document.fonts.ready.then(() => true)');
+    await sleep(250);
+    await capture('texto-200-ventana-baja', 'registro', '.auth-form button[type=submit]');
   }
   if (!baseline) {
     const theme = await read("['--cmc-cta','--cmc-text-on-primary','--cmc-promo-mamey','--cmc-text-primary','--cmc-primary','--cmc-background'].map(name=>getComputedStyle(document.documentElement).getPropertyValue(name).trim())");
