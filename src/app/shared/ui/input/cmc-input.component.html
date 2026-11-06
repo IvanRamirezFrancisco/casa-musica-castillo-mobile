@@ -11,6 +11,7 @@
     [class.cmc-input__field--filled]="isFilled()"
     [class.cmc-input__field--error]="hasError()"
     [class.cmc-input__field--disabled]="isDisabled()"
+    [attr.data-feedback]="isDisabled() ? null : feedback()"
   >
     <input
       #control

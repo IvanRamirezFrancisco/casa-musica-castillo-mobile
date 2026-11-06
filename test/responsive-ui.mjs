@@ -91,9 +91,9 @@ function isVisible(element) {
 async function measure(isVisible, selector) {
   const bar = location.pathname.startsWith('/main/') ? [...document.querySelectorAll('ion-tab-bar')].find(isVisible) : undefined;
   const modal = document.querySelector('ion-modal.show-modal');
-  const content = [...(modal || document).querySelectorAll('ion-content')].filter(isVisible).at(-1);
+  const last = selector ? [...document.querySelectorAll(selector)].filter(isVisible).at(-1) : undefined;
+  const content = last?.closest('ion-content') ?? [...(modal || document).querySelectorAll('ion-content')].filter(isVisible).at(-1);
   const scroll = await content?.getScrollElement?.();
-  const last = selector && [...document.querySelectorAll(selector)].filter(isVisible).at(-1);
   // Let Ionic and the browser settle reflow after a viewport or inset change.
   await new Promise(requestAnimationFrame);
   await new Promise(requestAnimationFrame);
@@ -359,6 +359,13 @@ try {
       await wait('document.activeElement === ' + find(password));
       await wait("!!document.querySelector('.password-guide')");
       await capture(label, 'registro-enfoque');
+      await rpc('Input.insertText', { text: 'abcdefgh' });
+      await wait("document.querySelector('.password-guide progress')?.getAttribute('data-feedback') === 'warning'");
+      await capture(label, 'registro-requisito-pendiente');
+      await read(find(password) + '.select()');
+      await rpc('Input.insertText', { text: 'Cl4ve-Segura' });
+      await wait("document.querySelector('.password-guide progress')?.getAttribute('data-feedback') === 'positive'");
+      await capture(label, 'registro-requisitos-cumplidos');
       await read(find(password) + '.blur()');
       await wait("!document.querySelector('.password-guide')");
     }

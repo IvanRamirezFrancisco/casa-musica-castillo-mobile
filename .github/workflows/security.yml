@@ -16,6 +16,7 @@ on:
       - fix/aceptacion-a55-p0
       - feature/refinamiento-comercial-a55
       - feature/refinamiento-cuenta-favoritos-carrito
+      - feature/galeria-experiencia-comercial
 
   push:
     branches:

@@ -15,14 +15,30 @@ describe('Security enrollment lifecycle with synthetic data',()=>{
  it('operates security controls through the rendered UI',()=>{const f=TestBed.createComponent(AccountSecurityPage);const p=f.componentInstance;
  const click=(label:string)=>{f.detectChanges();const b=Array.from(f.nativeElement.querySelectorAll('button')) as HTMLButtonElement[];const found=b.find(x=>x.textContent?.trim()===label);expect(found).toBeTruthy();found?.click();f.detectChanges();};
  f.detectChanges();click('Activar correo');p.methods.set({...methods,EMAIL:true});click('Desactivar correo');click('Desactivar autenticador');click('Cancelar');click('Desactivar autenticador');click('Confirmar desactivación');click('Generar o regenerar');click('Cancelar');click('Generar o regenerar');click('Confirmar generación');click('Ocultar códigos');p.methods.set({...methods,GOOGLE_AUTHENTICATOR:false});click('Configurar autenticador');click('Copiar clave');const input=f.nativeElement.querySelector('input') as HTMLInputElement;input.value='123456';input.dispatchEvent(new Event('input'));p.code='123456';click('Confirmar activación');p.methods.set({...methods,GOOGLE_AUTHENTICATOR:false});click('Configurar autenticador');click('Ocultar configuración');p.error.set('Error');click('Reintentar consulta');f.destroy();});
- it('distingue la verificación de la cuenta de los métodos activos', () => {
+ it('resume solo las opciones de seguridad confirmadas y ajusta la recomendación', () => {
    const fixture = TestBed.createComponent(AccountSecurityPage);
+   const page = fixture.componentInstance;
+   const root = fixture.nativeElement as HTMLElement;
+   const summary = () => root.querySelector('.security-summary')!;
+   page.methods.set({ EMAIL: false, GOOGLE_AUTHENTICATOR: false, BACKUP_CODES: false });
    fixture.detectChanges();
-   const summary = fixture.nativeElement.querySelector('.security-summary');
-   expect(summary.textContent).toContain('Verificación de cuenta por correo');
-   expect(summary.textContent).toContain('Sin dato en esta pantalla');
-   expect(summary.textContent).toContain('Segundo factor por correo');
-   expect(summary.textContent).not.toContain('%');
+   expect(summary().textContent).toContain('Configuración básica');
+   expect(summary().textContent).toContain('Sesión activa');
+   expect(summary().textContent).toContain('Configura Google Authenticator');
+   expect(summary().querySelectorAll('.security-indicator .is-active')).toHaveLength(0);
+
+   page.methods.set(methods);
+   fixture.detectChanges();
+   expect(summary().textContent).toContain('Segundo factor activo');
+   expect(summary().textContent).toContain('Genera códigos de recuperación');
+   expect(summary().querySelectorAll('.security-indicator .is-active')).toHaveLength(1);
+
+   page.methods.set({ ...methods, EMAIL: true, BACKUP_CODES: true });
+   fixture.detectChanges();
+   expect(summary().textContent).toContain('Segundo factor y recuperación');
+   expect(summary().textContent).toContain('Guarda tus códigos');
+   expect(summary().querySelectorAll('.security-indicator .is-active')).toHaveLength(3);
+   expect(summary().textContent).not.toContain('%');
    fixture.destroy();
  });
  it('renders methods, enrollment, confirmation and recovery controls accessibly',async()=>{const f=TestBed.createComponent(AccountSecurityPage);const p=f.componentInstance;f.detectChanges();expect(f.nativeElement.textContent).toContain('Seguridad de la cuenta');p.methods.set({...methods,GOOGLE_AUTHENTICATOR:false});f.detectChanges();p.setup();f.detectChanges();expect(f.nativeElement.querySelector('img').src).toContain('data:image/png');expect(f.nativeElement.querySelector('input').inputMode).toBe('numeric');p.disabling.set(true);p.generating.set(true);p.codes.set(['0000-0000']);p.notice.set('Guardado');p.error.set('Error de prueba');f.detectChanges();expect(f.nativeElement.textContent).toContain('0000-0000');p.busy.set(true);f.detectChanges();expect(f.nativeElement.textContent).toContain('Procesando');p.clearSecrets();p.methods.set({...methods,EMAIL:true,BACKUP_CODES:true});f.detectChanges();await p.copyKey();p.setup();Object.defineProperty(navigator,'clipboard',{configurable:true,value:{writeText:vi.fn().mockRejectedValue(new Error())}});await p.copyKey();expect(p.notice()).toContain('manualmente');Object.defineProperty(navigator,'clipboard',{configurable:true,value:{writeText:vi.fn().mockResolvedValue(undefined)}});await p.copyKey();expect(p.notice()).toContain('copiada');f.destroy();});

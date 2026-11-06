@@ -202,33 +202,78 @@ describe('autenticación conectada (integración)', () => {
     page.componentInstance['goBack']();
   });
 
-  it('muestra los requisitos solo con foco y distingue confirmación pendiente, inválida y válida', () => {
+  it('muestra los tres estados de contraseña y separa la coincidencia', () => {
     const fixture = TestBed.createComponent(ConnectedRegisterPage);
     fixture.detectChanges();
     const root = fixture.nativeElement as HTMLElement;
     const password = root.querySelector<HTMLInputElement>('cmc-input[formcontrolname="password"] input')!;
     const confirmation = root.querySelector<HTMLInputElement>('cmc-input[formcontrolname="confirmPassword"] input')!;
+    const enter = (field: HTMLInputElement, value: string) => {
+      field.value = value;
+      field.dispatchEvent(new Event('input'));
+      fixture.detectChanges();
+    };
+
     expect(root.querySelector('.password-guide')).toBeNull();
     password.dispatchEvent(new FocusEvent('focusin', { bubbles: true }));
-    password.value = 'Cl4ve-Segura';
-    password.dispatchEvent(new Event('input'));
-    fixture.detectChanges();
-    expect(root.querySelector('progress')?.value).toBe(3);
-    expect(root.textContent).toContain('Confirmación pendiente');
-    expect(root.textContent).not.toContain('Las contraseñas no coinciden');
+    enter(password, 'a');
+    expect(password.closest('[data-feedback]')?.getAttribute('data-feedback')).toBe('negative');
+    expect(root.querySelector('progress')?.value).toBe(1);
+
+    enter(password, 'abcdefgh');
+    expect(password.closest('[data-feedback]')?.getAttribute('data-feedback')).toBe('warning');
+    expect(root.querySelector('progress')?.value).toBe(2);
+    password.dispatchEvent(new FocusEvent('blur'));
     password.dispatchEvent(new FocusEvent('focusout', { bubbles: true }));
     fixture.detectChanges();
     expect(root.querySelector('.password-guide')).toBeNull();
+    expect(root.textContent).toContain('Falta un requisito de contraseña');
+
+    enter(password, 'Cl4ve-Segura');
+    expect(password.closest('[data-feedback]')?.getAttribute('data-feedback')).toBe('positive');
     expect(root.textContent).toContain('Cumple los requisitos locales');
-    confirmation.value = 'otra';
-    confirmation.dispatchEvent(new Event('input'));
+    expect(root.textContent).toContain('Confirmación pendiente');
+    expect(root.textContent).not.toContain('Las contraseñas no coinciden');
+
+    enter(confirmation, 'otra');
     confirmation.dispatchEvent(new FocusEvent('blur'));
     fixture.detectChanges();
+    expect(confirmation.getAttribute('aria-invalid')).toBe('true');
     expect(root.textContent).toContain('Las contraseñas no coinciden');
-    confirmation.value = password.value;
-    confirmation.dispatchEvent(new Event('input'));
-    fixture.detectChanges();
+    enter(confirmation, password.value);
+    expect(confirmation.getAttribute('aria-invalid')).toBeNull();
+    expect(confirmation.closest('[data-feedback]')?.getAttribute('data-feedback')).toBe('positive');
     expect(root.textContent).toContain('Las contraseñas coinciden');
+  });
+
+  it('deja el teléfono vacío válido, detecta un número incompleto y confirma diez dígitos con separadores', () => {
+    const fixture = TestBed.createComponent(ConnectedRegisterPage);
+    fixture.detectChanges();
+    const root = fixture.nativeElement as HTMLElement;
+    const phone = root.querySelector<HTMLInputElement>('input[type="tel"]')!;
+    expect(phone.inputMode).toBe('tel');
+    expect(phone.getAttribute('aria-invalid')).toBeNull();
+    expect(root.textContent).not.toContain('Formato de teléfono válido');
+
+    phone.value = '55-1234';
+    phone.dispatchEvent(new Event('input'));
+    phone.dispatchEvent(new FocusEvent('blur'));
+    fixture.detectChanges();
+    expect(phone.getAttribute('aria-invalid')).toBe('true');
+    expect(root.textContent).toContain('Ingresa 10 dígitos');
+
+    phone.value = '55-1234 5678';
+    phone.dispatchEvent(new Event('input'));
+    fixture.detectChanges();
+    expect(phone.getAttribute('aria-invalid')).toBeNull();
+    expect(phone.closest('[data-feedback]')?.getAttribute('data-feedback')).toBe('positive');
+    expect(root.textContent).toContain('Formato de teléfono válido');
+
+    phone.value = '';
+    phone.dispatchEvent(new Event('input'));
+    fixture.detectChanges();
+    expect(phone.getAttribute('aria-invalid')).toBeNull();
+    expect(root.textContent).not.toContain('Formato de teléfono válido');
   });
 
   it('recuperación y restablecimiento: usa /password-reset/* y limpia contraseñas al terminar o fallar', () => {
