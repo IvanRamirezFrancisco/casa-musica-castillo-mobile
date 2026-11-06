@@ -67,8 +67,23 @@ describe('carrito real conectado (integración)', () => {
     refresh.flush(productDto());
     const post = http.expectOne(`${base}/api/cart/items`);
     expect(post.request.body).toEqual({ productId: 313, quantity: 1 });
-    vi.useFakeTimers();
-    post.flush(cartDto());
+    const root = detail.nativeElement as HTMLElement;
+    const origin = root.querySelector('.purchase-panel cmc-button')!;
+    const target = root.querySelector('.detail-cart')!;
+    vi.spyOn(origin, 'getBoundingClientRect').mockReturnValue(new DOMRect(40, 100, 200, 48));
+    vi.spyOn(target, 'getBoundingClientRect').mockReturnValue(new DOMRect(220, 20, 44, 44));
+    const animate = vi.fn(() => ({ onfinish: null, cancel: vi.fn() }));
+    const previousAnimate = Object.getOwnPropertyDescriptor(HTMLElement.prototype, 'animate');
+    Object.defineProperty(HTMLElement.prototype, 'animate', { configurable: true, value: animate });
+    try {
+      vi.useFakeTimers();
+      expect(document.querySelector('[data-cart-transfer]')).toBeNull();
+      post.flush(cartDto());
+      expect(animate).toHaveBeenCalledTimes(1);
+    } finally {
+      if (previousAnimate) Object.defineProperty(HTMLElement.prototype, 'animate', previousAnimate);
+      else Reflect.deleteProperty(HTMLElement.prototype, 'animate');
+    }
     expect(TestBed.inject(PurchaseIntentService).take(313)).toBeNull();
     detail.detectChanges();
     nav.detectChanges();

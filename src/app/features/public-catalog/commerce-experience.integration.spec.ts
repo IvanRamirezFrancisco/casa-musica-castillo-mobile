@@ -65,6 +65,16 @@ describe('Experiencia comercial móvil: HTTP controlado, nunca backend real',()=
  it('galería usa imágenes reales, descripción y atributos sin HTML ejecutable',()=>{
   const f=detail([],{images:[{url:'https://res.cloudinary.com/test/second.jpg',displayOrder:1}]});const instance=f.componentInstance;expect(instance.imageNumber()).toBe(1);const thumb=f.nativeElement.querySelectorAll('.gallery-thumb')[1] as HTMLButtonElement;thumb.click();f.detectChanges();expect(instance.imageNumber()).toBe(2);expect(thumb.getAttribute('aria-current')).toBe('true');instance.selectedImage.set('https://not-a-product.test');expect(instance.imageNumber()).toBe(1);instance.descriptionExpanded.update(instance.invert);expect(instance.descriptionExpanded()).toBe(true);expect(instance.maximum()).toBeGreaterThan(0);
  });
+ it('retira el acceso al visor cuando falla la única fotografía', () => {
+  const fixture = detail();
+  const root = fixture.nativeElement as HTMLElement;
+  const image = root.querySelector('.cover-action img');
+  expect(image).not.toBeNull();
+  image?.dispatchEvent(new Event('error'));
+  fixture.detectChanges();
+  expect(root.querySelector('.cover-action')).toBeNull();
+  expect(root.querySelector('.cover-empty [role="img"]')?.getAttribute('aria-label')).toContain('imagen no disponible');
+ });
  it('home prioriza disponibles en la selección recibida sin reordenar una página de catálogo',()=>{
   const f=TestBed.createComponent(PublicHomeComponent);fixtures.push(f);f.detectChanges();http.expectOne(r=>r.url.endsWith('/categories/active')).flush([categoryDto]);http.expectOne(r=>r.url.endsWith('/latest')).flush([productDto({id:1,stock:0,name:'Agotado no promocionado'}),productDto({id:2,stock:5,name:'Instrumento disponible'})]);http.expectOne(r=>r.url.endsWith('/featured')).flush(productPage([productDto({stock:0})],{size:6}));f.detectChanges();expect(f.nativeElement.textContent).toContain('Instrumento disponible');expect(f.nativeElement.textContent).not.toContain('Agotado no promocionado');expect(f.nativeElement.textContent).toContain('Sin destacados disponibles');
  });
