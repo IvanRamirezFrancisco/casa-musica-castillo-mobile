@@ -229,9 +229,11 @@ describe('autenticación conectada (integración)', () => {
     http.expectOne(`${base}/api/auth/password-reset/confirm`).flush({ success: false, message: 'Token inválido' }, { status: 400, statusText: 'Bad Request' });
     expect(page.componentInstance['confirmForm'].controls.password.value).toBe('');
 
-    page.componentInstance['confirmForm'].setValue({ token: 'tok-reset', password: 'Nu3va-Clave', confirmPassword: 'Nu3va-Clave' });
+    page.componentInstance['confirmForm'].setValue({ token: 'http://127.0.0.1:4200/reset-password?token=tok-reset', password: 'Nu3va-Clave', confirmPassword: 'Nu3va-Clave' });
     page.componentInstance['confirm']();
-    http.expectOne(`${base}/api/auth/password-reset/confirm`).flush({ success: true, message: 'ok' });
+    const confirmation = http.expectOne(`${base}/api/auth/password-reset/confirm`);
+    expect(confirmation.request.body.token).toBe('tok-reset');
+    confirmation.flush({ success: true, message: 'ok' });
     page.detectChanges();
     expect(page.nativeElement.textContent).toContain('Contraseña actualizada');
     page.componentInstance['goBackToLogin']();
@@ -255,11 +257,13 @@ describe('autenticación conectada (integración)', () => {
     page.detectChanges();
     expect(page.nativeElement.textContent).toContain('enviamos un nuevo código');
 
-    page.componentInstance['form'].setValue({ token: 'tok-email' });
+    page.componentInstance['form'].setValue({ token: 'http://127.0.0.1:4200/verify-account?token=token-test' });
     page.componentInstance['verify']();
     http.expectOne(`${base}/api/auth/verify-email`).flush({ success: false, message: 'Expirado' }, { status: 400, statusText: 'Bad Request' });
     page.componentInstance['verify']();
-    http.expectOne(`${base}/api/auth/verify-email`).flush({ success: true, message: 'ok' });
+    const verification = http.expectOne(`${base}/api/auth/verify-email`);
+    expect(verification.request.body.token).toBe('token-test');
+    verification.flush({ success: true, message: 'ok' });
     page.detectChanges();
     expect(page.nativeElement.textContent).toContain('Cuenta verificada');
     page.componentInstance['goBackToLogin']();

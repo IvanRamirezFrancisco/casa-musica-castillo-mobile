@@ -1,5 +1,5 @@
 <ion-header class="cmc-store-header ion-no-border"><ion-toolbar><ion-buttons slot="start"><ion-back-button defaultHref="/main/catalog" text="Volver" aria-label="Volver al catálogo"/></ion-buttons><ion-title>Detalle del producto</ion-title></ion-toolbar></ion-header>
-<ion-content class="cmc-page"><main class="cmc-store">
+<ion-content class="cmc-page product-content"><main class="cmc-store">
 @switch(service.product().status){
   @case('loading'){<cmc-loading message="Consultando producto"/>}
   @case('error'){@if(invalidId||service.product().error?.status===404){<cmc-empty-state heading="Producto no encontrado" description="El producto no existe o ya no está disponible."/>}@else{<cmc-error-state heading="No pudimos cargar el producto" description="Revisa la conexión y vuelve a intentarlo." (retry)="service.retryProduct()"/>}}

@@ -344,6 +344,11 @@ try {
     await wait("innerWidth === 375 && innerHeight === 667");
     await capture('inset-28px', 'catalogo', '.paging button:last-child');
     assert.ok(rows.at(-1).barLeft >= 28);
+    await go('/products/313', '.product-summary h1');
+    await read("document.documentElement.style.setProperty('--ion-safe-area-bottom','24px')");
+    await capture('inset-24px', 'detalle', '.purchase-panel cmc-button');
+    assert.ok(await read("document.querySelector('ion-content.product-content').getBoundingClientRect().bottom <= innerHeight - 24"));
+
     await resize(320, 350);
     await go('/register', 'app-connected-register input[type=email]');
     await read("document.documentElement.style.fontSize='200%'");
