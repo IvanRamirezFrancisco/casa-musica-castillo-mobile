@@ -1,0 +1,25 @@
+@use '../../../shared/ui/styles/security' as *;
+
+@include feedback;
+
+.factor-card { border-block-start: 3px solid var(--cmc-primary); }
+.factor-header { margin-top: 0; }
+.factor-eyebrow { color: var(--cmc-primary); font-weight: 700; margin-block: 0.75rem 0.25rem; }
+.factor-method, .factor-help { margin: 0; overflow-wrap: anywhere; }
+.factor-method { padding: 0.75rem; background: var(--cmc-surface-alt); border-radius: var(--cmc-radius-md); font-weight: 600; }
+.factor-help { color: var(--cmc-text-secondary); }
+.method-group { min-width: 0; border: 0; padding: 0; margin: 0; display: grid; gap: 0.5rem; }
+.method-group legend { margin-bottom: 0.5rem; }
+.method-option {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-height: 48px;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--cmc-border);
+  border-radius: var(--cmc-radius-md);
+  overflow-wrap: anywhere;
+}
+.method-option:has(:checked) { border-color: var(--cmc-primary); background: var(--cmc-surface-alt); }
+.method-option input { flex: none; width: 24px; height: 24px; accent-color: var(--cmc-primary); }
+.step-actions { padding-block-start: 0.75rem; border-block-start: 1px solid var(--cmc-border); }

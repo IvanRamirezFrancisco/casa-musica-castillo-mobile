@@ -1,9 +1,10 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, afterRenderEffect, inject, signal, viewChild } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { IonContent, IonIcon } from '@ionic/angular';
 import { addIcons } from 'ionicons';
-import { musicalNotesOutline } from 'ionicons/icons';
+import { arrowBackOutline, musicalNotesOutline } from 'ionicons/icons';
+import { CmcIconComponent } from '../../../shared/ui/icon/cmc-icon.component';
 import { CmcInputComponent } from '../../../shared/ui/input/cmc-input.component';
 import { CmcButtonComponent } from '../../../shared/ui/button/cmc-button.component';
 import { describeApiError } from '../../../core/api/api-error-message';
@@ -26,11 +27,10 @@ const METHOD_LABELS: Record<TwoFactorMethod, string> = {
 @Component({
   selector: 'app-connected-login',
   templateUrl: './connected-login.page.html',
-  styleUrls: ['../login/login.page.scss'],
-  styles: ['.auth-alert { margin: 0 0 16px; padding: 12px 16px; border-radius: 8px; font-size: 0.9rem; } .auth-alert--error { background: #fdecea; color: #7a1c14; } .auth-alert--info { background: #fff6e0; color: #5c4300; } .method-group { border: 0; padding: 0; margin: 0 0 16px; display: grid; gap: 8px; } .method-option { display: flex; align-items: center; gap: 12px; min-height: 48px; } .method-option input { width: 24px; height: 24px; accent-color: var(--cmc-primary); } .step-actions { display: grid; gap: 12px; margin-top: 12px; }'],
+  styleUrls: ['../login/login.page.scss', './connected-login.page.scss'],
   host: { class: 'ion-page' },
   standalone: true,
-  imports: [IonContent, IonIcon, ReactiveFormsModule, RouterLink, CmcInputComponent, CmcButtonComponent],
+  imports: [IonContent, IonIcon, ReactiveFormsModule, RouterLink, CmcIconComponent, CmcInputComponent, CmcButtonComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ConnectedLoginPage {
@@ -57,7 +57,12 @@ export class ConnectedLoginPage {
     code: ['', [otpValidator(() => this.method())]],
   });
 
-  constructor() { addIcons({ musicalNotesOutline }); }
+  private readonly factorTitle = viewChild<ElementRef<HTMLElement>>('factorTitle');
+
+  constructor() {
+    addIcons({ arrowBackOutline, musicalNotesOutline });
+    afterRenderEffect(() => this.factorTitle()?.nativeElement.focus());
+  }
 
   protected submit(): void {
     if (this.submitting()) return;

@@ -84,11 +84,21 @@ describe('autenticación conectada (integración)', () => {
     page.detectChanges();
     expect(auth.hasValidSession()).toBe(false);
     expect(page.nativeElement.textContent).toContain('Todavía no has iniciado sesión');
+    const heading = page.nativeElement.querySelector('#second-factor-title');
+    expect(page.nativeElement.ownerDocument.activeElement).toBe(heading);
+    expect(page.nativeElement.querySelector('fieldset legend')?.textContent).toContain('Método de verificación');
 
     page.componentInstance['sendEmailCode']();
     http.expectOne(`${base}/api/2fa/send-login-code`).flush({ success: true, message: 'ok' });
     page.detectChanges();
     expect(page.nativeElement.textContent).toContain('Te enviamos un código');
+    const resend = Array.from<HTMLButtonElement>(page.nativeElement.querySelectorAll('button'))
+      .find(button => button.textContent?.includes('Reenviar código'))!;
+    resend.click();
+    const retry = http.expectOne(`${base}/api/2fa/send-login-code`);
+    page.detectChanges();
+    expect(resend.disabled).toBe(true);
+    retry.flush({ success: true, message: 'ok' });
 
     page.componentInstance['verify']();
     http.expectNone(`${base}/api/2fa/verify`);

@@ -2,7 +2,7 @@ import { emailValidator } from '../../../core/validation/auth-fields.validation'
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { addIcons } from 'ionicons';
-import { musicalNotesOutline } from 'ionicons/icons';
+import { arrowBackOutline, musicalNotesOutline } from 'ionicons/icons';
 import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { IonContent, IonIcon } from '@ionic/angular';
 import { CmcInputComponent } from '../../../shared/ui/input/cmc-input.component';
@@ -27,7 +27,7 @@ import { ConnectedLoginPage } from '../connected/connected-login.page';
 })
 export class LoginPage {
   readonly connected = inject(BACKEND_SESSION_ENABLED);
-  constructor() { addIcons({ musicalNotesOutline }); }
+  constructor() { addIcons({ arrowBackOutline, musicalNotesOutline }); }
 
   private fb = inject(NonNullableFormBuilder);
   private router = inject(Router);
