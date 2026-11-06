@@ -9,9 +9,16 @@
    * ================================================== */
 
   --cmc-primary: #722f37;
-  --cmc-primary-soft: #a64d5b;
+  --cmc-primary-soft: #9e4751;
   --cmc-primary-dark: #421a20;
   --cmc-accent-gold: #c5a059;
+  --cmc-cta: #b84a22;
+  --cmc-cta-hover: #9a3b19;
+  --cmc-cta-dark: #7c2e12;
+  --cmc-shadow-cta: 0 4px 12px rgb(184 74 34 / 22%);
+  --cmc-promo-mamey: #ffcf71;
+  --cmc-promo-surface: #fff6df;
+  --cmc-promo-border: #e5b047;
 
   /* ==================================================
    * Surfaces
@@ -100,6 +107,9 @@
   --cmc-warning-text: #914201;
   --cmc-warning-surface: #fff1dc;
   --cmc-success-text: #047857;
+  --cmc-success-surface: #ecfdf5;
+  --cmc-error-text: #991b1b;
+  --cmc-error-surface: #fef2f2;
   /* Capacitor 8 SystemBars supplies actual system/cutout insets in CSS mode. */
   --ion-safe-area-top: var(--safe-area-inset-top, env(safe-area-inset-top, 0px));
   --ion-safe-area-bottom: var(--safe-area-inset-bottom, env(safe-area-inset-bottom, 0px));

@@ -45,7 +45,7 @@
     box-shadow var(--cmc-transition-fast);
 
   &:focus-visible {
-    outline: 3px solid var(--cmc-accent-gold);
+    outline: 3px solid var(--cmc-primary);
     outline-offset: 2px;
   }
 
@@ -74,6 +74,16 @@
     }
   }
 
+  &--commercial {
+    background: var(--cmc-cta);
+    color: var(--cmc-text-on-primary);
+    box-shadow: var(--cmc-shadow-cta);
+
+    &:active:not(:disabled):not([aria-disabled='true']) {
+      background: var(--cmc-cta-dark);
+    }
+  }
+
   &--secondary {
     background: var(--cmc-surface);
     border-color: var(--cmc-primary);
@@ -96,6 +106,10 @@
   @media (hover: hover) {
     &--primary:hover:not(:disabled):not([aria-disabled='true']) {
       background: var(--cmc-primary-soft);
+    }
+
+    &--commercial:hover:not(:disabled):not(:active):not([aria-disabled='true']) {
+      background: var(--cmc-cta-hover);
     }
 
     &--secondary:hover:not(:disabled):not([aria-disabled='true']),
