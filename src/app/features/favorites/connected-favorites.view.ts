@@ -6,6 +6,7 @@ import { IonHeader,IonToolbar,IonTitle,IonButtons,IonBackButton,IonContent } fro
 import { Subject, takeUntil } from 'rxjs';
 import { WISHLIST_REPOSITORY } from '../../core/repositories/wishlist.repository';
 import { WishlistItem } from '../../core/models/wishlist.model';
+import { ProductFavoritesService } from '../../core/services/product-favorites.service';
 import { AuthService } from '../../core/services/auth.service';
 import { describeApiError } from '../../core/api/api-error-message';
 import { PublicImageComponent } from '../public-catalog/public-product-grid.component';
@@ -21,9 +22,10 @@ import { CmcLoadingComponent } from '../../shared/ui/loading/cmc-loading.compone
  @for(item of items();track item.wishlistId){<article><cmc-public-image [src]="item.productImage" [alt]="item.productName"/><div><h3>{{item.productName}}</h3><p>{{item.currentPrice | currency:'MXN'}}</p><p>{{item.available===false || item.availableStock===0?'No disponible':item.availableStock===null || item.available!==true?'Disponibilidad por confirmar':'Disponible'}}</p><a [routerLink]="['/products',item.productId]">Ver producto</a><button [disabled]="loading()" (click)="remove(item.wishlistId)" [attr.aria-label]="'Quitar de favoritos '+item.productName">Quitar</button></div></article>}
  </main></ion-content>`,})
 export class ConnectedFavoritesComponent {
+ private readonly favorites=inject(ProductFavoritesService);
  private readonly repo=inject(WISHLIST_REPOSITORY);private readonly destroyRef=inject(DestroyRef);private readonly cancel=new Subject<void>();
  readonly items=signal<readonly WishlistItem[]>([]);readonly loading=signal(false);readonly error=signal('');
  constructor(){inject(AuthService).sessionEnded$.pipe(takeUntilDestroyed()).subscribe(()=>{this.cancel.next();this.items.set([]);this.loading.set(false);});this.reload();}
  reload():void {if(this.loading())return;this.loading.set(true);this.error.set('');this.repo.list().pipe(takeUntil(this.cancel),takeUntilDestroyed(this.destroyRef)).subscribe({next:data=>{this.items.set(data.items);this.loading.set(false);},error:e=>{this.loading.set(false);this.error.set(describeApiError(e));}});}
- remove(id:number):void {if(this.loading())return;this.loading.set(true);this.error.set('');this.repo.remove(id).pipe(takeUntil(this.cancel),takeUntilDestroyed(this.destroyRef)).subscribe({next:()=>{this.loading.set(false);this.reload();},error:e=>{this.loading.set(false);this.error.set(describeApiError(e));}});}
+ remove(id:number):void {if(this.loading())return;this.loading.set(true);this.error.set('');this.repo.remove(id).pipe(takeUntil(this.cancel),takeUntilDestroyed(this.destroyRef)).subscribe({next:()=>{this.favorites.forget(id);this.loading.set(false);this.reload();},error:e=>{this.loading.set(false);this.error.set(describeApiError(e));}});}
 }

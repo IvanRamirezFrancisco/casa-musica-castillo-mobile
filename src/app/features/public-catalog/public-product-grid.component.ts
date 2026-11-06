@@ -1,8 +1,11 @@
-import { ChangeDetectionStrategy, Component, input, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, inject, input, signal, untracked } from '@angular/core';
 import { CmcMoneyPipe } from '../../shared/ui/money/cmc-money.pipe';
 import { CmcIconComponent } from '../../shared/ui/icon/cmc-icon.component';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { PublicProduct } from '../../core/models/public-product.model';
+import { BACKEND_SESSION_ENABLED } from '../../core/config/backend-session.token';
+import { AuthService } from '../../core/services/auth.service';
+import { ProductFavoritesService } from '../../core/services/product-favorites.service';
 
 @Component({
   selector: 'cmc-public-image', standalone: true, changeDetection: ChangeDetectionStrategy.OnPush,
@@ -22,16 +25,51 @@ export class PublicImageComponent {
   styleUrl: './public-product-grid.component.scss',
   template: `<div class="products-grid">@for (product of products(); track product.id) {
     <article class="product-card">
-      <div class="product-image"><cmc-public-image [src]="product.imageUrl" [alt]="product.name" /></div>
-      <div class="product-info">
-        <span class="cmc-caption">{{ product.category }} · {{ product.brand }}</span>
-        <h3 class="product-name cmc-body">{{ product.name }}</h3>
-        @if(product.reviewCount && product.averageRating !== null) {<p class="rating"><cmc-icon name="star"/>{{product.averageRating}} · {{product.reviewCount}} opiniones</p>}<p class="product-price">@if (product.originalPrice !== null) { <del>{{ product.originalPrice | cmcMoney }}</del> }
-          {{ product.price | cmcMoney }}</p>
-        <p class="cmc-caption stock-badge" [attr.data-status]="product.availability">{{ product.availability === 'available' ? 'Disponible' : product.availability === 'unavailable' ? 'Agotado' : 'Disponibilidad por confirmar' }}</p>
-        <a class="detail-btn" [routerLink]="['/products', product.id]" [attr.aria-label]="'Ver información de ' + product.name">Ver información</a>
-      </div>
+      <a class="detail-btn" [routerLink]="['/products', product.id]" [attr.aria-label]="product.name">
+        <div class="product-image"><cmc-public-image [src]="product.imageUrl" [alt]="product.name" /></div>
+        <div class="product-info">
+          <span class="cmc-caption">{{ product.category }} · {{ product.brand }}</span>
+          <h3 class="product-name cmc-body">{{ product.name }}</h3>
+          @if (product.reviewCount && product.averageRating !== null) {
+            <p class="rating"><cmc-icon name="star"/>{{product.averageRating}} · {{product.reviewCount}} opiniones</p>
+          }
+          <p class="product-price">@if (product.originalPrice !== null) { <del>{{ product.originalPrice | cmcMoney }}</del> }
+            {{ product.price | cmcMoney }}</p>
+          <p class="cmc-caption stock-badge" [attr.data-status]="product.availability">{{ product.availability === 'available' ? 'Disponible' : product.availability === 'unavailable' ? 'Agotado' : 'Disponibilidad por confirmar' }}</p>
+        </div>
+      </a>
+      @if (connected) {
+        <button type="button" class="card-favorite-btn" [disabled]="favorites.busy()"
+          [attr.aria-pressed]="favorites.id(product.id) !== null"
+          [attr.aria-busy]="favorites.busy()"
+          [attr.aria-label]="(favorites.id(product.id) !== null ? 'Quitar de favoritos: ' : 'Guardar en favoritos: ') + product.name"
+          (click)="toggleFavorite(product.id)">
+          <cmc-icon [name]="favorites.id(product.id) !== null ? 'saved' : 'heart'"/>
+        </button>
+      }
     </article>
-  }</div>`,
+  }</div>
+  @if (connected && favorites.notice(); as notice) { <p role="status">{{ notice }}</p> }`,
 })
-export class PublicProductGridComponent { readonly products = input.required<readonly PublicProduct[]>(); }
+export class PublicProductGridComponent {
+  readonly products = input.required<readonly PublicProduct[]>();
+  readonly connected = inject(BACKEND_SESSION_ENABLED);
+  readonly favorites = inject(ProductFavoritesService);
+  private readonly auth = inject(AuthService);
+  private readonly router = inject(Router);
+
+  constructor() {
+    effect(() => {
+      if (this.connected && this.auth.user()) untracked(() => this.favorites.load());
+    });
+  }
+
+  toggleFavorite(productId: number): void {
+    if (!this.connected) return;
+    if (!this.auth.hasValidSession()) {
+      void this.router.navigate(['/login'], { queryParams: { returnUrl: '/products/' + productId } });
+      return;
+    }
+    this.favorites.toggle(productId);
+  }
+}
