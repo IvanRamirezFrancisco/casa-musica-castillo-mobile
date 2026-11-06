@@ -18,13 +18,13 @@
     <section class="product-gallery" aria-label="Galería del producto">
       @if(activeImage(); as image){
         <button type="button" class="cover cover-action" aria-label="Ampliar fotografía del producto" (click)="viewer.open()">
-          <cmc-public-image [src]="image" [alt]="product.name"/>
+          <cmc-public-image [src]="image" [alt]="product.name" (unavailable)="markPhotoUnavailable($event)"/>
         </button>
         @if(galleryImages().length > 1){
           <div class="gallery" role="group" aria-label="Elegir fotografía">
             @for(photo of galleryImages();track photo;let i=$index){
               <button type="button" class="gallery-thumb" [attr.aria-label]="'Fotografía '+(i+1)" [attr.aria-current]="image===photo" (click)="selectImage(photo)">
-                <cmc-public-image [src]="photo" [alt]="product.name"/>
+                <cmc-public-image [src]="photo" [alt]="product.name" [compact]="true" (unavailable)="markPhotoUnavailable($event)"/>
               </button>
             }
           </div>
@@ -34,7 +34,7 @@
         <div class="cover cover-empty"><cmc-public-image [alt]="product.name"/></div>
       }
       <cmc-product-photo-viewer #viewer [photos]="galleryImages()" [position]="imageNumber() - 1"
-        [title]="product.name" (photoChange)="selectImage($event)"/>
+        [title]="product.name" (photoChange)="selectImage($event)" (photoUnavailable)="markPhotoUnavailable($event)"/>
     </section>
     <section class="product-purchase">
       <div class="product-price-panel"><div class="price-row"><strong>{{product.price | cmcMoney}}</strong>@if(product.originalPrice!==null){<del>{{product.originalPrice | cmcMoney}}</del><span class="offer-label">Oferta</span>}</div><p class="muted">Precio en MXN</p>

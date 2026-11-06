@@ -65,7 +65,11 @@ function fixture(method, pathname) {
   }
   if (method !== 'GET') return undefined;
   if (pathname === '/api/auth/me') return user;
-  if (pathname === '/api/wishlist') return { items: [], totalItems: 0 };
+  if (pathname === '/api/wishlist') return {
+    items: [{ wishlistId: 9, productId: products[0].id, productName: products[0].name, productImage: null,
+      currentPrice: 5900, available: true, availableStock: 18 }],
+    totalItems: 1,
+  };
   if (pathname === '/api/2fa/methods') {
     return wrap({ EMAIL: emailEnabled, GOOGLE_AUTHENTICATOR: false, BACKUP_CODES: false });
   }
@@ -282,6 +286,18 @@ try {
     }
     await go('/products/313', '.product-summary h1');
     await capture(label, 'detalle');
+    if (!baseline && ['320x640', '375x667', 'abierto', 'tablet-horizontal', 'telefono-horizontal'].includes(label)) {
+      await click('.cover-action');
+      await wait("document.querySelector('.photo-viewer')?.open");
+      await click('[aria-label="Ampliar zoom"]');
+      assert.equal(await read("document.querySelector('.viewer-photo').style.width"), '150%');
+      assert.ok(await read("document.querySelector('[aria-label=\"Cerrar visor\"]').getBoundingClientRect().height >= 44"));
+      assert.ok(await read("document.querySelector('.photo-viewer').getBoundingClientRect().width <= innerWidth"));
+      await capture(label, 'galeria');
+      await click('[aria-label="Cerrar visor"]');
+      await wait("!document.querySelector('.photo-viewer').open");
+      assert.equal(await read("document.activeElement.classList.contains('cover-action')"), true);
+    }
     await go('/main/home', 'app-public-home .store-hero');
     await capture(label, 'inicio');
     await go('/login', 'app-connected-login input[type=email]');
@@ -301,6 +317,16 @@ try {
       await click('#security-email ~ cmc-button button');
       await wait("document.querySelector('#security-email ~ .security-state')?.textContent === 'Activado'");
       await capture(label, 'seguridad-confirmada');
+      await go('/login', 'app-connected-login input[type=email]');
+      await submitLogin();
+      await wait("location.pathname==='/main/home'");
+      await click('ion-tab-button[tab=profile]');
+      await wait("location.pathname==='/main/profile' && !!document.querySelector('app-connected-profile-view .profile-card')");
+      await read("[...document.querySelectorAll('app-connected-profile-view button')].find(button => button.textContent.includes('Mis favoritos')).click()");
+      await wait("location.pathname==='/favorites' && !!document.querySelector('.favorite-card')");
+      await capture(label, 'favoritos', '.favorite-card button');
+      await go('/forgot-password', 'app-connected-forgot-password input[type=email]');
+      await capture(label, 'recuperacion', '.auth-footer button');
     }
     useSecondFactor = true;
     await go('/login', 'app-connected-login input[type=email]');
@@ -324,6 +350,18 @@ try {
     useSecondFactor = false;
     await go('/register', 'app-connected-register input[type=email]');
     await capture(label, 'registro');
+    if (!baseline && label === '375x667') {
+      const password = 'app-connected-register cmc-input[formcontrolname=password] input';
+      await read(find(password) + '.scrollIntoView({ block: "center" })');
+      const point = await read('(() => { const r = ' + find(password) + '.getBoundingClientRect(); return { x: r.left + r.width/2, y: r.top + r.height/2 }; })()');
+      await rpc('Input.dispatchMouseEvent', { type: 'mousePressed', ...point, button: 'left', clickCount: 1 });
+      await rpc('Input.dispatchMouseEvent', { type: 'mouseReleased', ...point, button: 'left', clickCount: 1 });
+      await wait('document.activeElement === ' + find(password));
+      await wait("!!document.querySelector('.password-guide')");
+      await capture(label, 'registro-enfoque');
+      await read(find(password) + '.blur()');
+      await wait("!document.querySelector('.password-guide')");
+    }
     await go('/privacy', '.privacy-shell');
     await capture(label, 'privacidad');
   }

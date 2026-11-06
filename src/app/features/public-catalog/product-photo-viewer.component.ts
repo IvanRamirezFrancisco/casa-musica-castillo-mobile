@@ -15,6 +15,7 @@ export class ProductPhotoViewerComponent {
   readonly title = input.required<string>();
   readonly position = input.required<number>();
   readonly photoChange = output<string>();
+  readonly photoUnavailable = output<string>();
   protected readonly zoom = signal(1);
   protected readonly activePhoto = computed(() => this.photos()[this.position()]);
   private readonly dialog = viewChild.required<ElementRef<HTMLDialogElement>>('dialog');
@@ -32,7 +33,7 @@ export class ProductPhotoViewerComponent {
     if (dialog.open) dialog.close();
   }
 
-  protected onArrow(event: KeyboardEvent, delta: number): void {
+  protected onArrow(event: Event, delta: number): void {
     const area = this.zoomArea()?.nativeElement;
     if (this.zoom() > 1 && event.target instanceof Node && area?.contains(event.target)) return;
     event.preventDefault();

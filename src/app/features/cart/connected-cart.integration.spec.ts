@@ -18,11 +18,8 @@ import { AuthService } from '../../core/services/auth.service';
 import { CartService } from '../../core/services/cart.service';
 import { PurchaseIntentService } from '../../core/services/purchase-intent.service';
 import { MainNavigationComponent } from '../../layout/main-navigation/main-navigation.component';
-import * as transfer from '../public-catalog/cart-transfer';
 import { PublicProductDetailComponent } from '../public-catalog/public-product-detail.view';
 import { CartPage } from './cart.page';
-
-vi.mock('../public-catalog/cart-transfer', () => ({ animateCartTransfer: vi.fn() }));
 
 const base = 'https://api.example.test';
 
@@ -47,7 +44,6 @@ describe('carrito real conectado (integración)', () => {
   });
 
   it('detalle público: sin sesión redirige a login; con sesión agrega por productId y actualiza el badge', async () => {
-    const animate = vi.mocked(transfer.animateCartTransfer);
     const navigate = vi.spyOn(TestBed.inject(Router), 'navigate').mockResolvedValue(true);
     const detail = TestBed.createComponent(PublicProductDetailComponent);
     detail.detectChanges();
@@ -71,11 +67,23 @@ describe('carrito real conectado (integración)', () => {
     refresh.flush(productDto());
     const post = http.expectOne(`${base}/api/cart/items`);
     expect(post.request.body).toEqual({ productId: 313, quantity: 1 });
-    vi.useFakeTimers();
-    expect(animate).not.toHaveBeenCalled();
-    post.flush(cartDto());
-    expect(animate).toHaveBeenCalledTimes(1);
-    animate.mockClear();
+    const root = detail.nativeElement as HTMLElement;
+    const origin = root.querySelector('.purchase-panel cmc-button')!;
+    const target = root.querySelector('.detail-cart')!;
+    vi.spyOn(origin, 'getBoundingClientRect').mockReturnValue(new DOMRect(40, 100, 200, 48));
+    vi.spyOn(target, 'getBoundingClientRect').mockReturnValue(new DOMRect(220, 20, 44, 44));
+    const animate = vi.fn(() => ({ onfinish: null, cancel: vi.fn() }));
+    const previousAnimate = Object.getOwnPropertyDescriptor(HTMLElement.prototype, 'animate');
+    Object.defineProperty(HTMLElement.prototype, 'animate', { configurable: true, value: animate });
+    try {
+      vi.useFakeTimers();
+      expect(document.querySelector('[data-cart-transfer]')).toBeNull();
+      post.flush(cartDto());
+      expect(animate).toHaveBeenCalledTimes(1);
+    } finally {
+      if (previousAnimate) Object.defineProperty(HTMLElement.prototype, 'animate', previousAnimate);
+      else Reflect.deleteProperty(HTMLElement.prototype, 'animate');
+    }
     expect(TestBed.inject(PurchaseIntentService).take(313)).toBeNull();
     detail.detectChanges();
     nav.detectChanges();

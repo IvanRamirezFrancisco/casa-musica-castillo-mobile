@@ -14,3 +14,11 @@
 .viewer-photo { min-inline-size: 100%; }
 .viewer-tools button { min-block-size: 44px; min-inline-size: 44px; }
 .viewer-tools button:disabled { opacity: .6; }
+
+.viewer-photo.is-zoomed { --cmc-image-position: top left; }
+.photo-viewer .icon-action {
+  display: inline-grid; place-items: center;
+  min-inline-size: 44px; min-block-size: 44px;
+  border: 1px solid var(--cmc-border); border-radius: var(--cmc-radius-md);
+  color: var(--cmc-primary); background: var(--cmc-surface-alt);
+}

@@ -41,10 +41,12 @@ export class PublicProductDetailComponent {
  private cartFeedbackTimer: ReturnType<typeof setTimeout> | undefined;
  invalidId=false;
  readonly maximum=computed(()=>Math.max(1,Math.min(100,this.service.product().data?.stock??1)));
+ private readonly failedPhotos=signal<ReadonlySet<string>>(new Set());
  readonly galleryImages=computed(() => {
   const product=this.service.product().data;
   if(!product) return [];
-  return [...new Set([product.imageUrl, ...product.images].filter((image): image is string => Boolean(image)))];
+  const failed=this.failedPhotos();
+  return [...new Set([product.imageUrl, ...product.images].filter((image): image is string => image !== null && !failed.has(image)))];
  });
  readonly activeImage=computed(() => {
   const selected=this.selectedImage();
@@ -55,12 +57,17 @@ export class PublicProductDetailComponent {
   if (!this.galleryImages().includes(photo)) return;
   this.selectedImage.set(photo);
  }
+ markPhotoUnavailable(image: string): void {
+  if (!this.galleryImages().includes(image)) return;
+  this.failedPhotos.update(failed => new Set([...failed, image]));
+  if (!this.galleryImages().length) this.viewer()?.close();
+ }
  constructor(){
   this.destroyRef.onDestroy(() => this.clearCartFeedback());
   this.auth.sessionEnded$.pipe(takeUntilDestroyed()).subscribe(()=>{this.cancelled.next();this.viewer()?.close();this.clearCartFeedback();this.actionNotice.set('');});
   inject(ActivatedRoute).paramMap.pipe(takeUntilDestroyed()).subscribe(params=>{
    this.cancelled.next();this.viewer()?.close();const raw=params.get('id')??'';const id=Number(raw);this.invalidId=!/^[1-9][0-9]*$/.test(raw)||!Number.isSafeInteger(id);
-   this.quantity.set(this.auth.hasValidSession()?this.intent.take(id)??1:1);this.clearCartFeedback();this.selectedImage.set(null);this.actionNotice.set('');this.descriptionExpanded.set(false);
+   this.quantity.set(this.auth.hasValidSession()?this.intent.take(id)??1:1);this.clearCartFeedback();this.selectedImage.set(null);this.failedPhotos.set(new Set());this.actionNotice.set('');this.descriptionExpanded.set(false);
    this.service.loadProduct(this.invalidId?0:id);
    if(!this.invalidId&&this.connected&&this.auth.hasValidSession())this.favorites.load();
   });

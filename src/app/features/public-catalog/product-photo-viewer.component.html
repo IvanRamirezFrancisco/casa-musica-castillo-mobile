@@ -6,8 +6,8 @@
     </div>
     @if(activePhoto(); as photo){
       <div #zoomArea class="viewer-image" tabindex="0" aria-label="Área desplazable de la fotografía">
-        <div class="viewer-photo" [style.width.%]="zoom()*100" [style.height.%]="zoom()*100">
-          <cmc-public-image [src]="photo" [alt]="title()"/>
+        <div class="viewer-photo" [class.is-zoomed]="zoom()>1" [style.width.%]="zoom()*100" [style.height.%]="zoom()*100">
+          <cmc-public-image [src]="photo" [alt]="title()" (unavailable)="photoUnavailable.emit($event)"/>
         </div>
       </div>
       <div class="viewer-tools">
