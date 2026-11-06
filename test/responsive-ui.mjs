@@ -4,7 +4,9 @@ import { spawn } from 'node:child_process';
 import { mkdir, mkdtemp, readFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 
-const origin = 'http://127.0.0.1:4291';
+const port = Number(process.env.CMC_UI_PORT ?? 4291);
+assert.ok(Number.isInteger(port) && port > 0 && port < 65536, 'Invalid local test port');
+const origin = 'http://127.0.0.1:' + port;
 const baseline = process.argv.includes('--baseline');
 const out = path.resolve('reports/uiux', baseline ? 'before' : 'after');
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -26,8 +28,8 @@ const products = Array.from({ length: 8 }, (_, index) => ({
     ? 'Jarana huasteca de estudio con nombre deliberadamente largo'
     : 'Instrumento de prueba ' + (index + 1),
   description: 'Descripción sintética para comprobar el diseño y la lectura.',
-  detailedDescription: null, price: 6500, discountPrice: null, stock: 18,
-  imageUrl: index === 0 && !baseline ? fixtureImage : null, images: [], category, brand: null,
+  detailedDescription: null, price: 6500, discountPrice: index === 0 ? 5900 : null, stock: 18,
+  imageUrl: index === 0 ? fixtureImage : null, images: [], category, brand: null,
   attributes: [{ name: 'Material', value: 'Madera de prueba', displayOrder: null }], model: 'MODELO-1234567890',
   weight: index === 1 ? null : 1.3, dimensions: '10 × 20 × 30 cm',
   featured: true, averageRating: 0, reviewCount: 0,
@@ -40,12 +42,33 @@ const encode = (data) => Buffer.from(JSON.stringify(data)).toString('base64url')
 const accessToken = [encode({ alg: 'HS256', typ: 'JWT' }),
   encode({ sub: '7', exp: Math.floor(Date.now() / 1000) + 3600 }), 'c2lnbmF0dXJl'].join('.');
 const wrap = (data) => ({ success: true, data });
-const cart = { cartId: 9, items: [], totalItems: 0, subtotal: 0, tax: 0, discount: 0,
-  total: 0, couponCode: null, canCheckout: false, warningMessage: null };
+const cart = { cartId: 9, items: [{
+  itemId: 50, productId: 313, productName: products[0].name, productImage: fixtureImage,
+  productSku: products[0].sku, quantity: 2, unitPrice: 5900, subtotal: 11800,
+  availableStock: 18, available: true, availabilityStatus: 'IN_STOCK', warningMessage: null,
+}], totalItems: 2, subtotal: 11800, tax: 1888, discount: 0, total: 13688,
+couponCode: null, canCheckout: true, warningMessage: null };
+let useSecondFactor = false;
+let emailEnabled = false;
 function fixture(method, pathname) {
-  if (pathname === '/api/auth/login' && method === 'POST') return wrap({ jwtResponse: { accessToken, tokenType: 'Bearer', user } });
+  if (pathname === '/api/auth/login' && method === 'POST') {
+    return useSecondFactor
+      ? wrap({ twoFactorRequired: true, preAuthChallenge: 'A'.repeat(43),
+        availableMethods: { EMAIL: true, GOOGLE_AUTHENTICATOR: true, BACKUP_CODE: false } })
+      : wrap({ jwtResponse: { accessToken, tokenType: 'Bearer', user } });
+  }
+  if (method === 'POST' && pathname === '/api/2fa/send-login-code') return wrap({});
+  if (method === 'POST' && pathname === '/api/2fa/verify') return { success: false };
+  if (method === 'POST' && pathname === '/api/2fa/email/enable') {
+    emailEnabled = true;
+    return wrap({});
+  }
   if (method !== 'GET') return undefined;
   if (pathname === '/api/auth/me') return user;
+  if (pathname === '/api/wishlist') return { items: [], totalItems: 0 };
+  if (pathname === '/api/2fa/methods') {
+    return wrap({ EMAIL: emailEnabled, GOOGLE_AUTHENTICATOR: false, BACKUP_CODES: false });
+  }
   if (pathname === '/api/users/profile') return wrap(user);
   if (pathname === '/api/cart' || pathname === '/api/cart/summary') return cart;
   if (pathname === '/api/orders/my') return emptyPage;
@@ -62,7 +85,7 @@ function isVisible(element) {
 }
 
 async function measure(isVisible, selector) {
-  const bar = [...document.querySelectorAll('ion-tab-bar')].find(isVisible);
+  const bar = location.pathname.startsWith('/main/') ? [...document.querySelectorAll('ion-tab-bar')].find(isVisible) : undefined;
   const modal = document.querySelector('ion-modal.show-modal');
   const content = [...(modal || document).querySelectorAll('ion-content')].filter(isVisible).at(-1);
   const scroll = await content?.getScrollElement?.();
@@ -133,9 +156,10 @@ try {
       return;
     }
     const data = fixture(request.method, url.pathname);
+    const status = request.method === 'POST' && url.pathname === '/api/2fa/verify' ? 401 : 200;
     if (data === undefined && request.method !== 'OPTIONS') errors.push(request.method + ' ' + url.pathname);
     await rpc('Fetch.fulfillRequest', {
-      requestId, responseCode: request.method === 'OPTIONS' ? 204 : data === undefined ? 404 : 200,
+      requestId, responseCode: request.method === 'OPTIONS' ? 204 : data === undefined ? 404 : status,
       responseHeaders: [
         { name: 'Content-Type', value: 'application/json' },
         { name: 'Access-Control-Allow-Origin', value: origin },
@@ -191,6 +215,13 @@ try {
     await read('(() => { const e = ' + find(selector) + '; e.focus(); (e.shadowRoot?.querySelector("a") ?? e).click(); })()');
     await sleep(220);
   }
+  async function submitLogin() {
+    for (const [type, value] of [['email', user.email], ['password', 'Only-Local-Layout-123']]) {
+      await read(find('app-connected-login input[type=' + type + ']') + '.focus()');
+      await rpc('Input.insertText', { text: value });
+    }
+    await read(find('app-connected-login form.auth-form') + '.requestSubmit()');
+  }
   const resize = (width, height) => rpc('Emulation.setDeviceMetricsOverride', { width, height, deviceScaleFactor: 1, mobile: true });
   async function capture(label, screen, lastSelector = null) {
     const geometry = await read('(' + measure.toString() + ')(' + isVisible.toString() + ',' + JSON.stringify(lastSelector) + ')');
@@ -225,18 +256,29 @@ try {
     await resize(width, height);
     await go('/main/catalog', '.product-card');
     await capture(label, 'catalogo', '.paging button:last-child');
-    await click('.catalog-controls button');
-    await wait("!!document.querySelector('ion-modal.show-modal .sheet-actions')");
-    await capture(label, 'filtros', '.sheet-actions button:last-child');
-    if (!baseline && label === '375x667') {
-      for (const type of ['rawKeyDown', 'keyUp']) {
-        await rpc('Input.dispatchKeyEvent', { type, key: 'Escape', code: 'Escape', windowsVirtualKeyCode: 27 });
+    if (!baseline && width >= 768) {
+      await wait("!!" + find('.catalog-filters-inline fieldset'));
+      await read("document.querySelector('.catalog-filters-inline').scrollIntoView({block:'start'})");
+      await capture(label, 'filtros');
+      if (width === 768) {
+        await click('.catalog-filters-inline input[name=category]:last-of-type' + ':not(:checked)');
+        await click('.catalog-filters-inline button[type=submit]');
+        await wait("location.search.includes('categoryId=20')");
       }
-      await wait("!document.querySelector('ion-modal.show-modal')");
-      await wait("document.activeElement === document.querySelector('.catalog-controls button')");
     } else {
-      await click('.sheet-close');
-      await wait("!document.querySelector('ion-modal.show-modal')");
+      await click('.catalog-controls button');
+      await wait("!!document.querySelector('ion-modal.show-modal .sheet-actions')");
+      await capture(label, 'filtros', 'ion-modal.show-modal .sheet-actions button:last-child');
+      if (!baseline && label === '375x667') {
+        for (const type of ['rawKeyDown', 'keyUp']) {
+          await rpc('Input.dispatchKeyEvent', { type, key: 'Escape', code: 'Escape', windowsVirtualKeyCode: 27 });
+        }
+        await wait("!document.querySelector('ion-modal.show-modal')");
+        await wait("document.activeElement === document.querySelector('.catalog-controls button')");
+      } else {
+        await click('.sheet-close');
+        await wait("!document.querySelector('ion-modal.show-modal')");
+      }
     }
     await go('/products/313', '.product-summary h1');
     await capture(label, 'detalle');
@@ -244,19 +286,42 @@ try {
     await capture(label, 'inicio');
     await go('/login', 'app-connected-login input[type=email]');
     await capture(label, 'login');
-    if (!baseline) {
-      for (const [type, value] of [['email', user.email], ['password', 'Only-Local-Layout-123']]) {
-        await read(find('app-connected-login input[type=' + type + ']') + '.focus()');
-        await rpc('Input.insertText', { text: value });
-      }
-      await read(find('app-connected-login form.auth-form') + '.requestSubmit()');
-      await wait("location.pathname==='/main/home'");
-      for (const [tab, view] of [['cart', 'app-connected-cart'], ['orders', 'app-connected-orders'], ['profile', 'app-connected-profile-view']]) {
-        await click('ion-tab-button[tab=' + tab + ']');
-        await wait('location.pathname===' + JSON.stringify('/main/' + tab) + ' && !!' + find(view + ' ion-content'));
-        await capture(label, tab, view + ' main button, ' + view + ' main a');
-      }
+    await submitLogin();
+    await wait("location.pathname==='/main/home'");
+    for (const [tab, view] of [['cart', 'app-connected-cart'], ['profile', 'app-connected-profile-view']]) {
+      await click('ion-tab-button[tab=' + tab + ']');
+      await wait('location.pathname===' + JSON.stringify('/main/' + tab) + ' && !!' + find(view + ' ion-content'));
+      await capture(label, tab, view + ' main button, ' + view + ' main a');
     }
+    await click('app-connected-profile-view .profile-card[aria-label="Accesos de tu cuenta"] cmc-button:last-child button');
+    await wait("location.pathname==='/profile/security' && !!document.querySelector('app-account-security main section')");
+    await capture(label, 'seguridad');
+    if (!baseline) await capture(label, 'seguridad-final', 'app-account-security section:last-child button');
+    if (!baseline && label === '375x667') {
+      await click('#security-email ~ cmc-button button');
+      await wait("document.querySelector('#security-email ~ .security-state')?.textContent === 'Activado'");
+      await capture(label, 'seguridad-confirmada');
+    }
+    useSecondFactor = true;
+    await go('/login', 'app-connected-login input[type=email]');
+    await submitLogin();
+    await wait("!!document.querySelector('#second-factor-title')");
+    if (!baseline) await wait("document.activeElement?.id === 'second-factor-title'");
+    await capture(label, 'mfa-solicitud');
+    await click('app-connected-login .auth-form button');
+    await wait("!!document.querySelector('app-connected-login input[autocomplete=one-time-code]')");
+    await capture(label, 'mfa', 'app-connected-login .step-actions button');
+    if (!baseline && label === '375x667') {
+      await read(find('app-connected-login input[autocomplete=one-time-code]') + '.focus()');
+      await rpc('Input.insertText', { text: '000000' });
+      await resize(375, 350);
+      assert.equal(await read(find('app-connected-login input[autocomplete=one-time-code]') + '.value'), '000000');
+      await read(find('app-connected-login form.auth-form') + '.requestSubmit()');
+      await wait("document.querySelector('[role=alert]')?.textContent.includes('Código inválido o vencido')");
+      await capture('ventana-baja', 'mfa-error', 'app-connected-login .step-actions button');
+      await resize(width, height);
+    }
+    useSecondFactor = false;
     await go('/register', 'app-connected-register input[type=email]');
     await capture(label, 'registro');
     await go('/privacy', '.privacy-shell');
@@ -285,6 +350,14 @@ try {
     await capture('texto-200-ventana-baja', 'registro', '.auth-form cmc-button[type=submit]');
   }
   if (!baseline) {
+    const theme = await read("['--cmc-cta','--cmc-text-on-primary','--cmc-promo-mamey','--cmc-text-primary','--cmc-primary','--cmc-background'].map(name=>getComputedStyle(document.documentElement).getPropertyValue(name).trim())");
+    const luminance = (hex) => hex.slice(1).match(/../g).map((channel) => Number.parseInt(channel, 16) / 255)
+      .map((value) => value <= 0.04045 ? value / 12.92 : ((value + 0.055) / 1.055) ** 2.4)
+      .reduce((sum, value, i) => sum + value * [0.2126, 0.7152, 0.0722][i], 0);
+    for (let i = 0; i < theme.length; i += 2) {
+      const pair = [luminance(theme[i]), luminance(theme[i + 1])].sort((a, b) => b - a);
+      assert.ok((pair[0] + 0.05) / (pair[1] + 0.05) >= 4.5, 'insufficient contrast: ' + theme.slice(i, i + 2));
+    }
     assert.ok(rows.some((row) => row.screen === 'catalogo' && row.image), 'no image measured in the catalog');
     assert.ok(rows.some((row) => row.screen === 'detalle' && row.image), 'no image measured in product detail');
     assert.deepEqual(errors, [], 'unhandled synthetic HTTP requests');
