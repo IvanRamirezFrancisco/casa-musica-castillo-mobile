@@ -42,6 +42,7 @@ export class CmcInputComponent implements ControlValueAccessor {
   readonly placeholder = input('');
   readonly hint = input('');
   readonly error = input('');
+  readonly feedback = input<'negative' | 'warning' | 'positive' | null>(null);
   readonly autocomplete = input<string | null>(null);
   readonly inputMode = input<'text'|'numeric'|'email'|'tel'|'decimal'|null>(null);
   readonly required = input(false, { transform: booleanAttribute });

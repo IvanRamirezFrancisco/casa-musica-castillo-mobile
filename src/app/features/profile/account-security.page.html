@@ -8,7 +8,7 @@
 <ion-content class="cmc-page">
   <main class="cmc-page-container cmc-account security-page">
     <header class="security-intro">
-      <span class="security-mark"><cmc-icon name="security"/></span>
+      <span class="security-mark" aria-hidden="true"><cmc-icon name="security"/></span>
       <div>
         <h1 class="cmc-title">Seguridad de la cuenta</h1>
         <p>Configura los métodos que protegerán tu acceso después de la contraseña.</p>
@@ -26,21 +26,32 @@
 
     @if (methods(); as m) {
       <section class="security-summary" aria-labelledby="security-summary-title">
-        <h2 id="security-summary-title">Configuración de seguridad</h2>
+        <div class="security-summary-header">
+          <h2 id="security-summary-title">Estado de seguridad</h2>
+          <span class="security-account"><cmc-icon name="available"/> Sesión activa</span>
+        </div>
+        <p class="security-level">
+          {{ m.BACKUP_CODES && (m.EMAIL || m.GOOGLE_AUTHENTICATOR) ? 'Segundo factor y recuperación' :
+            m.EMAIL || m.GOOGLE_AUTHENTICATOR ? 'Segundo factor activo' : 'Configuración básica' }}
+        </p>
+        <div class="security-indicator" aria-hidden="true">
+          <span [class.is-active]="m.EMAIL"></span>
+          <span [class.is-active]="m.GOOGLE_AUTHENTICATOR"></span>
+          <span [class.is-active]="m.BACKUP_CODES"></span>
+        </div>
         <dl class="security-checks">
-          <div><dt>Verificación de cuenta por correo</dt><dd>Sin dato en esta pantalla</dd></div>
-          <div><dt>Segundo factor por correo</dt><dd>{{m.EMAIL ? 'Activo' : 'Inactivo'}}</dd></div>
-          <div><dt>Google Authenticator</dt><dd>{{m.GOOGLE_AUTHENTICATOR ? 'Activo' : 'Inactivo'}}</dd></div>
-          <div><dt>Códigos de recuperación</dt><dd>{{m.BACKUP_CODES ? 'Activos' : 'Sin códigos activos'}}</dd></div>
+          <div><dt>Segundo factor por correo</dt><dd [class.is-active]="m.EMAIL">{{m.EMAIL ? 'Activo' : 'Inactivo'}}</dd></div>
+          <div><dt>Google Authenticator</dt><dd [class.is-active]="m.GOOGLE_AUTHENTICATOR">{{m.GOOGLE_AUTHENTICATOR ? 'Activo' : 'Inactivo'}}</dd></div>
+          <div><dt>Códigos de recuperación</dt><dd [class.is-active]="m.BACKUP_CODES">{{m.BACKUP_CODES ? 'Activos' : 'Sin códigos activos'}}</dd></div>
         </dl>
-        <p>
-        @if (m.GOOGLE_AUTHENTICATOR) {
-          El autenticador está activo. Guarda códigos de recuperación para cuando pierdas acceso a él.
-        } @else if (m.EMAIL) {
-          El segundo factor por correo está activo. Puedes configurar un autenticador para usar códigos sin esperar el correo.
-        } @else {
-          Correo y autenticador están desactivados. Configura un método para añadir un paso al inicio de sesión.
-        }
+        <p class="security-recommendation">
+          @if (!m.GOOGLE_AUTHENTICATOR) {
+            Configura Google Authenticator para usar códigos sin esperar el correo.
+          } @else if (!m.BACKUP_CODES) {
+            Genera códigos de recuperación para cuando pierdas acceso al autenticador.
+          } @else {
+            Guarda tus códigos de recuperación en un lugar seguro.
+          }
         </p>
       </section>
       <div class="security-grid">

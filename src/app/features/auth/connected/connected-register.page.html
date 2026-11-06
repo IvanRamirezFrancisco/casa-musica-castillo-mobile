@@ -33,7 +33,7 @@
             formControlName="username"
             autocomplete="username"
             label="Nombre de usuario"
-            placeholder="Ej. ivan_musica"
+            placeholder="Ej. usuario.123"
             type="text"
             hint="3 a 30 caracteres: letras, números, punto, guion o guion bajo."
             [error]="fieldError('username')"
@@ -71,10 +71,16 @@
             autocomplete="tel"
             label="Teléfono (opcional)"
             type="tel"
-            placeholder="10 dígitos"
+            inputMode="tel"
+            placeholder="Ej. 55 1234 5678"
+            hint="Usa 10 dígitos. Puedes separarlos con espacios o guiones."
             [error]="fieldError('phone')"
+            [feedback]="phoneConfirmed() ? 'positive' : null"
           ></cmc-input>
 
+          <p class="field-feedback field-success" role="status">{{ phoneConfirmed() ? 'Formato de teléfono válido.' : '' }}</p>
+
+          @let checks = passwordChecklist();
           <cmc-input
             formControlName="password"
             (focusin)="passwordFocused.set(true)"
@@ -83,24 +89,32 @@
             label="Contraseña"
             type="password"
             hint="Evita secuencias fáciles de adivinar como 123 o abc."
-            [error]="fieldError('password')"
+            [error]="passwordFocused() ? '' : fieldError('password')"
+            [feedback]="passwordFocused() || form.controls.password.touched ? checks.feedback : null"
            required></cmc-input>
 
-          @let checks = passwordChecklist();
           @if (passwordFocused()) {
             <section class="password-guide" aria-labelledby="password-guide-title">
               <h3 id="password-guide-title">Requisitos de contraseña</h3>
-              <progress max="3" [value]="+checks.length + +checks.bytes + +checks.variety"
-                [class.valid]="checks.valid" aria-label="Requisitos locales de contraseña cumplidos"></progress>
+              <progress max="3" [value]="checks.completed"
+                [attr.data-feedback]="checks.feedback" aria-label="Requisitos locales de contraseña cumplidos"></progress>
               <ul>
-                <li>{{checks.length ? 'Cumplido' : 'Pendiente'}} · De {{limits.passwordMin}} a {{limits.passwordMax}} caracteres</li>
-                <li>{{checks.variety ? 'Cumplido' : 'Pendiente'}} · Tres tipos entre minúsculas, mayúsculas, números y símbolos</li>
-                <li>{{checks.bytes ? 'Cumplido' : 'Pendiente'}} · Máximo {{limits.passwordMaxBytes}} bytes</li>
+                <li [class.requirement-met]="checks.length">{{checks.length ? 'Cumplido' : 'Pendiente'}} · Al menos {{limits.passwordMin}} caracteres</li>
+                <li [class.requirement-met]="checks.variety">{{checks.variety ? 'Cumplido' : 'Pendiente'}} · Tres tipos entre minúsculas, mayúsculas, números y símbolos</li>
+                <li [class.requirement-met]="checks.bytes">{{checks.bytes ? 'Cumplido' : 'Pendiente'}} · Máximo {{limits.passwordMaxBytes}} bytes</li>
               </ul>
-              <p>La barra indica requisitos cumplidos. Evita secuencias fáciles de adivinar.</p>
+              <p>El servidor realiza comprobaciones adicionales al crear tu cuenta.</p>
             </section>
           }
-          <p class="field-feedback" role="status">{{ checks.valid ? 'Cumple los requisitos locales de contraseña.' : '' }}</p>
+          <p class="field-feedback" role="status" [attr.data-feedback]="checks.feedback">
+            @if (!passwordFocused() && form.controls.password.touched && form.controls.password.value) {
+              @switch (checks.feedback) {
+                @case ('negative') { Faltan requisitos de contraseña. }
+                @case ('warning') { Falta un requisito de contraseña. }
+                @case ('positive') { Cumple los requisitos locales de contraseña. }
+              }
+            }
+          </p>
 
           <cmc-input
             formControlName="confirmPassword"
@@ -109,9 +123,10 @@
             type="password"
             placeholder="Repite tu contraseña"
             [error]="confirmError()"
+            [feedback]="passwordsCoincide() ? 'positive' : null"
            required></cmc-input>
 
-          <p class="field-feedback" role="status">{{ confirmationStatus() }}</p>
+          <p class="field-feedback" [class.field-success]="passwordsCoincide()" role="status">{{ confirmationStatus() }}</p>
 
           <cmc-button type="submit" fullWidth [loading]="submitting()" loadingLabel="Creando cuenta">
             Crear cuenta
