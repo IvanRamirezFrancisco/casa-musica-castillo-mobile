@@ -27,3 +27,30 @@ ion-content.product-content {
 @media (min-width: 42rem) {
   .product-layout { grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: var(--cmc-space-8); }
 }
+
+.detail-cart {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--cmc-space-1);
+  min-inline-size: 44px;
+  min-block-size: 44px;
+  margin-inline-end: var(--cmc-space-2);
+  padding-inline: var(--cmc-space-2);
+  color: var(--cmc-primary);
+  border-radius: var(--cmc-radius-lg);
+  text-decoration: none;
+}
+.detail-cart-count {
+  border-radius: 999px;
+  padding: 0.12em 0.55em;
+  color: var(--cmc-text-primary);
+  background: var(--cmc-promo-mamey);
+  font-weight: 700;
+}
+.detail-cart:focus-visible { outline: 3px solid var(--cmc-primary); outline-offset: -3px; }
+.cover.cover-empty { height: clamp(8rem, 24vw, 14rem); }
+@media (prefers-reduced-motion: no-preference) {
+  .cart-pulse .detail-cart-count { animation: detail-cart-confirm 360ms ease-out; }
+}
+@keyframes detail-cart-confirm { 45% { transform: scale(1.18); } }

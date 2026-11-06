@@ -40,8 +40,11 @@ import { CmcIconComponent } from '../../shared/ui/icon/cmc-icon.component';
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   styles: [
-    '.profile-shell { display: grid; gap: 16px; }',
+    '.profile-shell { display: grid; gap: var(--cmc-space-4); }',
     '@media(min-width:52rem){.profile-shell{grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);align-items:start}.profile-card:first-of-type{grid-row:span 2}}',
+    '.profile-shell > .profile-card { margin-block: 0; }',
+    '.profile-identity { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: var(--cmc-space-3); align-items: center; overflow-wrap: anywhere; }',
+    '.profile-identity h2, .profile-identity p { margin-block: 0; }',
     '.profile-card { background: var(--cmc-surface, #fff); border: 1px solid var(--cmc-border); border-radius: var(--cmc-radius-lg); padding: 18px; display: grid; gap: 12px; }',
     '.avatar { width: 56px; height: 56px; border-radius: 50%; background: var(--cmc-primary, #722f37); color: #fff; display: grid; place-items: center; font-weight: 700; font-size: 1.35rem; }',
     '.field-grid { display: grid; gap: 8px; margin: 0; }',
@@ -70,10 +73,12 @@ import { CmcIconComponent } from '../../shared/ui/icon/cmc-icon.component';
           ></cmc-error-state>
         } @else if (profile(); as user) {
           <section class="profile-card" aria-label="Datos de la cuenta">
-            <div class="avatar" aria-hidden="true">{{ initial() }}</div>
-            <div>
-              <h2 class="cmc-title">{{ user.fullName }}</h2>
-              <p class="cmc-text-secondary">{{ privacy.hideContact() ? 'Correo oculto' : user.email }}</p>
+            <div class="profile-identity">
+              <div class="avatar" aria-hidden="true">{{ initial() }}</div>
+              <div>
+                <h2 class="cmc-title">{{ user.fullName }}</h2>
+                <p class="cmc-text-secondary">{{ privacy.hideContact() ? 'Correo oculto' : user.email }}</p>
+              </div>
             </div>
 
             <div style="display: flex; flex-wrap: wrap; gap: 8px">
@@ -114,6 +119,7 @@ import { CmcIconComponent } from '../../shared/ui/icon/cmc-icon.component';
           </section>
 
           <section class="profile-card" aria-label="Accesos de tu cuenta">
+            <h2 class="cmc-title">Accesos de tu cuenta</h2>
             <a routerLink="/privacy" class="cmc-link">Privacidad y mis datos</a>
             <cmc-button variant="secondary" fullWidth (click)="goToOrders()"><cmc-icon name="cart"/> Mis pedidos</cmc-button>
             <cmc-button variant="secondary" fullWidth (click)="goToFavorites()"><cmc-icon name="heart"/> Mis favoritos</cmc-button>

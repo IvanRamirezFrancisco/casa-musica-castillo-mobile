@@ -13,6 +13,7 @@ on:
       - feature/uiux-adaptativo-multidispositivo
       - fix/galaxy-a55-integracion-real
       - feature/uiux-direccion-a
+      - fix/aceptacion-a55-p0
 
   push:
     branches:

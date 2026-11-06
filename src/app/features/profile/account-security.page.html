@@ -1,6 +1,6 @@
 <ion-header class="ion-no-border cmc-header-transparent">
   <ion-toolbar>
-    <ion-buttons slot="start"><ion-back-button defaultHref="/main/profile" text="Perfil" /></ion-buttons>
+    <ion-buttons slot="start"><ion-back-button defaultHref="/main/profile" text="Perfil" aria-label="Volver al perfil" /></ion-buttons>
     <ion-title>Seguridad</ion-title>
   </ion-toolbar>
 </ion-header>
@@ -25,6 +25,15 @@
     @if (notice()) { <p class="auth-alert auth-alert--success" role="status">{{notice()}}</p> }
 
     @if (methods(); as m) {
+      <p class="security-summary">
+        @if (m.GOOGLE_AUTHENTICATOR) {
+          El autenticador está activo. Guarda códigos de recuperación para cuando pierdas acceso a él.
+        } @else if (m.EMAIL) {
+          La verificación por correo está activa. Puedes configurar un autenticador para usar códigos sin esperar el correo.
+        } @else {
+          Correo y autenticador están desactivados. Configura un método para añadir un paso al inicio de sesión.
+        }
+      </p>
       <div class="security-grid">
         <section class="security-card" aria-labelledby="security-email">
           <h2 id="security-email">Correo electrónico</h2>
@@ -53,7 +62,8 @@
           }
           @if (enrollment(); as e) {
             <div class="security-panel">
-              <p>Escanea este QR con tu aplicación autenticadora o introduce la clave manual. No compartas esta pantalla.</p>
+              <p><strong>En este mismo teléfono:</strong> copia la clave y elige introducir una clave de configuración en tu autenticador. Vuelve aquí e introduce el código de seis dígitos.</p>
+              <p><strong>En otro dispositivo:</strong> escanea el QR desde su autenticador. Mantén privada la clave y esta pantalla.</p>
               <img [src]="e.qrCode" alt="QR privado para configurar tu autenticador" referrerpolicy="no-referrer" />
               <p>Clave manual <code>{{e.manualEntryKey}}</code></p>
               <cmc-button variant="secondary" (click)="copyKey()">Copiar clave</cmc-button>
@@ -71,6 +81,9 @@
           <h2 id="security-recovery">Códigos de recuperación</h2>
           <p class="security-state" [class.is-active]="m.BACKUP_CODES">{{m.BACKUP_CODES ? 'Método activo' : 'Sin códigos activos'}}</p>
           <p>Se generan diez códigos de un solo uso. Regenerar invalida todos los anteriores. Necesitas el autenticador activado.</p>
+          @if (!m.GOOGLE_AUTHENTICATOR) {
+            <p>Usa «Configurar autenticador» en la tarjeta anterior y confirma el código de seis dígitos. Después podrás generar códigos de recuperación.</p>
+          }
           <cmc-button variant="secondary" [disabled]="busy() || !m.GOOGLE_AUTHENTICATOR" (click)="generating.set(true)">Generar o regenerar</cmc-button>
           @if (generating()) {
             <div class="security-panel">
