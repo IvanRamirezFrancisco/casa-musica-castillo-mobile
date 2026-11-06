@@ -361,6 +361,7 @@ try {
       await capture(label, 'registro-enfoque');
       await rpc('Input.insertText', { text: 'abcdefgh' });
       await wait("document.querySelector('.password-guide progress')?.getAttribute('data-feedback') === 'warning'");
+      assert.ok(await read("(() => { const s = getComputedStyle(document.activeElement.closest('[data-feedback]')); return s.outlineColor === s.borderTopColor && parseFloat(s.outlineWidth) >= 2; })()"));
       await capture(label, 'registro-requisito-pendiente');
       await read(find(password) + '.select()');
       await rpc('Input.insertText', { text: 'Cl4ve-Segura' });

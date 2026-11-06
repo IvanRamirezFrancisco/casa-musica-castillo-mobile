@@ -41,7 +41,7 @@
   /* Focus indicator is drawn on the wrapper so it surrounds the whole field. */
   &:focus-within {
     border-color: var(--cmc-primary);
-    outline: 2px solid var(--cmc-primary);
+    outline: 2px solid var(--field-feedback, var(--cmc-primary));
     outline-offset: 2px;
   }
 
@@ -50,9 +50,10 @@
     box-shadow: 0 0 0 1px var(--cmc-error);
   }
 
-  &[data-feedback='negative'] { border-color: var(--cmc-error-text); }
-  &[data-feedback='warning'] { border-color: var(--cmc-warning-text); }
-  &[data-feedback='positive'] { border-color: var(--cmc-success-text); }
+  &[data-feedback] { border-color: var(--field-feedback); }
+  &[data-feedback='negative'] { --field-feedback: var(--cmc-error-text); }
+  &[data-feedback='warning'] { --field-feedback: var(--cmc-warning-text); }
+  &[data-feedback='positive'] { --field-feedback: var(--cmc-success-text); }
 
   &--disabled {
     background: var(--cmc-surface-alt);
