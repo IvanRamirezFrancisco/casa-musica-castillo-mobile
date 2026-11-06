@@ -26,6 +26,7 @@
       [attr.inputmode]="inputMode()"
       [attr.aria-invalid]="hasError() ? 'true' : null"
       [attr.aria-describedby]="describedBy()"
+      (beforeinput)="onBeforeInput($event)"
       (input)="onInput($event)"
       (blur)="onBlur()"
     />

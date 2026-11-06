@@ -366,12 +366,12 @@ try {
       await wait("!!document.querySelector('.password-guide')");
       await capture(label, 'registro-enfoque');
       await rpc('Input.insertText', { text: 'abcdefgh' });
-      await wait("document.querySelector('.password-guide progress')?.getAttribute('data-feedback') === 'warning'");
+      await wait("document.querySelector('.password-strength')?.getAttribute('data-feedback') === 'warning'");
       await wait("(() => { const field = document.activeElement.closest('[data-feedback]'); if (!field) return false; const s = getComputedStyle(field); return s.outlineColor === s.borderTopColor && parseFloat(s.outlineWidth) >= 2; })()");
       await capture(label, 'registro-requisito-pendiente');
       await read(find(password) + '.select()');
       await rpc('Input.insertText', { text: 'Cl4ve-Segura' });
-      await wait("document.querySelector('.password-guide progress')?.getAttribute('data-feedback') === 'positive'");
+      await wait("document.querySelector('.password-strength')?.getAttribute('data-feedback') === 'positive'");
       await capture(label, 'registro-requisitos-cumplidos');
       await read(find(password) + '.blur()');
       await wait("!document.querySelector('.password-guide')");

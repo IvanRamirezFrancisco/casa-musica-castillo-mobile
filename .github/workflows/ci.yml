@@ -17,6 +17,7 @@ on:
       - feature/refinamiento-comercial-a55
       - feature/refinamiento-cuenta-favoritos-carrito
       - feature/galeria-experiencia-comercial
+      - codex/refinamiento-final-formularios
 
   push:
     branches:

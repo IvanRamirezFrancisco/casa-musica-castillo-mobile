@@ -5,6 +5,7 @@ import { IonContent, IonIcon } from '@ionic/angular';
 import { addIcons } from 'ionicons';
 import { arrowBackOutline } from 'ionicons/icons';
 import { CmcInputComponent } from '../../../shared/ui/input/cmc-input.component';
+import { CmcIconComponent } from '../../../shared/ui/icon/cmc-icon.component';
 import { CmcButtonComponent } from '../../../shared/ui/button/cmc-button.component';
 import { describeApiError } from '../../../core/api/api-error-message';
 import { AuthService } from '../../../core/services/auth.service';
@@ -24,7 +25,7 @@ import {
   styles: ['.auth-alert { margin: 0 0 16px; padding: 12px 16px; border-radius: 8px; font-size: 0.9rem; } .auth-alert--error { background: #fdecea; color: #7a1c14; } .auth-alert--success { background: #e8f5e9; color: #1b4d20; } .step-actions { display: grid; gap: 12px; margin-top: 12px; }'],
   host: { class: 'ion-page' },
   standalone: true,
-  imports: [IonContent, IonIcon, RouterLink, ReactiveFormsModule, CmcInputComponent, CmcButtonComponent],
+  imports: [IonContent, IonIcon, RouterLink, ReactiveFormsModule, CmcInputComponent, CmcButtonComponent, CmcIconComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ConnectedRegisterPage {
@@ -37,6 +38,7 @@ export class ConnectedRegisterPage {
   protected readonly registered = signal(false);
   protected readonly errorMessage = signal('');
   protected readonly limits = FIELD_LIMITS;
+  protected readonly phoneDigits = 10;
 
   protected readonly form = this.fb.group({
     username: ['', [usernameValidator]],
@@ -54,7 +56,12 @@ export class ConnectedRegisterPage {
     const control = this.form.controls[name];
     if (!control.touched || control.valid) return '';
     const key = Object.keys(control.errors ?? {})[0];
-    if (name === 'password' && key === 'minlength') return `Usa al menos ${FIELD_LIMITS.passwordMin} caracteres.`;
+    if (name === 'password' && control.value) {
+      if (key === 'maxbytes' || key === 'maxlength') return 'Usa una contraseña más corta.';
+      return this.passwordChecklist().feedback === 'warning'
+        ? 'Estás a un paso de cumplir los requisitos.'
+        : 'Faltan requisitos de contraseña.';
+    }
     if (name === 'email' && key === 'pattern') return 'Ingresa un correo válido.';
     if (name === 'phone') return 'Ingresa 10 dígitos, sin lada internacional, o deja el campo vacío.';
     if (name === 'username' && key === 'pattern') return 'Usa solo letras, números, punto, guion y guion bajo.';
@@ -64,13 +71,14 @@ export class ConnectedRegisterPage {
   protected passwordChecklist() {
     const value = this.form.controls.password.value;
     const length = value.length >= FIELD_LIMITS.passwordMin && value.length <= FIELD_LIMITS.passwordMax;
-    const bytes = value.length > 0 && passwordByteLength(value) <= FIELD_LIMITS.passwordMaxBytes;
+    const tooLong = value.length > FIELD_LIMITS.passwordMax || passwordByteLength(value) > FIELD_LIMITS.passwordMaxBytes;
     const variety = passwordCharacterTypes(value) >= 3;
-    const completed = Number(length) + Number(bytes) + Number(variety);
     const valid = this.form.controls.password.valid;
-    const feedback = valid ? 'positive' : completed === 2 ? 'warning' : 'negative';
+    const feedback = valid ? 'positive' : !tooLong && (length || variety) ? 'warning' : 'negative';
+    const strength = valid ? 'Fuerte' : feedback === 'warning' ? 'Media' : 'Débil';
+    const level = valid ? 3 : feedback === 'warning' ? 2 : value ? 1 : 0;
 
-    return { length, bytes, variety, completed, feedback } as const;
+    return { length, variety, tooLong, feedback, strength, level } as const;
   }
 
   protected phoneConfirmed(): boolean {
@@ -81,13 +89,11 @@ export class ConnectedRegisterPage {
   protected confirmError(): string {
     const control = this.form.controls.confirmPassword;
     if (!control.touched) return '';
-    if (!control.value) return 'Confirma tu contraseña.';
+    if (!control.value) return 'Repite tu contraseña para continuar.';
     return this.form.hasError('passwordMismatch') ? 'Las contraseñas no coinciden.' : '';
   }
 
   protected confirmationStatus(): string {
-    const confirmation = this.form.controls.confirmPassword;
-    if (!confirmation.value && !confirmation.touched) return 'Confirmación pendiente.';
     return this.passwordsCoincide() ? 'Las contraseñas coinciden.' : '';
   }
 

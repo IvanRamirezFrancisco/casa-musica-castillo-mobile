@@ -9,14 +9,19 @@
   overflow-wrap: anywhere;
 }
 .password-guide h3 { margin: 0 0 .5rem; font-size: 1rem; }
-.password-guide progress { width: 100%; accent-color: var(--feedback-color); }
+.password-strength { display: grid; grid-template-columns: 1fr auto; gap: .25rem .75rem; font-size: .875rem; }
+.password-strength strong { color: var(--feedback-color); }
+.password-strength[data-feedback="warning"] progress { accent-color: var(--cmc-warning); }
+.password-strength progress { grid-column: 1 / -1; width: 100%; accent-color: var(--feedback-color); }
+.password-requirements { list-style: none; margin: .625rem 0 0; padding: 0; }
+.password-requirements li { display: grid; grid-template-columns: 1.125rem 1fr; align-items: baseline; gap: .5rem; }
+.requirement-circle { width: .8rem; height: .8rem; border: 1px solid var(--cmc-text-secondary); border-radius: 50%; }
+.requirement-status { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
 [data-feedback="negative"] { --feedback-color: var(--cmc-error-text); }
 [data-feedback="warning"] { --feedback-color: var(--cmc-warning-text); }
 [data-feedback="positive"] { --feedback-color: var(--cmc-success-text); }
-.field-feedback[data-feedback] { color: var(--feedback-color); }
 .field-feedback.field-success, .requirement-met { color: var(--cmc-success-text); }
 .field-feedback { margin: 0; color: var(--cmc-text-secondary); font-size: .875rem; }
 .field-feedback:empty { position: absolute; }
-.password-guide ul { margin: .5rem 0; padding-inline-start: 1.25rem; }
 .password-guide li + li { margin-block-start: .25rem; }
-.password-guide p { margin: 0; color: var(--cmc-text-secondary); font-size: .875rem; }
+.password-length-error { margin: .5rem 0 0; color: var(--cmc-error-text); font-size: .875rem; }
