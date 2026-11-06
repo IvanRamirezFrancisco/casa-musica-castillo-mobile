@@ -22,14 +22,20 @@ import { CmcLoadingComponent } from '../../shared/ui/loading/cmc-loading.compone
   host: { class: 'ion-page' },
   changeDetection: ChangeDetectionStrategy.OnPush,
   styles: [
-    '.cart-count { --background:var(--cmc-promo-mamey); --color:var(--cmc-text-primary); margin-inline-end:var(--cmc-space-3); }',
+    '.cart-count { --background:var(--cmc-promo-mamey); --color:var(--cmc-text-primary); margin-inline-end:var(--cmc-space-3); white-space:normal; }',
     '.qty span { min-inline-size:2ch; text-align:center; font-weight:700; }',
     '.icon-btn:focus-visible { outline:3px solid var(--cmc-primary); outline-offset:2px; }',
     '.items { display:grid; gap:12px; margin-bottom:20px; }',
-    '.card { display:grid; grid-template-columns:72px minmax(0,1fr); gap:12px; background:var(--cmc-surface); border:1px solid var(--cmc-border); border-radius:var(--cmc-radius-lg); padding:12px; box-shadow:var(--cmc-shadow-card); }',
-    '.thumb { width:72px; height:72px; border-radius:8px; overflow:hidden; }',
+    '.card { display:grid; grid-template-columns:minmax(3rem,20%) minmax(0,1fr); gap:12px; background:var(--cmc-surface); border:1px solid var(--cmc-border); border-radius:var(--cmc-radius-lg); padding:12px; box-shadow:var(--cmc-shadow-card); }',
+    '.thumb { aspect-ratio:1; border-radius:8px; overflow:hidden; }',
     '.row { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; }',
-    '.qty { display:inline-flex; align-items:center; gap:8px; }',
+    '.item-body { min-inline-size:0; display:grid; gap:8px; }',
+    '.item-title { overflow-wrap:anywhere; line-height:1.35; }',
+    '.item-money { display:flex; flex-wrap:wrap; gap:4px 12px; margin:0; }',
+    '.item-money span { white-space:nowrap; }',
+    '.item-actions { grid-column:1 / -1; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; }',
+    '.qty { display:inline-flex; align-items:center; gap:4px; border:1px solid var(--cmc-border); border-radius:var(--cmc-radius-md); background:var(--cmc-surface-alt); }',
+    '.qty .icon-btn { border:0; color:var(--cmc-primary); }',
     '.icon-btn { min-width:44px; min-height:44px; border:1px solid var(--cmc-border); border-radius:8px; background:transparent; display:inline-flex; align-items:center; justify-content:center; }',
     '.summary { background:var(--cmc-surface-alt); border:1px solid var(--cmc-border); border-radius:12px; padding:16px; display:grid; gap:8px; margin-block:16px; }',
     '.actions { display:grid; gap:12px; }',
@@ -41,7 +47,7 @@ import { CmcLoadingComponent } from '../../shared/ui/loading/cmc-loading.compone
     <ion-header class="ion-no-border cmc-header-transparent">
       <ion-toolbar>
         <ion-title class="cmc-title" role="heading" aria-level="1">Carrito</ion-title>
-        <ion-buttons slot="end"><ion-badge class="cart-count" [attr.aria-label]="cart.itemCount() + ' artículos'">{{ cart.itemCount() }}</ion-badge></ion-buttons>
+        <ion-buttons slot="end"><ion-badge class="cart-count">{{ cart.itemCount() }} {{ cart.itemCount() === 1 ? 'unidad' : 'unidades' }}</ion-badge></ion-buttons>
       </ion-toolbar>
     </ion-header>
     <ion-content class="cmc-page cmc-root-page" [scrollY]="true">
@@ -64,19 +70,19 @@ import { CmcLoadingComponent } from '../../shared/ui/loading/cmc-loading.compone
           <div class="cart-layout"><div class="items">
             @for (item of data.items; track item.itemId) {
               <article class="card">
-                <div class="thumb"><cmc-public-image [src]="item.productImage" [alt]="item.productName" /></div>
-                <div>
-                  <div class="row">
-                    <a class="cmc-link cmc-font-bold" [routerLink]="['/products', item.productId]">{{ item.productName }}</a>
-                    <button type="button" class="icon-btn" [disabled]="cart.mutating()" [attr.aria-label]="'Eliminar ' + item.productName" (click)="cart.removeItem(item.itemId)">
-                      <ion-icon name="trash-outline" aria-hidden="true"></ion-icon>
-                    </button>
-                  </div>
-                  <p class="cmc-caption">{{ item.unitPrice | currency:'MXN' }} c/u · Subtotal {{ item.subtotal | currency:'MXN' }}</p>
+                <div class="thumb"><cmc-public-image [src]="item.productImage" [alt]="item.productName" [compact]="true" /></div>
+                <div class="item-body">
+                  <a class="cmc-link cmc-font-bold item-title" [routerLink]="['/products', item.productId]">{{ item.productName }}</a>
+                  <p class="cmc-caption item-money">
+                    <span>{{ item.unitPrice | currency:'MXN' }} c/u</span>
+                    <span>Subtotal {{ item.subtotal | currency:'MXN' }}</span>
+                  </p>
                   @if (item.warningMessage || !item.available) {
                     <p class="warn" role="status">{{ item.warningMessage || 'No disponible actualmente.' }}</p>
                   }
-                  <div class="qty">
+                </div>
+                <div class="item-actions">
+                  <div class="qty" role="group" [attr.aria-label]="'Cantidad de ' + item.productName">
                     <button type="button" class="icon-btn" [disabled]="cart.mutating() || item.quantity <= limits.minQuantity" [attr.aria-label]="'Reducir cantidad de ' + item.productName" (click)="changeQty(item, -1)">
                       <ion-icon name="remove-outline" aria-hidden="true"></ion-icon>
                     </button>
@@ -85,6 +91,9 @@ import { CmcLoadingComponent } from '../../shared/ui/loading/cmc-loading.compone
                       <ion-icon name="add-outline" aria-hidden="true"></ion-icon>
                     </button>
                   </div>
+                    <button type="button" class="icon-btn" [disabled]="cart.mutating()" [attr.aria-label]="'Eliminar ' + item.productName" (click)="cart.removeItem(item.itemId)">
+                      <ion-icon name="trash-outline" aria-hidden="true"></ion-icon>
+                    </button>
                 </div>
               </article>
             }

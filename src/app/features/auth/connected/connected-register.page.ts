@@ -32,6 +32,7 @@ export class ConnectedRegisterPage {
   private readonly router = inject(Router);
   private readonly auth = inject(AuthService);
 
+  protected readonly passwordFocused = signal(false);
   protected readonly submitting = signal(false);
   protected readonly registered = signal(false);
   protected readonly errorMessage = signal('');
@@ -67,14 +68,21 @@ export class ConnectedRegisterPage {
       length: value.length >= FIELD_LIMITS.passwordMin && value.length <= FIELD_LIMITS.passwordMax,
       bytes: value.length > 0 && passwordByteLength(value) <= FIELD_LIMITS.passwordMaxBytes,
       variety: count >= 3,
-      matches: value.length > 0 && value === this.form.controls.confirmPassword.value,
+      valid: this.form.controls.password.valid,
     };
   }
 
   protected confirmError(): string {
     const control = this.form.controls.confirmPassword;
     if (!control.touched) return '';
-    return this.form.hasError('passwordMismatch') || control.invalid ? 'Las contraseñas no coinciden.' : '';
+    if (!control.value) return 'Confirma tu contraseña.';
+    return this.form.hasError('passwordMismatch') ? 'Las contraseñas no coinciden.' : '';
+  }
+
+  protected confirmationStatus(): string {
+    const confirmation = this.form.controls.confirmPassword;
+    if (!confirmation.value && !confirmation.touched) return 'Confirmación pendiente.';
+    return confirmation.value && !this.form.hasError('passwordMismatch') ? 'Las contraseñas coinciden.' : '';
   }
 
   protected goBack(): void {
