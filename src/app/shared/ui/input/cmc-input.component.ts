@@ -42,6 +42,7 @@ export class CmcInputComponent implements ControlValueAccessor {
   readonly placeholder = input('');
   readonly hint = input('');
   readonly error = input('');
+  readonly digitLimit = input<number | null>(null);
   readonly feedback = input<'negative' | 'warning' | 'positive' | null>(null);
   readonly autocomplete = input<string | null>(null);
   readonly inputMode = input<'text'|'numeric'|'email'|'tel'|'decimal'|null>(null);
@@ -87,12 +88,39 @@ export class CmcInputComponent implements ControlValueAccessor {
     this.formDisabled.set(isDisabled);
   }
 
+  protected onBeforeInput(event: Event): void {
+    const limit = this.digitLimit();
+    if (limit === null || !(event instanceof InputEvent) || event.inputType !== 'insertText' ||
+        !event.data || !(event.target instanceof HTMLInputElement)) return;
+    const { value, selectionStart, selectionEnd } = event.target;
+    const next = value.slice(0, selectionStart ?? value.length) + event.data +
+      value.slice(selectionEnd ?? value.length);
+    if ((next.match(/[0-9]/g)?.length ?? 0) > limit) event.preventDefault();
+  }
+
   protected onInput(event: Event): void {
     if (!(event.target instanceof HTMLInputElement)) {
       return;
     }
-    this.value.set(event.target.value);
-    this.onChange(event.target.value);
+    const control = event.target;
+    const limit = this.digitLimit();
+    let value = control.value;
+    if (limit !== null) {
+      const digits = /[0-9]/g;
+      let match = digits.exec(value);
+      for (let count = 0; match && count < limit; count++) match = digits.exec(value);
+      if (match) {
+        const caret = control.selectionStart;
+        value = value.slice(0, match.index).replace(/[ -]+$/, '');
+        control.value = value;
+        if (caret !== null) {
+          const position = Math.min(caret, value.length);
+          control.setSelectionRange(position, position);
+        }
+      }
+    }
+    this.value.set(value);
+    this.onChange(value);
   }
 
   protected onBlur(): void {
