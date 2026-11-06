@@ -11,6 +11,7 @@ on:
       - feature/tt05-sesion-segura
       - feature/conciliacion-validadores-equipo
       - feature/uiux-adaptativo-multidispositivo
+      - fix/galaxy-a55-integracion-real
 
   push:
     branches:

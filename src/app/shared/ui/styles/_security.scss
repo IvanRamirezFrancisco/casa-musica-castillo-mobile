@@ -1,0 +1,25 @@
+@mixin feedback {
+  .security-mark {
+    display: inline-grid;
+    place-items: center;
+    inline-size: 3rem;
+    block-size: 3rem;
+    border-radius: var(--cmc-radius-md);
+    background: var(--cmc-primary);
+    color: var(--cmc-promo-mamey);
+  }
+
+  .auth-alert {
+    margin: 0 0 var(--cmc-space-3);
+    padding: var(--cmc-space-3);
+    border-inline-start: 3px solid var(--cmc-primary);
+    border-radius: var(--cmc-radius-md);
+    color: var(--cmc-text-primary);
+    font-size: .9375rem;
+    overflow-wrap: anywhere;
+  }
+
+  .auth-alert--info { background: var(--cmc-promo-surface); }
+  .auth-alert--error { background: var(--cmc-error-surface); color: var(--cmc-error-text); border-color: var(--cmc-error); }
+  .auth-alert--success { background: var(--cmc-success-surface); color: var(--cmc-success-text); border-color: var(--cmc-success-text); }
+}

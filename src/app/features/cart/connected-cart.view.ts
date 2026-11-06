@@ -28,8 +28,9 @@ import { CmcLoadingComponent } from '../../shared/ui/loading/cmc-loading.compone
     '.row { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; }',
     '.qty { display:inline-flex; align-items:center; gap:8px; }',
     '.icon-btn { min-width:44px; min-height:44px; border:1px solid var(--cmc-border); border-radius:8px; background:transparent; display:inline-flex; align-items:center; justify-content:center; }',
-    '.summary { background:var(--cmc-surface); border-radius:12px; padding:16px; display:grid; gap:8px; margin-block:16px; }',
+    '.summary { background:var(--cmc-surface-alt); border:1px solid var(--cmc-border); border-radius:12px; padding:16px; display:grid; gap:8px; margin-block:16px; }',
     '.actions { display:grid; gap:12px; }',
+    '@media(min-width:52rem){.cart-layout{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(16rem,.9fr);gap:24px;align-items:start}.summary{margin-top:0}}',
     '.warn { background:#fff6e0; color:#5c4300; padding:10px 12px; border-radius:8px; margin-block:8px; font-size:0.9rem; }',
     '.err { background:#fdecea; color:#7a1c14; padding:10px 12px; border-radius:8px; margin-block:8px; font-size:0.9rem; }',
   ],
@@ -57,7 +58,7 @@ import { CmcLoadingComponent } from '../../shared/ui/loading/cmc-loading.compone
             @for (w of check.itemWarnings; track w.itemId) { <p class="warn" role="status">{{ w.warningMessage }}</p> }
           }
 
-          <div class="items">
+          <div class="cart-layout"><div class="items">
             @for (item of data.items; track item.itemId) {
               <article class="card">
                 <div class="thumb"><cmc-public-image [src]="item.productImage" [alt]="item.productName" /></div>
@@ -86,7 +87,7 @@ import { CmcLoadingComponent } from '../../shared/ui/loading/cmc-loading.compone
             }
           </div>
 
-          <section class="summary" aria-label="Resumen del carrito">
+          <div><section class="summary" aria-label="Resumen del carrito">
             <div class="row"><span>Subtotal</span><strong>{{ data.subtotal | currency:'MXN' }}</strong></div>
             @if (data.discount > 0) {
               <div class="row"><span>Descuento</span><strong>-{{ data.discount | currency:'MXN' }}</strong></div>
@@ -97,13 +98,13 @@ import { CmcLoadingComponent } from '../../shared/ui/loading/cmc-loading.compone
           </section>
 
           <div class="actions">
-            <cmc-button fullWidth [disabled]="!data.canCheckout" [loading]="cart.mutating()" loadingLabel="Validando" (click)="proceed()">
+            <cmc-button variant="commercial" fullWidth [disabled]="!data.canCheckout" [loading]="cart.mutating()" loadingLabel="Validando" (click)="proceed()">
               Continuar compra
             </cmc-button>
             <cmc-button variant="secondary" fullWidth [disabled]="cart.mutating()" (click)="cart.clear()">
               Vaciar carrito
             </cmc-button>
-          </div>
+          </div></div></div>
         }
       </main>
     </ion-content>

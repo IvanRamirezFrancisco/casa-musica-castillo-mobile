@@ -60,6 +60,24 @@ describe('Public HTTP catalog integration (explicit real mode)', () => {
     http.expectOne(r => r.url.endsWith('/catalog')).flush(productPage()); fixture.detectChanges();
     expect(text()).toContain('Instrumento de prueba');
   });
+  it('marks only a real discount as an offer and preserves the product link', async () => {
+    fixture = TestBed.createComponent(PublicCatalogComponent);
+    fixture.detectChanges();
+    http.expectOne(r => r.url.endsWith('/categories/active')).flush([]);
+    await settleSearch();
+    http.expectOne(r => r.url.endsWith('/catalog')).flush(productPage([
+      productDto({ id: 313, price: 6500, discountPrice: 5900, averageRating: 4.5, reviewCount: 2 }),
+      productDto({ id: 314, price: 6500, discountPrice: null }),
+    ]));
+    fixture.detectChanges();
+    const view: HTMLElement = fixture.nativeElement;
+    const offer = view.querySelector('.product-offer');
+    expect(offer?.textContent).toBe('Oferta');
+    expect(view.querySelector('a[href="/products/313"] .rating')?.textContent).toContain('2 opiniones');
+    expect(offer?.closest('a')?.getAttribute('href')).toBe('/products/313');
+    expect(view.querySelector('a[href="/products/314"] .product-offer')).toBeNull();
+  });
+
   it('shows real stock/price and plain text without adding to the DEMO cart', () => {
     const cart = TestBed.inject(DemoCheckoutStateService); const before = cart.cartItems();
     fixture = TestBed.createComponent(PublicProductDetailComponent); fixture.detectChanges();

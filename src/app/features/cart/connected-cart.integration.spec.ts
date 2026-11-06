@@ -81,6 +81,17 @@ describe('carrito real conectado (integración)', () => {
     f.componentInstance.addFavorite(313);const remove=http.expectOne(`${base}/api/wishlist/10`);expect(remove.request.method).toBe('DELETE');remove.flush({}, {status:503,statusText:'Unavailable'});expect(f.componentInstance.favoriteId()).toBe(10);expect(f.componentInstance.savingFavorite()).toBe(false);expect(f.componentInstance.favoriteNotice()).toContain('No se pudo');f.destroy();
   });
 
+  it('redirige al visitante desde el corazón sin enviar una solicitud de favoritos', () => {
+    const navigate = vi.spyOn(TestBed.inject(Router), 'navigate').mockResolvedValue(true);
+    const grid = TestBed.createComponent(PublicProductGridComponent);
+    grid.componentRef.setInput('products', [mapPublicProduct(productDto(), base)]);
+    grid.detectChanges();
+    const heart: HTMLButtonElement = grid.nativeElement.querySelector('.card-favorite-btn');
+    heart.click();
+    expect(navigate).toHaveBeenCalledWith(['/login'], { queryParams: { returnUrl: '/products/313' } });
+    http.expectNone(base + '/api/wishlist');
+  });
+
   it('comparte una lista entre tarjetas y detalle y limpia los favoritos al cerrar sesión', async () => {
     await store.save(testSession());
     const auth = TestBed.inject(AuthService);

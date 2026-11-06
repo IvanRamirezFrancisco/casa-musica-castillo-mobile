@@ -6,7 +6,7 @@ import {
   input,
 } from '@angular/core';
 
-export type CmcButtonVariant = 'primary' | 'secondary' | 'ghost';
+export type CmcButtonVariant = 'primary' | 'commercial' | 'secondary' | 'ghost';
 export type CmcButtonSize = 'default' | 'compact';
 export type CmcButtonType = 'button' | 'submit';
 

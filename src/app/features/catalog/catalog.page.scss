@@ -72,7 +72,7 @@
   padding: var(--cmc-space-1) var(--cmc-space-2);
   border-radius: var(--cmc-radius-xs);
 }
-.detail-btn, .clear-filters-btn {
+.clear-filters-btn {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -85,12 +85,10 @@
   font-size: 14px;
   font-weight: 600;
 }
-.detail-btn {
-  text-decoration: none;
-  margin-top: auto;
-  gap: var(--cmc-space-1);
-}
-.detail-btn:active, .clear-filters-btn:active {
+.detail-btn { display:flex; flex:1; flex-direction:column; color:inherit; text-decoration:none; }
+.detail-btn:focus-visible { outline:3px solid var(--cmc-primary); outline-offset:-3px; }
+
+.clear-filters-btn:active {
   background: var(--cmc-primary-dark);
 }
 .empty-results-wrapper {
