@@ -10,6 +10,7 @@ on:
       - feature/privacidad-play-compliance
       - feature/tt05-sesion-segura
       - feature/conciliacion-validadores-equipo
+      - feature/uiux-adaptativo-multidispositivo
 
   push:
     branches:

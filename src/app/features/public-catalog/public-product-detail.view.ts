@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component, DestroyRef, computed, inject, signal } from '@angular/core';
 import { Router, RouterLink, ActivatedRoute } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { EMPTY, Subject, finalize, map, of, switchMap, takeUntil, tap } from 'rxjs';
+import { EMPTY, Subject, finalize, switchMap, takeUntil } from 'rxjs';
 import { IonBackButton,IonButtons,IonContent,IonHeader,IonTitle,IonToolbar } from '@ionic/angular';
-import { WISHLIST_REPOSITORY } from '../../core/repositories/wishlist.repository';
+import { ProductFavoritesService } from '../../core/services/product-favorites.service';
 import { BACKEND_SESSION_ENABLED } from '../../core/config/backend-session.token';
 import { AuthService } from '../../core/services/auth.service';
 import { CartService } from '../../core/services/cart.service';
@@ -17,38 +17,35 @@ import { CmcLoadingComponent } from '../../shared/ui/loading/cmc-loading.compone
 import { CmcErrorStateComponent } from '../../shared/ui/error-state/cmc-error-state.component';
 import { CmcEmptyStateComponent } from '../../shared/ui/empty-state/cmc-empty-state.component';
 import { PublicImageComponent } from './public-product-grid.component';
+import { ProductDescriptionComponent } from './product-description.component';
 import { ProductReviewsComponent } from './product-reviews.component';
 @Component({selector:'app-public-product-detail',standalone:true,providers:[PublicCatalogService],host:{class:'ion-page'},changeDetection:ChangeDetectionStrategy.OnPush,
- imports:[RouterLink,CmcMoneyPipe,CmcIconComponent,CmcQuantityComponent,IonBackButton,IonButtons,IonContent,IonHeader,IonTitle,IonToolbar,PublicImageComponent,CmcButtonComponent,CmcLoadingComponent,CmcErrorStateComponent,CmcEmptyStateComponent,ProductReviewsComponent],
+ imports:[RouterLink,CmcMoneyPipe,CmcIconComponent,CmcQuantityComponent,IonBackButton,IonButtons,IonContent,IonHeader,IonTitle,IonToolbar,PublicImageComponent,CmcButtonComponent,CmcLoadingComponent,CmcErrorStateComponent,CmcEmptyStateComponent,ProductReviewsComponent,ProductDescriptionComponent],
  templateUrl:'./public-product-detail.view.html',styleUrl:'./public-product-detail.view.scss'})
 export class PublicProductDetailComponent {
  readonly weightFormat = new Intl.NumberFormat('es-MX', {
   style: 'unit', unit: 'kilogram', maximumSignificantDigits: 21,
  });
  readonly service=inject(PublicCatalogService);readonly connected=inject(BACKEND_SESSION_ENABLED);readonly cart=inject(CartService);
- private readonly wishlist=inject(WISHLIST_REPOSITORY);private readonly auth=inject(AuthService);private readonly router=inject(Router);private readonly intent=inject(PurchaseIntentService);private readonly destroyRef=inject(DestroyRef);private readonly cancelled=new Subject<void>();
- readonly quantity=signal(1);readonly preparing=signal(false);readonly added=signal(false);readonly selectedImage=signal<string|null>(null);readonly savingFavorite=signal(false);readonly favoriteNotice=signal('');readonly favoriteId=signal<number|null>(null);readonly actionNotice=signal('');readonly descriptionExpanded=signal(false);readonly invert=(value:boolean)=>!value;
- private favoriteLoaded=false;invalidId=false;
+ private readonly favorites=inject(ProductFavoritesService);private readonly auth=inject(AuthService);private readonly router=inject(Router);private readonly intent=inject(PurchaseIntentService);private readonly destroyRef=inject(DestroyRef);private readonly cancelled=new Subject<void>();
+ readonly quantity=signal(1);readonly preparing=signal(false);readonly added=signal(false);readonly selectedImage=signal<string|null>(null);readonly savingFavorite=()=>this.favorites.busy();
+ readonly favoriteNotice=()=>this.favorites.notice(this.service.product().data?.id);
+ readonly favoriteId=()=>this.favorites.id(this.service.product().data?.id??0);readonly actionNotice=signal('');readonly descriptionExpanded=signal(false);readonly invert=(value:boolean)=>!value;
+ invalidId=false;
  readonly maximum=computed(()=>Math.max(1,Math.min(100,this.service.product().data?.stock??1)));
  imageNumber():number{const p=this.service.product().data;return p?Math.max(1,p.images.indexOf(this.selectedImage()??p.imageUrl??'')+1):1;}
  constructor(){
-  this.auth.sessionEnded$.pipe(takeUntilDestroyed()).subscribe(()=>{this.cancelled.next();this.favoriteId.set(null);this.favoriteLoaded=false;this.added.set(false);this.favoriteNotice.set('');});
+  this.auth.sessionEnded$.pipe(takeUntilDestroyed()).subscribe(()=>{this.cancelled.next();this.added.set(false);});
   inject(ActivatedRoute).paramMap.pipe(takeUntilDestroyed()).subscribe(params=>{
    this.cancelled.next();const raw=params.get('id')??'';const id=Number(raw);this.invalidId=!/^[1-9][0-9]*$/.test(raw)||!Number.isSafeInteger(id);
-   this.quantity.set(this.auth.hasValidSession()?this.intent.take(id)??1:1);this.added.set(false);this.selectedImage.set(null);this.favoriteId.set(null);this.favoriteLoaded=false;this.actionNotice.set('');this.favoriteNotice.set('');this.descriptionExpanded.set(false);
+   this.quantity.set(this.auth.hasValidSession()?this.intent.take(id)??1:1);this.added.set(false);this.selectedImage.set(null);this.actionNotice.set('');this.descriptionExpanded.set(false);
    this.service.loadProduct(this.invalidId?0:id);
-   if(!this.invalidId&&this.connected&&this.auth.hasValidSession())this.loadFavoriteState(id);
+   if(!this.invalidId&&this.connected&&this.auth.hasValidSession())this.favorites.load();
   });
  }
- private resolveFavorite(id:number){return this.wishlist.list().pipe(tap(list=>{this.favoriteId.set(list.items.find(item=>item.productId===id)?.wishlistId??null);this.favoriteLoaded=true;}));}
- private loadFavoriteState(id:number):void{this.savingFavorite.set(true);this.resolveFavorite(id).pipe(takeUntil(this.cancelled),takeUntilDestroyed(this.destroyRef),finalize(()=>this.savingFavorite.set(false))).subscribe({error:()=>{this.favoriteNotice.set('No pudimos consultar tus favoritos. Puedes reintentar al guardar.');}});}
  addFavorite(id:number):void{
-  if(this.savingFavorite())return;
   if(!this.auth.hasValidSession()){void this.router.navigate(['/login'],{queryParams:{returnUrl:`/products/${id}`}});return;}
-  this.savingFavorite.set(true);this.favoriteNotice.set('');
-  const mutate=()=>this.favoriteId()!==null?this.wishlist.remove(this.favoriteId()!).pipe(tap(()=>{this.favoriteId.set(null);this.favoriteNotice.set('Producto retirado de favoritos.');}),map(()=>undefined)):this.wishlist.add(id).pipe(tap(item=>{this.favoriteId.set(item.wishlistId);this.favoriteNotice.set('Producto guardado en favoritos.');}),map(()=>undefined));
-  const request=this.favoriteLoaded?mutate():this.resolveFavorite(id).pipe(switchMap(()=>{if(this.favoriteId()!==null){this.favoriteNotice.set('Este producto ya está en tus favoritos.');return of(undefined);}return mutate();}));
-  request.pipe(takeUntil(this.cancelled),takeUntilDestroyed(this.destroyRef),finalize(()=>this.savingFavorite.set(false))).subscribe({error:()=>{this.favoriteNotice.set('No se pudo actualizar el favorito. Intenta de nuevo.');}});
+  this.favorites.toggle(id);
  }
  addToCart(productId:number):void{
   if(this.preparing()||this.cart.mutating())return;

@@ -6,6 +6,8 @@ import { provideIonicAngular } from '@ionic/angular';
 import { BehaviorSubject } from 'rxjs';
 import { API_BASE_URL } from '../../core/api/api-base-url.token';
 import { cartDto, cartItemDto, testSession } from '../../core/api/auth.testing';
+import { mapPublicProduct } from '../../core/api/public-product.mapper';
+import { PublicProductGridComponent } from '../public-catalog/public-product-grid.component';
 import { productDto } from '../../core/api/public-catalog.testing';
 import { BACKEND_SESSION_ENABLED } from '../../core/config/backend-session.token';
 import { MemorySessionStore } from '../../core/infrastructure/memory-session.store';
@@ -77,6 +79,41 @@ describe('carrito real conectado (integración)', () => {
     f.componentInstance.addFavorite(313);f.componentInstance.addFavorite(313);const state=http.expectOne(`${base}/api/wishlist`);expect(state.request.method).toBe('GET');state.flush({items:[],totalItems:0});const req=http.expectOne(`${base}/api/wishlist`);expect(req.request.method).toBe('POST');expect(req.request.headers.has('Authorization')).toBe(true);
     req.flush({wishlistId:10,productId:313,productName:'Jarana',currentPrice:6500,productImage:null,availableStock:2});f.detectChanges();expect(f.nativeElement.textContent).toContain('Producto guardado en favoritos');
     f.componentInstance.addFavorite(313);const remove=http.expectOne(`${base}/api/wishlist/10`);expect(remove.request.method).toBe('DELETE');remove.flush({}, {status:503,statusText:'Unavailable'});expect(f.componentInstance.favoriteId()).toBe(10);expect(f.componentInstance.savingFavorite()).toBe(false);expect(f.componentInstance.favoriteNotice()).toContain('No se pudo');f.destroy();
+  });
+
+  it('comparte una lista entre tarjetas y detalle y limpia los favoritos al cerrar sesión', async () => {
+    await store.save(testSession());
+    const auth = TestBed.inject(AuthService);
+    await auth.restore();
+
+    const grid = TestBed.createComponent(PublicProductGridComponent);
+    grid.componentRef.setInput('products', [mapPublicProduct(productDto(), base)]);
+    grid.detectChanges();
+    const detail = TestBed.createComponent(PublicProductDetailComponent);
+    http.expectOne(base + '/api/public/products/313').flush(productDto());
+    const list = http.expectOne(base + '/api/wishlist');
+    list.flush({ items: [], totalItems: 0 });
+    grid.detectChanges();
+
+    const heart: HTMLButtonElement = grid.nativeElement.querySelector('.card-favorite-btn');
+    expect(heart.closest('a')).toBeNull();
+    expect(grid.nativeElement.querySelector('a').getAttribute('href')).toBe('/products/313');
+    heart.click();
+    detail.componentInstance.addFavorite(313);
+    const post = http.expectOne(base + '/api/wishlist');
+    expect(post.request.body).toEqual({ productId: 313 });
+    post.flush({ wishlistId: 10, productId: 313, productName: 'Jarana', currentPrice: 6500, productImage: null, availableStock: 2 });
+    grid.detectChanges();
+    expect(heart.getAttribute('aria-pressed')).toBe('true');
+    expect(detail.componentInstance.favoriteId()).toBe(10);
+
+    detail.componentInstance.addFavorite(313);
+    const removal = http.expectOne(base + '/api/wishlist/10');
+    auth.handleUnauthorized(false);
+    expect(removal.cancelled).toBe(true);
+    grid.detectChanges();
+    expect(heart.getAttribute('aria-pressed')).toBe('false');
+    expect(detail.componentInstance.favoriteId()).toBeNull();
   });
 
   it('pantalla de carrito: muestra importes del servidor, actualiza por itemId, valida antes de checkout y vacía', async () => {
