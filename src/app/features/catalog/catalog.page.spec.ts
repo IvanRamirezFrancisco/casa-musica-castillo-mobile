@@ -143,6 +143,7 @@ describe('CatalogPage', () => {
     expect(links.length).toBe(component.productos.length);
     links.forEach((link, index) => {
       expect(link.getAttribute('href')).toBe(`/products/${component.productos[index].id}`);
+      expect(link.getAttribute('aria-label')).toBe('Ver información de ' + component.productos[index].nombre);
     });
   });
 
