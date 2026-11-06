@@ -1,5 +1,5 @@
 import { Injectable, computed, inject, signal } from '@angular/core';
-import { Observable, tap } from 'rxjs';
+import { Observable, finalize, tap } from 'rxjs';
 import { describeApiError } from '../api/api-error-message';
 import { CART_LIMITS, type Cart, type CartSummary, type CartValidation } from '../models/cart.model';
 import { CART_REPOSITORY } from '../repositories/cart.repository';
@@ -66,14 +66,15 @@ export class CartService {
   addProduct(productId: number, quantity = 1): Observable<Cart> {
     this.mutatingState.set(true);
     this.actionMessage.set(null);
+    const session = this.auth.sessionVersion;
     return this.repository.addItem(productId, quantity).pipe(
       tap({
-        next: (cart) => { this.mutatingState.set(false); this.applyCart(cart); },
+        next: (cart) => { if (this.auth.sessionVersion === session) this.applyCart(cart); },
         error: (error: unknown) => {
-          this.mutatingState.set(false);
-          this.actionMessage.set(describeApiError(error, 'form'));
+          if (this.auth.sessionVersion === session) this.actionMessage.set(describeApiError(error, 'form'));
         },
       }),
+      finalize(() => { if (this.auth.sessionVersion === session) this.mutatingState.set(false); }),
     );
   }
 

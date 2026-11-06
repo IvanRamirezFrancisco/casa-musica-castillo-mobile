@@ -42,3 +42,11 @@
   .security-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .security-intro { grid-template-columns: auto 1fr; align-items: center; }
 }
+
+.security-summary {
+  background: var(--cmc-surface-alt);
+  border-inline-start: 3px solid var(--cmc-primary);
+  border-radius: var(--cmc-radius-lg);
+  margin: 0 0 var(--cmc-space-4);
+  padding: var(--cmc-space-3) var(--cmc-space-4);
+}

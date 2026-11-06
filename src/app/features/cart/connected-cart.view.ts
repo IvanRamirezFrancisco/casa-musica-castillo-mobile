@@ -22,8 +22,11 @@ import { CmcLoadingComponent } from '../../shared/ui/loading/cmc-loading.compone
   host: { class: 'ion-page' },
   changeDetection: ChangeDetectionStrategy.OnPush,
   styles: [
+    '.cart-count { --background:var(--cmc-promo-mamey); --color:var(--cmc-text-primary); margin-inline-end:var(--cmc-space-3); }',
+    '.qty span { min-inline-size:2ch; text-align:center; font-weight:700; }',
+    '.icon-btn:focus-visible { outline:3px solid var(--cmc-primary); outline-offset:2px; }',
     '.items { display:grid; gap:12px; margin-bottom:20px; }',
-    '.card { display:grid; grid-template-columns:72px minmax(0,1fr); gap:12px; background:var(--cmc-surface); border-radius:12px; padding:12px; box-shadow:var(--cmc-shadow-card); }',
+    '.card { display:grid; grid-template-columns:72px minmax(0,1fr); gap:12px; background:var(--cmc-surface); border:1px solid var(--cmc-border); border-radius:var(--cmc-radius-lg); padding:12px; box-shadow:var(--cmc-shadow-card); }',
     '.thumb { width:72px; height:72px; border-radius:8px; overflow:hidden; }',
     '.row { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; }',
     '.qty { display:inline-flex; align-items:center; gap:8px; }',
@@ -38,7 +41,7 @@ import { CmcLoadingComponent } from '../../shared/ui/loading/cmc-loading.compone
     <ion-header class="ion-no-border cmc-header-transparent">
       <ion-toolbar>
         <ion-title class="cmc-title" role="heading" aria-level="1">Carrito</ion-title>
-        <ion-buttons slot="end"><ion-badge color="danger">{{ cart.itemCount() }}</ion-badge></ion-buttons>
+        <ion-buttons slot="end"><ion-badge class="cart-count" [attr.aria-label]="cart.itemCount() + ' artículos'">{{ cart.itemCount() }}</ion-badge></ion-buttons>
       </ion-toolbar>
     </ion-header>
     <ion-content class="cmc-page cmc-root-page" [scrollY]="true">
