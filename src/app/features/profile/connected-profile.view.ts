@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, DestroyRef, OnInit, computed, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { IonContent, IonHeader, IonIcon, IonTitle, IonToolbar } from '@ionic/angular';
 import { addIcons } from 'ionicons';
 import { logOutOutline, shieldCheckmarkOutline } from 'ionicons/icons';
@@ -9,6 +9,7 @@ import { describeApiError } from '../../core/api/api-error-message';
 import type { UserProfile } from '../../core/models/profile.model';
 import { PROFILE_REPOSITORY } from '../../core/repositories/profile.repository';
 import { AuthService } from '../../core/services/auth.service';
+import { PrivacyPreferencesService } from '../../core/services/privacy-preferences.service';
 import { CmcBadgeComponent } from '../../shared/ui/badge/cmc-badge.component';
 import { CmcButtonComponent } from '../../shared/ui/button/cmc-button.component';
 import { CmcErrorStateComponent } from '../../shared/ui/error-state/cmc-error-state.component';
@@ -30,6 +31,7 @@ import { CmcIconComponent } from '../../shared/ui/icon/cmc-icon.component';
     IonTitle,
     IonContent,
     IonIcon,
+    RouterLink,
     CmcBadgeComponent,
     CmcButtonComponent,
     CmcLoadingComponent,
@@ -70,7 +72,7 @@ import { CmcIconComponent } from '../../shared/ui/icon/cmc-icon.component';
             <div class="avatar" aria-hidden="true">{{ initial() }}</div>
             <div>
               <h2 class="cmc-title">{{ user.fullName }}</h2>
-              <p class="cmc-text-secondary">{{ user.email }}</p>
+              <p class="cmc-text-secondary">{{ privacy.hideContact() ? 'Correo oculto' : user.email }}</p>
             </div>
 
             <div style="display: flex; flex-wrap: wrap; gap: 8px">
@@ -93,11 +95,11 @@ import { CmcIconComponent } from '../../shared/ui/icon/cmc-icon.component';
               </div>
               <div class="field-row">
                 <dt>Correo electrónico</dt>
-                <dd>{{ user.email }}</dd>
+                <dd>{{ privacy.hideContact() ? 'Correo oculto' : user.email }}</dd>
               </div>
               <div class="field-row">
                 <dt>Teléfono</dt>
-                <dd>{{ user.phone ?? 'Sin teléfono registrado' }}</dd>
+                <dd>{{ privacy.hideContact() ? 'Teléfono oculto' : (user.phone ?? 'Sin teléfono registrado') }}</dd>
               </div>
               <div class="field-row">
                 <dt>Segundo factor (2FA)</dt>
@@ -111,6 +113,7 @@ import { CmcIconComponent } from '../../shared/ui/icon/cmc-icon.component';
           </section>
 
           <section class="profile-card" aria-label="Accesos de tu cuenta">
+            <a routerLink="/privacy" class="cmc-link">Privacidad y mis datos</a>
             <cmc-button variant="secondary" fullWidth (click)="goToOrders()"><cmc-icon name="cart"/> Mis pedidos</cmc-button>
             <cmc-button variant="secondary" fullWidth (click)="goToFavorites()"><cmc-icon name="heart"/> Mis favoritos</cmc-button>
             <cmc-button variant="secondary" fullWidth (click)="goToSecurity()"><cmc-icon name="security"/> Seguridad de la cuenta</cmc-button>
@@ -146,6 +149,7 @@ import { CmcIconComponent } from '../../shared/ui/icon/cmc-icon.component';
   `,
 })
 export class ConnectedProfileComponent implements OnInit {
+  readonly privacy = inject(PrivacyPreferencesService);
   protected readonly auth = inject(AuthService);
   private readonly repository = inject(PROFILE_REPOSITORY);
   private readonly router = inject(Router);

@@ -2,6 +2,8 @@ import { Routes } from '@angular/router';
 import { authGuard } from './core/security/auth.guard';
 
 export const routes: Routes = [
+  { path: 'privacy', loadComponent: () => import('./features/privacy/privacy.page').then(m => m.PrivacyPage) },
+  { path: 'privacy/my-data', canActivate: [authGuard], loadComponent: () => import('./features/privacy/my-data.page').then(m => m.MyPrivacyDataPage) },
   {
     path: 'api-connection',
     loadComponent: () => import('./features/api-connection/api-connection.page').then((m) => m.ApiConnectionPage),

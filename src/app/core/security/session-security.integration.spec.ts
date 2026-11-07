@@ -68,10 +68,12 @@ describe('sesión, interceptor y guard (integración)', () => {
 
   it('sin sesión una petición autenticada falla localmente con 401', () => {
     const { api, http } = configure();
+    const navigate = vi.spyOn(TestBed.inject(Router), 'navigate').mockResolvedValue(true);
     const error = vi.fn();
     api.get('/api/users/profile', undefined, { auth: true }).subscribe({ error });
     http.expectNone(`${base}/api/users/profile`);
     expect((error.mock.calls[0][0] as ApiError).isUnauthorized).toBe(true);
+    expect(navigate).toHaveBeenCalledWith(['/login'], { replaceUrl: true });
   });
 
   it('un 401 del servidor limpia la sesión; un 403 la conserva', async () => {

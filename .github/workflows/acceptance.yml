@@ -13,6 +13,8 @@ jobs:
       MAESTRO_CLI_ANALYSIS_NOTIFICATION_DISABLED: true
     steps:
       - uses: actions/checkout@v7
+      - name: Probar control de integridad de evidencia Maestro
+        run: python -B -m unittest discover -s test -p test_maestro_evidence.py
       - uses: actions/download-artifact@v7
         with:
           name: casa-musica-castillo-demo-debug-apk
@@ -47,6 +49,9 @@ jobs:
             mkdir -p reports/maestro
             maestro --version
             maestro test --format JUNIT --output reports/maestro/results.xml --test-output-dir reports/maestro --debug-output reports/maestro/debug .maestro
+      - name: Exigir todos los flujos registrados en JUnit
+        id: maestro-evidence
+        run: python -B scripts/verify-maestro-results.py
       - uses: actions/upload-artifact@v7
         if: always()
         with:
@@ -61,8 +66,9 @@ jobs:
           SUMMARY_PR: ${{ github.event.pull_request.number || 'No aplica' }}
           SUMMARY_CONTROLS: |
             Flujos Maestro DEMO|${{ steps.maestro-tests.outcome == 'success' && 'PASS' || 'FAIL' }}|Inicio/autenticación demo, compra demo y pedidos/perfil navegable; no acredita backend.
-          SUMMARY_STATUS: ${{ steps.maestro-tests.outcome == 'success' && 'PASS' || 'FAIL' }}
+            Integridad de evidencia|${{ steps.maestro-evidence.outcome == 'success' && 'PASS' || 'FAIL' }}|Todos los flujos raíz registrados, ejecutados exactamente una vez y SUCCESS en JUnit.
+          SUMMARY_STATUS: ${{ (steps.maestro-tests.outcome == 'success' && steps.maestro-evidence.outcome == 'success') && 'PASS' || 'FAIL' }}
           SUMMARY_DATA: APK Debug y estado DEMO reiniciado por flujo en emulador AOSP API 34.
-          SUMMARY_METRICS: Cuatro flujos; tiempos y casos reales en JUnit.
+          SUMMARY_METRICS: Cinco flujos, incluida persistencia de privacidad tras reiniciar; tiempos y casos reales en JUnit.
           SUMMARY_ARTIFACTS: acceptance-maestro-demo (JUnit, capturas y logs), retención 14 días.
         run: node scripts/write-workflow-summary.mjs

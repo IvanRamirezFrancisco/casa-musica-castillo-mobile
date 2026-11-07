@@ -1,0 +1,32 @@
+<ion-header class="ion-no-border cmc-header-transparent">
+  <ion-toolbar><ion-title class="cmc-title" role="heading" aria-level="1">Privacidad y mis datos</ion-title></ion-toolbar>
+</ion-header>
+<ion-content class="cmc-page cmc-standalone-page">
+  <div class="cmc-page-container privacy-shell">
+    <a routerLink="/main/home" class="cmc-link">Volver al inicio</a>
+    <section class="privacy-card" aria-labelledby="privacy-info">
+      <h2 id="privacy-info">Información de privacidad</h2>
+      <p>Los servicios de cuenta utilizan los datos que proporcionas para registro, autenticación, perfil y funciones de compra. La configuración DEMO utiliza datos ficticios.</p>
+      <p>Esta pantalla explica los controles disponibles. El aviso legal, el responsable del tratamiento y los canales de privacidad están pendientes de confirmación por el negocio. No hay una política pública aprobada para enlazar.</p>
+      <p>Consultar esta información no registra un consentimiento ni autoriza publicidad.</p>
+    </section>
+    <section class="privacy-card" aria-labelledby="privacy-preferences">
+      <h2 id="privacy-preferences">Preferencia de este dispositivo</h2>
+      <label for="hide-contact" class="privacy-choice">
+        <input id="hide-contact" type="checkbox" [checked]="preferences.hideContact()" (change)="changeVisibility($event)" aria-describedby="preference-purpose" />
+        <span>Ocultar correo y teléfono en el perfil</span>
+      </label>
+      <p id="preference-purpose">Reduce la exposición de tus datos de contacto en la pantalla de perfil. Puedes cambiarla aquí en cualquier momento. Se conserva en este navegador o instalación, para todas sus cuentas, hasta borrar los datos de la app. No cambia datos del servidor ni preferencias comerciales.</p>
+      @if (preferences.message()) { <p [attr.role]="preferences.storageError() ? 'alert' : 'status'">{{ preferences.message() }}</p> }
+    </section>
+    <section class="privacy-card" aria-labelledby="privacy-rights">
+      <h2 id="privacy-rights">Acceso y derechos sobre tus datos</h2>
+      <a routerLink="/privacy/my-data" class="cmc-link">Consultar los datos de mi cuenta</a>
+      <p>La consulta requiere iniciar sesión y muestra el perfil que entrega el servidor para tu propia cuenta. No es una exportación completa de todos los datos.</p>
+      <a routerLink="/main/orders" class="cmc-link">Consultar mis pedidos</a>
+      <h3>Rectificación, oposición y eliminación</h3>
+      <p>La app todavía no puede recibir ni confirmar estas solicitudes. El negocio debe habilitar y verificar el procedimiento de atención. No se ha enviado ninguna solicitud ni eliminado tu cuenta.</p>
+      <p>La URL pública para solicitar eliminación desde fuera de la app también está pendiente. Cerrar sesión no elimina una cuenta.</p>
+    </section>
+  </div>
+</ion-content>
