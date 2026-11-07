@@ -1,3 +1,4 @@
+import { normalizePersonName, normalizePhone } from '../validation/auth-fields.validation';
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { map } from 'rxjs';
@@ -61,12 +62,12 @@ export class HttpAuthRepository implements AuthRepository {
   register(input: RegisterInput) {
     const body: Record<string, string> = {
       username: input.username.trim(),
-      firstName: input.firstName.trim(),
-      lastName: input.lastName.trim(),
+      firstName: normalizePersonName(input.firstName),
+      lastName: normalizePersonName(input.lastName),
       email: input.email.trim(),
       password: input.password,
     };
-    if (input.phone?.trim()) body['phone'] = input.phone.trim();
+    if (input.phone?.trim()) body['phone'] = normalizePhone(input.phone);
     return this.api.post<unknown>('/api/auth/register', body).pipe(map((response) => void unwrapApiResponse(response)));
   }
 

@@ -8,6 +8,7 @@ on:
       - feature/actividad-4-integracion-movil
       - feature/android-release-google-play
       - feature/privacidad-play-compliance
+      - feature/tt05-sesion-segura
 
   push:
     branches:

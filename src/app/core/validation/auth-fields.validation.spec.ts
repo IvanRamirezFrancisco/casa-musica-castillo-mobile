@@ -45,7 +45,7 @@ describe('auth-fields.validation (restricciones reales de RegisterRequest)', () 
     expect(optionalPhoneError('')).toBeNull();
     expect(optionalPhoneError('5512345678')).toBeNull();
     expect(optionalPhoneError('551234')).toBe('pattern');
-    expect(optionalPhoneError('55-1234-5678')).toBe('pattern');
+    expect(optionalPhoneError('55-1234-5678')).toBeNull();
   });
 
   it('token de restablecimiento y códigos 2FA', () => {

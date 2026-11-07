@@ -1,6 +1,7 @@
+import { emailValidator } from '../../../core/validation/auth-fields.validation';
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
-import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { NonNullableFormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { IonContent, IonIcon } from '@ionic/angular';
 import { addIcons } from 'ionicons';
 import { arrowBackOutline, mailOutline } from 'ionicons/icons';
@@ -34,7 +35,7 @@ export class ForgotPasswordPage {
   isSubmitted = signal(false);
 
   forgotForm = this.fb.group({
-    email: ['', [Validators.required, Validators.email]],
+    email: ['', [emailValidator]],
   });
 
   onSubmit() {
