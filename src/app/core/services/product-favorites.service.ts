@@ -19,10 +19,12 @@ export class ProductFavoritesService {
   private readonly feedback = signal<{ productId: number; message: string } | null>(null);
   private readonly loadingState = signal(false);
   private readonly version = signal(-1);
+  private feedbackTimer: ReturnType<typeof setTimeout> | undefined;
   private loaded = false;
   private reading: Observable<void> | null = null;
 
   constructor() {
+    this.destroyRef.onDestroy(() => clearTimeout(this.feedbackTimer));
     this.auth.sessionEnded$.pipe(takeUntilDestroyed()).subscribe(() => this.reset());
   }
 
@@ -46,20 +48,20 @@ export class ProductFavoritesService {
     const version = this.version();
     const removing = this.id(productId) !== null;
     this.pending.set(productId);
-    this.feedback.set(null);
+    this.clearFeedback();
     this.read().pipe(
       switchMap(() => {
         if (!this.active() || this.version() !== version) return EMPTY;
         const wishlistId = this.id(productId);
         if (wishlistId !== null) {
           if (!removing) {
-            this.report(productId, 'Este producto ya está en tus favoritos.');
+            this.report(productId, 'Este producto ya está en tus favoritos.', true);
             return EMPTY;
           }
           return this.repository.remove(wishlistId).pipe(tap(() => {
             if (!this.active()) return;
             this.forget(wishlistId);
-            this.report(productId, 'Producto retirado de favoritos.');
+            this.report(productId, 'Producto retirado de favoritos.', true);
           }));
         }
         if (removing) return EMPTY;
@@ -67,7 +69,7 @@ export class ProductFavoritesService {
           if (!this.active()) return;
           if (item.productId !== productId) throw new Error('El favorito corresponde a otro producto.');
           this.entries.update(entries => new Map(entries).set(productId, item));
-          this.report(productId, 'Producto guardado en favoritos.');
+          this.report(productId, 'Producto guardado en favoritos.', true);
         }));
       }),
       takeUntil(this.resetRequests),
@@ -120,15 +122,24 @@ export class ProductFavoritesService {
     return this.reading;
   }
 
-  private report(productId: number, message: string): void {
-    if (this.active()) this.feedback.set({ productId, message });
+  private report(productId: number, message: string, temporary = false): void {
+    if (!this.active()) return;
+    this.clearFeedback();
+    this.feedback.set({ productId, message });
+    if (temporary) this.feedbackTimer = setTimeout(() => this.clearFeedback(), 3000);
+  }
+
+  private clearFeedback(): void {
+    clearTimeout(this.feedbackTimer);
+    this.feedbackTimer = undefined;
+    this.feedback.set(null);
   }
 
   private reset(): void {
     this.version.set(-1);
     this.resetRequests.next();
     this.entries.set(new Map());
-    this.feedback.set(null);
+    this.clearFeedback();
     this.pending.set(null);
     this.loadingState.set(false);
     this.loaded = false;

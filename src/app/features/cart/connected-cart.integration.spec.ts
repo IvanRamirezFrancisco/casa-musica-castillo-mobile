@@ -15,6 +15,7 @@ import { PUBLIC_CATALOG_ENABLED } from '../../core/repositories/public-catalog.r
 import { authInterceptor } from '../../core/security/auth.interceptor';
 import { SESSION_STORE } from '../../core/security/session-store.token';
 import { AuthService } from '../../core/services/auth.service';
+import { CartService } from '../../core/services/cart.service';
 import { PurchaseIntentService } from '../../core/services/purchase-intent.service';
 import { MainNavigationComponent } from '../../layout/main-navigation/main-navigation.component';
 import { PublicProductDetailComponent } from '../public-catalog/public-product-detail.view';
@@ -37,7 +38,10 @@ describe('carrito real conectado (integración)', () => {
     ] });
     http = TestBed.inject(HttpTestingController);
   });
-  afterEach(() => http.verify());
+  afterEach(() => {
+    vi.useRealTimers();
+    http.verify();
+  });
 
   it('detalle público: sin sesión redirige a login; con sesión agrega por productId y actualiza el badge', async () => {
     const navigate = vi.spyOn(TestBed.inject(Router), 'navigate').mockResolvedValue(true);
@@ -63,12 +67,31 @@ describe('carrito real conectado (integración)', () => {
     refresh.flush(productDto());
     const post = http.expectOne(`${base}/api/cart/items`);
     expect(post.request.body).toEqual({ productId: 313, quantity: 1 });
+    vi.useFakeTimers();
     post.flush(cartDto());
     expect(TestBed.inject(PurchaseIntentService).take(313)).toBeNull();
     detail.detectChanges();
     nav.detectChanges();
     expect(detail.nativeElement.textContent).toContain('Producto agregado a tu carrito');
     expect(nav.componentInstance.cartBadgeText()).toBe('2');
+    expect(detail.nativeElement.querySelector('.detail-cart').getAttribute('aria-label')).toContain('2');
+    vi.advanceTimersByTime(3000);
+    expect(detail.componentInstance.added()).toBe(false);
+    expect(nav.componentInstance.cartBadgeText()).toBe('2');
+  });
+
+  it('confirma la nueva partida con una lectura si el POST devuelve una instantánea vacía', async () => {
+    await store.save(testSession());
+    await TestBed.inject(AuthService).restore();
+    const cart = TestBed.inject(CartService);
+    cart.addProduct(313, 1).subscribe();
+    http.expectOne(`${base}/api/cart/items`).flush(cartDto([], { totalItems: 0 }));
+    expect(cart.itemCount()).toBe(0);
+    expect(cart.mutating()).toBe(true);
+    http.expectOne(`${base}/api/cart`).flush(cartDto());
+    expect(cart.itemCount()).toBe(2);
+    expect(cart.mutating()).toBe(false);
+    http.expectNone(`${base}/api/cart/items`);
   });
 
   it('favorito desde detalle exige sesión, no duplica el POST y presenta errores recuperables',async()=>{
@@ -77,7 +100,11 @@ describe('carrito real conectado (integración)', () => {
     f.componentInstance.addFavorite(313);expect(navigate).toHaveBeenCalledWith(['/login'],{queryParams:{returnUrl:'/products/313'}});http.expectNone(`${base}/api/wishlist`);
     await store.save(testSession());await TestBed.inject(AuthService).restore();
     f.componentInstance.addFavorite(313);f.componentInstance.addFavorite(313);const state=http.expectOne(`${base}/api/wishlist`);expect(state.request.method).toBe('GET');state.flush({items:[],totalItems:0});const req=http.expectOne(`${base}/api/wishlist`);expect(req.request.method).toBe('POST');expect(req.request.headers.has('Authorization')).toBe(true);
+    vi.useFakeTimers();
     req.flush({wishlistId:10,productId:313,productName:'Jarana',currentPrice:6500,productImage:null,availableStock:2});f.detectChanges();expect(f.nativeElement.textContent).toContain('Producto guardado en favoritos');
+    vi.advanceTimersByTime(3000);
+    expect(f.componentInstance.favoriteNotice()).toBe('');
+    expect(f.componentInstance.favoriteId()).toBe(10);
     f.componentInstance.addFavorite(313);const remove=http.expectOne(`${base}/api/wishlist/10`);expect(remove.request.method).toBe('DELETE');remove.flush({}, {status:503,statusText:'Unavailable'});expect(f.componentInstance.favoriteId()).toBe(10);expect(f.componentInstance.savingFavorite()).toBe(false);expect(f.componentInstance.favoriteNotice()).toContain('No se pudo');f.destroy();
   });
 

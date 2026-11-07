@@ -1,10 +1,16 @@
-<ion-header class="cmc-store-header ion-no-border"><ion-toolbar><ion-buttons slot="start"><ion-back-button defaultHref="/main/catalog" text="Volver" aria-label="Volver al catálogo"/></ion-buttons><ion-title>Detalle del producto</ion-title></ion-toolbar></ion-header>
+<ion-header class="cmc-store-header ion-no-border"><ion-toolbar><ion-buttons slot="start"><ion-back-button defaultHref="/main/catalog" text="Volver" aria-label="Volver al catálogo"/></ion-buttons><ion-title>Detalle del producto</ion-title>
+  @if(connected){<ion-buttons slot="end">
+    <a class="detail-cart" routerLink="/main/cart" [class.cart-pulse]="added()" [attr.aria-label]="'Carrito, artículos: '+cart.itemCount()">
+      <cmc-icon name="cart"/><span aria-hidden="true" class="detail-cart-count">{{cart.itemCount()}}</span>
+    </a>
+  </ion-buttons>}
+</ion-toolbar></ion-header>
 <ion-content class="cmc-page product-content"><main class="cmc-store">
 @switch(service.product().status){
   @case('loading'){<cmc-loading message="Consultando producto"/>}
   @case('error'){@if(invalidId||service.product().error?.status===404){<cmc-empty-state heading="Producto no encontrado" description="El producto no existe o ya no está disponible."/>}@else{<cmc-error-state heading="No pudimos cargar el producto" description="Revisa la conexión y vuelve a intentarlo." (retry)="service.retryProduct()"/>}}
   @case('ready'){@if(service.product().data;as product){
-    <div class="product-layout"><section class="product-gallery" aria-label="Galería del producto"><div class="cover"><cmc-public-image [src]="selectedImage()??product.imageUrl" [alt]="product.name"/></div>
+    <div class="product-layout"><section class="product-gallery" aria-label="Galería del producto"><div class="cover" [class.cover-empty]="!(selectedImage()??product.imageUrl)"><cmc-public-image [src]="selectedImage()??product.imageUrl" [alt]="product.name"/></div>
       @if(product.images.length>1){<div class="gallery">@for(image of product.images;track image;let i=$index){<button class="gallery-thumb" [attr.aria-label]="'Ver fotografía '+(i+1)+' de '+product.name" [attr.aria-current]="(selectedImage()??product.imageUrl)===image" (click)="selectedImage.set(image)"><cmc-public-image [src]="image" [alt]="product.name"/></button>}</div><p class="muted">Imagen {{imageNumber()}} de {{product.images.length}}</p>}
     </section>
     <section class="product-summary"><p class="eyebrow">{{product.category}}</p><p class="muted">{{product.brand}}</p><h1>{{product.name}}</h1>
@@ -15,7 +21,7 @@
         <cmc-button variant="commercial" fullWidth [disabled]="preparing()||product.availability!=='available'" [loading]="preparing()||cart.mutating()" loadingLabel="Verificando disponibilidad" (click)="addToCart(product.id)"><cmc-icon name="cart"/> {{product.availability==='unavailable'?'Agotado':'Agregar al carrito'}}</cmc-button>
         <button class="store-button favorite-button" [disabled]="savingFavorite()" [attr.aria-pressed]="favoriteId()!==null" (click)="addFavorite(product.id)"><cmc-icon [name]="favoriteId()!==null?'saved':'heart'"/>{{savingFavorite()?'Consultando favoritos…':favoriteId()!==null?'Quitar de favoritos':'Guardar en favoritos'}}</button>
         @if(favoriteNotice()){<p role="status" class="action-notice">{{favoriteNotice()}}</p>}@if(actionNotice()){<p role="status" class="action-notice">{{actionNotice()}}</p>}
-        @if(added()){<p role="status" class="action-notice">Producto agregado a tu carrito.</p><a class="store-button" routerLink="/main/cart">Ver carrito <cmc-icon name="arrow"/></a>}
+        @if(added()){<p role="status" class="action-notice">Producto agregado a tu carrito.</p>}
         @if(cart.notice();as err){<p role="alert">{{err}}</p>}
         <p class="muted"><cmc-icon name="security"/> Precio y existencias se verifican al agregar. No se realiza ningún pago.</p>
       </div>}@else{<p class="muted" role="note">Agregar productos reales al carrito requiere la próxima etapa de integración. Este producto no se enviará al carrito DEMO.</p>}

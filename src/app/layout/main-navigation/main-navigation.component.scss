@@ -40,8 +40,8 @@ ion-tab-bar {
     margin: var(--cmc-space-1) 0;
 
     ion-icon {
-      font-size: 21px;
-      margin-bottom: 2px;
+      font-size: 1.375rem;
+      margin-block-end: var(--cmc-space-1);
       z-index: 2;
     }
 
@@ -70,6 +70,8 @@ ion-tab-bar {
     &.tab-selected {
       background: var(--cmc-primary);
       box-shadow: var(--cmc-shadow-brand), inset 0 -3px var(--cmc-promo-mamey);
+
+      ion-label { font-weight: 750; }
 
       ion-icon, ion-label {
         color: var(--cmc-text-on-primary);

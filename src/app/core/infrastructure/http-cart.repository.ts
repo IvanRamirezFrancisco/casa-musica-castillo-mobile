@@ -1,5 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import { map, throwError } from 'rxjs';
+import { map, of, switchMap, throwError } from 'rxjs';
 import type { CartRepository } from '../repositories/cart.repository';
 import { CART_LIMITS } from '../models/cart.model';
 import { API_BASE_URL } from '../api/api-base-url.token';
@@ -30,7 +30,19 @@ export class HttpCartRepository implements CartRepository {
     }
     return this.api
       .post<unknown>('/api/cart/items', { productId, quantity }, { auth: true })
-      .pipe(map((body) => parseCart(body, this.base)));
+      .pipe(
+        map((body) => parseCart(body, this.base)),
+        switchMap(cart => {
+          const confirmsAddition = (item: { productId: number; quantity: number }) =>
+            item.productId === productId && item.quantity >= quantity;
+          if (cart.items.some(confirmsAddition)) return of(cart);
+          // A newly created line can be absent from the mutation's snapshot. Read once, never repeat the POST.
+          return this.loadCart().pipe(map(fresh => {
+            if (!fresh.items.some(confirmsAddition)) throw new ApiError('invalid-response', 0);
+            return fresh;
+          }));
+        }),
+      );
   }
 
   updateItemQuantity(itemId: number, quantity: number) {
