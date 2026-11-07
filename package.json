@@ -14,7 +14,12 @@
     "test:regression": "ng test --configuration=regression",
     "test:coverage": "ng test --configuration=ci",
     "test:white-box": "node test/run-white-box.mjs",
-    "test:api": "node scripts/run-api-tests.mjs"
+    "test:api": "node scripts/run-api-tests.mjs",
+    "android:debug": "node scripts/build-android.mjs --environment development --variant debug",
+    "android:demo": "node scripts/build-android.mjs --environment demo --variant debug",
+    "android:release": "node scripts/build-android.mjs --environment production --variant release",
+    "android:verify-release": "python scripts/verify-android-release.py",
+    "test:build-config": "node --test test/android-build-config.test.mjs"
   },
   "private": true,
   "dependencies": {

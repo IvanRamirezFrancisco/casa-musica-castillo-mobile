@@ -5,6 +5,7 @@ on:
     branches:
       - develop
       - main
+      - feature/actividad-4-integracion-movil
 
   push:
     branches:
@@ -132,6 +133,7 @@ jobs:
             CodeQL JavaScript y TypeScript
             Compilar APK Android Debug
             ACEPTACIÓN móvil DEMO / maestro
+            Verificar Android Release sin firma
           QUALITY_GATE_MAX_ATTEMPTS: 80
           QUALITY_GATE_INTERVAL_MS: 15000
         run: node scripts/quality-gate.mjs

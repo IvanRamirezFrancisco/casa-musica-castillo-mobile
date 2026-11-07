@@ -3,14 +3,14 @@
 // The list of file replacements can be found in `angular.json`.
 
 import { Capacitor } from '@capacitor/core';
+import { developmentEnvironment } from './environment-settings';
 
-export const environment = {
-  publicCatalogEnabled: true,
-  production: false,
-  apiBaseUrl: Capacitor.getPlatform() === 'android'
-    ? 'http://10.0.2.2:8080'
-    : 'http://localhost:8080',
-};
+// Only explicit device builds define this public origin. Browser/emulator defaults stay local.
+declare const CMC_DEVICE_API_URL: string | undefined;
+export const environment = developmentEnvironment(
+  Capacitor.getPlatform(),
+  typeof CMC_DEVICE_API_URL === 'undefined' ? undefined : CMC_DEVICE_API_URL,
+);
 
 /*
  * For easier debugging in development mode, you can import the following file

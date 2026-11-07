@@ -1,7 +1,7 @@
 name: INTEGRACIÓN - Frontend y API
 on:
   pull_request:
-    branches: [develop, main]
+    branches: [develop, main, feature/actividad-4-integracion-movil]
   push:
     branches: [develop, main]
   workflow_dispatch:

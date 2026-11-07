@@ -5,6 +5,7 @@ on:
     branches:
       - develop
       - main
+      - feature/actividad-4-integracion-movil
 
   push:
     branches:

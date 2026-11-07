@@ -1,7 +1,7 @@
 name: RENDIMIENTO Y ESFUERZO - k6 autorizado
 on:
   pull_request:
-    branches: [develop, main]
+    branches: [develop, main, feature/actividad-4-integracion-movil]
   workflow_dispatch:
     inputs:
       scenario:
