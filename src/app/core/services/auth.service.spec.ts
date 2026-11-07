@@ -206,13 +206,14 @@ describe('AuthService', () => {
     expect(service.user()).toBeNull();
   });
   it('restauración persistente consulta /me y utiliza roles actuales del servidor', async () => {
+    const session = testSession();
     const stored: SessionStore = { persistent: true, save: vi.fn().mockResolvedValue(undefined),
-      load: vi.fn().mockResolvedValue(testSession()), clear: vi.fn().mockResolvedValue(undefined) };
+      load: vi.fn().mockResolvedValue(session), clear: vi.fn().mockResolvedValue(undefined) };
     const { repo, service } = setup(stored);
-    const serverUser = { ...testSession().user, roles: ['ROLE_CUSTOMER'] };
+    const serverUser = { ...session.user, roles: ['ROLE_CUSTOMER'] };
     repo.restoreUser.mockReturnValue(of(serverUser));
     await service.restore();
-    expect(repo.restoreUser).toHaveBeenCalledWith(testSession().token);
+    expect(repo.restoreUser).toHaveBeenCalledWith(session.token);
     expect(service.user()).toEqual(serverUser);
   });
 
