@@ -56,20 +56,26 @@ export class ConnectedRegisterPage {
     const key = Object.keys(control.errors ?? {})[0];
     if (name === 'password' && key === 'minlength') return `Usa al menos ${FIELD_LIMITS.passwordMin} caracteres.`;
     if (name === 'email' && key === 'pattern') return 'Ingresa un correo válido.';
-    if (name === 'phone') return 'Ingresa 10 dígitos o deja el campo vacío.';
+    if (name === 'phone') return 'Ingresa 10 dígitos, sin lada internacional, o deja el campo vacío.';
     if (name === 'username' && key === 'pattern') return 'Usa solo letras, números, punto, guion y guion bajo.';
     return FIELD_MESSAGES[key] ?? 'El valor no es válido.';
   }
 
   protected passwordChecklist() {
     const value = this.form.controls.password.value;
-    const count = passwordCharacterTypes(value);
-    return {
-      length: value.length >= FIELD_LIMITS.passwordMin && value.length <= FIELD_LIMITS.passwordMax,
-      bytes: value.length > 0 && passwordByteLength(value) <= FIELD_LIMITS.passwordMaxBytes,
-      variety: count >= 3,
-      valid: this.form.controls.password.valid,
-    };
+    const length = value.length >= FIELD_LIMITS.passwordMin && value.length <= FIELD_LIMITS.passwordMax;
+    const bytes = value.length > 0 && passwordByteLength(value) <= FIELD_LIMITS.passwordMaxBytes;
+    const variety = passwordCharacterTypes(value) >= 3;
+    const completed = Number(length) + Number(bytes) + Number(variety);
+    const valid = this.form.controls.password.valid;
+    const feedback = valid ? 'positive' : completed === 2 ? 'warning' : 'negative';
+
+    return { length, bytes, variety, completed, feedback } as const;
+  }
+
+  protected phoneConfirmed(): boolean {
+    const phone = this.form.controls.phone;
+    return phone.valid && phone.value.trim().length > 0;
   }
 
   protected confirmError(): string {
@@ -82,7 +88,11 @@ export class ConnectedRegisterPage {
   protected confirmationStatus(): string {
     const confirmation = this.form.controls.confirmPassword;
     if (!confirmation.value && !confirmation.touched) return 'Confirmación pendiente.';
-    return confirmation.value && !this.form.hasError('passwordMismatch') ? 'Las contraseñas coinciden.' : '';
+    return this.passwordsCoincide() ? 'Las contraseñas coinciden.' : '';
+  }
+
+  protected passwordsCoincide(): boolean {
+    return !!this.form.controls.confirmPassword.value && !this.form.hasError('passwordMismatch');
   }
 
   protected goBack(): void {

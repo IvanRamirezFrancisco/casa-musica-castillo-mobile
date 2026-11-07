@@ -1,7 +1,7 @@
 name: RENDIMIENTO Y ESFUERZO - k6 autorizado
 on:
   pull_request:
-    branches: [develop, main, feature/actividad-4-integracion-movil, feature/android-release-google-play, feature/privacidad-play-compliance, feature/tt05-sesion-segura, feature/conciliacion-validadores-equipo, feature/uiux-adaptativo-multidispositivo, fix/galaxy-a55-integracion-real, feature/uiux-direccion-a, fix/aceptacion-a55-p0, feature/refinamiento-comercial-a55, feature/refinamiento-cuenta-favoritos-carrito]
+    branches: [develop, main, feature/actividad-4-integracion-movil, feature/android-release-google-play, feature/privacidad-play-compliance, feature/tt05-sesion-segura, feature/conciliacion-validadores-equipo, feature/uiux-adaptativo-multidispositivo, fix/galaxy-a55-integracion-real, feature/uiux-direccion-a, fix/aceptacion-a55-p0, feature/refinamiento-comercial-a55, feature/refinamiento-cuenta-favoritos-carrito, feature/galeria-experiencia-comercial]
   workflow_dispatch:
     inputs:
       scenario:
