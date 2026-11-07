@@ -5,11 +5,14 @@
 .cmc-page-container.security-page {
   max-inline-size: 64rem;
   margin-inline: auto;
-  padding-block-end: calc(var(--cmc-space-6) + var(--cmc-safe-area-bottom));
+  padding-block-end: var(--cmc-space-6);
 }
 
 .security-intro, .security-card, .security-panel { display: grid; gap: var(--cmc-space-3); min-width: 0; }
-.security-intro { margin-block-end: var(--cmc-space-4); }
+:host(.ion-page) { inset-block-end: var(--cmc-safe-area-bottom); }
+ion-content.cmc-page { --padding-bottom: var(--cmc-space-4); }
+.security-intro { grid-template-columns: auto minmax(0, 1fr); align-items: start; margin-block-end: var(--cmc-space-4); }
+.security-intro h1 { margin-block: 0 .25rem; }
 .security-intro p, .security-card p { margin: 0; color: var(--cmc-text-secondary); line-height: 1.5; }
 .security-grid { display: grid; gap: var(--cmc-space-4); align-items: start; }
 .security-grid > .security-card {
@@ -40,7 +43,6 @@
 
 @media (min-width: 48rem) {
   .security-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .security-intro { grid-template-columns: auto 1fr; align-items: center; }
 }
 
 .security-summary {
@@ -50,3 +52,10 @@
   margin: 0 0 var(--cmc-space-4);
   padding: var(--cmc-space-3) var(--cmc-space-4);
 }
+
+.security-page > .security-summary { margin: 0 0 var(--cmc-space-4); }
+.security-summary h2 { margin: 0 0 .5rem; font-size: 1rem; }
+.security-summary p { margin: .625rem 0 0; color: var(--cmc-text-secondary); }
+.security-checks { display: grid; gap: .375rem; margin: 0; font-size: .875rem; }
+.security-checks div { display: flex; flex-wrap: wrap; justify-content: space-between; column-gap: .5rem; }
+.security-checks dd { margin: 0; font-weight: 650; }

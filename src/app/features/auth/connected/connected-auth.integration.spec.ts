@@ -202,6 +202,35 @@ describe('autenticación conectada (integración)', () => {
     page.componentInstance['goBack']();
   });
 
+  it('muestra los requisitos solo con foco y distingue confirmación pendiente, inválida y válida', () => {
+    const fixture = TestBed.createComponent(ConnectedRegisterPage);
+    fixture.detectChanges();
+    const root = fixture.nativeElement as HTMLElement;
+    const password = root.querySelector<HTMLInputElement>('cmc-input[formcontrolname="password"] input')!;
+    const confirmation = root.querySelector<HTMLInputElement>('cmc-input[formcontrolname="confirmPassword"] input')!;
+    expect(root.querySelector('.password-guide')).toBeNull();
+    password.dispatchEvent(new FocusEvent('focusin', { bubbles: true }));
+    password.value = 'Cl4ve-Segura';
+    password.dispatchEvent(new Event('input'));
+    fixture.detectChanges();
+    expect(root.querySelector('progress')?.value).toBe(3);
+    expect(root.textContent).toContain('Confirmación pendiente');
+    expect(root.textContent).not.toContain('Las contraseñas no coinciden');
+    password.dispatchEvent(new FocusEvent('focusout', { bubbles: true }));
+    fixture.detectChanges();
+    expect(root.querySelector('.password-guide')).toBeNull();
+    expect(root.textContent).toContain('Cumple los requisitos locales');
+    confirmation.value = 'otra';
+    confirmation.dispatchEvent(new Event('input'));
+    confirmation.dispatchEvent(new FocusEvent('blur'));
+    fixture.detectChanges();
+    expect(root.textContent).toContain('Las contraseñas no coinciden');
+    confirmation.value = password.value;
+    confirmation.dispatchEvent(new Event('input'));
+    fixture.detectChanges();
+    expect(root.textContent).toContain('Las contraseñas coinciden');
+  });
+
   it('recuperación y restablecimiento: usa /password-reset/* y limpia contraseñas al terminar o fallar', () => {
     const page = TestBed.createComponent(ConnectedForgotPasswordPage);
     page.detectChanges();

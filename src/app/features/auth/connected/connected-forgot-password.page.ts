@@ -21,7 +21,7 @@ import {
 @Component({
   selector: 'app-connected-forgot-password',
   templateUrl: './connected-forgot-password.page.html',
-  styleUrls: ['../forgot-password/forgot-password.page.scss'],
+  styleUrls: ['../forgot-password/forgot-password.page.scss', './connected-forgot-password.page.scss'],
   styles: ['.auth-alert { margin: 0 0 16px; padding: 12px 16px; border-radius: 8px; font-size: 0.9rem; } .auth-alert--error { background: #fdecea; color: #7a1c14; } .auth-alert--success { background: #e8f5e9; color: #1b4d20; } .step-actions { display: grid; gap: 12px; margin-top: 12px; }'],
   host: { class: 'ion-page' },
   standalone: true,
