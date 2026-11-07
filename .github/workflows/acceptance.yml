@@ -15,7 +15,7 @@ jobs:
       - uses: actions/checkout@v7
       - uses: actions/download-artifact@v7
         with:
-          name: casa-musica-castillo-debug-apk
+          name: casa-musica-castillo-demo-debug-apk
           path: apk
       - uses: actions/setup-java@v6
         with:
@@ -63,6 +63,6 @@ jobs:
             Flujos Maestro DEMO|${{ steps.maestro-tests.outcome == 'success' && 'PASS' || 'FAIL' }}|Inicio/autenticación demo, compra demo y pedidos/perfil navegable; no acredita backend.
           SUMMARY_STATUS: ${{ steps.maestro-tests.outcome == 'success' && 'PASS' || 'FAIL' }}
           SUMMARY_DATA: APK Debug y estado DEMO reiniciado por flujo en emulador AOSP API 34.
-          SUMMARY_METRICS: Tres flujos; tiempos y casos reales en JUnit.
+          SUMMARY_METRICS: Cuatro flujos; tiempos y casos reales en JUnit.
           SUMMARY_ARTIFACTS: acceptance-maestro-demo (JUnit, capturas y logs), retención 14 días.
         run: node scripts/write-workflow-summary.mjs

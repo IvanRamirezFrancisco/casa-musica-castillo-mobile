@@ -10,32 +10,45 @@
 </ion-header>
 
 <ion-content class="cmc-page" [scrollY]="true">
-  <div class="cmc-page-container">
-    <form [formGroup]="form" (ngSubmit)="save()" class="edit-form" novalidate>
-      <cmc-input
-        formControlName="name"
-        label="Nombre completo"
-        autocomplete="name"
-        [error]="form.controls.name.invalid && form.controls.name.touched ? 'El nombre es requerido' : ''"
-      ></cmc-input>
+  <div class="cmc-page-container cmc-account">
+    @if (connected) {
+      <section aria-live="polite" style="display: grid; gap: 12px; padding: 16px; border: 1px solid rgba(114,47,55,0.18); border-radius: 12px; background: #fff;">
+        <h2 class="cmc-title">Actualización de datos no disponible</h2>
+        <p class="cmc-body cmc-text-secondary">
+          Puedes consultar tus datos desde el perfil. Por el momento, esta versión de la aplicación no permite modificarlos.
+        </p>
+        <p class="cmc-body cmc-text-secondary">
+          Tu información permanece sin cambios. Vuelve al perfil para consultar los datos de tu cuenta.
+        </p>
+        <cmc-button fullWidth (click)="goBack()">Volver al perfil</cmc-button>
+      </section>
+    } @else {
+      <form [formGroup]="form" (ngSubmit)="save()" class="edit-form" novalidate>
+        <cmc-input
+          formControlName="name"
+          label="Nombre completo"
+          autocomplete="name"
+          [error]="form.controls.name.invalid && form.controls.name.touched ? 'El nombre es requerido' : ''"
+        ></cmc-input>
 
-      <cmc-input
-        formControlName="email"
-        label="Correo electrónico"
-        type="email"
-        autocomplete="email"
-        [error]="form.controls.email.invalid && form.controls.email.touched ? 'Correo inválido' : ''"
-      ></cmc-input>
+        <cmc-input
+          formControlName="email"
+          label="Correo electrónico"
+          type="email"
+          autocomplete="email"
+          [error]="form.controls.email.invalid && form.controls.email.touched ? 'Correo inválido' : ''"
+        ></cmc-input>
 
-      <cmc-input
-        formControlName="phone"
-        label="Teléfono"
-        type="tel"
-        autocomplete="tel"
-        [error]="form.controls.phone.invalid && form.controls.phone.touched ? 'Teléfono inválido (10 dígitos)' : ''"
-      ></cmc-input>
+        <cmc-input
+          formControlName="phone"
+          label="Teléfono"
+          type="tel"
+          autocomplete="tel"
+          [error]="form.controls.phone.invalid && form.controls.phone.touched ? 'Teléfono inválido (10 dígitos)' : ''"
+        ></cmc-input>
 
-      <cmc-button type="submit" fullWidth>Guardar cambios</cmc-button>
-    </form>
+        <cmc-button type="submit" fullWidth>Guardar cambios</cmc-button>
+      </form>
+    }
   </div>
 </ion-content>

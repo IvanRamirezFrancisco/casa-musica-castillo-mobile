@@ -1,0 +1,369 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuites name="vitest tests" tests="154" failures="0" errors="0" time="2.8980634">
+    <testsuite name="src/app/core/services/auth.service.spec.ts" timestamp="2026-10-29T14:20:36.538Z" hostname="IvanFR" tests="15" failures="0" errors="0" skipped="0" time="0.0355337">
+        <testcase classname="src/app/core/services/auth.service.spec.ts" name="AuthService &gt; login con 2FA no crea sesión: solo expone el desafío" time="0.0029186">
+        </testcase>
+        <testcase classname="src/app/core/services/auth.service.spec.ts" name="AuthService &gt; login exitoso guarda la sesión, entrega solo el usuario y marca almacén volátil" time="0.0024218">
+        </testcase>
+        <testcase classname="src/app/core/services/auth.service.spec.ts" name="AuthService &gt; un error de login no modifica el estado" time="0.0019093">
+        </testcase>
+        <testcase classname="src/app/core/services/auth.service.spec.ts" name="AuthService &gt; completar 2FA establece la sesión" time="0.0025018">
+        </testcase>
+        <testcase classname="src/app/core/services/auth.service.spec.ts" name="AuthService &gt; delegan en el repositorio registro, reenvío, verificación y recuperación" time="0.001627">
+        </testcase>
+        <testcase classname="src/app/core/services/auth.service.spec.ts" name="AuthService &gt; una sesión vencida o a punto de vencer no entrega token" time="0.0023234">
+        </testcase>
+        <testcase classname="src/app/core/services/auth.service.spec.ts" name="AuthService &gt; un token sin exp se considera vigente hasta que el servidor responda 401" time="0.002152">
+        </testcase>
+        <testcase classname="src/app/core/services/auth.service.spec.ts" name="AuthService &gt; logout revoca en servidor y limpia siempre" time="0.0021621">
+        </testcase>
+        <testcase classname="src/app/core/services/auth.service.spec.ts" name="AuthService &gt; logout limpia localmente aunque el servidor falle y lo informa" time="0.0020268">
+        </testcase>
+        <testcase classname="src/app/core/services/auth.service.spec.ts" name="AuthService &gt; logout sin sesión no llama al servidor" time="0.0019057">
+        </testcase>
+        <testcase classname="src/app/core/services/auth.service.spec.ts" name="AuthService &gt; un 401 limpia credenciales, avisa expiración y navega a login una sola vez" time="0.0021978">
+        </testcase>
+        <testcase classname="src/app/core/services/auth.service.spec.ts" name="AuthService &gt; no navega a login si ya está en login o si se solicita sin navegación" time="0.0018342">
+        </testcase>
+        <testcase classname="src/app/core/services/auth.service.spec.ts" name="AuthService &gt; cambiar de usuario descarta el estado del anterior" time="0.0019977">
+        </testcase>
+        <testcase classname="src/app/core/services/auth.service.spec.ts" name="AuthService &gt; restore carga la sesión vigente una sola vez y descarta una vencida" time="0.0045663">
+        </testcase>
+        <testcase classname="src/app/core/services/auth.service.spec.ts" name="AuthService &gt; restore tolera un almacén que falla y fallos al guardar o limpiar" time="0.0027128">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/app/core/services/cart.service.spec.ts" timestamp="2026-10-29T14:20:36.544Z" hostname="IvanFR" tests="4" failures="0" errors="0" skipped="0" time="0.0203631">
+        <testcase classname="src/app/core/services/cart.service.spec.ts" name="CartService y HttpCartRepository &gt; usa productId en POST /items e itemId en PUT/DELETE /items/{itemId}, sin llamar GET /api/cart adicional" time="0.0054202">
+        </testcase>
+        <testcase classname="src/app/core/services/cart.service.spec.ts" name="CartService y HttpCartRepository &gt; respeta el rango de cantidades 1..100 y rechaza IDs no válidos sin enviar peticiones" time="0.0045058">
+        </testcase>
+        <testcase classname="src/app/core/services/cart.service.spec.ts" name="CartService y HttpCartRepository &gt; summary, validate, clear y descarte de respuestas fuera de orden" time="0.0069773">
+        </testcase>
+        <testcase classname="src/app/core/services/cart.service.spec.ts" name="CartService y HttpCartRepository &gt; maneja errores del servidor y limpia el estado al cerrar sesión" time="0.0033275">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/app/core/services/checkout-quote-state.service.spec.ts" timestamp="2026-10-29T14:20:36.547Z" hostname="IvanFR" tests="9" failures="0" errors="0" skipped="0" time="0.0212171">
+        <testcase classname="src/app/core/services/checkout-quote-state.service.spec.ts" name="CheckoutQuoteStateService (estado de presentación por vista) &gt; cancela la cotización previa e ignora una respuesta obsoleta" time="0.0027988">
+        </testcase>
+        <testcase classname="src/app/core/services/checkout-quote-state.service.spec.ts" name="CheckoutQuoteStateService (estado de presentación por vista) &gt; invalida importes y cancela solicitudes al terminar la sesión" time="0.0029841">
+        </testcase>
+        <testcase classname="src/app/core/services/checkout-quote-state.service.spec.ts" name="CheckoutQuoteStateService (estado de presentación por vista) &gt; descarta una cotización lista al editar su destino" time="0.0025448">
+        </testcase>
+        <testcase classname="src/app/core/services/checkout-quote-state.service.spec.ts" name="CheckoutQuoteStateService (estado de presentación por vista) &gt; distingue invalid-response/200 sin inventar importes" time="0.0022812">
+        </testcase>
+        <testcase classname="src/app/core/services/checkout-quote-state.service.spec.ts" name="CheckoutQuoteStateService (estado de presentación por vista) &gt; distingue http/401 sin inventar importes" time="0.0013442">
+        </testcase>
+        <testcase classname="src/app/core/services/checkout-quote-state.service.spec.ts" name="CheckoutQuoteStateService (estado de presentación por vista) &gt; distingue http/403 sin inventar importes" time="0.0018625">
+        </testcase>
+        <testcase classname="src/app/core/services/checkout-quote-state.service.spec.ts" name="CheckoutQuoteStateService (estado de presentación por vista) &gt; distingue connection/0 sin inventar importes" time="0.0027334">
+        </testcase>
+        <testcase classname="src/app/core/services/checkout-quote-state.service.spec.ts" name="CheckoutQuoteStateService (estado de presentación por vista) &gt; distingue http/500 sin inventar importes" time="0.0022728">
+        </testcase>
+        <testcase classname="src/app/core/services/checkout-quote-state.service.spec.ts" name="CheckoutQuoteStateService (estado de presentación por vista) &gt; permite reintentar después de una excepción síncrona del adaptador" time="0.0020965">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/app/core/services/critical.integration.spec.ts" timestamp="2026-10-29T14:20:36.551Z" hostname="IvanFR" tests="4" failures="0" errors="0" skipped="0" time="0.1222001">
+        <testcase classname="src/app/core/services/critical.integration.spec.ts" name="INTEGRACIÓN FRONTEND crítica DEMO (no API) &gt; HU10-HU11: carrito y resumen comparten cantidades, importe y selección" time="0.0335649">
+        </testcase>
+        <testcase classname="src/app/core/services/critical.integration.spec.ts" name="INTEGRACIÓN FRONTEND crítica DEMO (no API) &gt; HU10: los botones de la plantilla eliminan productos y muestran estado vacío" time="0.0305111">
+        </testcase>
+        <testcase classname="src/app/core/services/critical.integration.spec.ts" name="INTEGRACIÓN FRONTEND crítica DEMO (no API) &gt; HU14: editar perfil propaga datos válidos a la pantalla de perfil" time="0.0445946">
+        </testcase>
+        <testcase classname="src/app/core/services/critical.integration.spec.ts" name="INTEGRACIÓN FRONTEND crítica DEMO (no API) &gt; HU14: un formulario inválido no altera estado ni navega" time="0.0134041">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/app/core/services/demo-account-state.service.spec.ts" timestamp="2026-10-29T14:20:36.554Z" hostname="IvanFR" tests="3" failures="0" errors="0" skipped="0" time="0.0032568">
+        <testcase classname="src/app/core/services/demo-account-state.service.spec.ts" name="UNITARIAS HU12-HU14: cuenta DEMO &gt; suma unidades e importes incluyendo listas vacías" time="0.0004626">
+        </testcase>
+        <testcase classname="src/app/core/services/demo-account-state.service.spec.ts" name="UNITARIAS HU12-HU14: cuenta DEMO &gt; resuelve solo IDs existentes en el conjunto demo" time="0.0013888">
+        </testcase>
+        <testcase classname="src/app/core/services/demo-account-state.service.spec.ts" name="UNITARIAS HU12-HU14: cuenta DEMO &gt; copia el perfil para evitar mutación accidental desde el formulario" time="0.0013164">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/app/core/services/demo-checkout-state.service.spec.ts" timestamp="2026-10-29T14:20:36.555Z" hostname="IvanFR" tests="4" failures="0" errors="0" skipped="0" time="0.0061629">
+        <testcase classname="src/app/core/services/demo-checkout-state.service.spec.ts" name="UNITARIAS HU09-HU11: estado de compra DEMO &gt; recalcula subtotal y total al cambiar cantidad y entrega" time="0.0015857">
+        </testcase>
+        <testcase classname="src/app/core/services/demo-checkout-state.service.spec.ts" name="UNITARIAS HU09-HU11: estado de compra DEMO &gt; mantiene cantidad mínima y no modifica productos ante un ID desconocido" time="0.0011641">
+        </testcase>
+        <testcase classname="src/app/core/services/demo-checkout-state.service.spec.ts" name="UNITARIAS HU09-HU11: estado de compra DEMO &gt; elimina un producto y permite limpiar todo el checkout" time="0.0013475">
+        </testcase>
+        <testcase classname="src/app/core/services/demo-checkout-state.service.spec.ts" name="UNITARIAS HU09-HU11: estado de compra DEMO &gt; genera una instantánea demostrativa coherente con los métodos seleccionados" time="0.0019563">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/app/core/services/demo-purchase.spec.ts" timestamp="2026-10-29T14:20:36.557Z" hostname="IvanFR" tests="9" failures="0" errors="0" skipped="0" time="0.0152835">
+        <testcase classname="src/app/core/services/demo-purchase.spec.ts" name="Aplicación de compra DEMO &gt; agrega, acumula y calcula precios del catálogo sin colisión con muestras anteriores" time="0.002478">
+        </testcase>
+        <testcase classname="src/app/core/services/demo-purchase.spec.ts" name="Aplicación de compra DEMO &gt; confirma una sola vez, conserva historial al limpiar y permite una segunda compra" time="0.003447">
+        </testcase>
+        <testcase classname="src/app/core/services/demo-purchase.spec.ts" name="Aplicación de compra DEMO &gt; catálogo rechaza 0" time="0.001426">
+        </testcase>
+        <testcase classname="src/app/core/services/demo-purchase.spec.ts" name="Aplicación de compra DEMO &gt; catálogo rechaza -1" time="0.0011135">
+        </testcase>
+        <testcase classname="src/app/core/services/demo-purchase.spec.ts" name="Aplicación de compra DEMO &gt; catálogo rechaza 01" time="0.00124">
+        </testcase>
+        <testcase classname="src/app/core/services/demo-purchase.spec.ts" name="Aplicación de compra DEMO &gt; catálogo rechaza 1.5" time="0.0016813">
+        </testcase>
+        <testcase classname="src/app/core/services/demo-purchase.spec.ts" name="Aplicación de compra DEMO &gt; catálogo rechaza bad" time="0.0012602">
+        </testcase>
+        <testcase classname="src/app/core/services/demo-purchase.spec.ts" name="Aplicación de compra DEMO &gt; catálogo rechaza 9007199254740992" time="0.0011908">
+        </testcase>
+        <testcase classname="src/app/core/services/demo-purchase.spec.ts" name="Aplicación de compra DEMO &gt; catálogo rechaza 999" time="0.0012585">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/app/core/services/order-detail.service.spec.ts" timestamp="2026-10-29T14:20:36.561Z" hostname="IvanFR" tests="7" failures="0" errors="0" skipped="0" time="0.0172953">
+        <testcase classname="src/app/core/services/order-detail.service.spec.ts" name="OrderDetailService &gt; devuelve el pedido DEMO solicitado" time="0.0041192">
+        </testcase>
+        <testcase classname="src/app/core/services/order-detail.service.spec.ts" name="OrderDetailService &gt; devuelve null para un pedido inexistente" time="0.0022461">
+        </testcase>
+        <testcase classname="src/app/core/services/order-detail.service.spec.ts" name="OrderDetailService &gt; rechaza el identificador manipulado &quot;&quot; sin consultarlo" time="0.0017462">
+        </testcase>
+        <testcase classname="src/app/core/services/order-detail.service.spec.ts" name="OrderDetailService &gt; rechaza el identificador manipulado &quot;../admin&quot; sin consultarlo" time="0.0013719">
+        </testcase>
+        <testcase classname="src/app/core/services/order-detail.service.spec.ts" name="OrderDetailService &gt; rechaza el identificador manipulado &quot;DEMO-1004&apos; OR &apos;1&apos;=&apos;1&quot; sin consultarlo" time="0.0042838">
+        </testcase>
+        <testcase classname="src/app/core/services/order-detail.service.spec.ts" name="OrderDetailService &gt; rechaza el identificador manipulado &quot;demo-1004&quot; sin consultarlo" time="0.0018068">
+        </testcase>
+        <testcase classname="src/app/core/services/order-detail.service.spec.ts" name="OrderDetailService &gt; rechaza el identificador manipulado &quot;AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA&quot; sin consultarlo" time="0.0015806">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/app/core/services/orders.service.spec.ts" timestamp="2026-10-29T14:20:36.564Z" hostname="IvanFR" tests="2" failures="0" errors="0" skipped="0" time="0.0044612">
+        <testcase classname="src/app/core/services/orders.service.spec.ts" name="OrdersService &gt; devuelve los pedidos DEMO después de la latencia simulada" time="0.0021908">
+        </testcase>
+        <testcase classname="src/app/core/services/orders.service.spec.ts" name="OrdersService &gt; entrega una copia para que la pantalla no modifique el estado compartido" time="0.0021935">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/app/core/services/public-catalog.service.spec.ts" timestamp="2026-10-29T14:20:36.565Z" hostname="IvanFR" tests="5" failures="0" errors="0" skipped="0" time="0.0120364">
+        <testcase classname="src/app/core/services/public-catalog.service.spec.ts" name="Public catalog application state &gt; ignores out of order results after rapidly changing category and search" time="0.0031466">
+        </testcase>
+        <testcase classname="src/app/core/services/public-catalog.service.spec.ts" name="Public catalog application state &gt; retains a copy of retry filters and survives a request error" time="0.0024891">
+        </testcase>
+        <testcase classname="src/app/core/services/public-catalog.service.spec.ts" name="Public catalog application state &gt; cancels stale detail and retries after a synchronous invalid ID" time="0.002115">
+        </testcase>
+        <testcase classname="src/app/core/services/public-catalog.service.spec.ts" name="Public catalog application state &gt; loads home from real categories/latest/featured and can retry all after failure" time="0.0022599">
+        </testcase>
+        <testcase classname="src/app/core/services/public-catalog.service.spec.ts" name="Public catalog application state &gt; retries category errors without killing the stream" time="0.0018851">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/app/features/cart/cart.page.spec.ts" timestamp="2026-10-29T14:20:36.567Z" hostname="IvanFR" tests="6" failures="0" errors="0" skipped="0" time="0.2506478">
+        <testcase classname="src/app/features/cart/cart.page.spec.ts" name="CartPage &gt; should create" time="0.046156">
+        </testcase>
+        <testcase classname="src/app/features/cart/cart.page.spec.ts" name="CartPage &gt; should have initial cart items" time="0.0466005">
+        </testcase>
+        <testcase classname="src/app/features/cart/cart.page.spec.ts" name="CartPage &gt; should increment quantity" time="0.0401686">
+        </testcase>
+        <testcase classname="src/app/features/cart/cart.page.spec.ts" name="CartPage &gt; should not decrement below 1" time="0.039867">
+        </testcase>
+        <testcase classname="src/app/features/cart/cart.page.spec.ts" name="CartPage &gt; should remove item" time="0.037393">
+        </testcase>
+        <testcase classname="src/app/features/cart/cart.page.spec.ts" name="CartPage &gt; offers a working catalog action when the cart is empty" time="0.0399943">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/app/features/cart/connected-cart.integration.spec.ts" timestamp="2026-10-29T14:20:36.569Z" hostname="IvanFR" tests="3" failures="0" errors="0" skipped="0" time="0.1594485">
+        <testcase classname="src/app/features/cart/connected-cart.integration.spec.ts" name="carrito real conectado (integración) &gt; detalle público: sin sesión redirige a login; con sesión agrega por productId y actualiza el badge" time="0.0895157">
+        </testcase>
+        <testcase classname="src/app/features/cart/connected-cart.integration.spec.ts" name="carrito real conectado (integración) &gt; favorito desde detalle exige sesión, no duplica el POST y presenta errores recuperables" time="0.0388517">
+        </testcase>
+        <testcase classname="src/app/features/cart/connected-cart.integration.spec.ts" name="carrito real conectado (integración) &gt; pantalla de carrito: muestra importes del servidor, actualiza por itemId, valida antes de checkout y vacía" time="0.0309514">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/app/features/checkout/connected-checkout.integration.spec.ts" timestamp="2026-10-29T14:20:36.570Z" hostname="IvanFR" tests="6" failures="0" errors="0" skipped="0" time="0.2573992">
+        <testcase classname="src/app/features/checkout/connected-checkout.integration.spec.ts" name="checkout real seguro conectado (integración) &gt; por defecto (writeEnabled=false) cotiza /price-preview pero bloquea POST /api/checkout" time="0.0761737">
+        </testcase>
+        <testcase classname="src/app/features/checkout/connected-checkout.integration.spec.ts" name="checkout real seguro conectado (integración) &gt; en entorno aislado autorizado (writeEnabled=true) valida domicilios, cotiza, valida carrito y envía POST /api/checkout" time="0.0678757">
+        </testcase>
+        <testcase classname="src/app/features/checkout/connected-checkout.integration.spec.ts" name="checkout real seguro conectado (integración) &gt; maneja error en vista previa y cotización nacional con requiresQuote=true" time="0.0369476">
+        </testcase>
+        <testcase classname="src/app/features/checkout/connected-checkout.integration.spec.ts" name="checkout real seguro conectado (integración) &gt; cancela HTTP obsoleto al cambiar entrega y descarta importes al editar destino" time="0.0208137">
+        </testcase>
+        <testcase classname="src/app/features/checkout/connected-checkout.integration.spec.ts" name="checkout real seguro conectado (integración) &gt; muestra respuesta malformada, permite reintentar y no expone endpoints ni crea pedidos" time="0.0379046">
+        </testcase>
+        <testcase classname="src/app/features/checkout/connected-checkout.integration.spec.ts" name="checkout real seguro conectado (integración) &gt; rechaza campos demasiado largos antes de validar o confirmar una compra" time="0.0173932">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/app/features/home/home.page.spec.ts" timestamp="2026-10-29T14:20:36.571Z" hostname="IvanFR" tests="8" failures="0" errors="0" skipped="0" time="0.4802788">
+        <testcase classname="src/app/features/home/home.page.spec.ts" name="HomePage &gt; ofrece acceso accesible a Favoritos sin modificar los productos destacados" time="0.1749116">
+        </testcase>
+        <testcase classname="src/app/features/home/home.page.spec.ts" name="HomePage &gt; should create" time="0.0459484">
+        </testcase>
+        <testcase classname="src/app/features/home/home.page.spec.ts" name="HomePage &gt; should have categories initialized" time="0.0489114">
+        </testcase>
+        <testcase classname="src/app/features/home/home.page.spec.ts" name="HomePage &gt; should have featured products initialized" time="0.0393237">
+        </testcase>
+        <testcase classname="src/app/features/home/home.page.spec.ts" name="HomePage &gt; toggles favorites through accessible product controls" time="0.0473296">
+        </testcase>
+        <testcase classname="src/app/features/home/home.page.spec.ts" name="HomePage &gt; keeps the catalog search link synchronized with typed input" time="0.0423467">
+        </testcase>
+        <testcase classname="src/app/features/home/home.page.spec.ts" name="HomePage &gt; usa solo categorías existentes en el filtro del catálogo" time="0.0371836">
+        </testcase>
+        <testcase classname="src/app/features/home/home.page.spec.ts" name="HomePage &gt; enlaza cada categoría al catálogo filtrado por esa categoría" time="0.0424342">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/app/features/orders/connected-orders.integration.spec.ts" timestamp="2026-10-29T14:20:36.573Z" hostname="IvanFR" tests="3" failures="0" errors="0" skipped="0" time="0.0826086">
+        <testcase classname="src/app/features/orders/connected-orders.integration.spec.ts" name="pedidos reales conectados y aislamiento por usuario (integración) &gt; historial paginado: muestra orderNumber, enlaza por id numérico y navega entre páginas" time="0.028944">
+        </testcase>
+        <testcase classname="src/app/features/orders/connected-orders.integration.spec.ts" name="pedidos reales conectados y aislamiento por usuario (integración) &gt; detalle y timeline: consulta /orders/my/{id} y /timeline, y rechaza IDs DEMO-* sin petición HTTP" time="0.0247422">
+        </testcase>
+        <testcase classname="src/app/features/orders/connected-orders.integration.spec.ts" name="pedidos reales conectados y aislamiento por usuario (integración) &gt; aislamiento: 403/404 y un pedido con userId de otra cuenta nunca se muestran" time="0.0288136">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/app/features/orders/orders.page.spec.ts" timestamp="2026-10-29T14:20:36.574Z" hostname="IvanFR" tests="7" failures="0" errors="0" skipped="0" time="0.1494056">
+        <testcase classname="src/app/features/orders/orders.page.spec.ts" name="OrdersPage &gt; should create" time="0.01496">
+        </testcase>
+        <testcase classname="src/app/features/orders/orders.page.spec.ts" name="OrdersPage &gt; muestra un estado de carga mientras consulta los pedidos" time="0.0156359">
+        </testcase>
+        <testcase classname="src/app/features/orders/orders.page.spec.ts" name="OrdersPage &gt; lista los pedidos con su resumen, del más reciente al más antiguo" time="0.0237081">
+        </testcase>
+        <testcase classname="src/app/features/orders/orders.page.spec.ts" name="OrdersPage &gt; permite abrir el detalle de cada pedido" time="0.0255747">
+        </testcase>
+        <testcase classname="src/app/features/orders/orders.page.spec.ts" name="OrdersPage &gt; muestra el estado vacío cuando el usuario no tiene pedidos" time="0.0153362">
+        </testcase>
+        <testcase classname="src/app/features/orders/orders.page.spec.ts" name="OrdersPage &gt; muestra un error controlado sin detalles técnicos cuando falla la consulta" time="0.0137666">
+        </testcase>
+        <testcase classname="src/app/features/orders/orders.page.spec.ts" name="OrdersPage &gt; vuelve a consultar los pedidos al presionar Reintentar" time="0.0401884">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/app/features/profile/account-security.page.spec.ts" timestamp="2026-10-29T14:20:36.576Z" hostname="IvanFR" tests="9" failures="0" errors="0" skipped="0" time="0.2000127">
+        <testcase classname="src/app/features/profile/account-security.page.spec.ts" name="Security enrollment lifecycle with synthetic data &gt; loads the protected security route" time="0.0208917">
+        </testcase>
+        <testcase classname="src/app/features/profile/account-security.page.spec.ts" name="Security enrollment lifecycle with synthetic data &gt; operates security controls through the rendered UI" time="0.0623331">
+        </testcase>
+        <testcase classname="src/app/features/profile/account-security.page.spec.ts" name="Security enrollment lifecycle with synthetic data &gt; renders methods, enrollment, confirmation and recovery controls accessibly" time="0.0262061">
+        </testcase>
+        <testcase classname="src/app/features/profile/account-security.page.spec.ts" name="Security enrollment lifecycle with synthetic data &gt; only activates after server confirmation and clears enrollment" time="0.0148299">
+        </testcase>
+        <testcase classname="src/app/features/profile/account-security.page.spec.ts" name="Security enrollment lifecycle with synthetic data &gt; displays errors without activating and retries" time="0.017555">
+        </testcase>
+        <testcase classname="src/app/features/profile/account-security.page.spec.ts" name="Security enrollment lifecycle with synthetic data &gt; cancels pending secret responses on logout and view leave" time="0.0156092">
+        </testcase>
+        <testcase classname="src/app/features/profile/account-security.page.spec.ts" name="Security enrollment lifecycle with synthetic data &gt; generates, replaces and hides backup codes; clears on destruction" time="0.0173446">
+        </testcase>
+        <testcase classname="src/app/features/profile/account-security.page.spec.ts" name="Security enrollment lifecycle with synthetic data &gt; email and disabling call backend and refresh methods" time="0.0128547">
+        </testcase>
+        <testcase classname="src/app/features/profile/account-security.page.spec.ts" name="Security enrollment lifecycle with synthetic data &gt; never duplicates an active request" time="0.0112872">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/app/features/profile/connected-profile.integration.spec.ts" timestamp="2026-10-29T14:20:36.579Z" hostname="IvanFR" tests="3" failures="0" errors="0" skipped="0" time="0.116484">
+        <testcase classname="src/app/features/profile/connected-profile.integration.spec.ts" name="perfil real conectado y cierre de sesión (integración) &gt; consulta GET /api/users/profile, muestra identidad, estado 2FA, aviso TT-05 y cierra sesión" time="0.0346251">
+        </testcase>
+        <testcase classname="src/app/features/profile/connected-profile.integration.spec.ts" name="perfil real conectado y cierre de sesión (integración) &gt; mantiene Seguridad accesible también con un proveedor de sesión persistente" time="0.0353433">
+        </testcase>
+        <testcase classname="src/app/features/profile/connected-profile.integration.spec.ts" name="perfil real conectado y cierre de sesión (integración) &gt; aislamiento y errores: rechaza perfil de otro usuario, permite reintentar y documenta edición bloqueada" time="0.0463915">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/app/features/profile/profile.page.spec.ts" timestamp="2026-10-29T14:20:36.580Z" hostname="IvanFR" tests="2" failures="0" errors="0" skipped="0" time="0.0506864">
+        <testcase classname="src/app/features/profile/profile.page.spec.ts" name="ProfilePage &gt; should create" time="0.0245378">
+        </testcase>
+        <testcase classname="src/app/features/profile/profile.page.spec.ts" name="ProfilePage &gt; should display demo profile" time="0.0260391">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/app/features/auth/connected/connected-auth.integration.spec.ts" timestamp="2026-10-29T14:20:36.581Z" hostname="IvanFR" tests="8" failures="0" errors="0" skipped="0" time="0.2350332">
+        <testcase classname="src/app/features/auth/connected/connected-auth.integration.spec.ts" name="autenticación conectada (integración) &gt; permite Inicio público sin sesión y sin invocar login" time="0.0198617">
+        </testcase>
+        <testcase classname="src/app/features/auth/connected/connected-auth.integration.spec.ts" name="autenticación conectada (integración) &gt; una ruta protegida redirige a login y tras autenticar vuelve al destino original" time="0.0406555">
+        </testcase>
+        <testcase classname="src/app/features/auth/connected/connected-auth.integration.spec.ts" name="autenticación conectada (integración) &gt; 2FA: HTTP 200 con desafío NO autentica hasta completar /api/2fa/verify" time="0.0371189">
+        </testcase>
+        <testcase classname="src/app/features/auth/connected/connected-auth.integration.spec.ts" name="autenticación conectada (integración) &gt; 2FA: maneja fallo al enviar código y permite cancelar el desafío" time="0.0274293">
+        </testcase>
+        <testcase classname="src/app/features/auth/connected/connected-auth.integration.spec.ts" name="autenticación conectada (integración) &gt; muestra aviso de sesión expirada y errores 401/429/red sin filtrar secretos en consola" time="0.0214335">
+        </testcase>
+        <testcase classname="src/app/features/auth/connected/connected-auth.integration.spec.ts" name="autenticación conectada (integración) &gt; registro: valida campos separados de RegisterRequest, envía JSON y no inicia sesión" time="0.0320135">
+        </testcase>
+        <testcase classname="src/app/features/auth/connected/connected-auth.integration.spec.ts" name="autenticación conectada (integración) &gt; recuperación y restablecimiento: usa /password-reset/* y limpia contraseñas al terminar o fallar" time="0.0337587">
+        </testcase>
+        <testcase classname="src/app/features/auth/connected/connected-auth.integration.spec.ts" name="autenticación conectada (integración) &gt; verificación de correo y reenvío de código" time="0.0217934">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/app/features/auth/forgot-password/forgot-password.page.spec.ts" timestamp="2026-10-29T14:20:36.583Z" hostname="IvanFR" tests="3" failures="0" errors="0" skipped="0" time="0.0447395">
+        <testcase classname="src/app/features/auth/forgot-password/forgot-password.page.spec.ts" name="ForgotPasswordPage &gt; should create" time="0.0196007">
+        </testcase>
+        <testcase classname="src/app/features/auth/forgot-password/forgot-password.page.spec.ts" name="ForgotPasswordPage &gt; should set isSubmitted to true on valid submit" time="0.0126666">
+        </testcase>
+        <testcase classname="src/app/features/auth/forgot-password/forgot-password.page.spec.ts" name="ForgotPasswordPage &gt; should navigate back to login" time="0.0123418">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/app/features/auth/login/login.page.spec.ts" timestamp="2026-10-29T14:20:36.584Z" hostname="IvanFR" tests="3" failures="0" errors="0" skipped="0" time="0.0482625">
+        <testcase classname="src/app/features/auth/login/login.page.spec.ts" name="LoginPage &gt; should create" time="0.0136666">
+        </testcase>
+        <testcase classname="src/app/features/auth/login/login.page.spec.ts" name="LoginPage &gt; should navigate to home on valid submit" time="0.0137598">
+        </testcase>
+        <testcase classname="src/app/features/auth/login/login.page.spec.ts" name="LoginPage &gt; should not navigate on invalid submit" time="0.0206007">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/app/features/auth/register/register.page.spec.ts" timestamp="2026-10-29T14:20:36.585Z" hostname="IvanFR" tests="3" failures="0" errors="0" skipped="0" time="0.0538284">
+        <testcase classname="src/app/features/auth/register/register.page.spec.ts" name="RegisterPage &gt; should create" time="0.0192176">
+        </testcase>
+        <testcase classname="src/app/features/auth/register/register.page.spec.ts" name="RegisterPage &gt; should invalidate when passwords do not match" time="0.0170833">
+        </testcase>
+        <testcase classname="src/app/features/auth/register/register.page.spec.ts" name="RegisterPage &gt; should navigate to login on valid submit" time="0.0173982">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/app/features/checkout/checkout-summary/checkout-summary.page.spec.ts" timestamp="2026-10-29T14:20:36.586Z" hostname="IvanFR" tests="4" failures="0" errors="0" skipped="0" time="0.0917809">
+        <testcase classname="src/app/features/checkout/checkout-summary/checkout-summary.page.spec.ts" name="CheckoutSummaryPage &gt; should create" time="0.0295288">
+        </testcase>
+        <testcase classname="src/app/features/checkout/checkout-summary/checkout-summary.page.spec.ts" name="CheckoutSummaryPage &gt; should not allow proceed if missing methods" time="0.0233394">
+        </testcase>
+        <testcase classname="src/app/features/checkout/checkout-summary/checkout-summary.page.spec.ts" name="CheckoutSummaryPage &gt; should allow proceed when methods are selected" time="0.0205272">
+        </testcase>
+        <testcase classname="src/app/features/checkout/checkout-summary/checkout-summary.page.spec.ts" name="CheckoutSummaryPage &gt; usa dirección Ionic back hacia /main/cart" time="0.0182343">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/app/features/checkout/confirmation/confirmation.page.spec.ts" timestamp="2026-10-29T14:20:36.589Z" hostname="IvanFR" tests="5" failures="0" errors="0" skipped="0" time="0.0676468">
+        <testcase classname="src/app/features/checkout/confirmation/confirmation.page.spec.ts" name="ConfirmationPage &gt; should create" time="0.0171733">
+        </testcase>
+        <testcase classname="src/app/features/checkout/confirmation/confirmation.page.spec.ts" name="ConfirmationPage &gt; should display demo order id" time="0.0133357">
+        </testcase>
+        <testcase classname="src/app/features/checkout/confirmation/confirmation.page.spec.ts" name="ConfirmationPage &gt; returns incomplete direct navigation to checkout without rendering an invalid order" time="0.0142952">
+        </testcase>
+        <testcase classname="src/app/features/checkout/confirmation/confirmation.page.spec.ts" name="ConfirmationPage &gt; sale de confirmación con raíz Ionic hacia home" time="0.011508">
+        </testcase>
+        <testcase classname="src/app/features/checkout/confirmation/confirmation.page.spec.ts" name="ConfirmationPage &gt; sale de confirmación con raíz Ionic hacia orders" time="0.0111719">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/app/features/checkout/delivery-method/delivery-method.page.spec.ts" timestamp="2026-10-29T14:20:36.591Z" hostname="IvanFR" tests="4" failures="0" errors="0" skipped="0" time="0.0617107">
+        <testcase classname="src/app/features/checkout/delivery-method/delivery-method.page.spec.ts" name="DeliveryMethodPage &gt; should create" time="0.0144094">
+        </testcase>
+        <testcase classname="src/app/features/checkout/delivery-method/delivery-method.page.spec.ts" name="DeliveryMethodPage &gt; should select method" time="0.0142292">
+        </testcase>
+        <testcase classname="src/app/features/checkout/delivery-method/delivery-method.page.spec.ts" name="DeliveryMethodPage &gt; selects through the native radio and exposes the checked state" time="0.0165982">
+        </testcase>
+        <testcase classname="src/app/features/checkout/delivery-method/delivery-method.page.spec.ts" name="DeliveryMethodPage &gt; usa dirección Ionic back hacia /checkout" time="0.0163579">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/app/features/checkout/payment-method/payment-method.page.spec.ts" timestamp="2026-10-29T14:20:36.594Z" hostname="IvanFR" tests="4" failures="0" errors="0" skipped="0" time="0.0627952">
+        <testcase classname="src/app/features/checkout/payment-method/payment-method.page.spec.ts" name="PaymentMethodPage &gt; should create" time="0.0149531">
+        </testcase>
+        <testcase classname="src/app/features/checkout/payment-method/payment-method.page.spec.ts" name="PaymentMethodPage &gt; should select method" time="0.0132743">
+        </testcase>
+        <testcase classname="src/app/features/checkout/payment-method/payment-method.page.spec.ts" name="PaymentMethodPage &gt; selects through the native radio and exposes the checked state" time="0.0200511">
+        </testcase>
+        <testcase classname="src/app/features/checkout/payment-method/payment-method.page.spec.ts" name="PaymentMethodPage &gt; usa dirección Ionic back hacia /checkout" time="0.0143999">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/app/features/orders/order-detail/order-detail.page.spec.ts" timestamp="2026-10-29T14:20:36.596Z" hostname="IvanFR" tests="7" failures="0" errors="0" skipped="0" time="0.1529408">
+        <testcase classname="src/app/features/orders/order-detail/order-detail.page.spec.ts" name="OrderDetailPage &gt; should create" time="0.0212521">
+        </testcase>
+        <testcase classname="src/app/features/orders/order-detail/order-detail.page.spec.ts" name="OrderDetailPage &gt; muestra un estado de carga mientras consulta el pedido" time="0.0162025">
+        </testcase>
+        <testcase classname="src/app/features/orders/order-detail/order-detail.page.spec.ts" name="OrderDetailPage &gt; muestra los datos, partidas e importes del pedido solicitado" time="0.0211711">
+        </testcase>
+        <testcase classname="src/app/features/orders/order-detail/order-detail.page.spec.ts" name="OrderDetailPage &gt; muestra una respuesta controlada para un pedido inexistente" time="0.0166811">
+        </testcase>
+        <testcase classname="src/app/features/orders/order-detail/order-detail.page.spec.ts" name="OrderDetailPage &gt; no repite en pantalla un identificador manipulado" time="0.0207775">
+        </testcase>
+        <testcase classname="src/app/features/orders/order-detail/order-detail.page.spec.ts" name="OrderDetailPage &gt; muestra un error controlado sin detalles técnicos y permite reintentar" time="0.0399745">
+        </testcase>
+        <testcase classname="src/app/features/orders/order-detail/order-detail.page.spec.ts" name="OrderDetailPage &gt; regresa a Mis pedidos" time="0.0166694">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/app/features/profile/edit-profile/edit-profile.page.spec.ts" timestamp="2026-10-29T14:20:36.598Z" hostname="IvanFR" tests="4" failures="0" errors="0" skipped="0" time="0.0745437">
+        <testcase classname="src/app/features/profile/edit-profile/edit-profile.page.spec.ts" name="EditProfilePage &gt; should create" time="0.0184786">
+        </testcase>
+        <testcase classname="src/app/features/profile/edit-profile/edit-profile.page.spec.ts" name="EditProfilePage &gt; should have initial values from demo profile" time="0.0178413">
+        </testcase>
+        <testcase classname="src/app/features/profile/edit-profile/edit-profile.page.spec.ts" name="EditProfilePage &gt; should validate form and update profile" time="0.0190027">
+        </testcase>
+        <testcase classname="src/app/features/profile/edit-profile/edit-profile.page.spec.ts" name="EditProfilePage &gt; usa dirección Ionic back hacia /main/profile" time="0.0190488">
+        </testcase>
+    </testsuite>
+</testsuites>

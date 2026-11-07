@@ -1,0 +1,109 @@
+<ion-content class="cmc-page cmc-standalone-page auth-page" [scrollY]="true">
+  <div class="auth-hero">
+    <button type="button" aria-label="Volver a iniciar sesión" class="auth-back-btn" (click)="goBack()">
+      <ion-icon name="arrow-back-outline" aria-hidden="true"></ion-icon>
+    </button>
+
+    <div class="brand-info">
+      <h1 class="auth-brand-title">Crea tu cuenta</h1>
+      <p class="auth-brand-subtitle">Compra, guarda favoritos y da seguimiento a tus pedidos.</p>
+    </div>
+  </div>
+
+  <div class="auth-card-container">
+    <div class="auth-card">
+      @if (registered()) {
+        <div class="auth-card-header">
+          <h2 class="cmc-title">Revisa tu correo</h2>
+        </div>
+        <p class="auth-alert auth-alert--success" role="status">
+          Si los datos son válidos, te enviamos un mensaje para verificar tu cuenta. Debes verificarla antes de iniciar sesión.
+        </p>
+        <div class="step-actions">
+          <cmc-button fullWidth (click)="goBack()">Ir a iniciar sesión</cmc-button>
+          <a routerLink="/verify-email" class="cmc-link cmc-font-bold">Ya tengo mi código de verificación</a>
+        </div>
+      } @else {
+        @if (errorMessage()) {
+          <p class="auth-alert auth-alert--error" role="alert">{{ errorMessage() }}</p>
+        }
+        <form [formGroup]="form" (ngSubmit)="submit()" class="auth-form" novalidate>
+          <cmc-input
+            formControlName="username"
+            autocomplete="username"
+            label="Nombre de usuario"
+            type="text"
+            hint="3 a 30 caracteres: letras, números, punto, guion o guion bajo."
+            [error]="fieldError('username')"
+           required></cmc-input>
+
+          <cmc-input
+            formControlName="firstName"
+            autocomplete="given-name"
+            label="Nombre(s)"
+            type="text"
+            placeholder="Ej. Juan"
+            [error]="fieldError('firstName')"
+           required></cmc-input>
+
+          <cmc-input
+            formControlName="lastName"
+            autocomplete="family-name"
+            label="Apellidos"
+            type="text"
+            placeholder="Ej. Pérez"
+            [error]="fieldError('lastName')"
+           required></cmc-input>
+
+          <cmc-input
+            formControlName="email"
+            autocomplete="email"
+            label="Correo electrónico"
+            type="email"
+            placeholder="ejemplo@correo.com"
+            [error]="fieldError('email')"
+           required></cmc-input>
+
+          <cmc-input
+            formControlName="phone"
+            autocomplete="tel"
+            label="Teléfono (opcional)"
+            type="tel"
+            placeholder="10 dígitos"
+            [error]="fieldError('phone')"
+          ></cmc-input>
+
+          <cmc-input
+            formControlName="password"
+            autocomplete="new-password"
+            label="Contraseña"
+            type="password"
+            hint="Mínimo 8 caracteres con al menos 3 tipos: minúsculas, mayúsculas, números o símbolos. Evita secuencias como 123 o abc."
+            [error]="fieldError('password')"
+           required></cmc-input>
+
+          <cmc-input
+            formControlName="confirmPassword"
+            autocomplete="new-password"
+            label="Confirmar contraseña"
+            type="password"
+            placeholder="Repite tu contraseña"
+            [error]="confirmError()"
+           required></cmc-input>
+
+          <cmc-button type="submit" fullWidth [loading]="submitting()" loadingLabel="Creando cuenta">
+            Crear cuenta
+          </cmc-button>
+        </form>
+
+        <div class="auth-separator"></div>
+
+        <div class="auth-footer">
+          <p class="cmc-body cmc-text-secondary">
+            ¿Ya tienes cuenta? <a routerLink="/login" class="cmc-link cmc-font-bold">Iniciar sesión</a>
+          </p>
+        </div>
+      }
+    </div>
+  </div>
+</ion-content>

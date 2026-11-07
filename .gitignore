@@ -89,3 +89,13 @@ android/local.properties
 # Test reports and private runtime configuration
 /reports/
 /.maestro/tests/
+
+# Local delivery artifacts: keep hashes/instructions in Git, binaries and backups outside commits.
+*.apk
+*.aab
+*.zip
+*.hprof
+*.db
+*.sqlite
+*.sqlite3
+android/.kotlin/

@@ -1,0 +1,75 @@
+{
+  "checkedOn": "2026-10-29",
+  "decision": "blocked pending joint review of overlapping changes",
+  "notAGithubMergeabilityCheck": true,
+  "newCommits": [],
+  "draftPr": null,
+  "prs": [
+    {
+      "author": {
+        "id": "U_kgDODmVvEg",
+        "is_bot": false,
+        "login": "Tackalay",
+        "name": "Brayan Lara"
+      },
+      "baseRefName": "develop",
+      "headRefName": "feature/HU-14-validacion-perfil",
+      "number": 80,
+      "title": "feat(perfil): validar y normalizar datos al editar el perfil",
+      "url": "https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/pull/80",
+      "dryRun": "git apply --check; not applied",
+      "diagnostics": [
+        "error: patch failed: src/app/features/profile/edit-profile/edit-profile.page.html:16",
+        "error: src/app/features/profile/edit-profile/edit-profile.page.html: patch does not apply",
+        "error: patch failed: src/app/features/profile/edit-profile/edit-profile.page.spec.ts:1",
+        "error: src/app/features/profile/edit-profile/edit-profile.page.spec.ts: patch does not apply",
+        "error: patch failed: src/app/features/profile/edit-profile/edit-profile.page.ts:1",
+        "error: src/app/features/profile/edit-profile/edit-profile.page.ts: patch does not apply"
+      ],
+      "patchSha256": "303c1c2d80bc5d175da2b3e666fd811527379422604e849b56d9483ee2345cc1"
+    },
+    {
+      "author": {
+        "id": "U_kgDODmVvEg",
+        "is_bot": false,
+        "login": "Tackalay",
+        "name": "Brayan Lara"
+      },
+      "baseRefName": "develop",
+      "headRefName": "feature/HU-03-validacion-recuperacion",
+      "number": 77,
+      "title": "feat(recuperacion): validar correo y manejar confirmación y errores",
+      "url": "https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/pull/77",
+      "dryRun": "git apply --check; not applied",
+      "diagnostics": [
+        "error: patch failed: src/app/features/auth/forgot-password/forgot-password.page.html:27",
+        "error: src/app/features/auth/forgot-password/forgot-password.page.html: patch does not apply",
+        "error: patch failed: src/app/features/auth/forgot-password/forgot-password.page.ts:1",
+        "error: src/app/features/auth/forgot-password/forgot-password.page.ts: patch does not apply"
+      ],
+      "patchSha256": "7c7644ea247c42fc1efc317d31a10f0f1edcf9e88b60d729ea8e45c2c2d56193"
+    },
+    {
+      "author": {
+        "id": "U_kgDODmVvEg",
+        "is_bot": false,
+        "login": "Tackalay",
+        "name": "Brayan Lara"
+      },
+      "baseRefName": "develop",
+      "headRefName": "feature/registro-catalogo",
+      "number": 71,
+      "title": "feat: implementar interfaces móviles de registro y catálogo",
+      "url": "https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/pull/71",
+      "dryRun": "git apply --check; not applied",
+      "diagnostics": [
+        "error: patch failed: src/app/app.routes.ts:10",
+        "error: src/app/app.routes.ts: patch does not apply"
+      ],
+      "patchSha256": "5eb94050bd46de34737ce39e1f3fe4921affc4ecb0e9787d61a1cf2029e158a2"
+    }
+  ],
+  "historicalRecord": true,
+  "currentStageReport": "docs/etapa1b/README.md",
+  "historicalRecordNote": "Conserva los resultados, hashes y decisiones originales del 29 de octubre. No representa el estado de publicación, Projects, pruebas o APK de Etapa 1B."
+}

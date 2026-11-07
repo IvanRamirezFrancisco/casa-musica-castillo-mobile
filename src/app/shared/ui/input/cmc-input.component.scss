@@ -41,7 +41,7 @@
   /* Focus indicator is drawn on the wrapper so it surrounds the whole field. */
   &:focus-within {
     border-color: var(--cmc-primary);
-    outline: 3px solid var(--cmc-accent-gold);
+    outline: 2px solid var(--cmc-primary);
     outline-offset: 2px;
   }
 
@@ -82,6 +82,7 @@
     cursor: not-allowed;
   }
 }
+.cmc-input__visibility {display:grid;place-items:center;flex:none;min-width:48px;min-height:48px;border:0;border-radius:var(--cmc-radius-sm);background:transparent;color:var(--cmc-primary);cursor:pointer;}
 
 .cmc-input__message {
   font-size: 12px;

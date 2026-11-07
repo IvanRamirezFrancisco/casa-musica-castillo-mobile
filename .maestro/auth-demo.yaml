@@ -5,8 +5,10 @@ tags: [critical, demo]
 - launchApp:
     clearState: true
 - extendedWaitUntil:
-    visible: "Bienvenido de nuevo"
+    visible: "Novedades"
     timeout: 30000
+- tapOn: "Iniciar sesión"
+- assertVisible: "Bienvenido de nuevo"
 - tapOn: "Crear cuenta"
 - assertVisible: "Crea tu cuenta"
 - back

@@ -108,3 +108,7 @@
   text-align: center;
   margin-top: var(--cmc-space-5);
 }
+
+@media (max-width: 360px) {
+  .products-grid { grid-template-columns: minmax(0, 1fr); }
+}

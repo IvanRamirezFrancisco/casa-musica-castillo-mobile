@@ -5,8 +5,10 @@ tags: [critical, demo, navigation]
 - launchApp:
     clearState: true
 - extendedWaitUntil:
-    visible: "Bienvenido de nuevo"
+    visible: "Novedades"
     timeout: 30000
+- tapOn: "Iniciar sesión"
+- assertVisible: "Bienvenido de nuevo"
 - runFlow: shared/login-demo.yaml
 - tapOn: "Abrir Favoritos"
 - assertVisible: "Tus favoritos, próximamente"

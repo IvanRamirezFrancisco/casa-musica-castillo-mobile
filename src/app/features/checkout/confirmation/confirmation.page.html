@@ -29,7 +29,7 @@
         </div>
         <div class="summary-divider"></div>
         <div class="summary-section total-section">
-          <h2 class="cmc-font-bold">Total Pagado</h2>
+          <h2 class="cmc-font-bold">Total DEMO</h2>
           <p class="cmc-title cmc-primary">{{ confirmedOrder.summary.total | currency:'MXN' }}</p>
         </div>
       </div>
@@ -39,5 +39,11 @@
       <cmc-button fullWidth variant="secondary" (click)="goToOrders()" class="mt-3">Ver mis pedidos</cmc-button>
     </div>
   </div>
+  }
+  @if (error()) {
+    <div class="cmc-page-container" role="alert">
+      <p>{{ error() }}</p>
+      <cmc-button fullWidth (click)="goToHome()">Volver al inicio</cmc-button>
+    </div>
   }
 </ion-content>

@@ -1,3 +1,5 @@
+import { PUBLIC_CATALOG_ENABLED } from '../../core/repositories/public-catalog.repository';
+import { PublicCatalogComponent } from '../public-catalog/public-catalog.view';
 import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
 import { CommonModule, CurrencyPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -18,7 +20,8 @@ import {
   pulseOutline,
   searchOutline,
 } from 'ionicons/icons';
-import { CATALOG_DEMO_PRODUCTS, CatalogCategory, CatalogSort } from './catalog-demo.data';
+import { CatalogCategory, CatalogSort } from '../../core/models/catalog.model';
+import { DemoCatalogService } from '../../core/services/demo-catalog.service';
 import { CmcEmptyStateComponent } from '../../shared/ui/empty-state/cmc-empty-state.component';
 
 @Component({
@@ -27,6 +30,7 @@ import { CmcEmptyStateComponent } from '../../shared/ui/empty-state/cmc-empty-st
   styleUrls: ['./catalog.page.scss'],
   standalone: true,
   imports: [
+    PublicCatalogComponent,
     CommonModule,
     RouterLink,
     FormsModule,
@@ -40,6 +44,7 @@ import { CmcEmptyStateComponent } from '../../shared/ui/empty-state/cmc-empty-st
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CatalogPage {
+  readonly publicCatalogEnabled = inject(PUBLIC_CATALOG_ENABLED);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   readonly busqueda = signal('');
@@ -55,7 +60,7 @@ export class CatalogPage {
     'Audio',
   ];
 
-  readonly productos = CATALOG_DEMO_PRODUCTS;
+  readonly productos = inject(DemoCatalogService).products;
 
   readonly productosFiltrados = computed(() => {
     const texto = this.busqueda().trim().toLowerCase();

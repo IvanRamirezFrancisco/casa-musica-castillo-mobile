@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { DemoAccountOrder } from '../models/account.model';
-import { DemoAccountStateService } from './demo-account-state.service';
+import { DEMO_ORDER_REPOSITORY } from '../repositories/demo-order.repository';
 
 /**
  * Consulta de pedidos del usuario autenticado (HU-12).
@@ -12,11 +12,11 @@ import { DemoAccountStateService } from './demo-account-state.service';
 @Injectable({ providedIn: 'root' })
 export class OrdersService {
   private static readonly DEMO_DELAY_MS = 400;
-  private readonly account = inject(DemoAccountStateService);
+  private readonly repository = inject(DEMO_ORDER_REPOSITORY);
 
   listMyOrders(): Promise<DemoAccountOrder[]> {
     return new Promise((resolve) =>
-      setTimeout(() => resolve([...this.account.orders()]), OrdersService.DEMO_DELAY_MS),
+      setTimeout(() => resolve(this.repository.list()), OrdersService.DEMO_DELAY_MS),
     );
   }
 }

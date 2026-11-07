@@ -13,11 +13,11 @@ export function isPublicCategory(value: unknown): value is PublicCategory {
   if (typeof value !== 'object' || value === null) return false;
   const row = value as Record<string, unknown>;
   const nullableString = (item: unknown): boolean => item === null || typeof item === 'string';
-  return typeof row['id'] === 'number' && Number.isSafeInteger(row['id'])
-    && typeof row['name'] === 'string'
+  return typeof row['id'] === 'number' && Number.isSafeInteger(row['id']) && row['id'] > 0
+    && typeof row['name'] === 'string' && !!row['name'].trim()
     && nullableString(row['description'])
     && nullableString(row['imageUrl'])
-    && (row['parentId'] === null || (typeof row['parentId'] === 'number' && Number.isSafeInteger(row['parentId'])))
+    && (row['parentId'] === null || (typeof row['parentId'] === 'number' && Number.isSafeInteger(row['parentId']) && row['parentId'] > 0))
     && nullableString(row['parentName'])
-    && typeof row['activeProductCount'] === 'number' && Number.isInteger(row['activeProductCount']);
+    && typeof row['activeProductCount'] === 'number' && Number.isSafeInteger(row['activeProductCount']) && row['activeProductCount'] >= 0;
 }

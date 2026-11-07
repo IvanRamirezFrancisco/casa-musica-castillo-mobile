@@ -5,26 +5,62 @@ tags: [critical, demo]
 - launchApp:
     clearState: true
 - extendedWaitUntil:
-    visible: "Bienvenido de nuevo"
+    visible: "Novedades"
     timeout: 30000
+- tapOn: "Iniciar sesión"
+- assertVisible: "Bienvenido de nuevo"
 - runFlow: shared/login-demo.yaml
 - tapOn: "Carrito"
 - assertVisible: "Guitarra Acústica Yamaha"
 - scrollUntilVisible:
     element: "Continuar compra"
     direction: DOWN
+    # The floating tab bar can cover a target still reported inside the viewport.
+    centerElement: true
 - tapOn: "Continuar compra"
+- assertVisible: "Finalizar compra"
+- scrollUntilVisible:
+    element: "Selecciona entrega y pago para continuar"
+    direction: DOWN
+    centerElement: true
 - assertVisible: "Selecciona entrega y pago para continuar"
+- assertVisible:
+    text: "Confirmar pedido DEMO"
+    enabled: false
+- takeScreenshot: reports/maestro/checkout-demo-incomplete
+- scrollUntilVisible:
+    element: "Seleccionar método de entrega"
+    direction: UP
+    centerElement: true
 - tapOn: "Seleccionar método de entrega"
 - tapOn: "Recoger en tienda.*"
+- scrollUntilVisible:
+    element: "Confirmar método"
+    direction: DOWN
+    centerElement: true
 - tapOn: "Confirmar método"
+- assertVisible: "Finalizar compra"
+- scrollUntilVisible:
+    element: "Seleccionar método de pago"
+    direction: DOWN
+    centerElement: true
 - tapOn: "Seleccionar método de pago"
 - tapOn: "Transferencia bancaria.*"
-- tapOn: "Confirmar método"
 - scrollUntilVisible:
-    element: "Confirmar pago"
+    element: "Confirmar método"
     direction: DOWN
-- tapOn: "Confirmar pago"
+    centerElement: true
+- tapOn: "Confirmar método"
+- assertVisible: "Finalizar compra"
+- scrollUntilVisible:
+    element: "Confirmar pedido DEMO"
+    direction: DOWN
+    centerElement: true
+- assertVisible:
+    text: "Confirmar pedido DEMO"
+    enabled: true
+- assertNotVisible: "Selecciona entrega y pago para continuar"
+- tapOn: "Confirmar pedido DEMO"
 - assertVisible: "¡Pedido Confirmado!"
 - assertVisible: "Este es un pedido demostrativo. No se realizaron cobros reales."
 - takeScreenshot: reports/maestro/purchase-demo

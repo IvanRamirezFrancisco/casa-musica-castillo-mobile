@@ -8,6 +8,7 @@ import {
   signal,
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { CmcIconComponent } from '../icon/cmc-icon.component';
 
 export type CmcInputType = 'text' | 'email' | 'password' | 'tel' | 'number' | 'search' | 'url';
 
@@ -23,6 +24,7 @@ let nextId = 0;
  */
 @Component({
   selector: 'cmc-input',
+  imports: [CmcIconComponent],
   templateUrl: './cmc-input.component.html',
   styleUrl: './cmc-input.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -41,10 +43,12 @@ export class CmcInputComponent implements ControlValueAccessor {
   readonly hint = input('');
   readonly error = input('');
   readonly autocomplete = input<string | null>(null);
+  readonly inputMode = input<'text'|'numeric'|'email'|'tel'|'decimal'|null>(null);
   readonly required = input(false, { transform: booleanAttribute });
   readonly disabled = input(false, { transform: booleanAttribute });
 
   protected readonly value = signal('');
+  protected readonly revealed = signal(false);
   private readonly formDisabled = signal(false);
 
   protected readonly inputId = `cmc-input-${nextId++}`;
@@ -92,5 +96,11 @@ export class CmcInputComponent implements ControlValueAccessor {
 
   protected onBlur(): void {
     this.onTouched();
+  }
+
+  protected togglePassword(control: HTMLInputElement): void {
+    if(this.isDisabled())return;
+    this.revealed.update(value=>!value);
+    control.focus({preventScroll:true});
   }
 }

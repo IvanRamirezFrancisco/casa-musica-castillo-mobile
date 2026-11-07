@@ -1,0 +1,2494 @@
+{
+  "observedOn": "2026-11-03",
+  "projectUrl": "https://github.com/users/IvanRamirezFrancisco/projects/1",
+  "projectId": "PVT_kwHOCAIt6M4BjgQ6",
+  "itemsBefore": 69,
+  "fieldsVerified": 19,
+  "draftPr": {
+    "number": 83,
+    "url": "https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/pull/83",
+    "base": "develop",
+    "draft": true
+  },
+  "statusPolicy": "Conservar todas las tarjetas existentes. Agregar el Draft PR como entrega en revisión; no crear Issues ni modificar responsables, estimaciones, iteraciones o estados de HU/TT.",
+  "sourceCommits": {
+    "configuration": "1c5fdbe33eeae392be0d59495469739e4ade454a",
+    "core": "69fd14f1eb8eba40b7b16b8e2c6f62bd47d11f4c",
+    "ui": "6ac78a04b23b87367e74b1c95ac6632d892f48f7",
+    "modules": "9145ddf383297b4fe3b6547faa5ab4fcdf242d9b",
+    "testTools": "d03d0a5945fcfe99df5d13abceeb9183a08c9978"
+  },
+  "items": [
+    {
+      "assignees": [
+        "IvanRamirezFrancisco"
+      ],
+      "etapa DevOps": "BUILD",
+      "id": "PVTI_lAHOCAIt6M4BjgQ6zg7Iqec",
+      "iteración XP": {
+        "duration": 14,
+        "iterationId": "f0c5fd5c",
+        "startDate": "2026-09-28",
+        "title": "Iteración XP 1"
+      },
+      "módulo": "Configuración",
+      "prioridad": "Alta",
+      "status": "Terminado",
+      "story Points": 3,
+      "tipo": "Tarea técnica",
+      "title": "TT-02 | Configurar Capacitor para Android",
+      "issueNumber": 16,
+      "issueUrl": "https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/issues/16",
+      "issueState": "CLOSED",
+      "statusDecision": "preserve",
+      "assigneeDecision": "preserve",
+      "storyPointsDecision": "preserve",
+      "iterationDecision": "preserve",
+      "acceptanceDecision": "No se declara aceptación ni se marca Done. Validación completa y revisión colaborativa pendientes salvo estados históricos ya existentes.",
+      "relatedCommits": [
+        "1c5fdbe33eeae392be0d59495469739e4ade454a"
+      ],
+      "evidence": [
+        "docs/etapa1b/VALIDATION.json"
+      ],
+      "acceptanceRemaining": "Se conserva el estado histórico; este Draft PR no equivale a nueva aceptación ni a merge."
+    },
+    {
+      "assignees": [
+        "IvanRamirezFrancisco"
+      ],
+      "etapa DevOps": "SECURITY",
+      "id": "PVTI_lAHOCAIt6M4BjgQ6zg7Iqxc",
+      "iteración XP": {
+        "duration": 14,
+        "iterationId": "f0c5fd5c",
+        "startDate": "2026-09-28",
+        "title": "Iteración XP 1"
+      },
+      "módulo": "API / Backend",
+      "prioridad": "Alta",
+      "status": "Terminado",
+      "story Points": 5,
+      "tipo": "Tarea técnica",
+      "title": "TT-03 | Configurar conexión con API Spring Boot",
+      "issueNumber": 17,
+      "issueUrl": "https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/issues/17",
+      "issueState": "CLOSED",
+      "statusDecision": "preserve",
+      "assigneeDecision": "preserve",
+      "storyPointsDecision": "preserve",
+      "iterationDecision": "preserve",
+      "acceptanceDecision": "No se declara aceptación ni se marca Done. Validación completa y revisión colaborativa pendientes salvo estados históricos ya existentes.",
+      "relatedCommits": [
+        "69fd14f1eb8eba40b7b16b8e2c6f62bd47d11f4c"
+      ],
+      "evidence": [
+        "docs/etapa1b/VALIDATION.json"
+      ],
+      "acceptanceRemaining": "Se conserva el estado histórico; este Draft PR no equivale a nueva aceptación ni a merge."
+    },
+    {
+      "assignees": [
+        "IvanRamirezFrancisco",
+        "Tackalay"
+      ],
+      "etapa DevOps": "SECURITY",
+      "id": "PVTI_lAHOCAIt6M4BjgQ6zg7Isfo",
+      "iteración XP": {
+        "duration": 14,
+        "iterationId": "f0c5fd5c",
+        "startDate": "2026-09-28",
+        "title": "Iteración XP 1"
+      },
+      "módulo": "Configuración",
+      "prioridad": "Alta",
+      "status": "Terminado",
+      "story Points": 3,
+      "tipo": "Tarea técnica",
+      "title": "TT-04 | Implementar navegación móvil",
+      "issueNumber": 18,
+      "issueUrl": "https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/issues/18",
+      "issueState": "CLOSED",
+      "statusDecision": "preserve",
+      "assigneeDecision": "preserve",
+      "storyPointsDecision": "preserve",
+      "iterationDecision": "preserve",
+      "acceptanceDecision": "No se declara aceptación ni se marca Done. Validación completa y revisión colaborativa pendientes salvo estados históricos ya existentes.",
+      "relatedCommits": [
+        "9145ddf383297b4fe3b6547faa5ab4fcdf242d9b"
+      ],
+      "evidence": [
+        "docs/etapa1b/VALIDATION.json"
+      ],
+      "acceptanceRemaining": "Se conserva el estado histórico; este Draft PR no equivale a nueva aceptación ni a merge."
+    },
+    {
+      "assignees": [
+        "IvanRamirezFrancisco"
+      ],
+      "etapa DevOps": "CODE",
+      "id": "PVTI_lAHOCAIt6M4BjgQ6zg7IsnI",
+      "iteración XP": {
+        "duration": 14,
+        "iterationId": "f0c5fd5c",
+        "startDate": "2026-09-28",
+        "title": "Iteración XP 1"
+      },
+      "módulo": "Autenticación",
+      "prioridad": "Alta",
+      "status": "En proceso",
+      "story Points": 5,
+      "tipo": "Tarea técnica",
+      "title": "TT-05 | Implementar almacenamiento seguro de sesión",
+      "issueNumber": 19,
+      "issueUrl": "https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/issues/19",
+      "issueState": "OPEN",
+      "statusDecision": "preserve",
+      "assigneeDecision": "preserve",
+      "storyPointsDecision": "preserve",
+      "iterationDecision": "preserve",
+      "acceptanceDecision": "No se declara aceptación ni se marca Done. Validación completa y revisión colaborativa pendientes salvo estados históricos ya existentes.",
+      "relatedCommits": [
+        "69fd14f1eb8eba40b7b16b8e2c6f62bd47d11f4c"
+      ],
+      "evidence": [
+        "docs/etapa1b/VALIDATION.json"
+      ],
+      "acceptanceRemaining": "La sesión continúa exclusivamente en memoria; almacenamiento seguro persistente no implementado ni aceptado."
+    },
+    {
+      "assignees": [
+        "IvanRamirezFrancisco"
+      ],
+      "etapa DevOps": "CODE",
+      "id": "PVTI_lAHOCAIt6M4BjgQ6zg7Isus",
+      "iteración XP": {
+        "duration": 14,
+        "iterationId": "f0c5fd5c",
+        "startDate": "2026-09-28",
+        "title": "Iteración XP 1"
+      },
+      "módulo": "API / Backend",
+      "prioridad": "Alta",
+      "status": "Por hacer",
+      "story Points": 3,
+      "tipo": "Tarea técnica",
+      "title": "TT-06 | Implementar manejo global de errores de API",
+      "issueNumber": 20,
+      "issueUrl": "https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/issues/20",
+      "issueState": "OPEN",
+      "statusDecision": "preserve",
+      "assigneeDecision": "preserve",
+      "storyPointsDecision": "preserve",
+      "iterationDecision": "preserve",
+      "acceptanceDecision": "No se declara aceptación ni se marca Done. Validación completa y revisión colaborativa pendientes salvo estados históricos ya existentes.",
+      "relatedCommits": [
+        "69fd14f1eb8eba40b7b16b8e2c6f62bd47d11f4c"
+      ],
+      "evidence": [
+        "docs/etapa1b/VALIDATION.json"
+      ],
+      "acceptanceRemaining": "Mapeo de errores y reintentos bajo HTTP controlado; saneamiento/aceptación global y backend real pendientes."
+    },
+    {
+      "assignees": [
+        "IvanRamirezFrancisco"
+      ],
+      "etapa DevOps": "BUILD",
+      "id": "PVTI_lAHOCAIt6M4BjgQ6zg7IqMQ",
+      "iteración XP": {
+        "duration": 14,
+        "iterationId": "f0c5fd5c",
+        "startDate": "2026-09-28",
+        "title": "Iteración XP 1"
+      },
+      "módulo": "Configuración",
+      "prioridad": "Alta",
+      "status": "Terminado",
+      "story Points": 3,
+      "tipo": "Tarea técnica",
+      "title": "TT-01 | Configurar proyecto Ionic + Angular",
+      "issueNumber": 15,
+      "issueUrl": "https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/issues/15",
+      "issueState": "CLOSED",
+      "statusDecision": "preserve",
+      "assigneeDecision": "preserve",
+      "storyPointsDecision": "preserve",
+      "iterationDecision": "preserve",
+      "acceptanceDecision": "No se declara aceptación ni se marca Done. Validación completa y revisión colaborativa pendientes salvo estados históricos ya existentes.",
+      "relatedCommits": [
+        "1c5fdbe33eeae392be0d59495469739e4ade454a"
+      ],
+      "evidence": [
+        "docs/etapa1b/VALIDATION.json"
+      ],
+      "acceptanceRemaining": "Se conserva el estado histórico; este Draft PR no equivale a nueva aceptación ni a merge."
+    },
+    {
+      "assignees": [
+        "IvanRamirezFrancisco"
+      ],
+      "etapa DevOps": "PLAN",
+      "id": "PVTI_lAHOCAIt6M4BjgQ6zg7Iq0Y",
+      "iteración XP": {
+        "duration": 14,
+        "iterationId": "f0c5fd5c",
+        "startDate": "2026-09-28",
+        "title": "Iteración XP 1"
+      },
+      "módulo": "Autenticación",
+      "prioridad": "Alta",
+      "status": "Por hacer",
+      "story Points": 5,
+      "tipo": "Historia de usuario",
+      "title": "HU-01 | Iniciar sesión desde la aplicación móvil",
+      "issueNumber": 1,
+      "issueUrl": "https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/issues/1",
+      "issueState": "OPEN",
+      "statusDecision": "preserve",
+      "assigneeDecision": "preserve",
+      "storyPointsDecision": "preserve",
+      "iterationDecision": "preserve",
+      "acceptanceDecision": "No se declara aceptación ni se marca Done. Validación completa y revisión colaborativa pendientes salvo estados históricos ya existentes.",
+      "relatedCommits": [
+        "69fd14f1eb8eba40b7b16b8e2c6f62bd47d11f4c",
+        "6ac78a04b23b87367e74b1c95ac6632d892f48f7",
+        "9145ddf383297b4fe3b6547faa5ab4fcdf242d9b"
+      ],
+      "evidence": [
+        "src/app/features/auth/connected/connected-auth.integration.spec.ts",
+        "src/app/core/security/session-security.integration.spec.ts"
+      ],
+      "acceptanceRemaining": "HTTP controlado; falta cuenta sintética, buzón y MFA reales. TT-05 abierto. Conciliar #71 y #77 cuando corresponda."
+    },
+    {
+      "assignees": [
+        "Tackalay"
+      ],
+      "etapa DevOps": "PLAN",
+      "id": "PVTI_lAHOCAIt6M4BjgQ6zg7IrJw",
+      "iteración XP": {
+        "duration": 14,
+        "iterationId": "f0c5fd5c",
+        "startDate": "2026-09-28",
+        "title": "Iteración XP 1"
+      },
+      "módulo": "Autenticación",
+      "prioridad": "Alta",
+      "status": "Por hacer",
+      "story Points": 5,
+      "tipo": "Historia de usuario",
+      "title": "HU-02 | Registrarse como cliente",
+      "issueNumber": 2,
+      "issueUrl": "https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/issues/2",
+      "issueState": "OPEN",
+      "statusDecision": "preserve",
+      "assigneeDecision": "preserve",
+      "storyPointsDecision": "preserve",
+      "iterationDecision": "preserve",
+      "acceptanceDecision": "No se declara aceptación ni se marca Done. Validación completa y revisión colaborativa pendientes salvo estados históricos ya existentes.",
+      "relatedCommits": [
+        "69fd14f1eb8eba40b7b16b8e2c6f62bd47d11f4c",
+        "6ac78a04b23b87367e74b1c95ac6632d892f48f7",
+        "9145ddf383297b4fe3b6547faa5ab4fcdf242d9b"
+      ],
+      "evidence": [
+        "src/app/features/auth/connected/connected-auth.integration.spec.ts",
+        "src/app/core/security/session-security.integration.spec.ts"
+      ],
+      "acceptanceRemaining": "HTTP controlado; falta cuenta sintética, buzón y MFA reales. TT-05 abierto. Conciliar #71 y #77 cuando corresponda."
+    },
+    {
+      "assignees": [
+        "Tackalay"
+      ],
+      "etapa DevOps": "PLAN",
+      "id": "PVTI_lAHOCAIt6M4BjgQ6zg7IrzQ",
+      "iteración XP": {
+        "duration": 14,
+        "iterationId": "f0c5fd5c",
+        "startDate": "2026-09-28",
+        "title": "Iteración XP 1"
+      },
+      "módulo": "Autenticación",
+      "prioridad": "Media",
+      "status": "Por hacer",
+      "story Points": 3,
+      "tipo": "Historia de usuario",
+      "title": "HU-03 | Recuperar contraseña",
+      "issueNumber": 3,
+      "issueUrl": "https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/issues/3",
+      "issueState": "OPEN",
+      "statusDecision": "preserve",
+      "assigneeDecision": "preserve",
+      "storyPointsDecision": "preserve",
+      "iterationDecision": "preserve",
+      "acceptanceDecision": "No se declara aceptación ni se marca Done. Validación completa y revisión colaborativa pendientes salvo estados históricos ya existentes.",
+      "relatedCommits": [
+        "69fd14f1eb8eba40b7b16b8e2c6f62bd47d11f4c",
+        "6ac78a04b23b87367e74b1c95ac6632d892f48f7",
+        "9145ddf383297b4fe3b6547faa5ab4fcdf242d9b"
+      ],
+      "evidence": [
+        "src/app/features/auth/connected/connected-auth.integration.spec.ts",
+        "src/app/core/security/session-security.integration.spec.ts"
+      ],
+      "acceptanceRemaining": "HTTP controlado; falta cuenta sintética, buzón y MFA reales. TT-05 abierto. Conciliar #71 y #77 cuando corresponda."
+    },
+    {
+      "assignees": [
+        "Tackalay"
+      ],
+      "etapa DevOps": "PLAN",
+      "id": "PVTI_lAHOCAIt6M4BjgQ6zg7IsKo",
+      "iteración XP": {
+        "duration": 14,
+        "iterationId": "7b34589b",
+        "startDate": "2026-10-12",
+        "title": "Iteración XP 2"
+      },
+      "módulo": "Inicio",
+      "prioridad": "Alta",
+      "status": "Backlog",
+      "story Points": 5,
+      "tipo": "Historia de usuario",
+      "title": "HU-04 | Visualizar pantalla de inicio",
+      "issueNumber": 4,
+      "issueUrl": "https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/issues/4",
+      "issueState": "OPEN",
+      "statusDecision": "preserve",
+      "assigneeDecision": "preserve",
+      "storyPointsDecision": "preserve",
+      "iterationDecision": "preserve",
+      "acceptanceDecision": "No se declara aceptación ni se marca Done. Validación completa y revisión colaborativa pendientes salvo estados históricos ya existentes.",
+      "relatedCommits": [
+        "69fd14f1eb8eba40b7b16b8e2c6f62bd47d11f4c",
+        "6ac78a04b23b87367e74b1c95ac6632d892f48f7",
+        "9145ddf383297b4fe3b6547faa5ab4fcdf242d9b"
+      ],
+      "evidence": [
+        "src/app/features/public-catalog/public-catalog.integration.spec.ts",
+        "src/app/features/public-catalog/commerce-experience.integration.spec.ts",
+        "docs/activity4/ANDROID.md"
+      ],
+      "acceptanceRemaining": "Pruebas nuevas con HTTP controlado; capturas/API públicas de octubre conservadas como históricas. Aceptación funcional y de seguridad del servidor pendiente; conciliación #71 para catálogo."
+    },
+    {
+      "assignees": [
+        "Tackalay"
+      ],
+      "etapa DevOps": "PLAN",
+      "id": "PVTI_lAHOCAIt6M4BjgQ6zg7IsP4",
+      "iteración XP": {
+        "duration": 14,
+        "iterationId": "7b34589b",
+        "startDate": "2026-10-12",
+        "title": "Iteración XP 2"
+      },
+      "módulo": "Catálogo",
+      "prioridad": "Alta",
+      "status": "Backlog",
+      "story Points": 8,
+      "tipo": "Historia de usuario",
+      "title": "HU-05 | Consultar catálogo de productos",
+      "issueNumber": 5,
+      "issueUrl": "https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/issues/5",
+      "issueState": "OPEN",
+      "statusDecision": "preserve",
+      "assigneeDecision": "preserve",
+      "storyPointsDecision": "preserve",
+      "iterationDecision": "preserve",
+      "acceptanceDecision": "No se declara aceptación ni se marca Done. Validación completa y revisión colaborativa pendientes salvo estados históricos ya existentes.",
+      "relatedCommits": [
+        "69fd14f1eb8eba40b7b16b8e2c6f62bd47d11f4c",
+        "6ac78a04b23b87367e74b1c95ac6632d892f48f7",
+        "9145ddf383297b4fe3b6547faa5ab4fcdf242d9b"
+      ],
+      "evidence": [
+        "src/app/features/public-catalog/public-catalog.integration.spec.ts",
+        "src/app/features/public-catalog/commerce-experience.integration.spec.ts",
+        "docs/activity4/ANDROID.md"
+      ],
+      "acceptanceRemaining": "Pruebas nuevas con HTTP controlado; capturas/API públicas de octubre conservadas como históricas. Aceptación funcional y de seguridad del servidor pendiente; conciliación #71 para catálogo."
+    },
+    {
+      "assignees": [
+        "IvanRamirezFrancisco"
+      ],
+      "etapa DevOps": "PLAN",
+      "id": "PVTI_lAHOCAIt6M4BjgQ6zg7IrCM",
+      "iteración XP": {
+        "duration": 14,
+        "iterationId": "7b34589b",
+        "startDate": "2026-10-12",
+        "title": "Iteración XP 2"
+      },
+      "módulo": "Búsqueda",
+      "prioridad": "Alta",
+      "status": "Backlog",
+      "story Points": 5,
+      "tipo": "Historia de usuario",
+      "title": "HU-06 | Buscar productos",
+      "issueNumber": 6,
+      "issueUrl": "https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/issues/6",
+      "issueState": "OPEN",
+      "statusDecision": "preserve",
+      "assigneeDecision": "preserve",
+      "storyPointsDecision": "preserve",
+      "iterationDecision": "preserve",
+      "acceptanceDecision": "No se declara aceptación ni se marca Done. Validación completa y revisión colaborativa pendientes salvo estados históricos ya existentes.",
+      "relatedCommits": [
+        "69fd14f1eb8eba40b7b16b8e2c6f62bd47d11f4c",
+        "6ac78a04b23b87367e74b1c95ac6632d892f48f7",
+        "9145ddf383297b4fe3b6547faa5ab4fcdf242d9b"
+      ],
+      "evidence": [
+        "src/app/features/public-catalog/public-catalog.integration.spec.ts",
+        "src/app/features/public-catalog/commerce-experience.integration.spec.ts",
+        "docs/activity4/ANDROID.md"
+      ],
+      "acceptanceRemaining": "Pruebas nuevas con HTTP controlado; capturas/API públicas de octubre conservadas como históricas. Aceptación funcional y de seguridad del servidor pendiente; conciliación #71 para catálogo."
+    },
+    {
+      "assignees": [
+        "Tackalay"
+      ],
+      "etapa DevOps": "PLAN",
+      "id": "PVTI_lAHOCAIt6M4BjgQ6zg7IrJ0",
+      "iteración XP": {
+        "duration": 14,
+        "iterationId": "1811389b",
+        "startDate": "2026-10-26",
+        "title": "Iteración XP 3"
+      },
+      "módulo": "Producto",
+      "prioridad": "Alta",
+      "status": "Backlog",
+      "story Points": 5,
+      "tipo": "Historia de usuario",
+      "title": "HU-07 | Consultar detalle de un producto",
+      "issueNumber": 7,
+      "issueUrl": "https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/issues/7",
+      "issueState": "OPEN",
+      "statusDecision": "preserve",
+      "assigneeDecision": "preserve",
+      "storyPointsDecision": "preserve",
+      "iterationDecision": "preserve",
+      "acceptanceDecision": "No se declara aceptación ni se marca Done. Validación completa y revisión colaborativa pendientes salvo estados históricos ya existentes.",
+      "relatedCommits": [
+        "69fd14f1eb8eba40b7b16b8e2c6f62bd47d11f4c",
+        "6ac78a04b23b87367e74b1c95ac6632d892f48f7",
+        "9145ddf383297b4fe3b6547faa5ab4fcdf242d9b"
+      ],
+      "evidence": [
+        "src/app/features/public-catalog/public-catalog.integration.spec.ts",
+        "src/app/features/public-catalog/commerce-experience.integration.spec.ts",
+        "docs/activity4/ANDROID.md"
+      ],
+      "acceptanceRemaining": "Pruebas nuevas con HTTP controlado; capturas/API públicas de octubre conservadas como históricas. Aceptación funcional y de seguridad del servidor pendiente; conciliación #71 para catálogo."
+    },
+    {
+      "assignees": [
+        "IvanRamirezFrancisco"
+      ],
+      "etapa DevOps": "PLAN",
+      "id": "PVTI_lAHOCAIt6M4BjgQ6zg7IrQg",
+      "iteración XP": {
+        "duration": 14,
+        "iterationId": "1811389b",
+        "startDate": "2026-10-26",
+        "title": "Iteración XP 3"
+      },
+      "módulo": "Favoritos",
+      "prioridad": "Media",
+      "status": "Backlog",
+      "story Points": 5,
+      "tipo": "Historia de usuario",
+      "title": "HU-08 | Agregar o eliminar productos de favoritos",
+      "issueNumber": 8,
+      "issueUrl": "https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/issues/8",
+      "issueState": "OPEN",
+      "statusDecision": "preserve",
+      "assigneeDecision": "preserve",
+      "storyPointsDecision": "preserve",
+      "iterationDecision": "preserve",
+      "acceptanceDecision": "No se declara aceptación ni se marca Done. Validación completa y revisión colaborativa pendientes salvo estados históricos ya existentes.",
+      "relatedCommits": [
+        "69fd14f1eb8eba40b7b16b8e2c6f62bd47d11f4c",
+        "6ac78a04b23b87367e74b1c95ac6632d892f48f7",
+        "9145ddf383297b4fe3b6547faa5ab4fcdf242d9b"
+      ],
+      "evidence": [
+        "src/app/features/favorites/connected-favorites.integration.spec.ts"
+      ],
+      "acceptanceRemaining": "HTTP controlado; falta autorización/persistencia real y pruebas con cuentas aisladas. Checkout real bloqueado; edición de perfil conectada no disponible; conciliar #80."
+    },
+    {
+      "assignees": [
+        "IvanRamirezFrancisco"
+      ],
+      "etapa DevOps": "PLAN",
+      "id": "PVTI_lAHOCAIt6M4BjgQ6zg7IrVk",
+      "iteración XP": {
+        "duration": 14,
+        "iterationId": "41c311ff",
+        "startDate": "2026-11-09",
+        "title": "Iteración XP 4"
+      },
+      "módulo": "Carrito",
+      "prioridad": "Alta",
+      "status": "Backlog",
+      "story Points": 5,
+      "tipo": "Historia de usuario",
+      "title": "HU-09 | Agregar productos al carrito",
+      "issueNumber": 9,
+      "issueUrl": "https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/issues/9",
+      "issueState": "OPEN",
+      "statusDecision": "preserve",
+      "assigneeDecision": "preserve",
+      "storyPointsDecision": "preserve",
+      "iterationDecision": "preserve",
+      "acceptanceDecision": "No se declara aceptación ni se marca Done. Validación completa y revisión colaborativa pendientes salvo estados históricos ya existentes.",
+      "relatedCommits": [
+        "69fd14f1eb8eba40b7b16b8e2c6f62bd47d11f4c",
+        "6ac78a04b23b87367e74b1c95ac6632d892f48f7",
+        "9145ddf383297b4fe3b6547faa5ab4fcdf242d9b"
+      ],
+      "evidence": [
+        "src/app/core/services/cart.service.spec.ts"
+      ],
+      "acceptanceRemaining": "HTTP controlado; falta autorización/persistencia real y pruebas con cuentas aisladas. Checkout real bloqueado; edición de perfil conectada no disponible; conciliar #80."
+    },
+    {
+      "assignees": [
+        "IvanRamirezFrancisco"
+      ],
+      "etapa DevOps": "PLAN",
+      "id": "PVTI_lAHOCAIt6M4BjgQ6zg7Irgg",
+      "iteración XP": {
+        "duration": 14,
+        "iterationId": "41c311ff",
+        "startDate": "2026-11-09",
+        "title": "Iteración XP 4"
+      },
+      "módulo": "Carrito",
+      "prioridad": "Alta",
+      "status": "Backlog",
+      "story Points": 8,
+      "tipo": "Historia de usuario",
+      "title": "HU-10 | Administrar productos del carrito",
+      "issueNumber": 10,
+      "issueUrl": "https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/issues/10",
+      "issueState": "OPEN",
+      "statusDecision": "preserve",
+      "assigneeDecision": "preserve",
+      "storyPointsDecision": "preserve",
+      "iterationDecision": "preserve",
+      "acceptanceDecision": "No se declara aceptación ni se marca Done. Validación completa y revisión colaborativa pendientes salvo estados históricos ya existentes.",
+      "relatedCommits": [
+        "69fd14f1eb8eba40b7b16b8e2c6f62bd47d11f4c",
+        "6ac78a04b23b87367e74b1c95ac6632d892f48f7",
+        "9145ddf383297b4fe3b6547faa5ab4fcdf242d9b"
+      ],
+      "evidence": [
+        "src/app/features/cart/connected-cart.integration.spec.ts"
+      ],
+      "acceptanceRemaining": "HTTP controlado; falta autorización/persistencia real y pruebas con cuentas aisladas. Checkout real bloqueado; edición de perfil conectada no disponible; conciliar #80."
+    },
+    {
+      "assignees": [
+        "IvanRamirezFrancisco"
+      ],
+      "etapa DevOps": "PLAN",
+      "id": "PVTI_lAHOCAIt6M4BjgQ6zg7IsBk",
+      "iteración XP": {
+        "duration": 14,
+        "iterationId": "41c311ff",
+        "startDate": "2026-11-09",
+        "title": "Iteración XP 4"
+      },
+      "módulo": "Checkout",
+      "prioridad": "Alta",
+      "status": "Backlog",
+      "story Points": 8,
+      "tipo": "Historia de usuario",
+      "title": "HU-11 | Realizar proceso de checkout",
+      "issueNumber": 11,
+      "issueUrl": "https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/issues/11",
+      "issueState": "OPEN",
+      "statusDecision": "preserve",
+      "assigneeDecision": "preserve",
+      "storyPointsDecision": "preserve",
+      "iterationDecision": "preserve",
+      "acceptanceDecision": "No se declara aceptación ni se marca Done. Validación completa y revisión colaborativa pendientes salvo estados históricos ya existentes.",
+      "relatedCommits": [
+        "69fd14f1eb8eba40b7b16b8e2c6f62bd47d11f4c",
+        "6ac78a04b23b87367e74b1c95ac6632d892f48f7",
+        "9145ddf383297b4fe3b6547faa5ab4fcdf242d9b"
+      ],
+      "evidence": [
+        "src/app/features/checkout/connected-checkout.integration.spec.ts"
+      ],
+      "acceptanceRemaining": "HTTP controlado; falta autorización/persistencia real y pruebas con cuentas aisladas. Checkout real bloqueado; edición de perfil conectada no disponible; conciliar #80."
+    },
+    {
+      "assignees": [
+        "Tackalay"
+      ],
+      "etapa DevOps": "PLAN",
+      "id": "PVTI_lAHOCAIt6M4BjgQ6zg7IsK4",
+      "iteración XP": {
+        "duration": 14,
+        "iterationId": "81145736",
+        "startDate": "2026-11-23",
+        "title": "Iteración XP 5"
+      },
+      "módulo": "Pedidos",
+      "prioridad": "Alta",
+      "status": "Backlog",
+      "story Points": 5,
+      "tipo": "Historia de usuario",
+      "title": "HU-12 | Consultar mis pedidos",
+      "issueNumber": 12,
+      "issueUrl": "https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/issues/12",
+      "issueState": "OPEN",
+      "statusDecision": "preserve",
+      "assigneeDecision": "preserve",
+      "storyPointsDecision": "preserve",
+      "iterationDecision": "preserve",
+      "acceptanceDecision": "No se declara aceptación ni se marca Done. Validación completa y revisión colaborativa pendientes salvo estados históricos ya existentes.",
+      "relatedCommits": [
+        "69fd14f1eb8eba40b7b16b8e2c6f62bd47d11f4c",
+        "6ac78a04b23b87367e74b1c95ac6632d892f48f7",
+        "9145ddf383297b4fe3b6547faa5ab4fcdf242d9b"
+      ],
+      "evidence": [
+        "src/app/features/orders/connected-orders.integration.spec.ts"
+      ],
+      "acceptanceRemaining": "HTTP controlado; falta autorización/persistencia real y pruebas con cuentas aisladas. Checkout real bloqueado; edición de perfil conectada no disponible; conciliar #80."
+    },
+    {
+      "assignees": [
+        "Tackalay"
+      ],
+      "etapa DevOps": "PLAN",
+      "id": "PVTI_lAHOCAIt6M4BjgQ6zg7IsQc",
+      "iteración XP": {
+        "duration": 14,
+        "iterationId": "81145736",
+        "startDate": "2026-11-23",
+        "title": "Iteración XP 5"
+      },
+      "módulo": "Pedidos",
+      "prioridad": "Media",
+      "status": "Backlog",
+      "story Points": 3,
+      "tipo": "Historia de usuario",
+      "title": "HU-13 | Consultar detalle de un pedido",
+      "issueNumber": 13,
+      "issueUrl": "https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/issues/13",
+      "issueState": "OPEN",
+      "statusDecision": "preserve",
+      "assigneeDecision": "preserve",
+      "storyPointsDecision": "preserve",
+      "iterationDecision": "preserve",
+      "acceptanceDecision": "No se declara aceptación ni se marca Done. Validación completa y revisión colaborativa pendientes salvo estados históricos ya existentes.",
+      "relatedCommits": [
+        "69fd14f1eb8eba40b7b16b8e2c6f62bd47d11f4c",
+        "6ac78a04b23b87367e74b1c95ac6632d892f48f7",
+        "9145ddf383297b4fe3b6547faa5ab4fcdf242d9b"
+      ],
+      "evidence": [
+        "src/app/features/orders/connected-orders.integration.spec.ts"
+      ],
+      "acceptanceRemaining": "HTTP controlado; falta autorización/persistencia real y pruebas con cuentas aisladas. Checkout real bloqueado; edición de perfil conectada no disponible; conciliar #80."
+    },
+    {
+      "assignees": [
+        "Tackalay"
+      ],
+      "etapa DevOps": "PLAN",
+      "id": "PVTI_lAHOCAIt6M4BjgQ6zg7IsV0",
+      "iteración XP": {
+        "duration": 14,
+        "iterationId": "81145736",
+        "startDate": "2026-11-23",
+        "title": "Iteración XP 5"
+      },
+      "módulo": "Perfil",
+      "prioridad": "Media",
+      "status": "Backlog",
+      "story Points": 5,
+      "tipo": "Historia de usuario",
+      "title": "HU-14 | Consultar y modificar perfil",
+      "issueNumber": 14,
+      "issueUrl": "https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/issues/14",
+      "issueState": "OPEN",
+      "statusDecision": "preserve",
+      "assigneeDecision": "preserve",
+      "storyPointsDecision": "preserve",
+      "iterationDecision": "preserve",
+      "acceptanceDecision": "No se declara aceptación ni se marca Done. Validación completa y revisión colaborativa pendientes salvo estados históricos ya existentes.",
+      "relatedCommits": [
+        "69fd14f1eb8eba40b7b16b8e2c6f62bd47d11f4c",
+        "6ac78a04b23b87367e74b1c95ac6632d892f48f7",
+        "9145ddf383297b4fe3b6547faa5ab4fcdf242d9b"
+      ],
+      "evidence": [
+        "src/app/features/profile/connected-profile.integration.spec.ts"
+      ],
+      "acceptanceRemaining": "HTTP controlado; falta autorización/persistencia real y pruebas con cuentas aisladas. Checkout real bloqueado; edición de perfil conectada no disponible; conciliar #80."
+    },
+    {
+      "assignees": [
+        "IvanRamirezFrancisco"
+      ],
+      "etapa DevOps": "CODE",
+      "id": "PVTI_lAHOCAIt6M4BjgQ6zg9T7tU",
+      "iteración XP": {
+        "duration": 14,
+        "iterationId": "f0c5fd5c",
+        "startDate": "2026-09-28",
+        "title": "Iteración XP 1"
+      },
+      "módulo": "Autenticación",
+      "prioridad": "Alta",
+      "status": "Por hacer",
+      "story Points": 3,
+      "tipo": "Tarea técnica",
+      "title": "TT-07 | Implementar interfaz de inicio de sesión",
+      "issueNumber": 21,
+      "issueUrl": "https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/issues/21",
+      "issueState": "OPEN",
+      "statusDecision": "preserve",
+      "assigneeDecision": "preserve",
+      "storyPointsDecision": "preserve",
+      "iterationDecision": "preserve",
+      "acceptanceDecision": "No se declara aceptación ni se marca Done. Validación completa y revisión colaborativa pendientes salvo estados históricos ya existentes.",
+      "relatedCommits": [
+        "69fd14f1eb8eba40b7b16b8e2c6f62bd47d11f4c",
+        "9145ddf383297b4fe3b6547faa5ab4fcdf242d9b"
+      ],
+      "evidence": [
+        "test/WHITE_BOX_MATRIX.md",
+        "docs/etapa1b/VALIDATION.json"
+      ],
+      "acceptanceRemaining": "Implementación y pruebas controladas vinculadas para revisión. Sin aceptación integral del backend; conservar estado, responsable, iteración y estimación. Respetar #71/#77/#80."
+    },
+    {
+      "assignees": [
+        "IvanRamirezFrancisco"
+      ],
+      "etapa DevOps": "CODE",
+      "id": "PVTI_lAHOCAIt6M4BjgQ6zg9T708",
+      "iteración XP": {
+        "duration": 14,
+        "iterationId": "f0c5fd5c",
+        "startDate": "2026-09-28",
+        "title": "Iteración XP 1"
+      },
+      "módulo": "Autenticación",
+      "prioridad": "Alta",
+      "status": "Por hacer",
+      "story Points": 2,
+      "tipo": "Tarea técnica",
+      "title": "TT-08 | Implementar validaciones del formulario",
+      "issueNumber": 22,
+      "issueUrl": "https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/issues/22",
+      "issueState": "OPEN",
+      "statusDecision": "preserve",
+      "assigneeDecision": "preserve",
+      "storyPointsDecision": "preserve",
+      "iterationDecision": "preserve",
+      "acceptanceDecision": "No se declara aceptación ni se marca Done. Validación completa y revisión colaborativa pendientes salvo estados históricos ya existentes.",
+      "relatedCommits": [
+        "69fd14f1eb8eba40b7b16b8e2c6f62bd47d11f4c",
+        "9145ddf383297b4fe3b6547faa5ab4fcdf242d9b"
+      ],
+      "evidence": [
+        "test/WHITE_BOX_MATRIX.md",
+        "docs/etapa1b/VALIDATION.json"
+      ],
+      "acceptanceRemaining": "Implementación y pruebas controladas vinculadas para revisión. Sin aceptación integral del backend; conservar estado, responsable, iteración y estimación. Respetar #71/#77/#80."
+    },
+    {
+      "assignees": [
+        "IvanRamirezFrancisco"
+      ],
+      "etapa DevOps": "CODE",
+      "id": "PVTI_lAHOCAIt6M4BjgQ6zg9T78M",
+      "iteración XP": {
+        "duration": 14,
+        "iterationId": "f0c5fd5c",
+        "startDate": "2026-09-28",
+        "title": "Iteración XP 1"
+      },
+      "módulo": "Autenticación",
+      "prioridad": "Alta",
+      "status": "Por hacer",
+      "story Points": 5,
+      "tipo": "Tarea técnica",
+      "title": "TT-09 | Integrar inicio de sesión con AuthService",
+      "issueNumber": 23,
+      "issueUrl": "https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/issues/23",
+      "issueState": "OPEN",
+      "statusDecision": "preserve",
+      "assigneeDecision": "preserve",
+      "storyPointsDecision": "preserve",
+      "iterationDecision": "preserve",
+      "acceptanceDecision": "No se declara aceptación ni se marca Done. Validación completa y revisión colaborativa pendientes salvo estados históricos ya existentes.",
+      "relatedCommits": [
+        "69fd14f1eb8eba40b7b16b8e2c6f62bd47d11f4c",
+        "9145ddf383297b4fe3b6547faa5ab4fcdf242d9b"
+      ],
+      "evidence": [
+        "test/WHITE_BOX_MATRIX.md",
+        "docs/etapa1b/VALIDATION.json"
+      ],
+      "acceptanceRemaining": "Implementación y pruebas controladas vinculadas para revisión. Sin aceptación integral del backend; conservar estado, responsable, iteración y estimación. Respetar #71/#77/#80."
+    },
+    {
+      "assignees": [
+        "IvanRamirezFrancisco"
+      ],
+      "etapa DevOps": "CODE",
+      "id": "PVTI_lAHOCAIt6M4BjgQ6zg9T8Cw",
+      "iteración XP": {
+        "duration": 14,
+        "iterationId": "f0c5fd5c",
+        "startDate": "2026-09-28",
+        "title": "Iteración XP 1"
+      },
+      "módulo": "Autenticación",
+      "prioridad": "Media",
+      "status": "Por hacer",
+      "story Points": 2,
+      "tipo": "Tarea técnica",
+      "title": "TT-10 | Implementar manejo de respuesta y redirección",
+      "issueNumber": 24,
+      "issueUrl": "https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/issues/24",
+      "issueState": "OPEN",
+      "statusDecision": "preserve",
+      "assigneeDecision": "preserve",
+      "storyPointsDecision": "preserve",
+      "iterationDecision": "preserve",
+      "acceptanceDecision": "No se declara aceptación ni se marca Done. Validación completa y revisión colaborativa pendientes salvo estados históricos ya existentes.",
+      "relatedCommits": [
+        "69fd14f1eb8eba40b7b16b8e2c6f62bd47d11f4c",
+        "9145ddf383297b4fe3b6547faa5ab4fcdf242d9b"
+      ],
+      "evidence": [
+        "test/WHITE_BOX_MATRIX.md",
+        "docs/etapa1b/VALIDATION.json"
+      ],
+      "acceptanceRemaining": "Implementación y pruebas controladas vinculadas para revisión. Sin aceptación integral del backend; conservar estado, responsable, iteración y estimación. Respetar #71/#77/#80."
+    },
+    {
+      "assignees": [
+        "Tackalay"
+      ],
+      "etapa DevOps": "CODE",
+      "id": "PVTI_lAHOCAIt6M4BjgQ6zg9T8RM",
+      "iteración XP": {
+        "duration": 14,
+        "iterationId": "f0c5fd5c",
+        "startDate": "2026-09-28",
+        "title": "Iteración XP 1"
+      },
+      "módulo": "Autenticación",
+      "prioridad": "Alta",
+      "status": "Por hacer",
+      "story Points": 3,
+      "tipo": "Tarea técnica",
+      "title": "TT-11 | Implementar formulario de registro",
+      "issueNumber": 25,
+      "issueUrl": "https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/issues/25",
+      "issueState": "OPEN",
+      "statusDecision": "preserve",
+      "assigneeDecision": "preserve",
+      "storyPointsDecision": "preserve",
+      "iterationDecision": "preserve",
+      "acceptanceDecision": "No se declara aceptación ni se marca Done. Validación completa y revisión colaborativa pendientes salvo estados históricos ya existentes.",
+      "relatedCommits": [
+        "69fd14f1eb8eba40b7b16b8e2c6f62bd47d11f4c",
+        "9145ddf383297b4fe3b6547faa5ab4fcdf242d9b"
+      ],
+      "evidence": [
+        "test/WHITE_BOX_MATRIX.md",
+        "docs/etapa1b/VALIDATION.json"
+      ],
+      "acceptanceRemaining": "Implementación y pruebas controladas vinculadas para revisión. Sin aceptación integral del backend; conservar estado, responsable, iteración y estimación. Respetar #71/#77/#80."
+    },
+    {
+      "assignees": [
+        "Tackalay"
+      ],
+      "etapa DevOps": "CODE",
+      "id": "PVTI_lAHOCAIt6M4BjgQ6zg9T8Ww",
+      "iteración XP": {
+        "duration": 14,
+        "iterationId": "f0c5fd5c",
+        "startDate": "2026-09-28",
+        "title": "Iteración XP 1"
+      },
+      "módulo": "Autenticación",
+      "prioridad": "Alta",
+      "status": "Por hacer",
+      "story Points": 2,
+      "tipo": "Tarea técnica",
+      "title": "TT-12 | Implementar validaciones de registro",
+      "issueNumber": 26,
+      "issueUrl": "https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/issues/26",
+      "issueState": "OPEN",
+      "statusDecision": "preserve",
+      "assigneeDecision": "preserve",
+      "storyPointsDecision": "preserve",
+      "iterationDecision": "preserve",
+      "acceptanceDecision": "No se declara aceptación ni se marca Done. Validación completa y revisión colaborativa pendientes salvo estados históricos ya existentes.",
+      "relatedCommits": [
+        "69fd14f1eb8eba40b7b16b8e2c6f62bd47d11f4c",
+        "9145ddf383297b4fe3b6547faa5ab4fcdf242d9b"
+      ],
+      "evidence": [
+        "test/WHITE_BOX_MATRIX.md",
+        "docs/etapa1b/VALIDATION.json"
+      ],
+      "acceptanceRemaining": "Implementación y pruebas controladas vinculadas para revisión. Sin aceptación integral del backend; conservar estado, responsable, iteración y estimación. Respetar #71/#77/#80."
+    },
+    {
+      "assignees": [
+        "Tackalay"
+      ],
+      "etapa DevOps": "CODE",
+      "id": "PVTI_lAHOCAIt6M4BjgQ6zg9T8eU",
+      "iteración XP": {
+        "duration": 14,
+        "iterationId": "f0c5fd5c",
+        "startDate": "2026-09-28",
+        "title": "Iteración XP 1"
+      },
+      "módulo": "Autenticación",
+      "prioridad": "Alta",
+      "status": "Por hacer",
+      "story Points": 5,
+      "tipo": "Tarea técnica",
+      "title": "TT-13 | Integrar registro con API",
+      "issueNumber": 27,
+      "issueUrl": "https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/issues/27",
+      "issueState": "OPEN",
+      "statusDecision": "preserve",
+      "assigneeDecision": "preserve",
+      "storyPointsDecision": "preserve",
+      "iterationDecision": "preserve",
+      "acceptanceDecision": "No se declara aceptación ni se marca Done. Validación completa y revisión colaborativa pendientes salvo estados históricos ya existentes.",
+      "relatedCommits": [
+        "69fd14f1eb8eba40b7b16b8e2c6f62bd47d11f4c",
+        "9145ddf383297b4fe3b6547faa5ab4fcdf242d9b"
+      ],
+      "evidence": [
+        "test/WHITE_BOX_MATRIX.md",
+        "docs/etapa1b/VALIDATION.json"
+      ],
+      "acceptanceRemaining": "Implementación y pruebas controladas vinculadas para revisión. Sin aceptación integral del backend; conservar estado, responsable, iteración y estimación. Respetar #71/#77/#80."
+    },
+    {
+      "assignees": [
+        "Tackalay"
+      ],
+      "etapa DevOps": "CODE",
+      "id": "PVTI_lAHOCAIt6M4BjgQ6zg9T8nw",
+      "iteración XP": {
+        "duration": 14,
+        "iterationId": "f0c5fd5c",
+        "startDate": "2026-09-28",
+        "title": "Iteración XP 1"
+      },
+      "módulo": "Autenticación",
+      "prioridad": "Media",
+      "status": "Por hacer",
+      "story Points": 2,
+      "tipo": "Tarea técnica",
+      "title": "TT-14 | Implementar confirmación y manejo de errores",
+      "issueNumber": 28,
+      "issueUrl": "https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/issues/28",
+      "issueState": "OPEN",
+      "statusDecision": "preserve",
+      "assigneeDecision": "preserve",
+      "storyPointsDecision": "preserve",
+      "iterationDecision": "preserve",
+      "acceptanceDecision": "No se declara aceptación ni se marca Done. Validación completa y revisión colaborativa pendientes salvo estados históricos ya existentes.",
+      "relatedCommits": [
+        "69fd14f1eb8eba40b7b16b8e2c6f62bd47d11f4c",
+        "9145ddf383297b4fe3b6547faa5ab4fcdf242d9b"
+      ],
+      "evidence": [
+        "test/WHITE_BOX_MATRIX.md",
+        "docs/etapa1b/VALIDATION.json"
+      ],
+      "acceptanceRemaining": "Implementación y pruebas controladas vinculadas para revisión. Sin aceptación integral del backend; conservar estado, responsable, iteración y estimación. Respetar #71/#77/#80."
+    },
+    {
+      "assignees": [
+        "Tackalay"
+      ],
+      "etapa DevOps": "CODE",
+      "id": "PVTI_lAHOCAIt6M4BjgQ6zg9T9Po",
+      "iteración XP": {
+        "duration": 14,
+        "iterationId": "f0c5fd5c",
+        "startDate": "2026-09-28",
+        "title": "Iteración XP 1"
+      },
+      "módulo": "Autenticación",
+      "prioridad": "Alta",
+      "status": "Por hacer",
+      "story Points": 3,
+      "tipo": "Tarea técnica",
+      "title": "TT-15 | Implementar pantalla de recuperación",
+      "issueNumber": 29,
+      "issueUrl": "https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/issues/29",
+      "issueState": "OPEN",
+      "statusDecision": "preserve",
+      "assigneeDecision": "preserve",
+      "storyPointsDecision": "preserve",
+      "iterationDecision": "preserve",
+      "acceptanceDecision": "No se declara aceptación ni se marca Done. Validación completa y revisión colaborativa pendientes salvo estados históricos ya existentes.",
+      "relatedCommits": [
+        "69fd14f1eb8eba40b7b16b8e2c6f62bd47d11f4c",
+        "9145ddf383297b4fe3b6547faa5ab4fcdf242d9b"
+      ],
+      "evidence": [
+        "test/WHITE_BOX_MATRIX.md",
+        "docs/etapa1b/VALIDATION.json"
+      ],
+      "acceptanceRemaining": "Implementación y pruebas controladas vinculadas para revisión. Sin aceptación integral del backend; conservar estado, responsable, iteración y estimación. Respetar #71/#77/#80."
+    },
+    {
+      "assignees": [
+        "Tackalay"
+      ],
+      "etapa DevOps": "CODE",
+      "id": "PVTI_lAHOCAIt6M4BjgQ6zg9T9V4",
+      "iteración XP": {
+        "duration": 14,
+        "iterationId": "f0c5fd5c",
+        "startDate": "2026-09-28",
+        "title": "Iteración XP 1"
+      },
+      "módulo": "Autenticación",
+      "prioridad": "Media",
+      "status": "Por hacer",
+      "story Points": 2,
+      "tipo": "Tarea técnica",
+      "title": "TT-16 | Validar correo electrónico",
+      "issueNumber": 30,
+      "issueUrl": "https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/issues/30",
+      "issueState": "OPEN",
+      "statusDecision": "preserve",
+      "assigneeDecision": "preserve",
+      "storyPointsDecision": "preserve",
+      "iterationDecision": "preserve",
+      "acceptanceDecision": "No se declara aceptación ni se marca Done. Validación completa y revisión colaborativa pendientes salvo estados históricos ya existentes.",
+      "relatedCommits": [
+        "69fd14f1eb8eba40b7b16b8e2c6f62bd47d11f4c",
+        "9145ddf383297b4fe3b6547faa5ab4fcdf242d9b"
+      ],
+      "evidence": [
+        "test/WHITE_BOX_MATRIX.md",
+        "docs/etapa1b/VALIDATION.json"
+      ],
+      "acceptanceRemaining": "Implementación y pruebas controladas vinculadas para revisión. Sin aceptación integral del backend; conservar estado, responsable, iteración y estimación. Respetar #71/#77/#80."
+    },
+    {
+      "assignees": [
+        "Tackalay"
+      ],
+      "etapa DevOps": "CODE",
+      "id": "PVTI_lAHOCAIt6M4BjgQ6zg9T9bU",
+      "iteración XP": {
+        "duration": 14,
+        "iterationId": "f0c5fd5c",
+        "startDate": "2026-09-28",
+        "title": "Iteración XP 1"
+      },
+      "módulo": "Autenticación",
+      "prioridad": "Alta",
+      "status": "Por hacer",
+      "story Points": 5,
+      "tipo": "Tarea técnica",
+      "title": "TT-17 | Integrar recuperación de contraseña con API",
+      "issueNumber": 31,
+      "issueUrl": "https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/issues/31",
+      "issueState": "OPEN",
+      "statusDecision": "preserve",
+      "assigneeDecision": "preserve",
+      "storyPointsDecision": "preserve",
+      "iterationDecision": "preserve",
+      "acceptanceDecision": "No se declara aceptación ni se marca Done. Validación completa y revisión colaborativa pendientes salvo estados históricos ya existentes.",
+      "relatedCommits": [
+        "69fd14f1eb8eba40b7b16b8e2c6f62bd47d11f4c",
+        "9145ddf383297b4fe3b6547faa5ab4fcdf242d9b"
+      ],
+      "evidence": [
+        "test/WHITE_BOX_MATRIX.md",
+        "docs/etapa1b/VALIDATION.json"
+      ],
+      "acceptanceRemaining": "Implementación y pruebas controladas vinculadas para revisión. Sin aceptación integral del backend; conservar estado, responsable, iteración y estimación. Respetar #71/#77/#80."
+    },
+    {
+      "assignees": [
+        "Tackalay"
+      ],
+      "etapa DevOps": "CODE",
+      "id": "PVTI_lAHOCAIt6M4BjgQ6zg9T9gU",
+      "iteración XP": {
+        "duration": 14,
+        "iterationId": "f0c5fd5c",
+        "startDate": "2026-09-28",
+        "title": "Iteración XP 1"
+      },
+      "módulo": "Autenticación",
+      "prioridad": "Media",
+      "status": "Por hacer",
+      "story Points": 2,
+      "tipo": "Tarea técnica",
+      "title": "TT-18 | Implementar confirmación y manejo de errores de recuperación",
+      "issueNumber": 32,
+      "issueUrl": "https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/issues/32",
+      "issueState": "OPEN",
+      "statusDecision": "preserve",
+      "assigneeDecision": "preserve",
+      "storyPointsDecision": "preserve",
+      "iterationDecision": "preserve",
+      "acceptanceDecision": "No se declara aceptación ni se marca Done. Validación completa y revisión colaborativa pendientes salvo estados históricos ya existentes.",
+      "relatedCommits": [
+        "69fd14f1eb8eba40b7b16b8e2c6f62bd47d11f4c",
+        "9145ddf383297b4fe3b6547faa5ab4fcdf242d9b"
+      ],
+      "evidence": [
+        "test/WHITE_BOX_MATRIX.md",
+        "docs/etapa1b/VALIDATION.json"
+      ],
+      "acceptanceRemaining": "Implementación y pruebas controladas vinculadas para revisión. Sin aceptación integral del backend; conservar estado, responsable, iteración y estimación. Respetar #71/#77/#80."
+    },
+    {
+      "assignees": [
+        "Tackalay"
+      ],
+      "etapa DevOps": "CODE",
+      "id": "PVTI_lAHOCAIt6M4BjgQ6zg9T93E",
+      "iteración XP": {
+        "duration": 14,
+        "iterationId": "7b34589b",
+        "startDate": "2026-10-12",
+        "title": "Iteración XP 2"
+      },
+      "módulo": "Inicio",
+      "prioridad": "Alta",
+      "status": "Backlog",
+      "story Points": 3,
+      "tipo": "Tarea técnica",
+      "title": "TT-19 | Implementar estructura de pantalla Inicio",
+      "issueNumber": 33,
+      "issueUrl": "https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/issues/33",
+      "issueState": "OPEN",
+      "statusDecision": "preserve",
+      "assigneeDecision": "preserve",
+      "storyPointsDecision": "preserve",
+      "iterationDecision": "preserve",
+      "acceptanceDecision": "No se declara aceptación ni se marca Done. Validación completa y revisión colaborativa pendientes salvo estados históricos ya existentes.",
+      "relatedCommits": [
+        "69fd14f1eb8eba40b7b16b8e2c6f62bd47d11f4c",
+        "9145ddf383297b4fe3b6547faa5ab4fcdf242d9b"
+      ],
+      "evidence": [
+        "test/WHITE_BOX_MATRIX.md",
+        "docs/etapa1b/VALIDATION.json"
+      ],
+      "acceptanceRemaining": "Implementación y pruebas controladas vinculadas para revisión. Sin aceptación integral del backend; conservar estado, responsable, iteración y estimación. Respetar #71/#77/#80."
+    },
+    {
+      "assignees": [
+        "Tackalay"
+      ],
+      "etapa DevOps": "CODE",
+      "id": "PVTI_lAHOCAIt6M4BjgQ6zg9T-IA",
+      "iteración XP": {
+        "duration": 14,
+        "iterationId": "7b34589b",
+        "startDate": "2026-10-12",
+        "title": "Iteración XP 2"
+      },
+      "módulo": "Inicio",
+      "prioridad": "Media",
+      "status": "Backlog",
+      "story Points": 3,
+      "tipo": "Tarea técnica",
+      "title": "TT-20 | Integrar contenido destacado",
+      "issueNumber": 34,
+      "issueUrl": "https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/issues/34",
+      "issueState": "OPEN",
+      "statusDecision": "preserve",
+      "assigneeDecision": "preserve",
+      "storyPointsDecision": "preserve",
+      "iterationDecision": "preserve",
+      "acceptanceDecision": "No se declara aceptación ni se marca Done. Validación completa y revisión colaborativa pendientes salvo estados históricos ya existentes.",
+      "relatedCommits": [
+        "69fd14f1eb8eba40b7b16b8e2c6f62bd47d11f4c",
+        "9145ddf383297b4fe3b6547faa5ab4fcdf242d9b"
+      ],
+      "evidence": [
+        "test/WHITE_BOX_MATRIX.md",
+        "docs/etapa1b/VALIDATION.json"
+      ],
+      "acceptanceRemaining": "Implementación y pruebas controladas vinculadas para revisión. Sin aceptación integral del backend; conservar estado, responsable, iteración y estimación. Respetar #71/#77/#80."
+    },
+    {
+      "assignees": [
+        "Tackalay"
+      ],
+      "etapa DevOps": "CODE",
+      "id": "PVTI_lAHOCAIt6M4BjgQ6zg9T-OU",
+      "iteración XP": {
+        "duration": 14,
+        "iterationId": "7b34589b",
+        "startDate": "2026-10-12",
+        "title": "Iteración XP 2"
+      },
+      "módulo": "Inicio",
+      "prioridad": "Media",
+      "status": "Backlog",
+      "story Points": 2,
+      "tipo": "Tarea técnica",
+      "title": "TT-21 | Implementar navegación desde Inicio",
+      "issueNumber": 35,
+      "issueUrl": "https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/issues/35",
+      "issueState": "OPEN",
+      "statusDecision": "preserve",
+      "assigneeDecision": "preserve",
+      "storyPointsDecision": "preserve",
+      "iterationDecision": "preserve",
+      "acceptanceDecision": "No se declara aceptación ni se marca Done. Validación completa y revisión colaborativa pendientes salvo estados históricos ya existentes.",
+      "relatedCommits": [
+        "69fd14f1eb8eba40b7b16b8e2c6f62bd47d11f4c",
+        "9145ddf383297b4fe3b6547faa5ab4fcdf242d9b"
+      ],
+      "evidence": [
+        "test/WHITE_BOX_MATRIX.md",
+        "docs/etapa1b/VALIDATION.json"
+      ],
+      "acceptanceRemaining": "Implementación y pruebas controladas vinculadas para revisión. Sin aceptación integral del backend; conservar estado, responsable, iteración y estimación. Respetar #71/#77/#80."
+    },
+    {
+      "assignees": [
+        "Tackalay"
+      ],
+      "etapa DevOps": "CODE",
+      "id": "PVTI_lAHOCAIt6M4BjgQ6zg9T-eU",
+      "iteración XP": {
+        "duration": 14,
+        "iterationId": "7b34589b",
+        "startDate": "2026-10-12",
+        "title": "Iteración XP 2"
+      },
+      "módulo": "Catálogo",
+      "prioridad": "Alta",
+      "status": "Backlog",
+      "story Points": 5,
+      "tipo": "Tarea técnica",
+      "title": "TT-22 | Implementar listado de productos",
+      "issueNumber": 36,
+      "issueUrl": "https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/issues/36",
+      "issueState": "OPEN",
+      "statusDecision": "preserve",
+      "assigneeDecision": "preserve",
+      "storyPointsDecision": "preserve",
+      "iterationDecision": "preserve",
+      "acceptanceDecision": "No se declara aceptación ni se marca Done. Validación completa y revisión colaborativa pendientes salvo estados históricos ya existentes.",
+      "relatedCommits": [
+        "69fd14f1eb8eba40b7b16b8e2c6f62bd47d11f4c",
+        "9145ddf383297b4fe3b6547faa5ab4fcdf242d9b"
+      ],
+      "evidence": [
+        "test/WHITE_BOX_MATRIX.md",
+        "docs/etapa1b/VALIDATION.json"
+      ],
+      "acceptanceRemaining": "Implementación y pruebas controladas vinculadas para revisión. Sin aceptación integral del backend; conservar estado, responsable, iteración y estimación. Respetar #71/#77/#80."
+    },
+    {
+      "assignees": [
+        "IvanRamirezFrancisco"
+      ],
+      "etapa DevOps": "CODE",
+      "id": "PVTI_lAHOCAIt6M4BjgQ6zg9T-nk",
+      "iteración XP": {
+        "duration": 14,
+        "iterationId": "7b34589b",
+        "startDate": "2026-10-12",
+        "title": "Iteración XP 2"
+      },
+      "módulo": "Catálogo",
+      "prioridad": "Alta",
+      "status": "Backlog",
+      "story Points": 5,
+      "tipo": "Tarea técnica",
+      "title": "TT-23 | Integrar ProductService",
+      "issueNumber": 37,
+      "issueUrl": "https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/issues/37",
+      "issueState": "OPEN",
+      "statusDecision": "preserve",
+      "assigneeDecision": "preserve",
+      "storyPointsDecision": "preserve",
+      "iterationDecision": "preserve",
+      "acceptanceDecision": "No se declara aceptación ni se marca Done. Validación completa y revisión colaborativa pendientes salvo estados históricos ya existentes.",
+      "relatedCommits": [
+        "69fd14f1eb8eba40b7b16b8e2c6f62bd47d11f4c",
+        "9145ddf383297b4fe3b6547faa5ab4fcdf242d9b"
+      ],
+      "evidence": [
+        "test/WHITE_BOX_MATRIX.md",
+        "docs/etapa1b/VALIDATION.json"
+      ],
+      "acceptanceRemaining": "Implementación y pruebas controladas vinculadas para revisión. Sin aceptación integral del backend; conservar estado, responsable, iteración y estimación. Respetar #71/#77/#80."
+    },
+    {
+      "assignees": [
+        "Tackalay"
+      ],
+      "etapa DevOps": "CODE",
+      "id": "PVTI_lAHOCAIt6M4BjgQ6zg9T-xk",
+      "iteración XP": {
+        "duration": 14,
+        "iterationId": "7b34589b",
+        "startDate": "2026-10-12",
+        "title": "Iteración XP 2"
+      },
+      "módulo": "Catálogo",
+      "prioridad": "Media",
+      "status": "Backlog",
+      "story Points": 3,
+      "tipo": "Tarea técnica",
+      "title": "TT-24 | Implementar carga, paginación y estados",
+      "issueNumber": 38,
+      "issueUrl": "https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/issues/38",
+      "issueState": "OPEN",
+      "statusDecision": "preserve",
+      "assigneeDecision": "preserve",
+      "storyPointsDecision": "preserve",
+      "iterationDecision": "preserve",
+      "acceptanceDecision": "No se declara aceptación ni se marca Done. Validación completa y revisión colaborativa pendientes salvo estados históricos ya existentes.",
+      "relatedCommits": [
+        "69fd14f1eb8eba40b7b16b8e2c6f62bd47d11f4c",
+        "9145ddf383297b4fe3b6547faa5ab4fcdf242d9b"
+      ],
+      "evidence": [
+        "test/WHITE_BOX_MATRIX.md",
+        "docs/etapa1b/VALIDATION.json"
+      ],
+      "acceptanceRemaining": "Implementación y pruebas controladas vinculadas para revisión. Sin aceptación integral del backend; conservar estado, responsable, iteración y estimación. Respetar #71/#77/#80."
+    },
+    {
+      "assignees": [
+        "IvanRamirezFrancisco"
+      ],
+      "etapa DevOps": "CODE",
+      "id": "PVTI_lAHOCAIt6M4BjgQ6zg9T_Ds",
+      "iteración XP": {
+        "duration": 14,
+        "iterationId": "7b34589b",
+        "startDate": "2026-10-12",
+        "title": "Iteración XP 2"
+      },
+      "módulo": "Búsqueda",
+      "prioridad": "Alta",
+      "status": "Backlog",
+      "story Points": 3,
+      "tipo": "Tarea técnica",
+      "title": "TT-25 | Implementar componente de búsqueda",
+      "issueNumber": 39,
+      "issueUrl": "https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/issues/39",
+      "issueState": "OPEN",
+      "statusDecision": "preserve",
+      "assigneeDecision": "preserve",
+      "storyPointsDecision": "preserve",
+      "iterationDecision": "preserve",
+      "acceptanceDecision": "No se declara aceptación ni se marca Done. Validación completa y revisión colaborativa pendientes salvo estados históricos ya existentes.",
+      "relatedCommits": [
+        "69fd14f1eb8eba40b7b16b8e2c6f62bd47d11f4c",
+        "9145ddf383297b4fe3b6547faa5ab4fcdf242d9b"
+      ],
+      "evidence": [
+        "test/WHITE_BOX_MATRIX.md",
+        "docs/etapa1b/VALIDATION.json"
+      ],
+      "acceptanceRemaining": "Implementación y pruebas controladas vinculadas para revisión. Sin aceptación integral del backend; conservar estado, responsable, iteración y estimación. Respetar #71/#77/#80."
+    },
+    {
+      "assignees": [
+        "IvanRamirezFrancisco"
+      ],
+      "etapa DevOps": "CODE",
+      "id": "PVTI_lAHOCAIt6M4BjgQ6zg9T_Jg",
+      "iteración XP": {
+        "duration": 14,
+        "iterationId": "7b34589b",
+        "startDate": "2026-10-12",
+        "title": "Iteración XP 2"
+      },
+      "módulo": "Búsqueda",
+      "prioridad": "Alta",
+      "status": "Backlog",
+      "story Points": 5,
+      "tipo": "Tarea técnica",
+      "title": "TT-26 | Integrar búsqueda con API",
+      "issueNumber": 40,
+      "issueUrl": "https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/issues/40",
+      "issueState": "OPEN",
+      "statusDecision": "preserve",
+      "assigneeDecision": "preserve",
+      "storyPointsDecision": "preserve",
+      "iterationDecision": "preserve",
+      "acceptanceDecision": "No se declara aceptación ni se marca Done. Validación completa y revisión colaborativa pendientes salvo estados históricos ya existentes.",
+      "relatedCommits": [
+        "69fd14f1eb8eba40b7b16b8e2c6f62bd47d11f4c",
+        "9145ddf383297b4fe3b6547faa5ab4fcdf242d9b"
+      ],
+      "evidence": [
+        "test/WHITE_BOX_MATRIX.md",
+        "docs/etapa1b/VALIDATION.json"
+      ],
+      "acceptanceRemaining": "Implementación y pruebas controladas vinculadas para revisión. Sin aceptación integral del backend; conservar estado, responsable, iteración y estimación. Respetar #71/#77/#80."
+    },
+    {
+      "assignees": [
+        "IvanRamirezFrancisco"
+      ],
+      "etapa DevOps": "CODE",
+      "id": "PVTI_lAHOCAIt6M4BjgQ6zg9T_QI",
+      "iteración XP": {
+        "duration": 14,
+        "iterationId": "7b34589b",
+        "startDate": "2026-10-12",
+        "title": "Iteración XP 2"
+      },
+      "módulo": "Búsqueda",
+      "prioridad": "Media",
+      "status": "Backlog",
+      "story Points": 2,
+      "tipo": "Tarea técnica",
+      "title": "TT-27 | Implementar estados sin resultados y errores",
+      "issueNumber": 41,
+      "issueUrl": "https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/issues/41",
+      "issueState": "OPEN",
+      "statusDecision": "preserve",
+      "assigneeDecision": "preserve",
+      "storyPointsDecision": "preserve",
+      "iterationDecision": "preserve",
+      "acceptanceDecision": "No se declara aceptación ni se marca Done. Validación completa y revisión colaborativa pendientes salvo estados históricos ya existentes.",
+      "relatedCommits": [
+        "69fd14f1eb8eba40b7b16b8e2c6f62bd47d11f4c",
+        "9145ddf383297b4fe3b6547faa5ab4fcdf242d9b"
+      ],
+      "evidence": [
+        "test/WHITE_BOX_MATRIX.md",
+        "docs/etapa1b/VALIDATION.json"
+      ],
+      "acceptanceRemaining": "Implementación y pruebas controladas vinculadas para revisión. Sin aceptación integral del backend; conservar estado, responsable, iteración y estimación. Respetar #71/#77/#80."
+    },
+    {
+      "assignees": [
+        "Tackalay"
+      ],
+      "etapa DevOps": "CODE",
+      "id": "PVTI_lAHOCAIt6M4BjgQ6zg9T_0A",
+      "iteración XP": {
+        "duration": 14,
+        "iterationId": "1811389b",
+        "startDate": "2026-10-26",
+        "title": "Iteración XP 3"
+      },
+      "módulo": "Producto",
+      "prioridad": "Alta",
+      "status": "Backlog",
+      "story Points": 3,
+      "tipo": "Tarea técnica",
+      "title": "TT-28 | Implementar vista de detalle",
+      "issueNumber": 42,
+      "issueUrl": "https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/issues/42",
+      "issueState": "OPEN",
+      "statusDecision": "preserve",
+      "assigneeDecision": "preserve",
+      "storyPointsDecision": "preserve",
+      "iterationDecision": "preserve",
+      "acceptanceDecision": "No se declara aceptación ni se marca Done. Validación completa y revisión colaborativa pendientes salvo estados históricos ya existentes.",
+      "relatedCommits": [
+        "69fd14f1eb8eba40b7b16b8e2c6f62bd47d11f4c",
+        "9145ddf383297b4fe3b6547faa5ab4fcdf242d9b"
+      ],
+      "evidence": [
+        "test/WHITE_BOX_MATRIX.md",
+        "docs/etapa1b/VALIDATION.json"
+      ],
+      "acceptanceRemaining": "Implementación y pruebas controladas vinculadas para revisión. Sin aceptación integral del backend; conservar estado, responsable, iteración y estimación. Respetar #71/#77/#80."
+    },
+    {
+      "assignees": [
+        "IvanRamirezFrancisco"
+      ],
+      "etapa DevOps": "CODE",
+      "id": "PVTI_lAHOCAIt6M4BjgQ6zg9UANE",
+      "iteración XP": {
+        "duration": 14,
+        "iterationId": "1811389b",
+        "startDate": "2026-10-26",
+        "title": "Iteración XP 3"
+      },
+      "módulo": "Producto",
+      "prioridad": "Alta",
+      "status": "Backlog",
+      "story Points": 5,
+      "tipo": "Tarea técnica",
+      "title": "TT-29 | Consultar producto por identificador",
+      "issueNumber": 43,
+      "issueUrl": "https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/issues/43",
+      "issueState": "OPEN",
+      "statusDecision": "preserve",
+      "assigneeDecision": "preserve",
+      "storyPointsDecision": "preserve",
+      "iterationDecision": "preserve",
+      "acceptanceDecision": "No se declara aceptación ni se marca Done. Validación completa y revisión colaborativa pendientes salvo estados históricos ya existentes.",
+      "relatedCommits": [
+        "69fd14f1eb8eba40b7b16b8e2c6f62bd47d11f4c",
+        "9145ddf383297b4fe3b6547faa5ab4fcdf242d9b"
+      ],
+      "evidence": [
+        "test/WHITE_BOX_MATRIX.md",
+        "docs/etapa1b/VALIDATION.json"
+      ],
+      "acceptanceRemaining": "Implementación y pruebas controladas vinculadas para revisión. Sin aceptación integral del backend; conservar estado, responsable, iteración y estimación. Respetar #71/#77/#80."
+    },
+    {
+      "assignees": [
+        "Tackalay"
+      ],
+      "etapa DevOps": "CODE",
+      "id": "PVTI_lAHOCAIt6M4BjgQ6zg9UASA",
+      "iteración XP": {
+        "duration": 14,
+        "iterationId": "1811389b",
+        "startDate": "2026-10-26",
+        "title": "Iteración XP 3"
+      },
+      "módulo": "Producto",
+      "prioridad": "Alta",
+      "status": "Backlog",
+      "story Points": 3,
+      "tipo": "Tarea técnica",
+      "title": "TT-30 | Integrar acciones de carrito y favoritos",
+      "issueNumber": 46,
+      "issueUrl": "https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/issues/46",
+      "issueState": "OPEN",
+      "statusDecision": "preserve",
+      "assigneeDecision": "preserve",
+      "storyPointsDecision": "preserve",
+      "iterationDecision": "preserve",
+      "acceptanceDecision": "No se declara aceptación ni se marca Done. Validación completa y revisión colaborativa pendientes salvo estados históricos ya existentes.",
+      "relatedCommits": [
+        "69fd14f1eb8eba40b7b16b8e2c6f62bd47d11f4c",
+        "9145ddf383297b4fe3b6547faa5ab4fcdf242d9b"
+      ],
+      "evidence": [
+        "test/WHITE_BOX_MATRIX.md",
+        "docs/etapa1b/VALIDATION.json"
+      ],
+      "acceptanceRemaining": "Implementación y pruebas controladas vinculadas para revisión. Sin aceptación integral del backend; conservar estado, responsable, iteración y estimación. Respetar #71/#77/#80."
+    },
+    {
+      "assignees": [
+        "IvanRamirezFrancisco"
+      ],
+      "etapa DevOps": "CODE",
+      "id": "PVTI_lAHOCAIt6M4BjgQ6zg9UBHg",
+      "iteración XP": {
+        "duration": 14,
+        "iterationId": "1811389b",
+        "startDate": "2026-10-26",
+        "title": "Iteración XP 3"
+      },
+      "módulo": "Favoritos",
+      "prioridad": "Media",
+      "status": "Backlog",
+      "story Points": 5,
+      "tipo": "Tarea técnica",
+      "title": "TT-31 | Implementar servicio de favoritos",
+      "issueNumber": 47,
+      "issueUrl": "https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/issues/47",
+      "issueState": "OPEN",
+      "statusDecision": "preserve",
+      "assigneeDecision": "preserve",
+      "storyPointsDecision": "preserve",
+      "iterationDecision": "preserve",
+      "acceptanceDecision": "No se declara aceptación ni se marca Done. Validación completa y revisión colaborativa pendientes salvo estados históricos ya existentes.",
+      "relatedCommits": [
+        "69fd14f1eb8eba40b7b16b8e2c6f62bd47d11f4c",
+        "9145ddf383297b4fe3b6547faa5ab4fcdf242d9b"
+      ],
+      "evidence": [
+        "test/WHITE_BOX_MATRIX.md",
+        "docs/etapa1b/VALIDATION.json"
+      ],
+      "acceptanceRemaining": "Implementación y pruebas controladas vinculadas para revisión. Sin aceptación integral del backend; conservar estado, responsable, iteración y estimación. Respetar #71/#77/#80."
+    },
+    {
+      "assignees": [
+        "IvanRamirezFrancisco"
+      ],
+      "etapa DevOps": "CODE",
+      "id": "PVTI_lAHOCAIt6M4BjgQ6zg9UBOE",
+      "iteración XP": {
+        "duration": 14,
+        "iterationId": "1811389b",
+        "startDate": "2026-10-26",
+        "title": "Iteración XP 3"
+      },
+      "módulo": "Favoritos",
+      "prioridad": "Media",
+      "status": "Backlog",
+      "story Points": 3,
+      "tipo": "Tarea técnica",
+      "title": "TT-32 | Implementar agregar/eliminar favorito",
+      "issueNumber": 48,
+      "issueUrl": "https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/issues/48",
+      "issueState": "OPEN",
+      "statusDecision": "preserve",
+      "assigneeDecision": "preserve",
+      "storyPointsDecision": "preserve",
+      "iterationDecision": "preserve",
+      "acceptanceDecision": "No se declara aceptación ni se marca Done. Validación completa y revisión colaborativa pendientes salvo estados históricos ya existentes.",
+      "relatedCommits": [
+        "69fd14f1eb8eba40b7b16b8e2c6f62bd47d11f4c",
+        "9145ddf383297b4fe3b6547faa5ab4fcdf242d9b"
+      ],
+      "evidence": [
+        "test/WHITE_BOX_MATRIX.md",
+        "docs/etapa1b/VALIDATION.json"
+      ],
+      "acceptanceRemaining": "Implementación y pruebas controladas vinculadas para revisión. Sin aceptación integral del backend; conservar estado, responsable, iteración y estimación. Respetar #71/#77/#80."
+    },
+    {
+      "assignees": [
+        "IvanRamirezFrancisco"
+      ],
+      "etapa DevOps": "CODE",
+      "id": "PVTI_lAHOCAIt6M4BjgQ6zg9UBTA",
+      "iteración XP": {
+        "duration": 14,
+        "iterationId": "1811389b",
+        "startDate": "2026-10-26",
+        "title": "Iteración XP 3"
+      },
+      "módulo": "Favoritos",
+      "prioridad": "Media",
+      "status": "Backlog",
+      "story Points": 3,
+      "tipo": "Tarea técnica",
+      "title": "TT-33 | Sincronizar estado de favoritos",
+      "issueNumber": 49,
+      "issueUrl": "https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/issues/49",
+      "issueState": "OPEN",
+      "statusDecision": "preserve",
+      "assigneeDecision": "preserve",
+      "storyPointsDecision": "preserve",
+      "iterationDecision": "preserve",
+      "acceptanceDecision": "No se declara aceptación ni se marca Done. Validación completa y revisión colaborativa pendientes salvo estados históricos ya existentes.",
+      "relatedCommits": [
+        "69fd14f1eb8eba40b7b16b8e2c6f62bd47d11f4c",
+        "9145ddf383297b4fe3b6547faa5ab4fcdf242d9b"
+      ],
+      "evidence": [
+        "test/WHITE_BOX_MATRIX.md",
+        "docs/etapa1b/VALIDATION.json"
+      ],
+      "acceptanceRemaining": "Implementación y pruebas controladas vinculadas para revisión. Sin aceptación integral del backend; conservar estado, responsable, iteración y estimación. Respetar #71/#77/#80."
+    },
+    {
+      "assignees": [
+        "IvanRamirezFrancisco"
+      ],
+      "etapa DevOps": "CODE",
+      "id": "PVTI_lAHOCAIt6M4BjgQ6zg9UBh0",
+      "iteración XP": {
+        "duration": 14,
+        "iterationId": "41c311ff",
+        "startDate": "2026-11-09",
+        "title": "Iteración XP 4"
+      },
+      "módulo": "Carrito",
+      "prioridad": "Alta",
+      "status": "Backlog",
+      "story Points": 5,
+      "tipo": "Tarea técnica",
+      "title": "TT-34 | Integrar producto con CartService",
+      "issueNumber": 50,
+      "issueUrl": "https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/issues/50",
+      "issueState": "OPEN",
+      "statusDecision": "preserve",
+      "assigneeDecision": "preserve",
+      "storyPointsDecision": "preserve",
+      "iterationDecision": "preserve",
+      "acceptanceDecision": "No se declara aceptación ni se marca Done. Validación completa y revisión colaborativa pendientes salvo estados históricos ya existentes.",
+      "relatedCommits": [
+        "69fd14f1eb8eba40b7b16b8e2c6f62bd47d11f4c",
+        "9145ddf383297b4fe3b6547faa5ab4fcdf242d9b"
+      ],
+      "evidence": [
+        "test/WHITE_BOX_MATRIX.md",
+        "docs/etapa1b/VALIDATION.json"
+      ],
+      "acceptanceRemaining": "Implementación y pruebas controladas vinculadas para revisión. Sin aceptación integral del backend; conservar estado, responsable, iteración y estimación. Respetar #71/#77/#80."
+    },
+    {
+      "assignees": [
+        "IvanRamirezFrancisco"
+      ],
+      "etapa DevOps": "CODE",
+      "id": "PVTI_lAHOCAIt6M4BjgQ6zg9UBmw",
+      "iteración XP": {
+        "duration": 14,
+        "iterationId": "41c311ff",
+        "startDate": "2026-11-09",
+        "title": "Iteración XP 4"
+      },
+      "módulo": "Carrito",
+      "prioridad": "Alta",
+      "status": "Backlog",
+      "story Points": 3,
+      "tipo": "Tarea técnica",
+      "title": "TT-35 | Validar cantidad y disponibilidad",
+      "issueNumber": 51,
+      "issueUrl": "https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/issues/51",
+      "issueState": "OPEN",
+      "statusDecision": "preserve",
+      "assigneeDecision": "preserve",
+      "storyPointsDecision": "preserve",
+      "iterationDecision": "preserve",
+      "acceptanceDecision": "No se declara aceptación ni se marca Done. Validación completa y revisión colaborativa pendientes salvo estados históricos ya existentes.",
+      "relatedCommits": [
+        "69fd14f1eb8eba40b7b16b8e2c6f62bd47d11f4c",
+        "9145ddf383297b4fe3b6547faa5ab4fcdf242d9b"
+      ],
+      "evidence": [
+        "test/WHITE_BOX_MATRIX.md",
+        "docs/etapa1b/VALIDATION.json"
+      ],
+      "acceptanceRemaining": "Implementación y pruebas controladas vinculadas para revisión. Sin aceptación integral del backend; conservar estado, responsable, iteración y estimación. Respetar #71/#77/#80."
+    },
+    {
+      "assignees": [
+        "Tackalay"
+      ],
+      "etapa DevOps": "CODE",
+      "id": "PVTI_lAHOCAIt6M4BjgQ6zg9UBvA",
+      "iteración XP": {
+        "duration": 14,
+        "iterationId": "41c311ff",
+        "startDate": "2026-11-09",
+        "title": "Iteración XP 4"
+      },
+      "módulo": "Carrito",
+      "prioridad": "Media",
+      "status": "Backlog",
+      "story Points": 2,
+      "tipo": "Tarea técnica",
+      "title": "TT-36 | Actualizar indicador del carrito",
+      "issueNumber": 52,
+      "issueUrl": "https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/issues/52",
+      "issueState": "OPEN",
+      "statusDecision": "preserve",
+      "assigneeDecision": "preserve",
+      "storyPointsDecision": "preserve",
+      "iterationDecision": "preserve",
+      "acceptanceDecision": "No se declara aceptación ni se marca Done. Validación completa y revisión colaborativa pendientes salvo estados históricos ya existentes.",
+      "relatedCommits": [
+        "69fd14f1eb8eba40b7b16b8e2c6f62bd47d11f4c",
+        "9145ddf383297b4fe3b6547faa5ab4fcdf242d9b"
+      ],
+      "evidence": [
+        "test/WHITE_BOX_MATRIX.md",
+        "docs/etapa1b/VALIDATION.json"
+      ],
+      "acceptanceRemaining": "Implementación y pruebas controladas vinculadas para revisión. Sin aceptación integral del backend; conservar estado, responsable, iteración y estimación. Respetar #71/#77/#80."
+    },
+    {
+      "assignees": [
+        "Tackalay"
+      ],
+      "etapa DevOps": "CODE",
+      "id": "PVTI_lAHOCAIt6M4BjgQ6zg9UCis",
+      "iteración XP": {
+        "duration": 14,
+        "iterationId": "41c311ff",
+        "startDate": "2026-11-09",
+        "title": "Iteración XP 4"
+      },
+      "módulo": "Carrito",
+      "prioridad": "Alta",
+      "status": "Backlog",
+      "story Points": 3,
+      "tipo": "Tarea técnica",
+      "title": "TT-37 | Implementar vista del carrito",
+      "issueNumber": 53,
+      "issueUrl": "https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/issues/53",
+      "issueState": "OPEN",
+      "statusDecision": "preserve",
+      "assigneeDecision": "preserve",
+      "storyPointsDecision": "preserve",
+      "iterationDecision": "preserve",
+      "acceptanceDecision": "No se declara aceptación ni se marca Done. Validación completa y revisión colaborativa pendientes salvo estados históricos ya existentes.",
+      "relatedCommits": [
+        "69fd14f1eb8eba40b7b16b8e2c6f62bd47d11f4c",
+        "9145ddf383297b4fe3b6547faa5ab4fcdf242d9b"
+      ],
+      "evidence": [
+        "test/WHITE_BOX_MATRIX.md",
+        "docs/etapa1b/VALIDATION.json"
+      ],
+      "acceptanceRemaining": "Implementación y pruebas controladas vinculadas para revisión. Sin aceptación integral del backend; conservar estado, responsable, iteración y estimación. Respetar #71/#77/#80."
+    },
+    {
+      "assignees": [
+        "IvanRamirezFrancisco"
+      ],
+      "etapa DevOps": "CODE",
+      "id": "PVTI_lAHOCAIt6M4BjgQ6zg9UCn4",
+      "iteración XP": {
+        "duration": 14,
+        "iterationId": "41c311ff",
+        "startDate": "2026-11-09",
+        "title": "Iteración XP 4"
+      },
+      "módulo": "Carrito",
+      "prioridad": "Alta",
+      "status": "Backlog",
+      "story Points": 5,
+      "tipo": "Tarea técnica",
+      "title": "TT-38 | Modificar cantidades y eliminar productos",
+      "issueNumber": 45,
+      "issueUrl": "https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/issues/45",
+      "issueState": "OPEN",
+      "statusDecision": "preserve",
+      "assigneeDecision": "preserve",
+      "storyPointsDecision": "preserve",
+      "iterationDecision": "preserve",
+      "acceptanceDecision": "No se declara aceptación ni se marca Done. Validación completa y revisión colaborativa pendientes salvo estados históricos ya existentes.",
+      "relatedCommits": [
+        "69fd14f1eb8eba40b7b16b8e2c6f62bd47d11f4c",
+        "9145ddf383297b4fe3b6547faa5ab4fcdf242d9b"
+      ],
+      "evidence": [
+        "test/WHITE_BOX_MATRIX.md",
+        "docs/etapa1b/VALIDATION.json"
+      ],
+      "acceptanceRemaining": "Implementación y pruebas controladas vinculadas para revisión. Sin aceptación integral del backend; conservar estado, responsable, iteración y estimación. Respetar #71/#77/#80."
+    },
+    {
+      "assignees": [
+        "IvanRamirezFrancisco"
+      ],
+      "etapa DevOps": "CODE",
+      "id": "PVTI_lAHOCAIt6M4BjgQ6zg9UCzo",
+      "iteración XP": {
+        "duration": 14,
+        "iterationId": "41c311ff",
+        "startDate": "2026-11-09",
+        "title": "Iteración XP 4"
+      },
+      "módulo": "Carrito",
+      "prioridad": "Alta",
+      "status": "Backlog",
+      "story Points": 5,
+      "tipo": "Tarea técnica",
+      "title": "TT-39 | Calcular totales y disponibilidad",
+      "issueNumber": 44,
+      "issueUrl": "https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/issues/44",
+      "issueState": "OPEN",
+      "statusDecision": "preserve",
+      "assigneeDecision": "preserve",
+      "storyPointsDecision": "preserve",
+      "iterationDecision": "preserve",
+      "acceptanceDecision": "No se declara aceptación ni se marca Done. Validación completa y revisión colaborativa pendientes salvo estados históricos ya existentes.",
+      "relatedCommits": [
+        "69fd14f1eb8eba40b7b16b8e2c6f62bd47d11f4c",
+        "9145ddf383297b4fe3b6547faa5ab4fcdf242d9b"
+      ],
+      "evidence": [
+        "test/WHITE_BOX_MATRIX.md",
+        "docs/etapa1b/VALIDATION.json"
+      ],
+      "acceptanceRemaining": "Implementación y pruebas controladas vinculadas para revisión. Sin aceptación integral del backend; conservar estado, responsable, iteración y estimación. Respetar #71/#77/#80."
+    },
+    {
+      "assignees": [
+        "IvanRamirezFrancisco"
+      ],
+      "etapa DevOps": "RELEASE",
+      "id": "PVTI_lAHOCAIt6M4BjgQ6zg9dbl8",
+      "iteración XP": {
+        "duration": 14,
+        "iterationId": "f0c5fd5c",
+        "startDate": "2026-09-28",
+        "title": "Iteración XP 1"
+      },
+      "módulo": "Configuración",
+      "prioridad": "Alta",
+      "status": "Por hacer",
+      "story Points": 3,
+      "tipo": "Entrega verificable",
+      "title": "PV-01 | Producto verificable - Iteración XP 1",
+      "issueNumber": 54,
+      "issueUrl": "https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/issues/54",
+      "issueState": "OPEN",
+      "statusDecision": "preserve",
+      "assigneeDecision": "preserve",
+      "storyPointsDecision": "preserve",
+      "iterationDecision": "preserve",
+      "acceptanceDecision": "No se declara aceptación ni se marca Done. Validación completa y revisión colaborativa pendientes salvo estados históricos ya existentes.",
+      "relatedCommits": [
+        "9145ddf383297b4fe3b6547faa5ab4fcdf242d9b",
+        "d03d0a5945fcfe99df5d13abceeb9183a08c9978"
+      ],
+      "evidence": [
+        "docs/etapa1b/README.md",
+        "docs/etapa1b/VALIDATION.json"
+      ],
+      "acceptanceRemaining": "Producto de iteración no aceptado por esta intervención. Las pruebas locales no satisfacen por sí solas todos los criterios de entrega."
+    },
+    {
+      "assignees": [
+        "IvanRamirezFrancisco"
+      ],
+      "etapa DevOps": "RELEASE",
+      "id": "PVTI_lAHOCAIt6M4BjgQ6zg9dbmI",
+      "iteración XP": {
+        "duration": 14,
+        "iterationId": "7b34589b",
+        "startDate": "2026-10-12",
+        "title": "Iteración XP 2"
+      },
+      "módulo": "Catálogo",
+      "prioridad": "Alta",
+      "status": "Backlog",
+      "story Points": 3,
+      "tipo": "Entrega verificable",
+      "title": "PV-02 | Producto verificable - Iteración XP 2",
+      "issueNumber": 55,
+      "issueUrl": "https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/issues/55",
+      "issueState": "OPEN",
+      "statusDecision": "preserve",
+      "assigneeDecision": "preserve",
+      "storyPointsDecision": "preserve",
+      "iterationDecision": "preserve",
+      "acceptanceDecision": "No se declara aceptación ni se marca Done. Validación completa y revisión colaborativa pendientes salvo estados históricos ya existentes.",
+      "relatedCommits": [
+        "9145ddf383297b4fe3b6547faa5ab4fcdf242d9b",
+        "d03d0a5945fcfe99df5d13abceeb9183a08c9978"
+      ],
+      "evidence": [
+        "docs/etapa1b/README.md",
+        "docs/etapa1b/VALIDATION.json"
+      ],
+      "acceptanceRemaining": "Producto de iteración no aceptado por esta intervención. Las pruebas locales no satisfacen por sí solas todos los criterios de entrega."
+    },
+    {
+      "assignees": [
+        "IvanRamirezFrancisco"
+      ],
+      "etapa DevOps": "RELEASE",
+      "id": "PVTI_lAHOCAIt6M4BjgQ6zg9dbmQ",
+      "iteración XP": {
+        "duration": 14,
+        "iterationId": "1811389b",
+        "startDate": "2026-10-26",
+        "title": "Iteración XP 3"
+      },
+      "módulo": "Producto",
+      "prioridad": "Alta",
+      "status": "Backlog",
+      "story Points": 3,
+      "tipo": "Entrega verificable",
+      "title": "PV-03 | Producto verificable - Iteración XP 3",
+      "issueNumber": 56,
+      "issueUrl": "https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/issues/56",
+      "issueState": "OPEN",
+      "statusDecision": "preserve",
+      "assigneeDecision": "preserve",
+      "storyPointsDecision": "preserve",
+      "iterationDecision": "preserve",
+      "acceptanceDecision": "No se declara aceptación ni se marca Done. Validación completa y revisión colaborativa pendientes salvo estados históricos ya existentes.",
+      "relatedCommits": [
+        "9145ddf383297b4fe3b6547faa5ab4fcdf242d9b",
+        "d03d0a5945fcfe99df5d13abceeb9183a08c9978"
+      ],
+      "evidence": [
+        "docs/etapa1b/README.md",
+        "docs/etapa1b/VALIDATION.json"
+      ],
+      "acceptanceRemaining": "Producto de iteración no aceptado por esta intervención. Las pruebas locales no satisfacen por sí solas todos los criterios de entrega."
+    },
+    {
+      "assignees": [
+        "IvanRamirezFrancisco"
+      ],
+      "etapa DevOps": "RELEASE",
+      "id": "PVTI_lAHOCAIt6M4BjgQ6zg9dbmc",
+      "iteración XP": {
+        "duration": 14,
+        "iterationId": "41c311ff",
+        "startDate": "2026-11-09",
+        "title": "Iteración XP 4"
+      },
+      "módulo": "Checkout",
+      "prioridad": "Alta",
+      "status": "Backlog",
+      "story Points": 3,
+      "tipo": "Entrega verificable",
+      "title": "PV-04 | Producto verificable - Iteración XP 4",
+      "issueNumber": 57,
+      "issueUrl": "https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/issues/57",
+      "issueState": "OPEN",
+      "statusDecision": "preserve",
+      "assigneeDecision": "preserve",
+      "storyPointsDecision": "preserve",
+      "iterationDecision": "preserve",
+      "acceptanceDecision": "No se declara aceptación ni se marca Done. Validación completa y revisión colaborativa pendientes salvo estados históricos ya existentes.",
+      "relatedCommits": [
+        "9145ddf383297b4fe3b6547faa5ab4fcdf242d9b",
+        "d03d0a5945fcfe99df5d13abceeb9183a08c9978"
+      ],
+      "evidence": [
+        "docs/etapa1b/README.md",
+        "docs/etapa1b/VALIDATION.json"
+      ],
+      "acceptanceRemaining": "Producto de iteración no aceptado por esta intervención. Las pruebas locales no satisfacen por sí solas todos los criterios de entrega."
+    },
+    {
+      "assignees": [
+        "IvanRamirezFrancisco"
+      ],
+      "etapa DevOps": "RELEASE",
+      "id": "PVTI_lAHOCAIt6M4BjgQ6zg9dbmg",
+      "iteración XP": {
+        "duration": 14,
+        "iterationId": "81145736",
+        "startDate": "2026-11-23",
+        "title": "Iteración XP 5"
+      },
+      "módulo": "Pedidos",
+      "prioridad": "Alta",
+      "status": "Backlog",
+      "story Points": 3,
+      "tipo": "Entrega verificable",
+      "title": "PV-05 | Producto verificable - Iteración XP 5",
+      "issueNumber": 58,
+      "issueUrl": "https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/issues/58",
+      "issueState": "OPEN",
+      "statusDecision": "preserve",
+      "assigneeDecision": "preserve",
+      "storyPointsDecision": "preserve",
+      "iterationDecision": "preserve",
+      "acceptanceDecision": "No se declara aceptación ni se marca Done. Validación completa y revisión colaborativa pendientes salvo estados históricos ya existentes.",
+      "relatedCommits": [
+        "9145ddf383297b4fe3b6547faa5ab4fcdf242d9b",
+        "d03d0a5945fcfe99df5d13abceeb9183a08c9978"
+      ],
+      "evidence": [
+        "docs/etapa1b/README.md",
+        "docs/etapa1b/VALIDATION.json"
+      ],
+      "acceptanceRemaining": "Producto de iteración no aceptado por esta intervención. Las pruebas locales no satisfacen por sí solas todos los criterios de entrega."
+    },
+    {
+      "assignees": [
+        "IvanRamirezFrancisco"
+      ],
+      "etapa DevOps": "SECURITY",
+      "id": "PVTI_lAHOCAIt6M4BjgQ6zg-FTT8",
+      "iteración XP": {
+        "duration": 14,
+        "iterationId": "f0c5fd5c",
+        "startDate": "2026-09-28",
+        "title": "Iteración XP 1"
+      },
+      "módulo": "Seguridad",
+      "prioridad": "Alta",
+      "status": "Por hacer",
+      "story Points": 3,
+      "tipo": "Tarea técnica",
+      "title": "TT-40 | Integrar criterios de aceptación de seguridad en las HU",
+      "issueNumber": 59,
+      "issueUrl": "https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/issues/59",
+      "issueState": "OPEN",
+      "statusDecision": "preserve",
+      "assigneeDecision": "preserve",
+      "storyPointsDecision": "preserve",
+      "iterationDecision": "preserve",
+      "acceptanceDecision": "No se declara aceptación ni se marca Done. Validación completa y revisión colaborativa pendientes salvo estados históricos ya existentes.",
+      "relatedCommits": [],
+      "evidence": [],
+      "acceptanceRemaining": "Sin reevaluación completa de criterios en esta consolidación."
+    },
+    {
+      "assignees": [
+        "Tackalay"
+      ],
+      "etapa DevOps": "PLAN",
+      "id": "PVTI_lAHOCAIt6M4BjgQ6zg-FTUM",
+      "iteración XP": {
+        "duration": 14,
+        "iterationId": "f0c5fd5c",
+        "startDate": "2026-09-28",
+        "title": "Iteración XP 1"
+      },
+      "módulo": "Calidad / Pruebas",
+      "prioridad": "Alta",
+      "status": "Por hacer",
+      "story Points": 5,
+      "tipo": "Tarea técnica",
+      "title": "TT-41 | Completar criterios funcionales HU-06 a HU-14",
+      "issueNumber": 60,
+      "issueUrl": "https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/issues/60",
+      "issueState": "OPEN",
+      "statusDecision": "preserve",
+      "assigneeDecision": "preserve",
+      "storyPointsDecision": "preserve",
+      "iterationDecision": "preserve",
+      "acceptanceDecision": "No se declara aceptación ni se marca Done. Validación completa y revisión colaborativa pendientes salvo estados históricos ya existentes.",
+      "relatedCommits": [],
+      "evidence": [],
+      "acceptanceRemaining": "Sin reevaluación completa de criterios en esta consolidación."
+    },
+    {
+      "assignees": [
+        "Tackalay"
+      ],
+      "etapa DevOps": "TEST",
+      "id": "PVTI_lAHOCAIt6M4BjgQ6zg-FTUQ",
+      "iteración XP": {
+        "duration": 14,
+        "iterationId": "f0c5fd5c",
+        "startDate": "2026-09-28",
+        "title": "Iteración XP 1"
+      },
+      "módulo": "Calidad / Pruebas",
+      "prioridad": "Alta",
+      "status": "Por hacer",
+      "story Points": 3,
+      "tipo": "Tarea técnica",
+      "title": "TT-42 | Definir Plan de Pruebas y matriz de trazabilidad",
+      "issueNumber": 61,
+      "issueUrl": "https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/issues/61",
+      "issueState": "OPEN",
+      "statusDecision": "preserve",
+      "assigneeDecision": "preserve",
+      "storyPointsDecision": "preserve",
+      "iterationDecision": "preserve",
+      "acceptanceDecision": "No se declara aceptación ni se marca Done. Validación completa y revisión colaborativa pendientes salvo estados históricos ya existentes.",
+      "relatedCommits": [
+        "d03d0a5945fcfe99df5d13abceeb9183a08c9978"
+      ],
+      "evidence": [
+        "docs/etapa1b/VALIDATION.json",
+        "test/WHITE_BOX_MATRIX.md"
+      ],
+      "acceptanceRemaining": "Evidencia local disponible; revisar CI del HEAD publicado y criterios completos. No se altera el trabajo asignado a otros integrantes."
+    },
+    {
+      "assignees": [
+        "IvanRamirezFrancisco"
+      ],
+      "etapa DevOps": "BUILD",
+      "id": "PVTI_lAHOCAIt6M4BjgQ6zg-FTUc",
+      "iteración XP": {
+        "duration": 14,
+        "iterationId": "f0c5fd5c",
+        "startDate": "2026-09-28",
+        "title": "Iteración XP 1"
+      },
+      "módulo": "DevOps / CI-CD",
+      "prioridad": "Alta",
+      "status": "Por hacer",
+      "story Points": 5,
+      "tipo": "Tarea técnica",
+      "title": "TT-43 | Implementar pipeline CI de calidad",
+      "issueNumber": 62,
+      "issueUrl": "https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/issues/62",
+      "issueState": "OPEN",
+      "statusDecision": "preserve",
+      "assigneeDecision": "preserve",
+      "storyPointsDecision": "preserve",
+      "iterationDecision": "preserve",
+      "acceptanceDecision": "No se declara aceptación ni se marca Done. Validación completa y revisión colaborativa pendientes salvo estados históricos ya existentes.",
+      "relatedCommits": [],
+      "evidence": [],
+      "acceptanceRemaining": "Sin reevaluación completa de criterios en esta consolidación."
+    },
+    {
+      "assignees": [
+        "Tackalay"
+      ],
+      "etapa DevOps": "TEST",
+      "id": "PVTI_lAHOCAIt6M4BjgQ6zg-FTUk",
+      "iteración XP": {
+        "duration": 14,
+        "iterationId": "7b34589b",
+        "startDate": "2026-10-12",
+        "title": "Iteración XP 2"
+      },
+      "módulo": "Calidad / Pruebas",
+      "prioridad": "Alta",
+      "status": "Backlog",
+      "story Points": 5,
+      "tipo": "Tarea técnica",
+      "title": "TT-44 | Automatizar pruebas unitarias e integración con cobertura",
+      "issueNumber": 63,
+      "issueUrl": "https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/issues/63",
+      "issueState": "OPEN",
+      "statusDecision": "preserve",
+      "assigneeDecision": "preserve",
+      "storyPointsDecision": "preserve",
+      "iterationDecision": "preserve",
+      "acceptanceDecision": "No se declara aceptación ni se marca Done. Validación completa y revisión colaborativa pendientes salvo estados históricos ya existentes.",
+      "relatedCommits": [
+        "d03d0a5945fcfe99df5d13abceeb9183a08c9978"
+      ],
+      "evidence": [
+        "docs/etapa1b/VALIDATION.json",
+        "test/WHITE_BOX_MATRIX.md"
+      ],
+      "acceptanceRemaining": "Evidencia local disponible; revisar CI del HEAD publicado y criterios completos. No se altera el trabajo asignado a otros integrantes."
+    },
+    {
+      "assignees": [
+        "IvanRamirezFrancisco"
+      ],
+      "etapa DevOps": "SECURITY",
+      "id": "PVTI_lAHOCAIt6M4BjgQ6zg-FTUw",
+      "iteración XP": {
+        "duration": 14,
+        "iterationId": "f0c5fd5c",
+        "startDate": "2026-09-28",
+        "title": "Iteración XP 1"
+      },
+      "módulo": "Seguridad",
+      "prioridad": "Alta",
+      "status": "Por hacer",
+      "story Points": 5,
+      "tipo": "Tarea técnica",
+      "title": "TT-45 | Implementar pipeline de análisis de seguridad",
+      "issueNumber": 64,
+      "issueUrl": "https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/issues/64",
+      "issueState": "OPEN",
+      "statusDecision": "preserve",
+      "assigneeDecision": "preserve",
+      "storyPointsDecision": "preserve",
+      "iterationDecision": "preserve",
+      "acceptanceDecision": "No se declara aceptación ni se marca Done. Validación completa y revisión colaborativa pendientes salvo estados históricos ya existentes.",
+      "relatedCommits": [],
+      "evidence": [],
+      "acceptanceRemaining": "Sin reevaluación completa de criterios en esta consolidación."
+    },
+    {
+      "assignees": [
+        "IvanRamirezFrancisco"
+      ],
+      "etapa DevOps": "BUILD",
+      "id": "PVTI_lAHOCAIt6M4BjgQ6zg-FTU4",
+      "iteración XP": {
+        "duration": 14,
+        "iterationId": "7b34589b",
+        "startDate": "2026-10-12",
+        "title": "Iteración XP 2"
+      },
+      "módulo": "DevOps / CI-CD",
+      "prioridad": "Alta",
+      "status": "Backlog",
+      "story Points": 5,
+      "tipo": "Tarea técnica",
+      "title": "TT-46 | Automatizar compilación Android",
+      "issueNumber": 65,
+      "issueUrl": "https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/issues/65",
+      "issueState": "OPEN",
+      "statusDecision": "preserve",
+      "assigneeDecision": "preserve",
+      "storyPointsDecision": "preserve",
+      "iterationDecision": "preserve",
+      "acceptanceDecision": "No se declara aceptación ni se marca Done. Validación completa y revisión colaborativa pendientes salvo estados históricos ya existentes.",
+      "relatedCommits": [
+        "1c5fdbe33eeae392be0d59495469739e4ade454a"
+      ],
+      "evidence": [
+        "docs/etapa1b/VALIDATION.json",
+        "test/WHITE_BOX_MATRIX.md"
+      ],
+      "acceptanceRemaining": "Evidencia local disponible; revisar CI del HEAD publicado y criterios completos. No se altera el trabajo asignado a otros integrantes."
+    },
+    {
+      "assignees": [
+        "IvanRamirezFrancisco"
+      ],
+      "etapa DevOps": "DEPLOY",
+      "id": "PVTI_lAHOCAIt6M4BjgQ6zg-FTVE",
+      "iteración XP": {
+        "duration": 14,
+        "iterationId": "7b34589b",
+        "startDate": "2026-10-12",
+        "title": "Iteración XP 2"
+      },
+      "módulo": "DevOps / CI-CD",
+      "prioridad": "Alta",
+      "status": "Backlog",
+      "story Points": 5,
+      "tipo": "Tarea técnica",
+      "title": "TT-47 | Implementar entrega de APK de staging",
+      "issueNumber": 66,
+      "issueUrl": "https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/issues/66",
+      "issueState": "OPEN",
+      "statusDecision": "preserve",
+      "assigneeDecision": "preserve",
+      "storyPointsDecision": "preserve",
+      "iterationDecision": "preserve",
+      "acceptanceDecision": "No se declara aceptación ni se marca Done. Validación completa y revisión colaborativa pendientes salvo estados históricos ya existentes.",
+      "relatedCommits": [],
+      "evidence": [],
+      "acceptanceRemaining": "Sin reevaluación completa de criterios en esta consolidación."
+    },
+    {
+      "assignees": [
+        "Tackalay"
+      ],
+      "etapa DevOps": "TEST",
+      "id": "PVTI_lAHOCAIt6M4BjgQ6zg-FTVI",
+      "iteración XP": {
+        "duration": 14,
+        "iterationId": "7b34589b",
+        "startDate": "2026-10-12",
+        "title": "Iteración XP 2"
+      },
+      "módulo": "Calidad / Pruebas",
+      "prioridad": "Alta",
+      "status": "Backlog",
+      "story Points": 5,
+      "tipo": "Tarea técnica",
+      "title": "TT-48 | Implementar pruebas funcionales y regresión",
+      "issueNumber": 67,
+      "issueUrl": "https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/issues/67",
+      "issueState": "OPEN",
+      "statusDecision": "preserve",
+      "assigneeDecision": "preserve",
+      "storyPointsDecision": "preserve",
+      "iterationDecision": "preserve",
+      "acceptanceDecision": "No se declara aceptación ni se marca Done. Validación completa y revisión colaborativa pendientes salvo estados históricos ya existentes.",
+      "relatedCommits": [
+        "d03d0a5945fcfe99df5d13abceeb9183a08c9978"
+      ],
+      "evidence": [
+        "docs/etapa1b/VALIDATION.json",
+        "test/WHITE_BOX_MATRIX.md"
+      ],
+      "acceptanceRemaining": "Evidencia local disponible; revisar CI del HEAD publicado y criterios completos. No se altera el trabajo asignado a otros integrantes."
+    },
+    {
+      "assignees": [
+        "Tackalay"
+      ],
+      "etapa DevOps": "SECURITY",
+      "id": "PVTI_lAHOCAIt6M4BjgQ6zg-FTVU",
+      "iteración XP": {
+        "duration": 14,
+        "iterationId": "1811389b",
+        "startDate": "2026-10-26",
+        "title": "Iteración XP 3"
+      },
+      "módulo": "Seguridad",
+      "prioridad": "Alta",
+      "status": "Backlog",
+      "story Points": 5,
+      "tipo": "Tarea técnica",
+      "title": "TT-49 | Ejecutar y documentar pruebas de seguridad",
+      "issueNumber": 68,
+      "issueUrl": "https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/issues/68",
+      "issueState": "OPEN",
+      "statusDecision": "preserve",
+      "assigneeDecision": "preserve",
+      "storyPointsDecision": "preserve",
+      "iterationDecision": "preserve",
+      "acceptanceDecision": "No se declara aceptación ni se marca Done. Validación completa y revisión colaborativa pendientes salvo estados históricos ya existentes.",
+      "relatedCommits": [],
+      "evidence": [],
+      "acceptanceRemaining": "Sin reevaluación completa de criterios en esta consolidación."
+    },
+    {
+      "assignees": [
+        "Tackalay"
+      ],
+      "etapa DevOps": "MONITOR",
+      "id": "PVTI_lAHOCAIt6M4BjgQ6zg-FTZU",
+      "iteración XP": {
+        "duration": 14,
+        "iterationId": "81145736",
+        "startDate": "2026-11-23",
+        "title": "Iteración XP 5"
+      },
+      "módulo": "DevOps / CI-CD",
+      "prioridad": "Media",
+      "status": "Backlog",
+      "story Points": 3,
+      "tipo": "Tarea técnica",
+      "title": "TT-50 | Documentar CI/CD, pruebas y evidencias",
+      "issueNumber": 69,
+      "issueUrl": "https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/issues/69",
+      "issueState": "OPEN",
+      "statusDecision": "preserve",
+      "assigneeDecision": "preserve",
+      "storyPointsDecision": "preserve",
+      "iterationDecision": "preserve",
+      "acceptanceDecision": "No se declara aceptación ni se marca Done. Validación completa y revisión colaborativa pendientes salvo estados históricos ya existentes.",
+      "relatedCommits": [
+        "d03d0a5945fcfe99df5d13abceeb9183a08c9978"
+      ],
+      "evidence": [
+        "docs/etapa1b/VALIDATION.json",
+        "test/WHITE_BOX_MATRIX.md"
+      ],
+      "acceptanceRemaining": "Evidencia local disponible; revisar CI del HEAD publicado y criterios completos. No se altera el trabajo asignado a otros integrantes."
+    }
+  ],
+  "projectVerification": {
+    "observedAtUtc": "2026-11-03T20:22:49.174555+00:00",
+    "itemsBefore": 69,
+    "itemsAfter": 70,
+    "existingItemsChanged": [],
+    "allExistingItemsPreserved": true,
+    "issuesCreated": 0,
+    "issuesClosed": 0,
+    "existingAssignmentsChanged": false,
+    "existingStoryPointsChanged": false,
+    "existingIterationsChanged": false,
+    "existingStatusesChanged": false
+  },
+  "projectPrItem": {
+    "content": {
+      "number": 83,
+      "repository": "IvanRamirezFrancisco/casa-musica-castillo-mobile",
+      "title": "feat(mobile): consolidar integración móvil de octubre y evidencias de Etapa 1B",
+      "type": "PullRequest",
+      "url": "https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/pull/83"
+    },
+    "etapa DevOps": "TEST",
+    "id": "PVTI_lAHOCAIt6M4BjgQ6zhFypjg",
+    "repository": "https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile",
+    "status": "En pruebas",
+    "tipo": "Entrega verificable",
+    "title": "feat(mobile): consolidar integración móvil de octubre y evidencias de Etapa 1B"
+  }
+}

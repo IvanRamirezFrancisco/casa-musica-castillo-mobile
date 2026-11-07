@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, OnInit, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { IonContent, IonIcon } from '@ionic/angular';
 import { addIcons } from 'ionicons';
@@ -19,9 +19,19 @@ export class SplashPage implements OnInit {
     addIcons({ musicalNotesOutline });
   }
 
+  private readonly destroyRef = inject(DestroyRef);
+
+  private timer: ReturnType<typeof setTimeout> | undefined;
+
   ngOnInit() {
-    setTimeout(() => {
-      this.router.navigate(['/login'], { replaceUrl: true });
+    this.timer = setTimeout(() => {
+      this.router.navigate(['/main/home'], { replaceUrl: true });
     }, 2500);
+    this.destroyRef.onDestroy(() => this.stopTimer());
+  }
+  // Ionic can cache a page after navigation; leaving must cancel startup navigation too.
+  ionViewWillLeave(): void { this.stopTimer(); }
+  private stopTimer(): void {
+    if (this.timer !== undefined) { clearTimeout(this.timer); this.timer = undefined; }
   }
 }

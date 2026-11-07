@@ -1,0 +1,7 @@
+import { Component, input, output } from '@angular/core';
+import { CmcIconComponent } from '../icon/cmc-icon.component';
+@Component({selector:'cmc-quantity',standalone:true,imports:[CmcIconComponent],template:`<div class="quantity" role="group" aria-label="Cantidad de productos"><button type="button" aria-label="Disminuir cantidad" [disabled]="disabled() || value()<=1" (click)="change(-1)"><cmc-icon name="remove"/></button><output aria-live="polite" aria-label="Cantidad seleccionada">{{value()}}</output><button type="button" aria-label="Aumentar cantidad" [disabled]="disabled() || value()>=max()" (click)="change(1)"><cmc-icon name="add"/></button></div>`,styles:['.quantity{display:inline-grid;grid-template-columns:48px minmax(48px,auto) 48px;align-items:center;border:1px solid var(--cmc-border-strong);border-radius:var(--cmc-radius-md);background:var(--cmc-surface);}button{display:grid;place-items:center;min-height:48px;border:0;background:transparent;color:var(--cmc-primary);border-radius:var(--cmc-radius-md);}button:disabled{color:var(--cmc-text-disabled);}output{text-align:center;font-weight:700;}']})
+export class CmcQuantityComponent {
+ readonly value=input(1); readonly max=input(100); readonly disabled=input(false); readonly quantityChange=output<number>();
+ change(delta:number):void { const next=this.value()+delta; if(!this.disabled() && Number.isSafeInteger(next) && next>=1 && next<=this.max())this.quantityChange.emit(next); }
+}

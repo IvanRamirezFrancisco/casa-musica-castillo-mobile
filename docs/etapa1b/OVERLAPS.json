@@ -1,0 +1,45 @@
+{
+  "observedOn": "2026-11-03",
+  "note": "Las superposiciones requieren conciliación colaborativa posterior; no impiden publicar este Draft PR. No se han aplicado patches ni modificado ramas o PR ajenos.",
+  "prs": [
+    {
+      "number": 71,
+      "url": "https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/pull/71",
+      "author": "Tackalay",
+      "state": "open",
+      "draft": true,
+      "merged": false,
+      "mergeableAtObservation": false,
+      "base": "develop",
+      "head": "feature/registro-catalogo",
+      "headSha": "890e13e70399755095743ab69d44249071dab85c",
+      "observedOn": "2026-11-03"
+    },
+    {
+      "number": 77,
+      "url": "https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/pull/77",
+      "author": "Tackalay",
+      "state": "open",
+      "draft": false,
+      "merged": false,
+      "mergeableAtObservation": true,
+      "base": "develop",
+      "head": "feature/HU-03-validacion-recuperacion",
+      "headSha": "8a6a7d5dcc8755512579f3a46d312670f6e9aa2d",
+      "observedOn": "2026-11-03"
+    },
+    {
+      "number": 80,
+      "url": "https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/pull/80",
+      "author": "Tackalay",
+      "state": "open",
+      "draft": false,
+      "merged": false,
+      "mergeableAtObservation": false,
+      "base": "develop",
+      "head": "feature/HU-14-validacion-perfil",
+      "headSha": "6b5955d88bd92417a0f5131767b6ea622bfcec2c",
+      "observedOn": "2026-11-03"
+    }
+  ]
+}

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, viewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { IonContent, IonHeader, IonIcon, IonTitle, IonToolbar } from '@ionic/angular';
 import { addIcons } from 'ionicons';
@@ -11,8 +11,10 @@ import {
   notificationsOutline,
 } from 'ionicons/icons';
 
+import { BACKEND_SESSION_ENABLED } from '../../core/config/backend-session.token';
 import { DemoAccountStateService } from '../../core/services/demo-account-state.service';
 import { CmcButtonComponent } from '../../shared/ui/button/cmc-button.component';
+import { ConnectedProfileComponent } from './connected-profile.view';
 
 interface ProfileOption {
   label: string;
@@ -25,10 +27,14 @@ interface ProfileOption {
   templateUrl: './profile.page.html',
   styleUrls: ['./profile.page.scss'],
   standalone: true,
-  imports: [IonContent, IonHeader, IonIcon, IonTitle, IonToolbar, CmcButtonComponent],
+  imports: [IonContent, IonHeader, IonIcon, IonTitle, IonToolbar, CmcButtonComponent, ConnectedProfileComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProfilePage {
+  private readonly connectedView = viewChild(ConnectedProfileComponent);
+  ionViewWillEnter(): void { if (this.connected) this.connectedView()?.reload(); }
+
+  protected readonly connected = inject(BACKEND_SESSION_ENABLED);
   private readonly router = inject(Router);
 
   readonly profile = inject(DemoAccountStateService).profile;

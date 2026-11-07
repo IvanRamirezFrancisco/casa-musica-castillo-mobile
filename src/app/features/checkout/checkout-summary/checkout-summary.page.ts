@@ -5,8 +5,10 @@ import { NavController, IonContent, IonHeader, IonToolbar, IonTitle, IonButtons,
 import { addIcons } from 'ionicons';
 import { arrowBackOutline, chevronForwardOutline, cubeOutline, cardOutline } from 'ionicons/icons';
 
+import { BACKEND_SESSION_ENABLED } from '../../../core/config/backend-session.token';
 import { DemoCheckoutStateService } from '../../../core/services/demo-checkout-state.service';
 import { CmcButtonComponent } from '../../../shared/ui/button/cmc-button.component';
+import { ConnectedCheckoutComponent } from '../connected-checkout.view';
 
 @Component({
   selector: 'app-checkout-summary',
@@ -21,11 +23,13 @@ import { CmcButtonComponent } from '../../../shared/ui/button/cmc-button.compone
     IonButtons,
     IonIcon,
     CurrencyPipe,
-    CmcButtonComponent
+    CmcButtonComponent,
+    ConnectedCheckoutComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CheckoutSummaryPage {
+  protected readonly connected = inject(BACKEND_SESSION_ENABLED);
   checkoutService = inject(DemoCheckoutStateService);
   private router = inject(Router);
   private nav = inject(NavController);
@@ -35,7 +39,7 @@ export class CheckoutSummaryPage {
   }
 
   canProceed(): boolean {
-    return !!this.checkoutService.deliveryMethod() && !!this.checkoutService.paymentMethod();
+    return this.checkoutService.cartItems().length > 0 && !!this.checkoutService.deliveryMethod() && !!this.checkoutService.paymentMethod();
   }
 
   goBack() {

@@ -4,6 +4,7 @@ import { NavController, IonButtons, IonContent, IonHeader, IonIcon, IonTitle, Io
 import { addIcons } from 'ionicons';
 import { arrowBackOutline } from 'ionicons/icons';
 
+import { BACKEND_SESSION_ENABLED } from '../../../core/config/backend-session.token';
 import { DemoAccountStateService } from '../../../core/services/demo-account-state.service';
 import { CmcButtonComponent } from '../../../shared/ui/button/cmc-button.component';
 import { CmcInputComponent } from '../../../shared/ui/input/cmc-input.component';
@@ -27,6 +28,7 @@ import { CmcInputComponent } from '../../../shared/ui/input/cmc-input.component'
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EditProfilePage {
+  protected readonly connected = inject(BACKEND_SESSION_ENABLED);
   private readonly fb = inject(NonNullableFormBuilder);
   private readonly nav = inject(NavController);
   private readonly account = inject(DemoAccountStateService);
@@ -42,6 +44,9 @@ export class EditProfilePage {
   }
 
   save(): void {
+    if (this.connected) {
+      return;
+    }
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       return;

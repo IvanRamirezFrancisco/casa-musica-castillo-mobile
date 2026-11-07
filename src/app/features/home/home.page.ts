@@ -1,8 +1,10 @@
+import { PUBLIC_CATALOG_ENABLED } from '../../core/repositories/public-catalog.repository';
+import { PublicHomeComponent } from '../public-catalog/public-home.view';
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { IonContent, IonHeader, IonToolbar,   IonIcon } from '@ionic/angular';
 import { addIcons } from 'ionicons';
 import { searchOutline, notificationsOutline, musicalNoteOutline, keypadOutline, ellipseOutline, pulseOutline, micOutline, heartOutline, imageOutline, musicalNotesOutline } from 'ionicons/icons';
-import type { CatalogCategory } from '../catalog/catalog-demo.data';
+import type { CatalogCategory } from '../../core/models/catalog.model';
 
 interface Product {
   id: string;
@@ -29,6 +31,7 @@ import { CurrencyPipe } from '@angular/common';
   styleUrls: ['./home.page.scss'],
   standalone: true,
   imports: [
+    PublicHomeComponent,
     IonContent,
     IonHeader,
     IonToolbar,
@@ -41,6 +44,7 @@ import { CurrencyPipe } from '@angular/common';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HomePage {
+  readonly publicCatalogEnabled = inject(PUBLIC_CATALOG_ENABLED);
   private readonly router = inject(Router);
   readonly searchTerm = signal('');
 
