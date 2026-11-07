@@ -11,7 +11,7 @@ ion-tab-bar {
   border-radius: var(--cmc-radius-xl);
   --background: var(--cmc-surface);
   --border: none;
-  box-shadow: var(--cmc-shadow-medium), inset 0 0 0 1px var(--cmc-border);
+  box-shadow: var(--cmc-shadow-medium), inset 0 0 0 1px var(--cmc-border-strong);
   /* Ionic forces content-box in its shadow host. Keep outer geometry exact:
    * no layout border/padding; inset shadow and button margins draw the capsule. */
   padding: 0;
@@ -58,16 +58,18 @@ ion-tab-bar {
     /* TT-36: indicador del carrito */
     .cart-sr-only { @include mixins.cmc-visually-hidden; }
     .cart-badge {
-      --background: var(--cmc-accent-gold);
-      --color: var(--cmc-primary-dark);
-      font-size: 10px;
+      --background: var(--cmc-promo-mamey);
+      --color: var(--cmc-text-primary);
+      border: 1px solid var(--cmc-primary-dark);
+      font-size: .6875rem;
+      font-weight: 700;
       z-index: 3;
     }
 
     /* Activo: Cápsula burdeos */
     &.tab-selected {
       background: var(--cmc-primary);
-      box-shadow: var(--cmc-shadow-brand);
+      box-shadow: var(--cmc-shadow-brand), inset 0 -3px var(--cmc-promo-mamey);
 
       ion-icon, ion-label {
         color: var(--cmc-text-on-primary);

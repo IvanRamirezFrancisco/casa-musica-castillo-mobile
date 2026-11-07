@@ -93,7 +93,8 @@
       @if (productosFiltrados().length > 0) {
         <div class="products-grid">
           @for (producto of productosFiltrados(); track producto.id) {
-            <article class="product-card" [attr.aria-label]="producto.nombre">
+            <article class="product-card">
+              <a class="detail-btn" [routerLink]="['/products', producto.id]" [attr.aria-label]="'Ver información de ' + producto.nombre">
               <div class="product-image">
                 <ion-icon [name]="producto.icono" class="placeholder-icon" aria-hidden="true"></ion-icon>
                 <span class="demo-tag">Demo</span>
@@ -106,15 +107,8 @@
                   {{ producto.precio | currency:'MXN':'symbol':'1.0-0' }} MXN
                 </p>
 
-                <a
-                  class="detail-btn"
-                  [routerLink]="['/products', producto.id]"
-                  [attr.aria-label]="'Ver información de ' + producto.nombre"
-                >
-                  <span>Ver información</span>
-                  <ion-icon name="chevron-forward-outline" aria-hidden="true"></ion-icon>
-                </a>
               </div>
+              </a>
             </article>
           }
         </div>

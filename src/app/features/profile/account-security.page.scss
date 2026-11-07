@@ -1,0 +1,44 @@
+@use '../../shared/ui/styles/security' as *;
+
+@include feedback;
+
+.cmc-page-container.security-page {
+  max-inline-size: 64rem;
+  margin-inline: auto;
+  padding-block-end: calc(var(--cmc-space-6) + var(--cmc-safe-area-bottom));
+}
+
+.security-intro, .security-card, .security-panel { display: grid; gap: var(--cmc-space-3); min-width: 0; }
+.security-intro { margin-block-end: var(--cmc-space-4); }
+.security-intro p, .security-card p { margin: 0; color: var(--cmc-text-secondary); line-height: 1.5; }
+.security-grid { display: grid; gap: var(--cmc-space-4); align-items: start; }
+.security-grid > .security-card {
+  margin: 0;
+  padding: clamp(0.875rem, 3vw, 1.25rem);
+  background: var(--cmc-surface);
+  border: 1px solid var(--cmc-border);
+  border-radius: var(--cmc-radius-lg);
+  box-shadow: var(--cmc-shadow-subtle);
+  overflow-wrap: anywhere;
+}
+.security-card h2 { font-size: 1.125rem; margin: 0; }
+.security-card .security-state {
+  justify-self: start;
+  padding: 0.25rem 0.625rem;
+  border-radius: var(--cmc-radius-full);
+  background: var(--cmc-surface-alt);
+  font-size: .875rem;
+  font-weight: 600;
+}
+.security-card .security-state.is-active { background: var(--cmc-success-surface); color: var(--cmc-success-text); }
+.security-panel { padding: var(--cmc-space-3); border-radius: var(--cmc-radius-md); background: var(--cmc-surface-alt); }
+.security-panel img { inline-size: min(15rem, 100%); }
+.security-panel input { min-height: 48px; inline-size: 100%; padding: .5rem; font-size: 1rem; border: 1px solid var(--cmc-primary); border-radius: var(--cmc-radius-md); }
+.security-actions { display: flex; flex-wrap: wrap; gap: var(--cmc-space-2); }
+.security-feedback { margin-block-end: var(--cmc-space-4); }
+.security-codes { padding-inline-start: 1.25rem; margin: 0; user-select: text; }
+
+@media (min-width: 48rem) {
+  .security-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .security-intro { grid-template-columns: auto 1fr; align-items: center; }
+}

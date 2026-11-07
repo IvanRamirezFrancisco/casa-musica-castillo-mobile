@@ -9,10 +9,10 @@
     </section>
     <section class="product-summary"><p class="eyebrow">{{product.category}}</p><p class="muted">{{product.brand}}</p><h1>{{product.name}}</h1>
       @if(product.reviewCount && product.averageRating!==null){<p class="rating"><cmc-icon name="star"/>{{product.averageRating}} / 5 <span>· {{product.reviewCount}} opiniones</span></p>}
-      <div class="price-row"><strong>{{product.price | cmcMoney}}</strong>@if(product.originalPrice!==null){<del>{{product.originalPrice | cmcMoney}}</del>}</div><p class="muted">Precio en MXN</p>
-      <p class="availability" [class.available]="product.availability==='available'" role="status"><cmc-icon [name]="product.availability==='available'?'available':'music'"/>{{product.availability==='available'?'Disponible · '+product.stock+' unidades':product.availability==='unavailable'?'Agotado':'Disponibilidad por confirmar'}}</p><p class="sku">SKU: {{product.sku}}</p>
+      <div class="product-price-panel"><div class="price-row"><strong>{{product.price | cmcMoney}}</strong>@if(product.originalPrice!==null){<del>{{product.originalPrice | cmcMoney}}</del><span class="offer-label">Oferta</span>}</div><p class="muted">Precio en MXN</p>
+      <p class="availability" [class.available]="product.availability==='available'" role="status"><cmc-icon [name]="product.availability==='available'?'available':'music'"/>{{product.availability==='available'?'Disponible · '+product.stock+' unidades':product.availability==='unavailable'?'Agotado':'Disponibilidad por confirmar'}}</p></div><p class="sku">SKU: {{product.sku}}</p>
       @if(connected){<div class="purchase-panel"><div class="quantity-row"><label>Cantidad</label><cmc-quantity [value]="quantity()" [max]="maximum()" [disabled]="preparing()||cart.mutating()||product.availability!=='available'" (quantityChange)="quantity.set($event)"/></div>
-        <cmc-button fullWidth [disabled]="preparing()||product.availability!=='available'" [loading]="preparing()||cart.mutating()" loadingLabel="Verificando disponibilidad" (click)="addToCart(product.id)"><cmc-icon name="cart"/> {{product.availability==='unavailable'?'Agotado':'Agregar al carrito'}}</cmc-button>
+        <cmc-button variant="commercial" fullWidth [disabled]="preparing()||product.availability!=='available'" [loading]="preparing()||cart.mutating()" loadingLabel="Verificando disponibilidad" (click)="addToCart(product.id)"><cmc-icon name="cart"/> {{product.availability==='unavailable'?'Agotado':'Agregar al carrito'}}</cmc-button>
         <button class="store-button favorite-button" [disabled]="savingFavorite()" [attr.aria-pressed]="favoriteId()!==null" (click)="addFavorite(product.id)"><cmc-icon [name]="favoriteId()!==null?'saved':'heart'"/>{{savingFavorite()?'Consultando favoritos…':favoriteId()!==null?'Quitar de favoritos':'Guardar en favoritos'}}</button>
         @if(favoriteNotice()){<p role="status" class="action-notice">{{favoriteNotice()}}</p>}@if(actionNotice()){<p role="status" class="action-notice">{{actionNotice()}}</p>}
         @if(added()){<p role="status" class="action-notice">Producto agregado a tu carrito.</p><a class="store-button" routerLink="/main/cart">Ver carrito <cmc-icon name="arrow"/></a>}
@@ -21,7 +21,13 @@
       </div>}@else{<p class="muted" role="note">Agregar productos reales al carrito requiere la próxima etapa de integración. Este producto no se enviará al carrito DEMO.</p>}
     </section></div>
     <section class="surface"><h2>Descripción</h2><div class="description" [class.expanded]="descriptionExpanded()||product.description.length<=400"><cmc-product-description [description]="product.description"/></div>@if(product.description.length>400){<button class="store-button" [attr.aria-expanded]="descriptionExpanded()" (click)="descriptionExpanded.update(invert)">{{descriptionExpanded()?'Leer menos':'Leer descripción completa'}} <cmc-icon name="down"/></button>}</section>
-    <section class="surface"><h2>Especificaciones</h2><dl class="spec-list"><dt>Marca</dt><dd>{{product.brand}}</dd>@if(product.model){<dt>Modelo</dt><dd>{{product.model}}</dd>}@if(product.dimensions){<dt>Dimensiones</dt><dd>{{product.dimensions}}</dd>}@if(product.weight!==null && product.weight!==undefined){<dt>Peso registrado</dt><dd>{{weightFormat.format(product.weight)}}</dd>}@for(attribute of product.attributes;track $index){<dt>{{attribute.name}}</dt><dd>{{attribute.value}}</dd>}</dl></section>
+    <section class="surface"><h2>Especificaciones</h2><dl class="spec-list">
+      <div><dt>Marca</dt><dd>{{product.brand}}</dd></div>
+      @if(product.model){<div><dt>Modelo</dt><dd>{{product.model}}</dd></div>}
+      @if(product.dimensions){<div><dt>Dimensiones</dt><dd>{{product.dimensions}}</dd></div>}
+      @if(product.weight!==null && product.weight!==undefined){<div><dt>Peso registrado</dt><dd>{{weightFormat.format(product.weight)}}</dd></div>}
+      @for(attribute of product.attributes;track $index){<div><dt>{{attribute.name}}</dt><dd>{{attribute.value}}</dd></div>}
+    </dl></section>
     <section class="surface"><cmc-product-reviews [productId]="product.id"/></section>
   }}
 }
