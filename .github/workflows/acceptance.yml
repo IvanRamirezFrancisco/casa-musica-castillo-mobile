@@ -16,7 +16,7 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
       - name: Probar control de integridad de evidencia Maestro
-        run: python -B -m unittest discover -s test -p test_maestro_evidence.py
+        run: python -B -m unittest discover -s test -p 'test_*maestro*.py'
       - uses: actions/download-artifact@v7
         with:
           name: casa-musica-castillo-demo-debug-apk
@@ -50,7 +50,7 @@ jobs:
             adb install -r apk/app-debug.apk
             mkdir -p reports/maestro
             maestro --version
-            maestro test --format JUNIT --output reports/maestro/results.xml --test-output-dir reports/maestro --debug-output reports/maestro/debug .maestro
+            python -B scripts/run-maestro-demo.py
       - name: Exigir todos los flujos registrados en JUnit
         id: maestro-evidence
         run: python -B scripts/verify-maestro-results.py
