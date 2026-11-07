@@ -179,7 +179,7 @@ describe('autenticación conectada (integración)', () => {
     expect(page.componentInstance['confirmError']()).toContain('no coinciden');
     page.componentInstance['form'].controls.password.setValue('x');
     page.componentInstance['form'].controls.password.markAsTouched();
-    expect(page.componentInstance['fieldError']('password')).toBe('Usa al menos 8 caracteres.');
+    expect(page.componentInstance['fieldError']('password')).toBe('Faltan requisitos de contraseña.');
     page.componentInstance['form'].controls.password.setValue('Cl4ve-Segura');
     page.componentInstance['form'].controls.confirmPassword.setValue('Cl4ve-Segura');
 
@@ -215,24 +215,29 @@ describe('autenticación conectada (integración)', () => {
     };
 
     expect(root.querySelector('.password-guide')).toBeNull();
+    expect(root.querySelector('input[autocomplete=username]')?.getAttribute('placeholder')).toBe('Ej. usuario.123');
     password.dispatchEvent(new FocusEvent('focusin', { bubbles: true }));
     enter(password, 'a');
     expect(password.closest('[data-feedback]')?.getAttribute('data-feedback')).toBe('negative');
     expect(root.querySelector('progress')?.value).toBe(1);
+    expect(root.querySelector('progress')?.getAttribute('aria-valuetext')).toBe('Débil');
+    expect(root.querySelectorAll('.requirement-circle')).toHaveLength(2);
 
     enter(password, 'abcdefgh');
     expect(password.closest('[data-feedback]')?.getAttribute('data-feedback')).toBe('warning');
     expect(root.querySelector('progress')?.value).toBe(2);
+    expect(root.querySelector('progress')?.getAttribute('aria-valuetext')).toBe('Media');
+    expect(root.querySelectorAll('.requirement-met')).toHaveLength(1);
     password.dispatchEvent(new FocusEvent('blur'));
     password.dispatchEvent(new FocusEvent('focusout', { bubbles: true }));
     fixture.detectChanges();
     expect(root.querySelector('.password-guide')).toBeNull();
-    expect(root.textContent).toContain('Falta un requisito de contraseña');
+    expect(root.textContent).toContain('Estás a un paso de cumplir los requisitos');
 
     enter(password, 'Cl4ve-Segura');
     expect(password.closest('[data-feedback]')?.getAttribute('data-feedback')).toBe('positive');
-    expect(root.textContent).toContain('Cumple los requisitos locales');
-    expect(root.textContent).toContain('Confirmación pendiente');
+    expect(root.textContent).toContain('Contraseña fuerte');
+    expect(root.textContent).not.toContain('Confirmación pendiente');
     expect(root.textContent).not.toContain('Las contraseñas no coinciden');
 
     enter(confirmation, 'otra');
@@ -244,6 +249,19 @@ describe('autenticación conectada (integración)', () => {
     expect(confirmation.getAttribute('aria-invalid')).toBeNull();
     expect(confirmation.closest('[data-feedback]')?.getAttribute('data-feedback')).toBe('positive');
     expect(root.textContent).toContain('Las contraseñas coinciden');
+
+    password.dispatchEvent(new FocusEvent('focusin', { bubbles: true }));
+    enter(password, 'Cl4ve-Segura');
+    expect(root.querySelector('progress')?.getAttribute('aria-valuetext')).toBe('Fuerte');
+    expect(root.querySelectorAll('.requirement-met')).toHaveLength(2);
+    enter(password, 'Cl4ve-' + 'á'.repeat(40));
+    expect(root.textContent).toContain('Usa una contraseña más corta.');
+    expect(root.textContent).not.toContain('bytes');
+    password.dispatchEvent(new FocusEvent('blur'));
+    password.dispatchEvent(new FocusEvent('focusout', { bubbles: true }));
+    fixture.detectChanges();
+    expect(root.querySelector('.password-guide')).toBeNull();
+    expect(root.textContent).toContain('Usa una contraseña más corta.');
   });
 
   it('deja el teléfono vacío válido, detecta un número incompleto y confirma diez dígitos con separadores', () => {
@@ -268,6 +286,24 @@ describe('autenticación conectada (integración)', () => {
     expect(phone.getAttribute('aria-invalid')).toBeNull();
     expect(phone.closest('[data-feedback]')?.getAttribute('data-feedback')).toBe('positive');
     expect(root.textContent).toContain('Formato de teléfono válido');
+
+    phone.setSelectionRange(3, 3);
+    const extraDigit = new InputEvent('beforeinput', { inputType: 'insertText', data: '9', cancelable: true });
+    phone.dispatchEvent(extraDigit);
+    expect(extraDigit.defaultPrevented).toBe(true);
+    phone.setSelectionRange(3, 4);
+    const replaceDigit = new InputEvent('beforeinput', { inputType: 'insertText', data: '9', cancelable: true });
+    phone.dispatchEvent(replaceDigit);
+    expect(replaceDigit.defaultPrevented).toBe(false);
+
+    phone.value = '55-1234 5678-90';
+    phone.setSelectionRange(phone.value.length, phone.value.length);
+    phone.dispatchEvent(new InputEvent('input', { inputType: 'insertFromPaste' }));
+    fixture.detectChanges();
+    expect(phone.value).toBe('55-1234 5678');
+    expect(fixture.componentInstance['form'].controls.phone.value).toBe(phone.value);
+    expect(phone.selectionStart).toBe(phone.value.length);
+    expect(phone.getAttribute('aria-invalid')).toBeNull();
 
     phone.value = '';
     phone.dispatchEvent(new Event('input'));

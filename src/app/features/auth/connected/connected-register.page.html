@@ -72,8 +72,9 @@
             label="Teléfono (opcional)"
             type="tel"
             inputMode="tel"
+            [digitLimit]="phoneDigits"
             placeholder="Ej. 55 1234 5678"
-            hint="Usa 10 dígitos. Puedes separarlos con espacios o guiones."
+            hint="10 dígitos. Puedes usar espacios o guiones."
             [error]="fieldError('phone')"
             [feedback]="phoneConfirmed() ? 'positive' : null"
           ></cmc-input>
@@ -88,32 +89,34 @@
             autocomplete="new-password"
             label="Contraseña"
             type="password"
-            hint="Evita secuencias fáciles de adivinar como 123 o abc."
             [error]="passwordFocused() ? '' : fieldError('password')"
             [feedback]="passwordFocused() || form.controls.password.touched ? checks.feedback : null"
            required></cmc-input>
 
           @if (passwordFocused()) {
             <section class="password-guide" aria-labelledby="password-guide-title">
-              <h3 id="password-guide-title">Requisitos de contraseña</h3>
-              <progress max="3" [value]="checks.completed"
-                [attr.data-feedback]="checks.feedback" aria-label="Requisitos locales de contraseña cumplidos"></progress>
-              <ul>
-                <li [class.requirement-met]="checks.length">{{checks.length ? 'Cumplido' : 'Pendiente'}} · Al menos {{limits.passwordMin}} caracteres</li>
-                <li [class.requirement-met]="checks.variety">{{checks.variety ? 'Cumplido' : 'Pendiente'}} · Tres tipos entre minúsculas, mayúsculas, números y símbolos</li>
-                <li [class.requirement-met]="checks.bytes">{{checks.bytes ? 'Cumplido' : 'Pendiente'}} · Máximo {{limits.passwordMaxBytes}} bytes</li>
+              <h3 id="password-guide-title">Crea tu contraseña</h3>
+              <div class="password-strength" [attr.data-feedback]="checks.feedback">
+                <span>Fortaleza</span><strong>{{checks.strength}}</strong>
+                <progress max="3" [value]="checks.level" aria-label="Fortaleza según los requisitos del formulario"
+                  [attr.aria-valuetext]="checks.strength"></progress>
+              </div>
+              <ul class="password-requirements">
+                @for (requirement of [{met: checks.length, label: 'Al menos ' + limits.passwordMin + ' caracteres'},
+                  {met: checks.variety, label: 'Combina 3 tipos: minúsculas, mayúsculas, números o símbolos'}]; track requirement.label) {
+                  <li [class.requirement-met]="requirement.met">
+                    @if (requirement.met) { <cmc-icon name="available"/> }
+                    @else { <span class="requirement-circle" aria-hidden="true"></span> }
+                    <span><span class="requirement-status">{{requirement.met ? 'Cumplido: ' : 'Por completar: '}}</span>{{requirement.label}}</span>
+                  </li>
+                }
               </ul>
-              <p>El servidor realiza comprobaciones adicionales al crear tu cuenta.</p>
+              @if (checks.tooLong) { <p class="password-length-error" role="status">Usa una contraseña más corta.</p> }
             </section>
           }
-          <p class="field-feedback" role="status" [attr.data-feedback]="checks.feedback">
-            @if (!passwordFocused() && form.controls.password.touched && form.controls.password.value) {
-              @switch (checks.feedback) {
-                @case ('negative') { Faltan requisitos de contraseña. }
-                @case ('warning') { Falta un requisito de contraseña. }
-                @case ('positive') { Cumple los requisitos locales de contraseña. }
-              }
-            }
+          <p class="field-feedback field-success" role="status">
+            {{ !passwordFocused() && form.controls.password.touched && checks.feedback === 'positive'
+              ? 'Contraseña fuerte.' : '' }}
           </p>
 
           <cmc-input

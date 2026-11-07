@@ -99,3 +99,7 @@
     color: var(--cmc-error);
   }
 }
+
+.cmc-input__field[data-feedback='warning'] ~ .cmc-input__message--error {
+  color: var(--cmc-warning-text);
+}

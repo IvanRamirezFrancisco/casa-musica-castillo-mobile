@@ -23,21 +23,21 @@ describe('Security enrollment lifecycle with synthetic data',()=>{
    page.methods.set({ EMAIL: false, GOOGLE_AUTHENTICATOR: false, BACKUP_CODES: false });
    fixture.detectChanges();
    expect(summary().textContent).toContain('Configuración básica');
-   expect(summary().textContent).toContain('Sesión activa');
+   expect(summary().querySelectorAll('.security-checks li')).toHaveLength(3);
    expect(summary().textContent).toContain('Configura Google Authenticator');
-   expect(summary().querySelectorAll('.security-indicator .is-active')).toHaveLength(0);
+   expect(summary().querySelectorAll('.security-checks .is-active')).toHaveLength(0);
 
    page.methods.set(methods);
    fixture.detectChanges();
    expect(summary().textContent).toContain('Segundo factor activo');
    expect(summary().textContent).toContain('Genera códigos de recuperación');
-   expect(summary().querySelectorAll('.security-indicator .is-active')).toHaveLength(1);
+   expect(summary().querySelectorAll('.security-checks .is-active')).toHaveLength(1);
 
    page.methods.set({ ...methods, EMAIL: true, BACKUP_CODES: true });
    fixture.detectChanges();
    expect(summary().textContent).toContain('Segundo factor y recuperación');
    expect(summary().textContent).toContain('Guarda tus códigos');
-   expect(summary().querySelectorAll('.security-indicator .is-active')).toHaveLength(3);
+   expect(summary().querySelectorAll('.security-checks .is-active')).toHaveLength(3);
    expect(summary().textContent).not.toContain('%');
    fixture.destroy();
  });
