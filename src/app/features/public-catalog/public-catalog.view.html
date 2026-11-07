@@ -14,7 +14,7 @@
     }}
   }
 </main></ion-content>
-<ion-modal [isOpen]="filtersOpen()" [initialBreakpoint]="0.85" [breakpoints]="[0,0.85,1]" (didDismiss)="filtersOpen.set(false)" aria-label="Filtros y ordenamiento"><ng-template>
+<ion-modal class="catalog-filter-modal" [isOpen]="filtersOpen()" (didDismiss)="filtersOpen.set(false)" aria-label="Filtros y ordenamiento"><ng-template>
   <ion-header><ion-toolbar><ion-title>Filtros y orden</ion-title><ion-buttons slot="end"><button class="sheet-close" aria-label="Cerrar filtros" (click)="filtersOpen.set(false)"><cmc-icon name="close"/></button></ion-buttons></ion-toolbar></ion-header>
   <ion-content><div class="filter-sheet"><fieldset><legend>Categoría</legend><label><input type="radio" name="category" [checked]="!draftCategory()" (change)="draftCategory.set('')"/>Todas las categorías</label>@for(cat of service.categories().data??[];track cat.id){<label><input type="radio" name="category" [checked]="draftCategory()===cat.id.toString()" (change)="draftCategory.set(cat.id.toString())"/>{{cat.name}}</label>}</fieldset>
     <fieldset [disabled]="!!keyword().trim()"><legend>Ordenar por</legend>@for(option of sortOptions;track option.id){<label><input type="radio" name="sort" [checked]="draftSort()===option.id" (change)="draftSort.set(option.id)"/>{{option.label}}</label>}</fieldset>

@@ -154,3 +154,16 @@ Clonar el repositorio:
 
 git clone https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile.git
 
+
+
+## Conexión web y Android
+
+Consulta la [guía de conexión REST](docs/api-connection.md) para comprobar el origen y el destino de cada variante. Desarrollo web usa el backend local en localhost:8080. Para probar la configuración de producción en navegador desde el origen previsto:
+
+```bash
+npm start -- --configuration production --port 4200
+```
+
+Abre http://localhost:4200. El puerto es parte del origen CORS. Si está ocupado, detén tu servidor anterior o identifica el proceso con Get-NetTCPConnection -LocalPort 4200 antes de decidir cómo liberarlo. Aceptar otro puerto cambia el origen y el backend debe autorizarlo explícitamente.
+
+En el emulador Android, 10.0.2.2 apunta al PC anfitrión. En un teléfono físico se necesita el build device y un destino de pruebas autorizado, como el túnel ADB descrito en la guía de TT-05. La variante de producción apunta a Render HTTPS.
