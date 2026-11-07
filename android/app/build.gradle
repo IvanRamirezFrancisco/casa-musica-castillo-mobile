@@ -73,7 +73,7 @@ def verifyReleaseWebAssets = tasks.register('verifyReleaseWebAssets') {
         if (!marker.isFile()) throw new GradleException('Build assets with npm run android:release before packaging Release.')
         def build = new groovy.json.JsonSlurper().parse(marker)
         def capacitor = new groovy.json.JsonSlurper().parse(file('src/main/assets/capacitor.config.json'))
-        if (capacitor.loggingBehavior != 'debug' || capacitor.android?.allowMixedContent != false ||
+        if (capacitor.loggingBehavior != 'none' || capacitor.android?.allowMixedContent != false ||
             capacitor.android?.webContentsDebuggingEnabled == true || capacitor.server?.url || capacitor.server?.cleartext == true) {
             throw new GradleException('Capacitor Release configuration must disable debugging, mixed content, live reload and production logging.')
         }

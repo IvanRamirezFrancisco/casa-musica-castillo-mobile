@@ -1,0 +1,33 @@
+# New local resources only; never mount an existing PostgreSQL directory.
+name: cmc-tt05-isolated
+services:
+  postgres:
+    image: postgres:16.15-alpine3.24
+    environment:
+      POSTGRES_USER: tt05_bootstrap
+      POSTGRES_DB: postgres
+      POSTGRES_PASSWORD: ${TT05_BOOTSTRAP_PASSWORD:?Generate private local configuration first}
+    ports:
+      - '127.0.0.1:55439:5432'
+    volumes:
+      - tt05_database:/var/lib/postgresql/data
+      - ./init-auth-db.sh:/docker-entrypoint-initdb.d/10-auth-db.sh:ro
+    networks: [isolated]
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U tt05_bootstrap -d postgres']
+      interval: 5s
+      timeout: 5s
+      retries: 12
+  mailpit:
+    image: axllent/mailpit:v1.33.0
+    ports:
+      - '127.0.0.1:11025:1025'
+      - '127.0.0.1:18025:8025'
+    environment:
+      MP_MAX_MESSAGES: '100'
+    networks: [isolated]
+networks:
+  isolated:
+    internal: true
+volumes:
+  tt05_database:

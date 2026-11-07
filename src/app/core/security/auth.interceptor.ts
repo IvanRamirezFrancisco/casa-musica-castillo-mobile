@@ -1,6 +1,6 @@
 import { HttpErrorResponse, HttpInterceptorFn } from '@angular/common/http';
 import { inject } from '@angular/core';
-import { catchError, throwError } from 'rxjs';
+import { catchError, map, throwError } from 'rxjs';
 import { API_BASE_URL } from '../api/api-base-url.token';
 import { REQUIRES_AUTH } from '../api/api-client.service';
 import { AuthService } from '../services/auth.service';
@@ -22,9 +22,14 @@ export const authInterceptor: HttpInterceptorFn = (request, next) => {
     auth.handleUnauthorized();
     return throwError(() => new HttpErrorResponse({ status: 401, url: request.url }));
   }
+  const version = auth.sessionVersion;
   return next(request.clone({ setHeaders: { Authorization: `Bearer ${token}` } })).pipe(
+    map((event) => {
+      if (auth.sessionVersion !== version) throw new HttpErrorResponse({ status: 401, url: request.url });
+      return event;
+    }),
     catchError((error: unknown) => {
-      if (error instanceof HttpErrorResponse && error.status === 401) auth.handleUnauthorized();
+      if (error instanceof HttpErrorResponse && error.status === 401 && auth.sessionVersion === version) auth.handleUnauthorized();
       return throwError(() => error);
     }),
   );

@@ -105,3 +105,6 @@ keystore.properties
 *.sqlite
 *.sqlite3
 android/.kotlin/
+
+# Local Python helpers for isolated integration
+/integration/tt05/__pycache__/

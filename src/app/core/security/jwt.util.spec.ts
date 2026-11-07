@@ -1,5 +1,5 @@
 import { fakeJwt } from '../api/auth.testing';
-import { looksLikeJwt, readJwtExpiry } from './jwt.util';
+import { looksLikeJwt, readJwtExpiry, readJwtSubject } from './jwt.util';
 
 describe('jwt.util', () => {
   it('lee exp en milisegundos y tolera payload Unicode', () => {
@@ -22,4 +22,10 @@ describe('jwt.util', () => {
     expect(looksLikeJwt(123)).toBe(false);
     expect(looksLikeJwt(`${'a'.repeat(9000)}.bbbb.cccc`)).toBe(false);
   });
+  it('lee un sub numérico de Spring y rechaza payloads o identidades inválidas', () => {
+    expect(readJwtSubject(fakeJwt())).toBe('7');
+    for (const token of ['invalid', 'aaaa.bm90LWpzb24.cccc', fakeJwt(null, { sub: null }),
+      `aaaa.${btoa('null').replace(/=+$/, '')}.cccc`]) expect(readJwtSubject(token)).toBeNull();
+  });
+
 });

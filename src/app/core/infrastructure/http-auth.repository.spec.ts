@@ -108,10 +108,20 @@ describe('HttpAuthRepository', () => {
     confirm.flush({ success: true });
   });
 
-  it('logout marca la petición como autenticada', () => {
-    repo.logout().subscribe();
+  it('logout revoca la instantánea del Bearer, sin cookies', () => {
+    repo.logout(fakeJwt()).subscribe();
     const req = http.expectOne(`${base}/api/auth/logout`);
     expect(req.request.method).toBe('POST');
+    expect(req.request.headers.get('Authorization')).toBe(`Bearer ${fakeJwt()}`);
+    expect(req.request.withCredentials).toBe(false);
     req.flush({ message: 'Sesión cerrada exitosamente' });
   });
+  it('restauración consulta /me con Bearer, sin cookies y valida UserResponse', () => {
+    const next = vi.fn(); const token = fakeJwt(); repo.restoreUser(token).subscribe(next);
+    const req = http.expectOne(`${base}/api/auth/me`);
+    expect(req.request.method).toBe('GET'); expect(req.request.headers.get('Authorization')).toBe(`Bearer ${token}`);
+    expect(req.request.withCredentials).toBe(false);
+    req.flush(userDto()); expect(next.mock.calls[0][0].id).toBe(7);
+  });
+
 });

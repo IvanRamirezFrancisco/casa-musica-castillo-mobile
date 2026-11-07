@@ -1,5 +1,7 @@
 import { Injectable, inject } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { map } from 'rxjs';
+import { API_BASE_URL } from '../api/api-base-url.token';
 import type { AuthRepository } from '../repositories/auth.repository';
 import type {
   LoginCredentials,
@@ -9,6 +11,7 @@ import type {
 } from '../models/auth.model';
 import { ApiClientService } from '../api/api-client.service';
 import {
+  parseAuthUser,
   parseLoginResponse,
   parseTwoFactorVerifyResponse,
   unwrapApiResponse,
@@ -23,6 +26,15 @@ import {
 @Injectable({ providedIn: 'root' })
 export class HttpAuthRepository implements AuthRepository {
   private readonly api = inject(ApiClientService);
+  private readonly http = inject(HttpClient);
+  private readonly base = inject(API_BASE_URL).replace(/\/+$/, '');
+
+  /** The candidate token is used only for /me; no user or role is trusted before Spring validates it. */
+  restoreUser(token: string) {
+    return this.http.get<unknown>(`${this.base}/api/auth/me`, {
+      headers: { Authorization: `Bearer ${token}` }, credentials: 'omit', cache: 'no-store', timeout: 15_000,
+    }).pipe(map(parseAuthUser));
+  }
 
   login(credentials: LoginCredentials) {
     return this.api
@@ -82,7 +94,10 @@ export class HttpAuthRepository implements AuthRepository {
       .pipe(map((body) => void unwrapApiResponse(body)));
   }
 
-  logout() {
-    return this.api.post<unknown>('/api/auth/logout', {}, { auth: true }).pipe(map(() => undefined));
+  logout(token: string) {
+    // Snapshot token: local logout does not wait for network revocation, and cannot revoke a later session.
+    return this.http.post<unknown>(`${this.base}/api/auth/logout`, {}, {
+      headers: { Authorization: `Bearer ${token}` }, credentials: 'omit', timeout: 15_000,
+    }).pipe(map(() => undefined));
   }
 }

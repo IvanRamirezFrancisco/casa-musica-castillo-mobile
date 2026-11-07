@@ -9,6 +9,7 @@ import { API_BASE_URL } from '../../../core/api/api-base-url.token';
 import { CHALLENGE, fakeJwt, loginSuccessBody, twoFactorBody, userDto } from '../../../core/api/auth.testing';
 import { BACKEND_SESSION_ENABLED } from '../../../core/config/backend-session.token';
 import { PUBLIC_CATALOG_ENABLED } from '../../../core/repositories/public-catalog.repository';
+import { SESSION_STORE } from '../../../core/security/session-store.token';
 import { authGuard } from '../../../core/security/auth.guard';
 import { authInterceptor } from '../../../core/security/auth.interceptor';
 import { AuthService } from '../../../core/services/auth.service';
@@ -249,4 +250,24 @@ describe('autenticación conectada (integración)', () => {
     expect(page.nativeElement.textContent).toContain('Cuenta verificada');
     page.componentInstance['goBackToLogin']();
   });
+  it('un fallo nativo de persistencia impide entrar y muestra un aviso accesible sin detalles privados', async () => {
+    TestBed.resetTestingModule();
+    const broken = { persistent: true, load: vi.fn().mockResolvedValue(null), clear: vi.fn().mockResolvedValue(undefined),
+      save: vi.fn().mockRejectedValue(new Error('private-device-details')) };
+    TestBed.configureTestingModule({ providers: [
+      provideRouter(testRoutes), provideHttpClient(withInterceptors([authInterceptor])), provideHttpClientTesting(),
+      provideIonicAngular({ animated: false }), { provide: API_BASE_URL, useValue: base },
+      { provide: BACKEND_SESSION_ENABLED, useValue: true }, { provide: SESSION_STORE, useValue: broken },
+    ] });
+    http = TestBed.inject(HttpTestingController); auth = TestBed.inject(AuthService); router = TestBed.inject(Router);
+    const page = TestBed.createComponent(ConnectedLoginPage); page.detectChanges();
+    page.componentInstance['form'].setValue({ email: 'ana@gmail.com', password: 'Cl4ve-Segura' });
+    page.componentInstance['submit'](); http.expectOne(`${base}/api/auth/login`).flush(loginSuccessBody());
+    await vi.waitFor(() => expect(auth.storageFailure()).toBe(true)); page.detectChanges();
+    const alerts = Array.from(page.nativeElement.querySelectorAll('[role="alert"]') as NodeListOf<HTMLElement>);
+    expect(alerts.some(a => a.textContent?.includes('almacenamiento seguro'))).toBe(true);
+    expect(page.nativeElement.textContent).not.toContain('private-device-details');
+    expect(auth.user()).toBeNull(); expect(router.url).not.toBe('/main/home');
+  });
+
 });

@@ -1,5 +1,5 @@
 import type { AuthSession, AuthUser, LoginOutcome, TwoFactorMethod } from '../models/auth.model';
-import { looksLikeJwt, readJwtExpiry } from '../security/jwt.util';
+import { looksLikeJwt, readJwtExpiry, readJwtSubject } from '../security/jwt.util';
 import { ApiError } from './api-error';
 
 const KNOWN_METHODS: readonly TwoFactorMethod[] = ['EMAIL', 'GOOGLE_AUTHENTICATOR', 'BACKUP_CODE'];
@@ -55,7 +55,9 @@ export function parseJwtAuthResponse(value: unknown): AuthSession {
   const expiresAt = readJwtExpiry(token);
   // Spring issues exp on every access token. Never infer an unlimited session from a malformed response.
   if (expiresAt === null || !Number.isFinite(expiresAt) || expiresAt <= Date.now()) throw invalid();
-  return { token, expiresAt, user: parseAuthUser(value['user']) };
+  const user = parseAuthUser(value['user']);
+  if (readJwtSubject(token) !== String(user.id)) throw invalid();
+  return { token, expiresAt, user };
 }
 
 /**

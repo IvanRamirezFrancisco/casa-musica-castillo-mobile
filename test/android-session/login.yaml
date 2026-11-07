@@ -1,0 +1,21 @@
+appId: com.casademusicacastillo.app
+name: TT05 - Login conectado y escritura nativa
+---
+- launchApp:
+    clearState: true
+- extendedWaitUntil:
+    visible: "Catálogo"
+    timeout: 30000
+- tapOn: "Iniciar sesión"
+- tapOn:
+    id: "cmc-input-0"
+- inputText: "qa@example.test"
+- tapOn:
+    id: "cmc-input-1"
+- inputText: "Only-Local-123"
+- hideKeyboard
+- tapOn: "Iniciar sesión"
+- tapOn: "Perfil"
+- assertVisible: "QA Sesion"
+- assertVisible: "Cuenta verificada y activa"
+- takeScreenshot: reports/android-session/login-native
