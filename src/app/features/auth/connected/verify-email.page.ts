@@ -7,6 +7,7 @@ import { arrowBackOutline, mailOutline } from 'ionicons/icons';
 import { CmcInputComponent } from '../../../shared/ui/input/cmc-input.component';
 import { CmcButtonComponent } from '../../../shared/ui/button/cmc-button.component';
 import { describeApiError } from '../../../core/api/api-error-message';
+import { emailActionToken } from '../../../core/validation/email-action-token';
 import { AuthService } from '../../../core/services/auth.service';
 import { emailValidator, resetTokenValidator } from '../../../core/validation/auth-fields.validation';
 
@@ -42,7 +43,7 @@ export class VerifyEmailPage {
 
   protected tokenError(): string {
     const control = this.form.controls.token;
-    return control.invalid && control.touched ? 'Pega el código completo, sin espacios.' : '';
+    return control.invalid && control.touched ? 'Pega el enlace de este trámite o el código completo, sin espacios.' : '';
   }
 
   protected emailError(): string {
@@ -53,9 +54,15 @@ export class VerifyEmailPage {
   protected verify(): void {
     if (this.submitting()) return;
     if (this.form.invalid) { this.form.markAllAsTouched(); return; }
+    const token = emailActionToken(this.form.controls.token.value, 'verify-account');
+    if (token === null) {
+      this.form.controls.token.setErrors({ pattern: true });
+      this.form.controls.token.markAsTouched();
+      return;
+    }
     this.submitting.set(true);
     this.errorMessage.set('');
-    this.auth.verifyEmail(this.form.controls.token.value).subscribe({
+    this.auth.verifyEmail(token).subscribe({
       next: () => { this.submitting.set(false); this.verified.set(true); this.form.reset(); },
       error: (error: unknown) => {
         this.submitting.set(false);

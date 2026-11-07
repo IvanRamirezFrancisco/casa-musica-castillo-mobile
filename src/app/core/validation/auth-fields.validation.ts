@@ -58,12 +58,15 @@ export const emailError = (value: string): string | null => {
     labels.every((label) => label.length <= 63 && DOMAIN_LABEL.test(label)) ? null : 'pattern';
 };
 
+export const passwordCharacterTypes = (value: string): number =>
+  [/[a-z]/, /[A-Z]/, /[0-9]/, SPECIAL].filter(rule => rule.test(value)).length;
+
 export const passwordError = (value: string): string | null => {
   if (!value) return 'required';
   if (value.length < FIELD_LIMITS.passwordMin) return 'minlength';
   if (value.length > FIELD_LIMITS.passwordMax) return 'maxlength';
   if (passwordByteLength(value) > FIELD_LIMITS.passwordMaxBytes) return 'maxbytes';
-  const classes = [/[a-z]/, /[A-Z]/, /[0-9]/, SPECIAL].filter((rule) => rule.test(value)).length;
+  const classes = passwordCharacterTypes(value);
   return classes >= 3 ? null : 'complexity';
 };
 

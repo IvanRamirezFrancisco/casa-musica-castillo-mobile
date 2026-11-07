@@ -9,7 +9,7 @@ import { CmcButtonComponent } from '../../../shared/ui/button/cmc-button.compone
 import { describeApiError } from '../../../core/api/api-error-message';
 import { AuthService } from '../../../core/services/auth.service';
 import {
-  FIELD_LIMITS, FIELD_MESSAGES, emailValidator, optionalPhoneValidator, passwordValidator,
+  FIELD_LIMITS, FIELD_MESSAGES, emailValidator, optionalPhoneValidator, passwordByteLength, passwordCharacterTypes, passwordValidator,
   passwordsMatch, personNameValidator, usernameValidator,
 } from '../../../core/validation/auth-fields.validation';
 
@@ -20,7 +20,7 @@ import {
 @Component({
   selector: 'app-connected-register',
   templateUrl: './connected-register.page.html',
-  styleUrls: ['../register/register.page.scss'],
+  styleUrls: ['../register/register.page.scss', './connected-register.page.scss'],
   styles: ['.auth-alert { margin: 0 0 16px; padding: 12px 16px; border-radius: 8px; font-size: 0.9rem; } .auth-alert--error { background: #fdecea; color: #7a1c14; } .auth-alert--success { background: #e8f5e9; color: #1b4d20; } .step-actions { display: grid; gap: 12px; margin-top: 12px; }'],
   host: { class: 'ion-page' },
   standalone: true,
@@ -58,6 +58,17 @@ export class ConnectedRegisterPage {
     if (name === 'phone') return 'Ingresa 10 dígitos o deja el campo vacío.';
     if (name === 'username' && key === 'pattern') return 'Usa solo letras, números, punto, guion y guion bajo.';
     return FIELD_MESSAGES[key] ?? 'El valor no es válido.';
+  }
+
+  protected passwordChecklist() {
+    const value = this.form.controls.password.value;
+    const count = passwordCharacterTypes(value);
+    return {
+      length: value.length >= FIELD_LIMITS.passwordMin && value.length <= FIELD_LIMITS.passwordMax,
+      bytes: value.length > 0 && passwordByteLength(value) <= FIELD_LIMITS.passwordMaxBytes,
+      variety: count >= 3,
+      matches: value.length > 0 && value === this.form.controls.confirmPassword.value,
+    };
   }
 
   protected confirmError(): string {

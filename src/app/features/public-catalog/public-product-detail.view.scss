@@ -1,3 +1,13 @@
+/* Keep the entire Ionic scroll viewport clear of the native navigation bar.
+   SystemBars supplies zero when the WebView is already inset or resized for the IME. */
+:host(.ion-page) {
+  inset-block-end: var(--cmc-safe-area-bottom);
+}
+
+ion-content.product-content {
+  --padding-bottom: var(--cmc-space-6);
+}
+
 .product-layout{display:grid;gap:24px;}.product-layout>section{margin:0;min-width:0;}
 .cover{height:clamp(9rem,min(65vw,55dvh),27.5rem);border:1px solid var(--cmc-border);border-radius:var(--cmc-radius-xl);overflow:hidden;background:var(--cmc-surface-alt);}
 .gallery{display:flex;gap:12px;overflow-x:auto;padding:12px 2px;}.gallery-thumb{flex:none;width:72px;height:72px;padding:0;border:2px solid var(--cmc-border);border-radius:12px;overflow:hidden;background:white;}.gallery-thumb cmc-public-image{min-height:0;}.gallery-thumb[aria-current='true']{border-color:var(--cmc-primary);}
