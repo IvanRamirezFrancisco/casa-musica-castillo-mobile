@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, effect, inject, input, signal, untracked } from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, inject, input, output, signal, untracked } from '@angular/core';
 import { CmcMoneyPipe } from '../../shared/ui/money/cmc-money.pipe';
 import { CmcIconComponent } from '../../shared/ui/icon/cmc-icon.component';
 import { Router, RouterLink } from '@angular/router';
@@ -10,9 +10,10 @@ import { ProductFavoritesService } from '../../core/services/product-favorites.s
 @Component({
   selector: 'cmc-public-image', standalone: true, imports: [CmcIconComponent], changeDetection: ChangeDetectionStrategy.OnPush,
   host: { '[class.compact-image]': 'compact()' },
-  styles: [':host { display: block; width: 100%; height: 100%; min-height: 96px; overflow: hidden; background: var(--cmc-surface-alt); } img { display: block; width: 100%; height: 100%; object-fit: contain; padding: 6px; box-sizing: border-box; } span { display: grid; place-items: center; height: 100%; padding: 12px; text-align: center; color: var(--cmc-text-secondary); font-size: 0.85rem; } :host(.compact-image) { min-height: 0; } :host(.compact-image) span { padding: 4px; font-size: 1.15rem; }'],
-  template: `@if (src() && failedUrl() !== src()) {
-    <img [src]="src()" [alt]="alt()" loading="lazy" decoding="async" referrerpolicy="no-referrer" (error)="failedUrl.set(src())" />
+  styles: [':host { display: block; width: 100%; height: 100%; min-height: 96px; overflow: hidden; background: var(--cmc-surface-alt); } img { display: block; width: 100%; height: 100%; object-fit: contain; object-position: var(--cmc-image-position, center); padding: 6px; box-sizing: border-box; } span { display: grid; place-items: center; height: 100%; padding: 12px; text-align: center; color: var(--cmc-text-secondary); font-size: 0.85rem; } :host(.compact-image) { min-height: 0; } :host(.compact-image) span { padding: 4px; font-size: 1.15rem; }'],
+  template: `@let image = src();
+  @if (image && failedUrl() !== image) {
+    <img [src]="image" [alt]="alt()" loading="lazy" decoding="async" referrerpolicy="no-referrer" (error)="reportUnavailable(image)" />
   } @else { <span role="img" [attr.aria-label]="alt() + ': imagen no disponible'">@if(compact()){<cmc-icon name="music"/>}@else{Imagen no disponible}</span> }`,
 })
 export class PublicImageComponent {
@@ -20,6 +21,12 @@ export class PublicImageComponent {
   readonly alt = input('Producto');
   readonly compact = input(false);
   readonly failedUrl = signal<string | null>(null);
+  readonly unavailable = output<string>();
+
+  protected reportUnavailable(image: string): void {
+    this.failedUrl.set(image);
+    this.unavailable.emit(image);
+  }
 }
 @Component({
   selector: 'cmc-public-product-grid', standalone: true, imports: [RouterLink, CmcMoneyPipe, CmcIconComponent, PublicImageComponent],

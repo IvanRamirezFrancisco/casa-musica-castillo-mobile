@@ -15,6 +15,7 @@ on:
       - feature/uiux-direccion-a
       - fix/aceptacion-a55-p0
       - feature/refinamiento-comercial-a55
+      - feature/refinamiento-cuenta-favoritos-carrito
 
   push:
     branches:
