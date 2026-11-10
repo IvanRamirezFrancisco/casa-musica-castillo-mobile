@@ -33,7 +33,7 @@ export class HttpAuthRepository implements AuthRepository {
   /** The candidate token is used only for /me; no user or role is trusted before Spring validates it. */
   restoreUser(token: string) {
     return this.http.get<unknown>(`${this.base}/api/auth/me`, {
-      headers: { Authorization: `Bearer ${token}` }, credentials: 'omit', cache: 'no-store', timeout: 15_000,
+      headers: { Authorization: `Bearer ${token}` }, credentials: 'omit', redirect: 'error', cache: 'no-store', timeout: 15_000,
     }).pipe(map(parseAuthUser));
   }
 
@@ -98,7 +98,7 @@ export class HttpAuthRepository implements AuthRepository {
   logout(token: string) {
     // Snapshot token: local logout does not wait for network revocation, and cannot revoke a later session.
     return this.http.post<unknown>(`${this.base}/api/auth/logout`, {}, {
-      headers: { Authorization: `Bearer ${token}` }, credentials: 'omit', timeout: 15_000,
+      headers: { Authorization: `Bearer ${token}` }, credentials: 'omit', redirect: 'error', timeout: 15_000,
     }).pipe(map(() => undefined));
   }
 }

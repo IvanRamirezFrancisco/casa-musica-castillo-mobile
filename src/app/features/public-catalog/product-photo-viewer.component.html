@@ -1,24 +1,52 @@
-<dialog #dialog class="photo-viewer" [attr.aria-label]="'Fotografías de ' + title()" (close)="resetZoom()"
-    (keydown.arrowleft)="onArrow($event, -1)" (keydown.arrowright)="onArrow($event, 1)">
-    <div class="viewer-header">
-      <h2>Fotografías del producto</h2>
-      <button autofocus type="button" class="icon-action" aria-label="Cerrar visor" (click)="close()"><cmc-icon name="close"/></button>
-    </div>
-    @if(activePhoto(); as photo){
-      <div #zoomArea class="viewer-image" tabindex="0" aria-label="Área desplazable de la fotografía">
-        <div class="viewer-photo" [class.is-zoomed]="zoom()>1" [style.width.%]="zoom()*100" [style.height.%]="zoom()*100">
-          <cmc-public-image [src]="photo" [alt]="title()" (unavailable)="photoUnavailable.emit($event)"/>
-        </div>
-      </div>
-      <div class="viewer-tools">
-        @if(photos().length > 1){
-          <button type="button" class="store-button" [disabled]="position() === 0" (click)="changeImage(-1)">Anterior</button>
-          <button type="button" class="store-button" [disabled]="position() === photos().length - 1" (click)="changeImage(1)">Siguiente</button>
-          <span role="status">{{position() + 1}} de {{photos().length}}</span>
-        }
-        <button type="button" class="icon-action" [disabled]="zoom()<=1" aria-label="Reducir zoom" (click)="changeZoom(-.5)"><cmc-icon name="remove"/></button>
-        <button type="button" class="store-button" (click)="resetZoom()" aria-label="Restablecer zoom">{{zoom()*100}} %</button>
-        <button type="button" class="icon-action" [disabled]="zoom()>=3" aria-label="Ampliar zoom" (click)="changeZoom(.5)"><cmc-icon name="add"/></button>
-      </div>
+<dialog #dialog class="photo-viewer" [attr.aria-label]="'Fotografías de ' + title()" (close)="onClose()" (keydown)="onKey($event)">
+  <header class="viewer-header">
+    <h2>Fotografías</h2>
+    @if (photos().length > 1) {
+      <span role="status">Imagen {{ position() + 1 }} de {{ photos().length }}</span>
     }
-  </dialog>
+    <button autofocus type="button" aria-label="Cerrar visor" (click)="close()"><cmc-icon name="close"/></button>
+  </header>
+
+  @if (opened()) {
+    <div #zoomArea class="viewer-image" tabindex="0" role="group" aria-label="Área desplazable de la fotografía"
+        [class.is-zoomed]="transform().scale > 1"
+        (pointerdown)="pointerDown($event)" (pointermove)="pointerMove($event)"
+        (pointerup)="pointerEnd($event)" (pointercancel)="pointerEnd($event)" (lostpointercapture)="pointerEnd($event)">
+      @if (activePhoto(); as photo) {
+        @for (url of [photo]; track url) {
+          <img class="viewer-photo" [class.is-ready]="loadState() === 'ready'" [src]="url" [alt]="title()"
+            [style.width.px]="photoSize().width" [style.height.px]="photoSize().height" [style.transform]="cssTransform()"
+            draggable="false" decoding="async" referrerpolicy="no-referrer"
+            (load)="photoLoaded(url, $event)" (error)="photoFailed(url)" />
+        }
+        @if (loadState() === 'loading') { <p role="status">Cargando fotografía…</p> }
+      }
+      @if (!activePhoto() || loadState() === 'error') {
+        <p role="status">Fotografía no disponible</p>
+      }
+    </div>
+    <footer class="viewer-footer">
+      <div class="viewer-tools" role="group" aria-label="Controles de la fotografía">
+        @if (photos().length > 1) {
+          <button type="button" [disabled]="position() === 0" aria-label="Anterior" (click)="changeImage(-1)"><cmc-icon class="previous-icon" name="arrow"/></button>
+        }
+        <button type="button" [disabled]="transform().scale <= 1" aria-label="Reducir zoom" (click)="changeZoom(-.5)"><cmc-icon name="remove"/></button>
+        <button type="button" (click)="resetZoom()" aria-label="Restablecer zoom">{{ percent() }} %</button>
+        <button type="button" [disabled]="loadState() !== 'ready' || transform().scale >= maxZoom" aria-label="Ampliar zoom" (click)="changeZoom(.5)"><cmc-icon name="add"/></button>
+        @if (photos().length > 1) {
+          <button type="button" [disabled]="position() === photos().length - 1" aria-label="Siguiente" (click)="changeImage(1)"><cmc-icon name="arrow"/></button>
+        }
+      </div>
+      @if (photos().length > 1) {
+        <div class="viewer-thumbs" role="group" aria-label="Miniaturas">
+          @for (photo of photos(); track photo; let i = $index) {
+            <button type="button" [attr.aria-label]="'Ver fotografía ' + (i + 1)" [attr.aria-current]="i === position() ? 'true' : null"
+                (click)="selectImage(photo)">
+              <cmc-public-image [src]="photo" [alt]="'Fotografía ' + (i + 1)" [compact]="true"/>
+            </button>
+          }
+        </div>
+      }
+    </footer>
+  }
+</dialog>

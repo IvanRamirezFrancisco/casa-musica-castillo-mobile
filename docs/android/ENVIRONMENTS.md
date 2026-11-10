@@ -7,7 +7,7 @@ Etapa 2A, noviembre de 2026. No se provisiona infraestructura.
 | Development navegador | `http://localhost:8080` | Spring Boot y PostgreSQL locales de desarrollo |
 | Development Android | `http://10.0.2.2:8080` | Alias del host en emulador, no en teléfono |
 | Device Debug | Origen explícito | USB o HTTPS de pruebas autorizado; rechaza el host comercial |
-| Staging | Sin valor predeterminado | HTTPS explícito, diferente de producción y confirmación de aislamiento |
+| Staging | Sin valor predeterminado | HTTPS explícito y aislamiento confirmado. Debug con ID `com.casademusicacastillo.app.staging` |
 | Production | `https://casa-musica-castillo-backend.onrender.com` | Servicio comercial; no usar para pruebas destructivas |
 | Production Debug | Mismo origen HTTPS de Production | Solo lectura. ID `com.casademusicacastillo.app.publicdemo` |
 | DEMO | `https://demo.invalid` | Fixtures explícitos, sin fallback remoto por errores HTTP |

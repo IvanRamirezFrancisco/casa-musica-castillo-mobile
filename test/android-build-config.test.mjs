@@ -16,6 +16,7 @@ test('production is fixed centrally and cannot be overridden by a caller', () =>
   assert.equal(debug.apiBaseUrl, productionApiUrl);
   assert.equal(debug.angularConfiguration, 'production,public-demo');
   assert.equal(debug.publicDemo, true);
+  assert.equal(debug.nativeVariant, 'publicDemo');
   assert.equal(buildOptions({ environment: 'production', variant: 'release' }, {}).publicDemo, false);
 });
 test('staging requires an explicitly isolated HTTPS origin, distinct from production', () => {
@@ -27,6 +28,10 @@ test('staging requires an explicitly isolated HTTPS origin, distinct from produc
   const options = buildOptions({ environment: 'staging', variant: 'release', isolated: true, apiUrl: 'https://isolated.example.test' }, {});
   assert.equal(options.apiBaseUrl, 'https://isolated.example.test');
   assert.equal(options.isolated, true);
+  const debug = buildOptions({ environment: 'staging', variant: 'debug', isolated: true, apiUrl: 'https://isolated.example.test' }, {});
+  assert.equal(debug.nativeVariant, 'stagingConnected');
+  assert.equal(debug.angularConfiguration, 'staging');
+  assert.equal(debug.publicDemo, false);
 });
 test('device builds cannot silently use the emulator; HTTP is limited to explicit local hosts', () => {
   assert.throws(() => buildOptions({ environment: 'device', variant: 'debug' }, {}));

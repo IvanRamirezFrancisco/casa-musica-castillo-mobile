@@ -39,6 +39,11 @@ android {
             applicationIdSuffix ".publicdemo"
             matchingFallbacks = ['debug']
         }
+        stagingConnected {
+            initWith debug
+            applicationIdSuffix ".staging"
+            matchingFallbacks = ['debug']
+        }
         release {
             debuggable false
             jniDebuggable false
@@ -71,7 +76,7 @@ dependencies {
 apply from: 'capacitor.build.gradle'
 
 // Protect direct Gradle invocations against stale assets from another build.
-def verifyConnectedWebAssets = { boolean publicDemo ->
+def verifyConnectedWebAssets = { String nativeVariant ->
         def assets = file('src/main/assets/public')
         def marker = new File(assets, 'cmc-build.json')
         if (!marker.isFile()) throw new GradleException('Build and sync the selected web assets with scripts/build-android.mjs first.')
@@ -83,11 +88,18 @@ def verifyConnectedWebAssets = { boolean publicDemo ->
         }
         def settings = rootProject.file('../src/environments/environment-settings.ts').text
         def expectedProduction = (settings =~ /PRODUCTION_API_BASE_URL = '([^']+)'/)[0][1]
-        if (publicDemo && (build.environment != 'production' || build.variant != 'debug' ||
+        if (build.nativeVariant != nativeVariant) {
+            throw new GradleException('Web assets do not match the requested Android variant.')
+        }
+        if (nativeVariant == 'publicDemo' && (build.environment != 'production' || build.variant != 'debug' ||
             build.publicDemo != true || build.angularConfiguration != 'production,public-demo')) {
             throw new GradleException('Public demo requires the read-only Production Debug web assets.')
         }
-        if (!publicDemo && (!(build.environment in ['production', 'staging']) || build.variant != 'release' || build.publicDemo == true)) {
+        if (nativeVariant == 'stagingConnected' && (build.environment != 'staging' || build.variant != 'debug' ||
+            build.publicDemo != false || build.angularConfiguration != 'staging')) {
+            throw new GradleException('Connected Staging requires explicitly isolated staging web assets.')
+        }
+        if (nativeVariant == 'release' && (!(build.environment in ['production', 'staging']) || build.variant != 'release' || build.publicDemo == true)) {
             throw new GradleException('Release requires production or explicitly isolated staging web assets.')
         }
         def endpoint = new URI(build.apiBaseUrl as String)
@@ -117,13 +129,17 @@ def verifyConnectedWebAssets = { boolean publicDemo ->
         }
 }
 def verifyReleaseWebAssets = tasks.register('verifyReleaseWebAssets') {
-    doLast { verifyConnectedWebAssets(false) }
+    doLast { verifyConnectedWebAssets('release') }
 }
 def verifyPublicDemoWebAssets = tasks.register('verifyPublicDemoWebAssets') {
-    doLast { verifyConnectedWebAssets(true) }
+    doLast { verifyConnectedWebAssets('publicDemo') }
+}
+def verifyStagingConnectedWebAssets = tasks.register('verifyStagingConnectedWebAssets') {
+    doLast { verifyConnectedWebAssets('stagingConnected') }
 }
 tasks.matching { it.name == 'preReleaseBuild' }.configureEach { dependsOn verifyReleaseWebAssets }
 tasks.matching { it.name == 'prePublicDemoBuild' }.configureEach { dependsOn verifyPublicDemoWebAssets }
+tasks.matching { it.name == 'preStagingConnectedBuild' }.configureEach { dependsOn verifyStagingConnectedWebAssets }
 
 try {
     def servicesJSON = file('google-services.json')

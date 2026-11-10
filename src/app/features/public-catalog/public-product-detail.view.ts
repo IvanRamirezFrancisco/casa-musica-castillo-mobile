@@ -48,7 +48,8 @@ export class PublicProductDetailComponent {
   const product=this.service.product().data;
   if(!product) return [];
   const failed=this.failedPhotos();
-  return [...new Set([product.imageUrl, ...product.images].filter((image): image is string => image !== null && !failed.has(image)))];
+  const photos = product.images.length ? product.images : product.imageUrl ? [product.imageUrl] : [];
+  return photos.filter(image => !failed.has(image));
  });
  readonly activeImage=computed(() => {
   const selected=this.selectedImage();
@@ -62,8 +63,8 @@ export class PublicProductDetailComponent {
  markPhotoUnavailable(image: string): void {
   if (!this.galleryImages().includes(image)) return;
   this.failedPhotos.update(failed => new Set([...failed, image]));
-  if (!this.galleryImages().length) this.viewer()?.close();
  }
+ ionViewWillLeave(): void { this.viewer()?.close(); }
  constructor(){
   this.destroyRef.onDestroy(() => this.clearCartFeedback());
   this.auth.sessionEnded$.pipe(takeUntilDestroyed()).subscribe(()=>{this.cancelled.next();this.viewer()?.close();this.clearCartFeedback();this.actionNotice.set('');});

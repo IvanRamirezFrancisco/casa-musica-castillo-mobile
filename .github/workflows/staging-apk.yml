@@ -107,7 +107,7 @@ jobs:
         id: prepare-apk
         run: |
           mkdir -p staging
-          cp reports/android-packages/staging-debug/app-debug.apk staging/CasaMusicaCastillo-staging.apk
+          cp reports/android-packages/staging-debug/app-stagingConnected.apk staging/CasaMusicaCastillo-staging.apk
           cp reports/android-packages/staging-debug/build-report.json staging/build-report.json
           test -f staging/CasaMusicaCastillo-staging.apk
           ls -lh staging/CasaMusicaCastillo-staging.apk

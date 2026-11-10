@@ -68,6 +68,7 @@ export class AuthService {
 
   /** Restaura la sesión del almacén (una sola vez). Sin persistencia nativa solo existe memoria. */
   restore(): Promise<void> {
+    if (this.hasValidSession()) return Promise.resolve();
     const revision = this.revision;
     this.restoration ??= (async () => {
       try {
@@ -85,6 +86,12 @@ export class AuthService {
         this.armExpiry();
       } catch (error) {
         if (revision !== this.revision) return;
+        if (typeof error === 'object' && error !== null && 'status' in error
+            && typeof error.status === 'number' && (error.status === 0 || error.status === 429 || error.status >= 500)) {
+          // Retain encrypted state without exposing it. The next attempt must still revalidate /me.
+          this.restoration = null;
+          return;
+        }
         if (error instanceof SessionStorageError) {
           if (error.reason === 'expired') this.expired.set(true);
           else this.storageFailed.set(true);

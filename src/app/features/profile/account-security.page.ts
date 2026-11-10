@@ -18,12 +18,15 @@ export class AccountSecurityPage {
  readonly methods=signal<SecurityMethods|null>(null); readonly enrollment=signal<TotpEnrollment|null>(null);
  readonly codes=signal<string[]>([]); readonly busy=signal(false); readonly error=signal(''); readonly notice=signal('');
  private readonly cancelled=new Subject<void>();
+ private cached = false;
  readonly disabling=signal(false); readonly generating=signal(false); code='';
  constructor() {
   inject(AuthService).sessionEnded$.pipe(takeUntilDestroyed()).subscribe(()=>{this.clearSecrets();this.methods.set(null);});
   this.destroyRef.onDestroy(()=>this.clearSecrets()); this.reload();
  }
+ ionViewWillLeave():void {this.cached=true;this.clearSecrets();}
  ionViewDidLeave():void {this.clearSecrets();}
+ ionViewWillEnter():void {if(this.cached){this.cached=false;this.reload();}}
  clearSecrets():void {this.cancelled.next();this.busy.set(false);this.enrollment.set(null);this.codes.set([]);this.code='';this.generating.set(false);this.disabling.set(false);}
  validCode():boolean {return /^\d{6}$/.test(this.code);}
  reload():void {this.run(this.repo.methods(),m=>this.methods.set(m));}

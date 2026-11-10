@@ -40,7 +40,8 @@ export function buildOptions({ environment, variant, apiUrl, isolated = false, r
   if (requireSigning && supplied.length !== signingNames.length) throw new Error('No authorized upload identity supplied. Only unsigned technical Release artifacts can be generated.');
   const publicDemo = environment === 'production' && variant === 'debug';
   const angularConfiguration = publicDemo ? 'production,public-demo' : environment === 'device' ? 'development' : environment;
-  return { environment, variant, angularConfiguration, publicDemo,
+  const nativeVariant = publicDemo ? 'publicDemo' : environment === 'staging' && variant === 'debug' ? 'stagingConnected' : variant;
+  return { environment, variant, nativeVariant, angularConfiguration, publicDemo,
     apiBaseUrl: endpoint, isolated: environment === 'staging' && isolated, defines,
     signing: variant === 'debug' ? 'android-debug-key' : supplied.length ? 'external-upload-key' : 'unsigned' };
 }

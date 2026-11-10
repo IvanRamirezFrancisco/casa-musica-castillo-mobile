@@ -1,9 +1,11 @@
 import { ChangeDetectionStrategy, Component, ElementRef, afterRenderEffect, inject, signal, viewChild } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { IonContent, IonIcon } from '@ionic/angular';
 import { addIcons } from 'ionicons';
 import { arrowBackOutline, musicalNotesOutline } from 'ionicons/icons';
+import { Subject, takeUntil } from 'rxjs';
 import { CmcIconComponent } from '../../../shared/ui/icon/cmc-icon.component';
 import { CmcInputComponent } from '../../../shared/ui/input/cmc-input.component';
 import { CmcButtonComponent } from '../../../shared/ui/button/cmc-button.component';
@@ -38,6 +40,8 @@ export class ConnectedLoginPage {
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
   protected readonly auth = inject(AuthService);
+  private readonly cancelled = new Subject<void>();
+  private readonly untilDestroyed = takeUntilDestroyed();
 
   protected readonly methodLabels = METHOD_LABELS;
   protected readonly step = signal<'credentials' | 'second-factor'>('credentials');
@@ -71,7 +75,7 @@ export class ConnectedLoginPage {
     this.errorMessage.set('');
     this.verificationSuggested.set(false);
     this.auth.acknowledgeExpiry();
-    this.auth.login(this.form.getRawValue()).subscribe({
+    this.auth.login(this.form.getRawValue()).pipe(takeUntil(this.cancelled), this.untilDestroyed).subscribe({
       next: (result) => {
         this.submitting.set(false);
         this.form.controls.password.reset('');
@@ -101,7 +105,7 @@ export class ConnectedLoginPage {
     if (!challenge || this.submitting()) return;
     this.submitting.set(true);
     this.errorMessage.set('');
-    this.auth.sendTwoFactorEmailCode(challenge).subscribe({
+    this.auth.sendTwoFactorEmailCode(challenge).pipe(takeUntil(this.cancelled), this.untilDestroyed).subscribe({
       next: () => {
         this.submitting.set(false);
         this.emailCodeSent.set(true);
@@ -125,7 +129,7 @@ export class ConnectedLoginPage {
       preAuthChallenge: challenge.preAuthChallenge,
       method: this.method(),
       code: this.codeForm.controls.code.value,
-    }).subscribe({
+    }).pipe(takeUntil(this.cancelled), this.untilDestroyed).subscribe({
       next: () => { this.submitting.set(false); this.finish(); },
       error: (error: unknown) => {
         this.submitting.set(false);
@@ -136,11 +140,20 @@ export class ConnectedLoginPage {
   }
 
   protected cancelSecondFactor(): void {
+    this.cancelled.next();
+    this.submitting.set(false);
     this.challenge.set(null);
     this.codeForm.reset();
     this.errorMessage.set('');
     this.infoMessage.set('');
     this.step.set('credentials');
+  }
+
+  ionViewWillLeave(): void {
+    this.cancelSecondFactor();
+    this.form.controls.password.reset('');
+    this.verificationSuggested.set(false);
+    this.emailCodeSent.set(false);
   }
 
   protected emailError(): string {
@@ -160,6 +173,7 @@ export class ConnectedLoginPage {
   }
 
   private finish(): void {
+    this.ionViewWillLeave();
     void this.router.navigateByUrl(safeReturnUrl(this.route.snapshot.queryParamMap.get('returnUrl')), { replaceUrl: true });
   }
 }

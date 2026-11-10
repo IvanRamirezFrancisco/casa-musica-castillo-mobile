@@ -15,9 +15,9 @@
       <p class="eyebrow">{{product.category}}</p><h1>{{product.name}}</h1><p class="muted">{{product.brand}}</p>
       @if(product.reviewCount && product.averageRating!==null){<p class="rating"><cmc-icon name="star"/>{{product.averageRating}} / 5 <span>· {{product.reviewCount}} opiniones</span></p>}
     </section>
-    <section class="product-gallery" aria-label="Galería del producto">
+    <section #gallery class="product-gallery" aria-label="Galería del producto" tabindex="-1">
       @if(activeImage(); as image){
-        <button type="button" class="cover cover-action" aria-label="Ampliar fotografía del producto" (click)="viewer.open()">
+        <button #coverTrigger type="button" class="cover cover-action" aria-label="Ampliar fotografía del producto" (click)="viewer.open(coverTrigger, gallery)">
           <cmc-public-image [src]="image" [alt]="product.name" (unavailable)="markPhotoUnavailable($event)"/>
         </button>
         @if(galleryImages().length > 1){
@@ -29,7 +29,7 @@
             }
           </div>
         }
-        <p class="muted gallery-position">Imagen {{imageNumber()}} de {{galleryImages().length}}</p>
+        @if(galleryImages().length > 1){<p class="muted gallery-position">Imagen {{imageNumber()}} de {{galleryImages().length}}</p>}
       }@else{
         <div class="cover cover-empty"><cmc-public-image [alt]="product.name"/></div>
       }

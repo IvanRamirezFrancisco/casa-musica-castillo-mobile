@@ -217,7 +217,7 @@ describe('AuthService', () => {
     expect(service.user()).toEqual(serverUser);
   });
 
-  it.each([401, 403, 0])('no concede una sesión restaurada si Spring rechaza /me o no hay red (%i)', async (status) => {
+  it.each([401, 403])('no concede una sesión restaurada si Spring rechaza /me (%i)', async (status) => {
     const stored: SessionStore = { persistent: true, save: vi.fn(),
       load: vi.fn().mockResolvedValue(testSession()), clear: vi.fn().mockResolvedValue(undefined) };
     const { repo, service } = setup(stored);
@@ -226,6 +226,21 @@ describe('AuthService', () => {
     expect(service.user()).toBeNull();
     expect(service.validToken()).toBeNull();
     expect(stored.clear).toHaveBeenCalled();
+  });
+
+  it.each([0, 429, 503])('retiene el estado cifrado sin conceder sesión y revalida /me tras un fallo temporal (%i)', async (status) => {
+    const session = testSession();
+    const stored: SessionStore = { persistent: true, save: vi.fn(),
+      load: vi.fn().mockResolvedValue(session), clear: vi.fn().mockResolvedValue(undefined) };
+    const { repo, service } = setup(stored);
+    repo.restoreUser.mockReturnValueOnce(throwError(() => new ApiError('http', status)));
+    await service.restore();
+    expect(service.user()).toBeNull();
+    expect(service.validToken()).toBeNull();
+    expect(stored.clear).not.toHaveBeenCalled();
+    await Promise.all([service.restore(), service.restore()]);
+    expect(repo.restoreUser).toHaveBeenCalledTimes(2);
+    expect(service.user()).toEqual(session.user);
   });
 
   it('rechaza una identidad distinta al revalidar /me', async () => {
