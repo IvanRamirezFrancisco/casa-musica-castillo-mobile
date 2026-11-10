@@ -13,6 +13,7 @@ import { describeApiError } from '../../../core/api/api-error-message';
 import { ApiError } from '../../../core/api/api-error';
 import type { TwoFactorChallenge, TwoFactorMethod } from '../../../core/models/auth.model';
 import { AuthService } from '../../../core/services/auth.service';
+import { CONNECTED_QA } from '../../../core/config/connected-qa.token';
 import { safeReturnUrl } from '../../../core/security/auth.guard';
 import { emailValidator, otpValidator } from '../../../core/validation/auth-fields.validation';
 
@@ -40,6 +41,7 @@ export class ConnectedLoginPage {
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
   protected readonly auth = inject(AuthService);
+  protected readonly connectedQa = inject(CONNECTED_QA);
   private readonly cancelled = new Subject<void>();
   private readonly destroyRef = inject(DestroyRef);
 
@@ -69,7 +71,7 @@ export class ConnectedLoginPage {
   }
 
   protected submit(): void {
-    if (this.submitting()) return;
+    if (this.connectedQa || this.submitting()) return;
     if (this.form.invalid) { this.form.markAllAsTouched(); return; }
     this.submitting.set(true);
     this.errorMessage.set('');

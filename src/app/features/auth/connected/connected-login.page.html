@@ -21,7 +21,11 @@
       @if (step() === 'credentials') {
         <div class="auth-card-header">
           <h2 class="cmc-title">Bienvenido de nuevo</h2>
-          <p class="cmc-body cmc-text-secondary">Inicia sesión para continuar.</p>
+          @if (connectedQa) {
+            <p class="cmc-body cmc-text-secondary" role="status">En esta compilación QA están disponibles las consultas públicas. El acceso a cuentas espera un entorno autorizado.</p>
+          } @else {
+            <p class="cmc-body cmc-text-secondary">Inicia sesión para continuar.</p>
+          }
         </div>
 
         @if (auth.sessionExpired()) {
@@ -55,7 +59,7 @@
             <a routerLink="/forgot-password" class="cmc-link">¿Olvidaste tu contraseña?</a>
           </div>
 
-          <cmc-button type="submit" fullWidth [loading]="submitting()" loadingLabel="Iniciando sesión">
+          <cmc-button type="submit" fullWidth [disabled]="connectedQa" [loading]="submitting()" loadingLabel="Iniciando sesión">
             Iniciar sesión
           </cmc-button>
         </form>

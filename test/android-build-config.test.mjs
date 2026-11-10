@@ -33,6 +33,17 @@ test('staging requires an explicitly isolated HTTPS origin, distinct from produc
   assert.equal(debug.angularConfiguration, 'staging');
   assert.equal(debug.publicDemo, false);
 });
+test('Connected QA uses Production routes and a Debug identity without changing publicDemo', () => {
+  const qa = buildOptions({ environment: 'production', variant: 'qa' }, {});
+  assert.equal(qa.apiBaseUrl, productionApiUrl);
+  assert.equal(qa.angularConfiguration, 'production');
+  assert.equal(qa.nativeVariant, 'connectedQa');
+  assert.equal(qa.publicDemo, false);
+  assert.equal(qa.signing, 'android-debug-key');
+  assert.deepEqual(qa.defines, ['--define=CMC_CONNECTED_QA=true']);
+  assert.throws(() => buildOptions({ environment: 'staging', variant: 'qa' }, {}));
+  assert.throws(() => buildOptions({ environment: 'production', variant: 'qa', requireSigning: true }, {}));
+});
 test('device builds cannot silently use the emulator; HTTP is limited to explicit local hosts', () => {
   assert.throws(() => buildOptions({ environment: 'device', variant: 'debug' }, {}));
   assert.throws(() => buildOptions({ environment: 'device', variant: 'debug', apiUrl: 'http://lan.example.test:8080' }, {}));

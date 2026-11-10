@@ -10,6 +10,7 @@ Etapa 2A, noviembre de 2026. No se provisiona infraestructura.
 | Staging | Sin valor predeterminado | HTTPS explícito y aislamiento confirmado. Debug con ID `com.casademusicacastillo.app.staging` |
 | Production | `https://casa-musica-castillo-backend.onrender.com` | Servicio comercial; no usar para pruebas destructivas |
 | Production Debug | Mismo origen HTTPS de Production | Solo lectura. ID `com.casademusicacastillo.app.publicdemo` |
+| Connected QA | Mismo origen HTTPS de Production | Cinco pestañas y módulos conectados. Transporte limitado a GET públicos hasta validar acceso privado. ID `com.casademusicacastillo.app.qa` |
 | DEMO | `https://demo.invalid` | Fixtures explícitos, sin fallback remoto por errores HTTP |
 
 Los orígenes se centralizan en `src/environments/environment-settings.ts`. Angular aplica los `fileReplacements` de `production`, `demo` y `staging` en `angular.json`. `development` conserva el entorno base y `ci` las pruebas existentes. Las URL públicas del bundle no son secretos.
@@ -25,6 +26,8 @@ El operador debe definir ese origen autorizado. Release solo admite `production`
 El workflow de APK Staging requiere un dispatch manual con confirmación de aislamiento, Quality Gate del mismo SHA y la variable `CMC_AUTHORIZED_STAGING_ORIGIN`. La URL por sí sola no demuestra el aislamiento.
 
 ## Demostración pública sin USB
+
+Para validar la navegación integral contra el catálogo real, ejecutar `npm run android:qa`. El APK queda en `reports/android-packages/production-qa/app-connectedQa.apk`, firmado con identidad Debug. Las rutas privadas conservan sus guards. QA informa en el formulario de ingreso que el acceso a cuentas espera un entorno autorizado. El interceptor impide enviar credenciales, tokens y escrituras a Render desde este paquete.
 
 Ejecutar `npm run android:production-debug`. El APK `reports/android-packages/production-debug/app-publicDemo.apk` tiene firma Debug y un ID separado del paquete principal. Comprobar SHA-256 y firma antes de transferirlo por un canal privado. Si ya existe una instalación con el mismo ID, comprobar certificado y versión antes de actualizar.
 

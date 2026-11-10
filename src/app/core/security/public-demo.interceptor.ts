@@ -4,6 +4,7 @@ import { throwError } from 'rxjs';
 import { PRODUCTION_API_BASE_URL } from '../../../environments/environment-settings';
 import { REQUIRES_AUTH } from '../api/api-client.service';
 import { PUBLIC_DEMO } from '../config/public-demo.token';
+import { CONNECTED_QA } from '../config/connected-qa.token';
 
 const publicPath = /^\/api\/(?:public\/(?:categories\/active|products\/(?:catalog|featured|latest|[1-9]\d*))|reviews\/product\/[1-9]\d*)$/;
 
@@ -17,7 +18,7 @@ function isPublicApiUrl(value: string): boolean {
 }
 
 export const publicDemoInterceptor: HttpInterceptorFn = (request, next) => {
-  if (!inject(PUBLIC_DEMO)) return next(request);
+  if (!inject(PUBLIC_DEMO) && !inject(CONNECTED_QA)) return next(request);
 
   if (request.method !== 'GET' || request.context.get(REQUIRES_AUTH) || request.headers.has('Authorization')
       || !isPublicApiUrl(request.url)) {

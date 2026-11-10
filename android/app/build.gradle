@@ -39,6 +39,11 @@ android {
             applicationIdSuffix ".publicdemo"
             matchingFallbacks = ['debug']
         }
+        connectedQa {
+            initWith debug
+            applicationIdSuffix ".qa"
+            matchingFallbacks = ['debug']
+        }
         stagingConnected {
             initWith debug
             applicationIdSuffix ".staging"
@@ -95,6 +100,10 @@ def verifyConnectedWebAssets = { String nativeVariant ->
             build.publicDemo != true || build.angularConfiguration != 'production,public-demo')) {
             throw new GradleException('Public demo requires the read-only Production Debug web assets.')
         }
+        if (nativeVariant == 'connectedQa' && (build.environment != 'production' || build.variant != 'qa' ||
+            build.publicDemo != false || build.angularConfiguration != 'production')) {
+            throw new GradleException('Connected QA requires the Production routes with the QA transport restriction.')
+        }
         if (nativeVariant == 'stagingConnected' && (build.environment != 'staging' || build.variant != 'debug' ||
             build.publicDemo != false || build.angularConfiguration != 'staging')) {
             throw new GradleException('Connected Staging requires explicitly isolated staging web assets.')
@@ -134,11 +143,15 @@ def verifyReleaseWebAssets = tasks.register('verifyReleaseWebAssets') {
 def verifyPublicDemoWebAssets = tasks.register('verifyPublicDemoWebAssets') {
     doLast { verifyConnectedWebAssets('publicDemo') }
 }
+def verifyConnectedQaWebAssets = tasks.register('verifyConnectedQaWebAssets') {
+    doLast { verifyConnectedWebAssets('connectedQa') }
+}
 def verifyStagingConnectedWebAssets = tasks.register('verifyStagingConnectedWebAssets') {
     doLast { verifyConnectedWebAssets('stagingConnected') }
 }
 tasks.matching { it.name == 'preReleaseBuild' }.configureEach { dependsOn verifyReleaseWebAssets }
 tasks.matching { it.name == 'prePublicDemoBuild' }.configureEach { dependsOn verifyPublicDemoWebAssets }
+tasks.matching { it.name == 'preConnectedQaBuild' }.configureEach { dependsOn verifyConnectedQaWebAssets }
 tasks.matching { it.name == 'preStagingConnectedBuild' }.configureEach { dependsOn verifyStagingConnectedWebAssets }
 
 try {

@@ -6,9 +6,10 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { PRODUCTION_API_BASE_URL } from '../../../environments/environment-settings';
 import { REQUIRES_AUTH } from '../api/api-client.service';
 import { PUBLIC_DEMO } from '../config/public-demo.token';
+import { CONNECTED_QA } from '../config/connected-qa.token';
 import { publicDemoInterceptor } from './public-demo.interceptor';
 
-describe('Production Debug HTTP policy', () => {
+describe.each(['Public Demo', 'Connected QA'])('%s HTTP policy', (mode) => {
   const catalog = `${PRODUCTION_API_BASE_URL}/api/public/products/catalog?page=0`;
   let http: HttpClient;
   let backend: HttpTestingController;
@@ -16,7 +17,8 @@ describe('Production Debug HTTP policy', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({ providers: [
       provideHttpClient(withInterceptors([publicDemoInterceptor])), provideHttpClientTesting(),
-      { provide: PUBLIC_DEMO, useValue: true },
+      { provide: PUBLIC_DEMO, useValue: mode === 'Public Demo' },
+      { provide: CONNECTED_QA, useValue: mode === 'Connected QA' },
     ] });
     http = TestBed.inject(HttpClient);
     backend = TestBed.inject(HttpTestingController);
