@@ -15,7 +15,7 @@ public class MainActivity extends BridgeActivity {
         // Manifest controls debugging, even if an asset configuration were to request it.
         WebView.setWebContentsDebuggingEnabled(debug);
         // Only the local Debug overlay permits loopback. Connected Debug variants remain HTTPS-only.
-        if (debug && NetworkSecurityPolicy.getInstance().isCleartextTrafficPermitted("127.0.0.1")) {
+        if (debug && NetworkSecurityPolicy.getInstance().isCleartextTrafficPermitted("10.0.2.2")) {
             getBridge().getWebView().getSettings().setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
         } else {
             getBridge().getWebView().getSettings().setMixedContentMode(WebSettings.MIXED_CONTENT_NEVER_ALLOW);

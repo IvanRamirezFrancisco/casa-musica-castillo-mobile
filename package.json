@@ -19,6 +19,7 @@
     "android:demo": "node scripts/build-android.mjs --environment demo --variant debug",
     "android:production-debug": "node scripts/build-android.mjs --environment production --variant debug",
     "android:qa": "node scripts/build-android.mjs --environment production --variant qa",
+    "android:emulator-integration": "node scripts/build-android.mjs --environment staging --variant emulator --isolated",
     "android:release": "node scripts/build-android.mjs --environment production --variant release",
     "android:verify-release": "python scripts/verify-android-release.py",
     "test:build-config": "node --test test/android-build-config.test.mjs"

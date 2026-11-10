@@ -3,10 +3,15 @@ import { fileURLToPath } from 'node:url';
 
 const source = fs.readFileSync(fileURLToPath(new URL('../src/environments/environment-settings.ts', import.meta.url)), 'utf8');
 export const productionApiUrl = source.match(/PRODUCTION_API_BASE_URL = '([^']+)'/)[1];
+export const emulatorIntegrationApiUrl = source.match(/EMULATOR_INTEGRATION_API_BASE_URL = '([^']+)'/)[1];
 
 export function buildOptions({ environment, variant, apiUrl, isolated = false, requireSigning = false }, env = process.env) {
-  if (!['development', 'device', 'staging', 'production', 'demo'].includes(environment) || !['debug', 'qa', 'release'].includes(variant)) {
-    throw new Error('Choose an explicit environment and debug/qa/release variant.');
+  if (!['development', 'device', 'staging', 'production', 'demo'].includes(environment) || !['debug', 'qa', 'emulator', 'release'].includes(variant)) {
+    throw new Error('Choose an explicit environment and debug/qa/emulator/release variant.');
+  }
+  const emulatorIntegration = variant === 'emulator';
+  if (emulatorIntegration && (environment !== 'staging' || !isolated || apiUrl !== undefined)) {
+    throw new Error('Emulator integration uses a fixed host-loopback origin and requires explicit staging isolation.');
   }
   if (variant === 'qa' && environment !== 'production') throw new Error('Connected QA requires the fixed production origin.');
   if (variant === 'release' && !['production', 'staging'].includes(environment)) {
@@ -16,7 +21,10 @@ export function buildOptions({ environment, variant, apiUrl, isolated = false, r
   const defines = [];
   if (variant === 'qa') defines.push('--define=CMC_CONNECTED_QA=true');
   let endpoint = environment === 'production' ? productionApiUrl : environment === 'demo' ? 'https://demo.invalid' : 'http://10.0.2.2:8080';
-  if (['staging', 'device'].includes(environment)) {
+  if (emulatorIntegration) {
+    endpoint = emulatorIntegrationApiUrl;
+    defines.push('--define=CMC_EMULATOR_INTEGRATION=true');
+  } else if (['staging', 'device'].includes(environment)) {
     if (!apiUrl) throw new Error('An explicit public API origin is required; no backend is provisioned automatically.');
     const url = new URL(apiUrl);
     if (url.username || url.password || url.search || url.hash || url.pathname !== '/') throw new Error('API URL must be a public configuration origin, never credentials or parameters.');
@@ -43,6 +51,7 @@ export function buildOptions({ environment, variant, apiUrl, isolated = false, r
   const publicDemo = environment === 'production' && variant === 'debug';
   const angularConfiguration = publicDemo ? 'production,public-demo' : environment === 'device' ? 'development' : environment;
   const nativeVariant = publicDemo ? 'publicDemo' : variant === 'qa' ? 'connectedQa'
+    : emulatorIntegration ? 'emulatorIntegration'
     : environment === 'staging' && variant === 'debug' ? 'stagingConnected' : variant;
   return { environment, variant, nativeVariant, angularConfiguration, publicDemo,
     apiBaseUrl: endpoint, isolated: environment === 'staging' && isolated, defines,

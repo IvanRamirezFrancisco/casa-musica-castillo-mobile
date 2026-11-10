@@ -1,4 +1,5 @@
 export const PRODUCTION_API_BASE_URL = 'https://casa-musica-castillo-backend.onrender.com';
+export const EMULATOR_INTEGRATION_API_BASE_URL = 'http://10.0.2.2:18082';
 
 export interface AppEnvironment {
   readonly name: 'development' | 'staging' | 'production' | 'demo';

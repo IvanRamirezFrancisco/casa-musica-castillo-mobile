@@ -49,6 +49,11 @@ android {
             applicationIdSuffix ".staging"
             matchingFallbacks = ['debug']
         }
+        emulatorIntegration {
+            initWith debug
+            applicationIdSuffix ".integration"
+            matchingFallbacks = ['debug']
+        }
         release {
             debuggable false
             jniDebuggable false
@@ -93,6 +98,7 @@ def verifyConnectedWebAssets = { String nativeVariant ->
         }
         def settings = rootProject.file('../src/environments/environment-settings.ts').text
         def expectedProduction = (settings =~ /PRODUCTION_API_BASE_URL = '([^']+)'/)[0][1]
+        def expectedEmulator = (settings =~ /EMULATOR_INTEGRATION_API_BASE_URL = '([^']+)'/)[0][1]
         if (build.nativeVariant != nativeVariant) {
             throw new GradleException('Web assets do not match the requested Android variant.')
         }
@@ -108,15 +114,21 @@ def verifyConnectedWebAssets = { String nativeVariant ->
             build.publicDemo != false || build.angularConfiguration != 'staging')) {
             throw new GradleException('Connected Staging requires explicitly isolated staging web assets.')
         }
+        def emulatorIntegration = nativeVariant == 'emulatorIntegration'
+        if (emulatorIntegration && (build.environment != 'staging' || build.variant != 'emulator' ||
+            !build.isolated || build.publicDemo != false || build.angularConfiguration != 'staging' ||
+            build.apiBaseUrl != expectedEmulator)) {
+            throw new GradleException('Emulator integration requires the fixed isolated backend origin.')
+        }
         if (nativeVariant == 'release' && (!(build.environment in ['production', 'staging']) || build.variant != 'release' || build.publicDemo == true)) {
             throw new GradleException('Release requires production or explicitly isolated staging web assets.')
         }
         def endpoint = new URI(build.apiBaseUrl as String)
-        if (endpoint.scheme != 'https' || endpoint.userInfo || endpoint.query || endpoint.fragment || !(endpoint.path in ['', '/'])) {
+        if ((!emulatorIntegration && endpoint.scheme != 'https') || endpoint.userInfo || endpoint.query || endpoint.fragment || !(endpoint.path in ['', '/'])) {
             throw new GradleException('Release requires an HTTPS API origin without credentials or URL parameters.')
         }
         if ((build.environment == 'production' && build.apiBaseUrl != expectedProduction) ||
-            (build.environment == 'staging' && (!build.isolated || !endpoint.host ||
+            (build.environment == 'staging' && !emulatorIntegration && (!build.isolated || !endpoint.host ||
                 !(endpoint.host ==~ /(?i).*\.[a-z][a-z0-9-]*/) || endpoint.host ==~ /(?i).*\.(localhost|local|internal)/ ||
                 endpoint.host.equalsIgnoreCase(new URI(expectedProduction).host) ||
                 endpoint.host.toLowerCase(Locale.ROOT).endsWith('.' + new URI(expectedProduction).host)))) {
@@ -149,10 +161,14 @@ def verifyConnectedQaWebAssets = tasks.register('verifyConnectedQaWebAssets') {
 def verifyStagingConnectedWebAssets = tasks.register('verifyStagingConnectedWebAssets') {
     doLast { verifyConnectedWebAssets('stagingConnected') }
 }
+def verifyEmulatorIntegrationWebAssets = tasks.register('verifyEmulatorIntegrationWebAssets') {
+    doLast { verifyConnectedWebAssets('emulatorIntegration') }
+}
 tasks.matching { it.name == 'preReleaseBuild' }.configureEach { dependsOn verifyReleaseWebAssets }
 tasks.matching { it.name == 'prePublicDemoBuild' }.configureEach { dependsOn verifyPublicDemoWebAssets }
 tasks.matching { it.name == 'preConnectedQaBuild' }.configureEach { dependsOn verifyConnectedQaWebAssets }
 tasks.matching { it.name == 'preStagingConnectedBuild' }.configureEach { dependsOn verifyStagingConnectedWebAssets }
+tasks.matching { it.name == 'preEmulatorIntegrationBuild' }.configureEach { dependsOn verifyEmulatorIntegrationWebAssets }
 
 try {
     def servicesJSON = file('google-services.json')

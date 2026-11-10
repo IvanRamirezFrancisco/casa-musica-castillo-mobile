@@ -44,6 +44,20 @@ test('Connected QA uses Production routes and a Debug identity without changing 
   assert.throws(() => buildOptions({ environment: 'staging', variant: 'qa' }, {}));
   assert.throws(() => buildOptions({ environment: 'production', variant: 'qa', requireSigning: true }, {}));
 });
+test('emulator integration is an isolated Debug variant with a fixed origin', () => {
+  const config = buildOptions({ environment: 'staging', variant: 'emulator', isolated: true }, {});
+  assert.equal(config.apiBaseUrl, 'http://10.0.2.2:18082');
+  assert.equal(config.nativeVariant, 'emulatorIntegration');
+  assert.equal(config.angularConfiguration, 'staging');
+  assert.equal(config.signing, 'android-debug-key');
+  assert.equal(config.publicDemo, false);
+  for (const options of [
+    { environment: 'production', variant: 'emulator', isolated: true },
+    { environment: 'staging', variant: 'emulator' },
+    { environment: 'staging', variant: 'emulator', isolated: true, apiUrl: productionApiUrl },
+    { environment: 'staging', variant: 'release', isolated: true, apiUrl: config.apiBaseUrl },
+  ]) assert.throws(() => buildOptions(options, {}));
+});
 test('device builds cannot silently use the emulator; HTTP is limited to explicit local hosts', () => {
   assert.throws(() => buildOptions({ environment: 'device', variant: 'debug' }, {}));
   assert.throws(() => buildOptions({ environment: 'device', variant: 'debug', apiUrl: 'http://lan.example.test:8080' }, {}));
