@@ -43,7 +43,13 @@ test('Angular replacements preserve production, DEMO and explicit staging; budge
   const angular = JSON.parse(fs.readFileSync(new URL('../angular.json', import.meta.url)));
   const build = angular.projects.app.architect.build;
   for (const [name, file] of [['production', 'environment.prod.ts'], ['demo', 'environment.demo.ts'], ['staging', 'environment.staging.ts']]) {
-    assert.deepEqual(build.configurations[name].fileReplacements, [{ replace: 'src/environments/environment.ts', with: `src/environments/${file}` }]);
+    assert.deepEqual(build.configurations[name].fileReplacements[0], { replace: 'src/environments/environment.ts', with: `src/environments/${file}` });
+  }
+  for (const name of ['production', 'staging']) {
+    assert.deepEqual(build.configurations[name].fileReplacements.slice(1), [
+      { replace: 'src/app/app-page-loaders.ts', with: 'src/app/app-page-loaders.connected.ts' },
+      { replace: 'src/app/layout/main-navigation/cart-count.ts', with: 'src/app/layout/main-navigation/cart-count.connected.ts' },
+    ]);
   }
   assert.equal(build.configurations.production.sourceMap, false);
   assert.deepEqual(build.configurations['public-demo'].fileReplacements.map(item => item.with), [

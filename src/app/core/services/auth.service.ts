@@ -70,22 +70,23 @@ export class AuthService {
   restore(): Promise<void> {
     if (this.hasValidSession()) return Promise.resolve();
     const revision = this.revision;
+    const attempt = this.attempt;
     this.restoration ??= (async () => {
       try {
         const stored = await this.store.load();
-        if (!stored || revision !== this.revision || this.current() !== null) return;
+        if (!stored || revision !== this.revision || attempt !== this.attempt || this.current() !== null) return;
         if (stored.expiresAt === null || stored.expiresAt - EXPIRY_SKEW_MS <= Date.now()) {
           this.endSession(true);
           return;
         }
         // Native persistence does not prove that the server still accepts the token or its roles.
         const user = this.store.persistent ? await firstValueFrom(this.repository.restoreUser(stored.token)) : stored.user;
-        if (revision !== this.revision) return;
+        if (revision !== this.revision || attempt !== this.attempt) return;
         if (user.id !== stored.user.id) throw new SessionStorageError();
         this.current.set({ ...stored, user });
         this.armExpiry();
       } catch (error) {
-        if (revision !== this.revision) return;
+        if (revision !== this.revision || attempt !== this.attempt) return;
         if (typeof error === 'object' && error !== null && 'status' in error
             && typeof error.status === 'number' && (error.status === 0 || error.status === 429 || error.status >= 500)) {
           // Retain encrypted state without exposing it. The next attempt must still revalidate /me.
@@ -109,7 +110,7 @@ export class AuthService {
       return this.repository.login(credentials).pipe(switchMap((outcome): Observable<LoginResult> => {
         if (attempt !== this.attempt) throw new SessionStorageError();
         if (outcome.kind === 'two-factor') {
-          if (this.current()) this.endSession(false);
+          if (this.current() || this.store.persistent) this.endSession(false);
           return of(outcome);
         }
         return this.establish(outcome.session).pipe(map(() => ({ kind: 'authenticated', user: outcome.session.user })));

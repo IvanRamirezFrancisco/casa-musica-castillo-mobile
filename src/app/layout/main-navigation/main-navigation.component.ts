@@ -1,10 +1,8 @@
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
 import { IonBadge, IonIcon, IonLabel, IonTabBar, IonTabButton, IonTabs } from '@ionic/angular';
 import { addIcons } from 'ionicons';
 import { cartOutline, gridOutline, homeOutline, personOutline, receiptOutline } from 'ionicons/icons';
-import { BACKEND_SESSION_ENABLED } from '../../core/config/backend-session.token';
-import { CartService } from '../../core/services/cart.service';
-import { DemoCheckoutStateService } from '../../core/services/demo-checkout-state.service';
+import { cartCount } from './cart-count';
 
 /** Cantidad máxima mostrada en el indicador; arriba de este valor se muestra "99+". */
 const MAX_BADGE_COUNT = 99;
@@ -18,12 +16,8 @@ const MAX_BADGE_COUNT = 99;
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MainNavigationComponent {
-  private readonly connected = inject(BACKEND_SESSION_ENABLED);
-  private readonly checkout = inject(DemoCheckoutStateService);
-  private readonly cart = inject(CartService);
-
   // TT-36: indicador del carrito sincronizado con el estado compartido (real o DEMO).
-  readonly cartCount = computed(() => (this.connected ? this.cart.itemCount() : this.checkout.itemCount()));
+  readonly cartCount = cartCount();
 
   readonly cartBadgeText = computed(() => {
     const count = this.cartCount();

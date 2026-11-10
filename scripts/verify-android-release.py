@@ -56,6 +56,8 @@ for kind,package in packages.items():
         js='\n'.join(archive.read(n).decode('utf-8',errors='replace') for n in names if n.startswith(prefix) and n.endswith('.js'))
         assert report['apiBaseUrl'] in js,'Selected backend is missing from web assets.'
         assert 'http://10.0.2.2:8080' not in js and 'http://localhost:8080' not in js and 'https://demo.invalid' not in js
+        forbidden = re.compile(r'\bDEMO-100[1-4]\b|demo@ejemplo\.com|Guitarra acústica de estudio|Usuario Demo|foundation-preview|api-connection|https?://(?:127\.0\.0\.1|localhost|10\.0\.2\.2):\d+|jdbc:postgresql:', re.I)
+        assert not forbidden.search(js), 'Fixture, diagnostic route or local origin found in Release.'
         if kind=='.aab' and report['signing']=='unsigned':assert not any(re.match(r'META-INF/.*\.(?:RSA|DSA|EC|SF)$',n) for n in names)
         config=json.loads(archive.read('assets/capacitor.config.json' if kind=='.apk' else 'base/assets/capacitor.config.json'))
         assert config['loggingBehavior']=='none' and config['android']['allowMixedContent'] is False
@@ -86,6 +88,6 @@ for name,count in [('backup_rules',9),('data_extraction_rules',18)]:
     compiled=resource_xml(name)
     assert compiled.count('E: exclude ')==count
     assert all('="'+domain+'"' in compiled for domain in domains)
-result={'status':'PASS','environment':args.environment,'signing':report['signing'],'packages':inventory,'permissions':permissions,'debuggable':False,'allowBackup':False,'releaseCleartext':False,'r8MappingSha256':hashlib.sha256(mapping.read_bytes()).hexdigest(),'r8BridgeMethodPreserved':True,'r8SecureStorageMethodsPreserved':True,'sourceMaps':False,'installedOrRuntimeValidated':False,'limitations':'Unsigned technical APK/AAB are not installable or ready for Play. Static packaging/R8 proof is not runtime, certificate pinning or JavaScript confidentiality.'}
+result={'status':'PASS','environment':args.environment,'signing':report['signing'],'packages':inventory,'permissions':permissions,'debuggable':False,'allowBackup':False,'releaseCleartext':False,'r8MappingSha256':hashlib.sha256(mapping.read_bytes()).hexdigest(),'r8BridgeMethodPreserved':True,'r8SecureStorageMethodsPreserved':True,'sourceMaps':False,'fixtureAndDiagnosticMarkersAbsent':True,'installedOrRuntimeValidated':False,'limitations':'Unsigned technical APK/AAB are not installable or ready for Play. Static packaging/R8 proof is not runtime, certificate pinning or JavaScript confidentiality.'}
 (folder/'verification.json').write_text(json.dumps(result,indent=2)+'\n',encoding='utf-8')
 print(json.dumps(result,indent=2))

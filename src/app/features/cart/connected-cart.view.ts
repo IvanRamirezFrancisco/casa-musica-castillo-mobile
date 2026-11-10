@@ -123,6 +123,13 @@ import { CmcLoadingComponent } from '../../shared/ui/loading/cmc-loading.compone
   `,
 })
 export class ConnectedCartComponent {
+  private entered = false;
+
+  ionViewWillEnter(): void {
+    if (this.entered) this.cart.load();
+    this.entered = true;
+  }
+
   readonly cart = inject(CartService);
   readonly limits = CART_LIMITS;
   private readonly router = inject(Router);

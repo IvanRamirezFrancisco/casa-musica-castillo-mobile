@@ -301,6 +301,28 @@ describe('AuthService', () => {
     expect(service.user()?.id).toBe(99);
   });
 
+  it('una restauración pendiente no abre la cuenta anterior durante el MFA de otro login', async () => {
+    const session = testSession();
+    const stored: SessionStore = { persistent: true, save: vi.fn(),
+      load: vi.fn().mockResolvedValue(session), clear: vi.fn().mockResolvedValue(undefined) };
+    const { repo, service } = setup(stored);
+    const validation = new Subject<typeof session.user>();
+    repo.restoreUser.mockReturnValue(validation);
+    const restore = service.restore();
+    await Promise.resolve();
+    expect(repo.restoreUser).toHaveBeenCalled();
+    const login = new Subject();
+    repo.login.mockReturnValue(login);
+    const result = firstValueFrom(service.login({ email: 'otra@gmail.com', password: 'x' }));
+    validation.next(session.user);
+    await restore;
+    expect(service.validToken()).toBeNull();
+    login.next({ kind: 'two-factor', challenge: { preAuthChallenge: CHALLENGE, methods: ['EMAIL'] } });
+    await expect(result).resolves.toMatchObject({ kind: 'two-factor' });
+    expect(service.user()).toBeNull();
+    expect(stored.clear).toHaveBeenCalledOnce();
+  });
+
   it('un login tardío no vuelve a autenticar después de logout', () => {
     const { repo, service } = setup();
     const pending = new Subject(); repo.login.mockReturnValue(pending);
