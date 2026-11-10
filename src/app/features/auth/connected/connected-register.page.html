@@ -103,7 +103,7 @@
               </div>
               <ul class="password-requirements">
                 @for (requirement of [{met: checks.length, label: 'Al menos ' + limits.passwordMin + ' caracteres'},
-                  {met: checks.variety, label: 'Combina 3 tipos: minúsculas, mayúsculas, números o símbolos'}]; track requirement.label) {
+                  {met: checks.variety, label: 'Incluye minúscula, mayúscula, número y símbolo'}]; track requirement.label) {
                   <li [class.requirement-met]="requirement.met">
                     @if (requirement.met) { <cmc-icon name="available"/> }
                     @else { <span class="requirement-circle" aria-hidden="true"></span> }

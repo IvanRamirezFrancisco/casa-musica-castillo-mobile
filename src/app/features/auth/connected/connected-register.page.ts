@@ -57,6 +57,7 @@ export class ConnectedRegisterPage {
     if (!control.touched || control.valid) return '';
     const key = Object.keys(control.errors ?? {})[0];
     if (name === 'password' && control.value) {
+      if (key === 'whitespace' || key === 'simplePassword') return FIELD_MESSAGES[key];
       if (key === 'maxbytes' || key === 'maxlength') return 'Usa una contraseña más corta.';
       return this.passwordChecklist().feedback === 'warning'
         ? 'Estás a un paso de cumplir los requisitos.'
@@ -72,7 +73,7 @@ export class ConnectedRegisterPage {
     const value = this.form.controls.password.value;
     const length = value.length >= FIELD_LIMITS.passwordMin && value.length <= FIELD_LIMITS.passwordMax;
     const tooLong = value.length > FIELD_LIMITS.passwordMax || passwordByteLength(value) > FIELD_LIMITS.passwordMaxBytes;
-    const variety = passwordCharacterTypes(value) >= 3;
+    const variety = passwordCharacterTypes(value) === 4;
     const valid = this.form.controls.password.valid;
     const feedback = valid ? 'positive' : !tooLong && (length || variety) ? 'warning' : 'negative';
     const strength = valid ? 'Fuerte' : feedback === 'warning' ? 'Media' : 'Débil';
