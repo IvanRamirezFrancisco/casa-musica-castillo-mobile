@@ -1,24 +1,22 @@
 name: Release - Staging APK
 
 on:
-  push:
-    branches:
-      - develop
-
   workflow_dispatch:
+    inputs:
+      isolated:
+        description: Confirmo el origen autorizado, PostgreSQL aislado y checkout/pagos deshabilitados.
+        type: boolean
+        required: true
+        default: false
 
 permissions:
   contents: read
   checks: read
 
-# Un push posterior a develop reemplaza la entrega pendiente; los dispatch manuales conservan su ejecución completa.
-concurrency:
-  group: ${{ github.workflow }}-${{ github.event_name == 'push' && github.ref || github.run_id }}
-  cancel-in-progress: ${{ github.event_name == 'push' }}
-
 jobs:
   changes:
     name: Alcance Staging
+    if: inputs.isolated
     runs-on: ubuntu-24.04
     outputs:
       docs_only: ${{ steps.scope.outputs.docs_only }}
@@ -40,7 +38,7 @@ jobs:
       - name: Exigir Quality Gate aprobado para el mismo SHA
         env:
           GITHUB_TOKEN: ${{ github.token }}
-          # En push/dispatch el APK y los checks corresponden a github.sha, nunca a un merge SHA temporal de PR.
+          # El APK y los checks corresponden al SHA exacto del dispatch.
           QUALITY_GATE_SHA: ${{ github.sha }}
           QUALITY_GATE_BRANCH: ${{ github.ref_name }}
           QUALITY_GATE_DOCS_ONLY: ${{ needs.changes.outputs.docs_only }}
@@ -84,6 +82,10 @@ jobs:
       - name: Configurar Gradle
         uses: gradle/actions/setup-gradle@v6
 
+      - uses: android-actions/setup-android@v3
+        with:
+          packages: 'platform-tools platforms;android-36 build-tools;36.0.0'
+
       - name: Mostrar versiones
         run: |
           node --version
@@ -93,27 +95,20 @@ jobs:
       - name: Instalar dependencias
         run: npm ci
 
-      - name: Compilar aplicacion Angular
-        id: angular-build
-        run: npm run build
-
-      - name: Sincronizar Capacitor con Android
-        id: capacitor-sync
-        run: npx cap sync android
-
-      - name: Dar permisos al Gradle Wrapper
-        run: chmod +x android/gradlew
-
       - name: Compilar APK de Staging
         id: gradle-build
-        working-directory: android
-        run: ./gradlew assembleDebug --no-daemon
+        env:
+          CMC_AUTHORIZED_STAGING_ORIGIN: ${{ vars.CMC_AUTHORIZED_STAGING_ORIGIN }}
+        run: |
+          chmod +x android/gradlew
+          node scripts/build-android.mjs --environment staging --variant debug --api-url "$CMC_AUTHORIZED_STAGING_ORIGIN" --isolated
 
       - name: Preparar APK de Staging
         id: prepare-apk
         run: |
           mkdir -p staging
-          cp android/app/build/outputs/apk/debug/app-debug.apk staging/CasaMusicaCastillo-staging.apk
+          cp reports/android-packages/staging-debug/app-debug.apk staging/CasaMusicaCastillo-staging.apk
+          cp reports/android-packages/staging-debug/build-report.json staging/build-report.json
           test -f staging/CasaMusicaCastillo-staging.apk
           ls -lh staging/CasaMusicaCastillo-staging.apk
 
@@ -131,11 +126,9 @@ jobs:
           SUMMARY_WORKFLOW: Release - Staging APK
           SUMMARY_CONTROLS: |
             Quality Gate del SHA|PASS|El job anterior exigió DEVOPS QUALITY GATE aprobado para este mismo commit.
-            Angular build|${{ steps.angular-build.outcome == 'success' && 'PASS' || 'FAIL' }}|Compila la aplicación para entrega.
-            Capacitor sync|${{ steps.capacitor-sync.outcome == 'success' && 'PASS' || 'FAIL' }}|Sincroniza assets/plugins.
-            Gradle staging|${{ steps.gradle-build.outcome == 'success' && 'PASS' || 'FAIL' }}|Genera el APK; función BUILD/entrega.
+            Angular, Capacitor y Gradle Staging|${{ steps.gradle-build.outcome == 'success' && 'PASS' || 'FAIL' }}|El script exige el origen HTTPS autorizado y una confirmación de aislamiento.
             Verificación artifact|${{ steps.prepare-apk.outcome == 'success' && 'PASS' || 'FAIL' }}|Confirma nombre y existencia del archivo.
-          SUMMARY_STATUS: ${{ (steps.angular-build.outcome == 'success' && steps.capacitor-sync.outcome == 'success' && steps.gradle-build.outcome == 'success' && steps.prepare-apk.outcome == 'success') && 'PASS' || 'FAIL' }}
+          SUMMARY_STATUS: ${{ (steps.gradle-build.outcome == 'success' && steps.prepare-apk.outcome == 'success') && 'PASS' || 'FAIL' }}
           SUMMARY_DATA: Mismo SHA aprobado; APK Debug identificado como staging, sin secretos embebidos.
           SUMMARY_METRICS: Tamaño del APK visible en Preparar APK de Staging.
           SUMMARY_ARTIFACTS: casa-musica-castillo-staging-${{ github.run_number }}, retención 14 días.

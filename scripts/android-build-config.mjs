@@ -20,7 +20,9 @@ export function buildOptions({ environment, variant, apiUrl, isolated = false, r
     if (url.username || url.password || url.search || url.hash || url.pathname !== '/') throw new Error('API URL must be a public configuration origin, never credentials or parameters.');
     if (environment === 'staging') {
       const productionHost = new URL(productionApiUrl).hostname;
-      if (!isolated || url.protocol !== 'https:' || url.hostname === productionHost || url.hostname.endsWith(`.${productionHost}`)) {
+      if (!isolated || url.protocol !== 'https:' || !/\.[a-z][a-z0-9-]*$/i.test(url.hostname)
+          || /\.(localhost|local|internal)$/i.test(url.hostname)
+          || url.hostname === productionHost || url.hostname.endsWith(`.${productionHost}`)) {
         throw new Error('Staging requires explicit isolation confirmation and HTTPS distinct from production.');
       }
     } else if (url.protocol !== 'https:' && !(url.protocol === 'http:' && ['localhost', '127.0.0.1', '10.0.2.2'].includes(url.hostname))) {
@@ -36,7 +38,9 @@ export function buildOptions({ environment, variant, apiUrl, isolated = false, r
   const supplied = signingNames.filter(name => Boolean(env[name]));
   if (supplied.length && supplied.length !== signingNames.length) throw new Error('Private upload signing configuration is incomplete.');
   if (requireSigning && supplied.length !== signingNames.length) throw new Error('No authorized upload identity supplied. Only unsigned technical Release artifacts can be generated.');
-  return { environment, variant, angularConfiguration: environment === 'device' ? 'development' : environment,
+  const publicDemo = environment === 'production' && variant === 'debug';
+  const angularConfiguration = publicDemo ? 'production,public-demo' : environment === 'device' ? 'development' : environment;
+  return { environment, variant, angularConfiguration, publicDemo,
     apiBaseUrl: endpoint, isolated: environment === 'staging' && isolated, defines,
     signing: variant === 'debug' ? 'android-debug-key' : supplied.length ? 'external-upload-key' : 'unsigned' };
 }

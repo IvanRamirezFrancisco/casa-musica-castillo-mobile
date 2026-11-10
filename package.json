@@ -17,6 +17,7 @@
     "test:api": "node scripts/run-api-tests.mjs",
     "android:debug": "node scripts/build-android.mjs --environment development --variant debug",
     "android:demo": "node scripts/build-android.mjs --environment demo --variant debug",
+    "android:production-debug": "node scripts/build-android.mjs --environment production --variant debug",
     "android:release": "node scripts/build-android.mjs --environment production --variant release",
     "android:verify-release": "python scripts/verify-android-release.py",
     "test:build-config": "node --test test/android-build-config.test.mjs"

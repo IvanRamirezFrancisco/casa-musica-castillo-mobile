@@ -4,6 +4,7 @@ export interface AppEnvironment {
   readonly name: 'development' | 'staging' | 'production' | 'demo';
   readonly production: boolean;
   readonly publicCatalogEnabled: boolean;
+  readonly publicDemo?: boolean;
   readonly apiBaseUrl: string;
 }
 
@@ -32,7 +33,9 @@ export function stagingEnvironment(apiBaseUrl: string): AppEnvironment {
   const normalized = origin(apiBaseUrl);
   const url = new URL(normalized);
   const productionHost = new URL(PRODUCTION_API_BASE_URL).hostname;
-  if (url.protocol !== 'https:' || url.hostname === productionHost || url.hostname.endsWith(`.${productionHost}`)) {
+  if (url.protocol !== 'https:' || !/\.[a-z][a-z0-9-]*$/i.test(url.hostname)
+      || /\.(localhost|local|internal)$/i.test(url.hostname)
+      || url.hostname === productionHost || url.hostname.endsWith(`.${productionHost}`)) {
     throw new Error('Staging requires an isolated HTTPS backend, distinct from production.');
   }
   return { name: 'staging', production: true, publicCatalogEnabled: true, apiBaseUrl: normalized };

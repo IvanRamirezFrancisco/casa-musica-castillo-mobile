@@ -12,9 +12,15 @@ test('Release rejects every local/DEMO environment and missing/partial upload id
 test('production is fixed centrally and cannot be overridden by a caller', () => {
   assert.equal(buildOptions({ environment: 'production', variant: 'release' }, {}).apiBaseUrl, productionApiUrl);
   assert.throws(() => buildOptions({ environment: 'production', variant: 'release', apiUrl: 'https://other.example.test' }, {}));
+  const debug = buildOptions({ environment: 'production', variant: 'debug' }, {});
+  assert.equal(debug.apiBaseUrl, productionApiUrl);
+  assert.equal(debug.angularConfiguration, 'production,public-demo');
+  assert.equal(debug.publicDemo, true);
+  assert.equal(buildOptions({ environment: 'production', variant: 'release' }, {}).publicDemo, false);
 });
 test('staging requires an explicitly isolated HTTPS origin, distinct from production', () => {
-  for (const apiUrl of [undefined, productionApiUrl, 'http://isolated.example.test', 'https://user:password@isolated.example.test', 'https://isolated.example.test/?token=fixture']) {
+  for (const apiUrl of [undefined, productionApiUrl, 'http://isolated.example.test', 'https://user:password@isolated.example.test', 'https://isolated.example.test/?token=fixture',
+    'https://localhost', 'https://test.localhost', 'https://postgres.internal', 'https://192.168.1.2', 'https://[::1]']) {
     assert.throws(() => buildOptions({ environment: 'staging', variant: 'release', isolated: true, apiUrl }, {}));
   }
   assert.throws(() => buildOptions({ environment: 'staging', variant: 'debug', apiUrl: 'https://isolated.example.test' }, {}));
@@ -35,6 +41,9 @@ test('Angular replacements preserve production, DEMO and explicit staging; budge
     assert.deepEqual(build.configurations[name].fileReplacements, [{ replace: 'src/environments/environment.ts', with: `src/environments/${file}` }]);
   }
   assert.equal(build.configurations.production.sourceMap, false);
+  assert.deepEqual(build.configurations['public-demo'].fileReplacements.map(item => item.with), [
+    'src/environments/environment.public-demo.ts', 'src/app/app.routes.public-demo.ts',
+  ]);
   assert.equal(build.configurations.production.budgets[1].maximumError, '4kb');
   assert.equal(angular.projects.app.architect.test.configurations.ci.coverageThresholds.lines, 60);
 });

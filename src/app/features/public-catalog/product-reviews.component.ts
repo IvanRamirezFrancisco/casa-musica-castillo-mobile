@@ -6,9 +6,11 @@ import { Subject, takeUntil } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { REVIEW_REPOSITORY, ReviewEligibility, ReviewPage } from '../../core/repositories/review.repository';
 import { AuthService } from '../../core/services/auth.service';
+import { PUBLIC_DEMO } from '../../core/config/public-demo.token';
 import { CmcIconComponent } from '../../shared/ui/icon/cmc-icon.component';
 @Component({selector:'cmc-product-reviews',standalone:true,imports:[DatePipe,FormsModule,RouterLink,CmcIconComponent],templateUrl:'./product-reviews.component.html',styles:[':host{display:block;}article{padding-block:20px;border-bottom:1px solid var(--cmc-border);}article p{white-space:pre-wrap;margin-top:8px;overflow-wrap:anywhere;} small{color:var(--cmc-text-secondary);} .review-meta{display:flex;flex-wrap:wrap;gap:8px;align-items:center;}form{display:grid;gap:12px;margin-block:16px;}label{display:grid;gap:8px;font-weight:600;}input,textarea,select{font:inherit;font-size:16px;width:100%;box-sizing:border-box;padding:12px;border:1px solid var(--cmc-border-strong);border-radius:12px;background:white;}textarea{min-height:120px;resize:vertical;}.review-paging{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-block:16px;}']})
 export class ProductReviewsComponent {
+ readonly publicDemo = inject(PUBLIC_DEMO);
  readonly productId=input.required<number>(); readonly auth=inject(AuthService);private readonly repo=inject(REVIEW_REPOSITORY);private readonly destroyRef=inject(DestroyRef);private readonly cancelled=new Subject<void>();
  readonly page=signal<ReviewPage|null>(null);readonly busy=signal(false);readonly error=signal('');readonly notice=signal('');readonly eligibility=signal<ReviewEligibility|null>(null);readonly editing=signal(false);
  rating=5;title='';comment='';

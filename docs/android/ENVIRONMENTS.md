@@ -9,6 +9,7 @@ Etapa 2A, noviembre de 2026. No se provisiona infraestructura.
 | Device Debug | Origen explícito | USB o HTTPS de pruebas autorizado; rechaza el host comercial |
 | Staging | Sin valor predeterminado | HTTPS explícito, diferente de producción y confirmación de aislamiento |
 | Production | `https://casa-musica-castillo-backend.onrender.com` | Servicio comercial; no usar para pruebas destructivas |
+| Production Debug | Mismo origen HTTPS de Production | Solo lectura. ID `com.casademusicacastillo.app.publicdemo` |
 | DEMO | `https://demo.invalid` | Fixtures explícitos, sin fallback remoto por errores HTTP |
 
 Los orígenes se centralizan en `src/environments/environment-settings.ts`. Angular aplica los `fileReplacements` de `production`, `demo` y `staging` en `angular.json`. `development` conserva el entorno base y `ci` las pruebas existentes. Las URL públicas del bundle no son secretos.
@@ -20,6 +21,14 @@ node scripts/build-android.mjs --environment staging --variant debug --api-url $
 ```
 
 El operador debe definir ese origen autorizado. Release solo admite `production` o `staging`. Gradle también rechaza assets locales/DEMO en invocaciones directas.
+
+El workflow de APK Staging requiere un dispatch manual con confirmación de aislamiento, Quality Gate del mismo SHA y la variable `CMC_AUTHORIZED_STAGING_ORIGIN`. La URL por sí sola no demuestra el aislamiento.
+
+## Demostración pública sin USB
+
+Ejecutar `npm run android:production-debug`. El APK `reports/android-packages/production-debug/app-publicDemo.apk` tiene firma Debug y un ID separado del paquete principal. Comprobar SHA-256 y firma antes de transferirlo por un canal privado. Si ya existe una instalación con el mismo ID, comprobar certificado y versión antes de actualizar.
+
+Con Wi-Fi o datos y el cable desconectado, comprobar Inicio, categoría, búsqueda, orden por precio, detalle, galería y el placeholder. Desactivar la red, abrir otra consulta y registrar el error. Restablecer la red y pulsar Reintentar. Registrar modelo, Android, WebView, fecha, SHA y resultado. El origen virtual `https://localhost` del WebView sirve los recursos empaquetados. Las solicitudes de datos usan Render por HTTPS.
 
 ## Samsung Galaxy A55 por USB
 

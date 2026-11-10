@@ -26,7 +26,7 @@ function files(dir) { return fs.readdirSync(dir, { withFileTypes: true }).flatMa
 const www = path.join(root, 'www');
 const sourceSha = execFileSync('git', ['rev-parse', 'HEAD'], { cwd: root, encoding: 'utf8' }).trim();
 const marker = { environment: config.environment, variant: config.variant, angularConfiguration: config.angularConfiguration,
-  apiBaseUrl: config.apiBaseUrl, isolated: config.isolated, sourceSha,
+  apiBaseUrl: config.apiBaseUrl, isolated: config.isolated, publicDemo: config.publicDemo, sourceSha,
   sourceTreeDirty: Boolean(execFileSync('git', ['status', '--porcelain', '--untracked-files=normal'], { cwd: root, encoding: 'utf8' }).trim()),
   webFiles: Object.fromEntries(files(www).filter(f => path.basename(f) !== 'cmc-build.json').map(f => [path.relative(www, f).replaceAll('\\', '/'), digest(f)])) };
 fs.writeFileSync(path.join(www, 'cmc-build.json'), JSON.stringify(marker, null, 2));
@@ -38,7 +38,8 @@ const nativePublic = path.join(android, 'app/src/main/assets/public');
 marker.webFiles = Object.fromEntries(files(nativePublic).filter(f => path.basename(f) !== 'cmc-build.json')
   .map(f => [path.relative(nativePublic, f).replaceAll('\\', '/'), digest(f)]));
 fs.writeFileSync(path.join(nativePublic, 'cmc-build.json'), JSON.stringify(marker, null, 2));
-const tasks = config.variant === 'release' ? ['assembleRelease', 'bundleRelease'] : ['assembleDebug'];
+const tasks = config.publicDemo ? ['assemblePublicDemo']
+  : config.variant === 'release' ? ['assembleRelease', 'bundleRelease'] : ['assembleDebug'];
 if (process.platform === 'win32') run('cmd.exe', ['/d', '/s', '/c', `gradlew.bat ${tasks.join(' ')} --no-daemon`], android);
 else run('./gradlew', [...tasks, '--no-daemon'], android);
 const destination = path.join(root, 'reports/android-packages', `${config.environment}-${config.variant}`);
@@ -46,7 +47,8 @@ fs.mkdirSync(destination, { recursive: true });
 const candidates = config.variant === 'release' ? [
   config.signing === 'unsigned' ? 'android/app/build/outputs/apk/release/app-release-unsigned.apk' : 'android/app/build/outputs/apk/release/app-release.apk',
   'android/app/build/outputs/bundle/release/app-release.aab',
-] : ['android/app/build/outputs/apk/debug/app-debug.apk'];
+] : config.publicDemo ? ['android/app/build/outputs/apk/publicDemo/app-publicDemo.apk']
+  : ['android/app/build/outputs/apk/debug/app-debug.apk'];
 const packages = candidates.map(relative => {
   if (!fs.existsSync(path.join(root, relative))) throw new Error(`Expected Android artifact is missing: ${relative}`);
   const source = path.join(root, relative); const target = path.join(destination, path.basename(source));

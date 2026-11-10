@@ -5,6 +5,7 @@ import { EMPTY, Subject, finalize, switchMap, takeUntil } from 'rxjs';
 import { IonBackButton,IonButtons,IonContent,IonHeader,IonTitle,IonToolbar } from '@ionic/angular';
 import { ProductFavoritesService } from '../../core/services/product-favorites.service';
 import { BACKEND_SESSION_ENABLED } from '../../core/config/backend-session.token';
+import { PUBLIC_DEMO } from '../../core/config/public-demo.token';
 import { AuthService } from '../../core/services/auth.service';
 import { CartService } from '../../core/services/cart.service';
 import { PurchaseIntentService } from '../../core/services/purchase-intent.service';
@@ -25,6 +26,7 @@ import { ProductReviewsComponent } from './product-reviews.component';
  imports:[RouterLink,CmcMoneyPipe,CmcIconComponent,CmcQuantityComponent,IonBackButton,IonButtons,IonContent,IonHeader,IonTitle,IonToolbar,PublicImageComponent,CmcButtonComponent,CmcLoadingComponent,CmcErrorStateComponent,CmcEmptyStateComponent,ProductReviewsComponent,ProductDescriptionComponent,ProductPhotoViewerComponent],
  templateUrl:'./public-product-detail.view.html',styleUrl:'./public-product-detail.view.scss'})
 export class PublicProductDetailComponent {
+ readonly publicDemo = inject(PUBLIC_DEMO);
  readonly weightFormat = new Intl.NumberFormat('es-MX', {
   style: 'unit', unit: 'kilogram', maximumSignificantDigits: 21,
  });
@@ -81,10 +83,12 @@ export class PublicProductDetailComponent {
   this.added.set(false);
  }
  addFavorite(id:number):void{
+  if(this.publicDemo)return;
   if(!this.auth.hasValidSession()){void this.router.navigate(['/login'],{queryParams:{returnUrl:`/products/${id}`}});return;}
   this.favorites.toggle(id);
  }
  addToCart(productId:number):void{
+  if(this.publicDemo)return;
   if(this.preparing()||this.cart.mutating())return;
   const quantity=this.quantity();const product=this.service.product().data;
   if(!product||product.id!==productId||product.availability!=='available'||!Number.isSafeInteger(quantity)||quantity<1||quantity>this.maximum()){this.actionNotice.set('Selecciona una cantidad disponible.');return;}

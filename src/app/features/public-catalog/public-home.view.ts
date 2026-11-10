@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { AuthService } from '../../core/services/auth.service';
+import { PUBLIC_DEMO } from '../../core/config/public-demo.token';
 import { API_BASE_URL } from '../../core/api/api-base-url.token';
 import { safeImageUrl } from '../../core/api/public-product.mapper';
 import { PublicProduct } from '../../core/models/public-product.model';
@@ -19,6 +20,7 @@ import { CmcEmptyStateComponent } from '../../shared/ui/empty-state/cmc-empty-st
 })
 export class PublicHomeComponent {
   readonly auth=inject(AuthService);
+  readonly publicDemo=inject(PUBLIC_DEMO);
   private readonly apiBase=inject(API_BASE_URL);
   categoryImage(raw:string|null):string|null{return safeImageUrl(raw,this.apiBase);}
   available(products:readonly PublicProduct[]):readonly PublicProduct[]{return products.filter(p=>p.availability==='available').slice(0,4);}

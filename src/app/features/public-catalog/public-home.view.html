@@ -1,11 +1,12 @@
 <ion-header class="cmc-store-header ion-no-border"><ion-toolbar><div class="store-header-row">
   <div class="store-brand"><cmc-icon name="music"/><div><h1>Casa de Música Castillo</h1><small>Instrumentos musicales</small></div></div>
-  <a class="icon-action" routerLink="/favorites" aria-label="Abrir Favoritos"><cmc-icon name="heart"/></a>
+  @if(!publicDemo){<a class="icon-action" routerLink="/favorites" aria-label="Abrir Favoritos"><cmc-icon name="heart"/></a>}
 </div></ion-toolbar></ion-header>
 <ion-content class="cmc-page cmc-root-page"><main class="cmc-store">
   <form class="store-search" (submit)="$event.preventDefault();search()" role="search"><cmc-icon name="search"/><input type="search" maxlength="100" aria-label="Buscar en el catálogo" placeholder="Encuentra tu próximo instrumento" (input)="update($event)" (keydown.enter)="$event.preventDefault();search()"/><button type="submit" aria-label="Buscar instrumentos"><cmc-icon name="arrow"/></button></form>
   <section class="store-hero" aria-labelledby="store-welcome"><div><p class="eyebrow">Casa de Música Castillo</p><h2 id="store-welcome">Tu próxima historia<br/>empieza con música.</h2><p>Encuentra el instrumento que acompaña tu manera de tocar.</p><a class="store-button primary" routerLink="/main/catalog">Explorar instrumentos <cmc-icon name="arrow"/></a></div><cmc-icon class="hero-mark" name="music"/></section>
-  @if(!auth.hasValidSession()) {<aside class="guest-access"><div><strong>Tu música, en un solo lugar</strong><p>Inicia sesión para guardar favoritos y gestionar tu carrito.</p></div><a routerLink="/login">Iniciar sesión</a><a routerLink="/register">Crear cuenta</a></aside>}
+  @if(publicDemo){<p class="muted">Demostración · Catálogo en vivo de solo lectura</p>}
+  @else if(!auth.hasValidSession()) {<aside class="guest-access"><div><strong>Tu música, en un solo lugar</strong><p>Inicia sesión para guardar favoritos y gestionar tu carrito.</p></div><a routerLink="/login">Iniciar sesión</a><a routerLink="/register">Crear cuenta</a></aside>}
   @switch(service.home().status) {
     @case('loading') {<cmc-loading message="Cargando instrumentos"/>}
     @case('error') {<cmc-error-state heading="No pudimos cargar Inicio" description="Revisa la conexión y vuelve a intentarlo." (retry)="service.loadHome()"/>}

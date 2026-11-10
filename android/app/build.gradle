@@ -34,6 +34,11 @@ android {
         }
     }
     buildTypes {
+        publicDemo {
+            initWith debug
+            applicationIdSuffix ".publicdemo"
+            matchingFallbacks = ['debug']
+        }
         release {
             debuggable false
             jniDebuggable false
@@ -65,12 +70,11 @@ dependencies {
 
 apply from: 'capacitor.build.gradle'
 
-// Protect direct Gradle invocations too: optimized Release must never package DEMO/local assets.
-def verifyReleaseWebAssets = tasks.register('verifyReleaseWebAssets') {
-    doLast {
+// Protect direct Gradle invocations against stale assets from another build.
+def verifyConnectedWebAssets = { boolean publicDemo ->
         def assets = file('src/main/assets/public')
         def marker = new File(assets, 'cmc-build.json')
-        if (!marker.isFile()) throw new GradleException('Build assets with npm run android:release before packaging Release.')
+        if (!marker.isFile()) throw new GradleException('Build and sync the selected web assets with scripts/build-android.mjs first.')
         def build = new groovy.json.JsonSlurper().parse(marker)
         def capacitor = new groovy.json.JsonSlurper().parse(file('src/main/assets/capacitor.config.json'))
         if (capacitor.loggingBehavior != 'none' || capacitor.android?.allowMixedContent != false ||
@@ -79,7 +83,11 @@ def verifyReleaseWebAssets = tasks.register('verifyReleaseWebAssets') {
         }
         def settings = rootProject.file('../src/environments/environment-settings.ts').text
         def expectedProduction = (settings =~ /PRODUCTION_API_BASE_URL = '([^']+)'/)[0][1]
-        if (!(build.environment in ['production', 'staging']) || build.variant != 'release') {
+        if (publicDemo && (build.environment != 'production' || build.variant != 'debug' ||
+            build.publicDemo != true || build.angularConfiguration != 'production,public-demo')) {
+            throw new GradleException('Public demo requires the read-only Production Debug web assets.')
+        }
+        if (!publicDemo && (!(build.environment in ['production', 'staging']) || build.variant != 'release' || build.publicDemo == true)) {
             throw new GradleException('Release requires production or explicitly isolated staging web assets.')
         }
         def endpoint = new URI(build.apiBaseUrl as String)
@@ -87,8 +95,10 @@ def verifyReleaseWebAssets = tasks.register('verifyReleaseWebAssets') {
             throw new GradleException('Release requires an HTTPS API origin without credentials or URL parameters.')
         }
         if ((build.environment == 'production' && build.apiBaseUrl != expectedProduction) ||
-            (build.environment == 'staging' && (!build.isolated || endpoint.host == new URI(expectedProduction).host ||
-                endpoint.host.endsWith('.' + new URI(expectedProduction).host)))) {
+            (build.environment == 'staging' && (!build.isolated || !endpoint.host ||
+                !(endpoint.host ==~ /(?i).*\.[a-z][a-z0-9-]*/) || endpoint.host ==~ /(?i).*\.(localhost|local|internal)/ ||
+                endpoint.host.equalsIgnoreCase(new URI(expectedProduction).host) ||
+                endpoint.host.toLowerCase(Locale.ROOT).endsWith('.' + new URI(expectedProduction).host)))) {
             throw new GradleException('Release environment and API origin do not match the selected build.')
         }
         def actualFiles = fileTree(assets).files.collect { assets.toPath().relativize(it.toPath()).toString().replace('\\', '/') }.findAll { it != 'cmc-build.json' }.sort()
@@ -103,11 +113,17 @@ def verifyReleaseWebAssets = tasks.register('verifyReleaseWebAssets') {
             }
         }
         if (!fileTree(assets).matching { include '**/*.map' }.isEmpty()) {
-            throw new GradleException('Release assets must not contain source maps.')
+            throw new GradleException('Public demo and Release assets must not contain source maps.')
         }
-    }
+}
+def verifyReleaseWebAssets = tasks.register('verifyReleaseWebAssets') {
+    doLast { verifyConnectedWebAssets(false) }
+}
+def verifyPublicDemoWebAssets = tasks.register('verifyPublicDemoWebAssets') {
+    doLast { verifyConnectedWebAssets(true) }
 }
 tasks.matching { it.name == 'preReleaseBuild' }.configureEach { dependsOn verifyReleaseWebAssets }
+tasks.matching { it.name == 'prePublicDemoBuild' }.configureEach { dependsOn verifyPublicDemoWebAssets }
 
 try {
     def servicesJSON = file('google-services.json')
