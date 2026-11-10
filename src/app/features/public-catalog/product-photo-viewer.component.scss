@@ -9,7 +9,9 @@
     var(--cmc-safe-area-bottom) var(--ion-safe-area-left, env(safe-area-inset-left, 0px));
   border: 0;
   overflow: hidden;
-  background: #211b1d;
+  background: linear-gradient(to bottom,
+    var(--cmc-background) 0 var(--cmc-safe-area-top),
+    #211b1d var(--cmc-safe-area-top) 100%);
   color: #fff7f1;
 }
 
@@ -17,7 +19,7 @@
 .photo-viewer::backdrop { background: #161214; }
 .viewer-header, .viewer-tools { display: flex; align-items: center; gap: .4rem; }
 .viewer-header { padding: .25rem .75rem; }
-.viewer-header h2 { margin: 0; margin-inline-end: auto; font-size: 1rem; }
+.viewer-header h2 { margin: 0; margin-inline-end: auto; font-size: 1rem; color: inherit; }
 .viewer-header span { font-size: .875rem; }
 .viewer-header button { flex: 0 0 44px; }
 
