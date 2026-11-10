@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, ElementRef, afterRenderEffect, inject, signal, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, ElementRef, afterRenderEffect, inject, signal, viewChild } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -41,7 +41,7 @@ export class ConnectedLoginPage {
   private readonly route = inject(ActivatedRoute);
   protected readonly auth = inject(AuthService);
   private readonly cancelled = new Subject<void>();
-  private readonly untilDestroyed = takeUntilDestroyed();
+  private readonly destroyRef = inject(DestroyRef);
 
   protected readonly methodLabels = METHOD_LABELS;
   protected readonly step = signal<'credentials' | 'second-factor'>('credentials');
@@ -75,7 +75,7 @@ export class ConnectedLoginPage {
     this.errorMessage.set('');
     this.verificationSuggested.set(false);
     this.auth.acknowledgeExpiry();
-    this.auth.login(this.form.getRawValue()).pipe(takeUntil(this.cancelled), this.untilDestroyed).subscribe({
+    this.auth.login(this.form.getRawValue()).pipe(takeUntil(this.cancelled), takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (result) => {
         this.submitting.set(false);
         this.form.controls.password.reset('');
@@ -105,7 +105,7 @@ export class ConnectedLoginPage {
     if (!challenge || this.submitting()) return;
     this.submitting.set(true);
     this.errorMessage.set('');
-    this.auth.sendTwoFactorEmailCode(challenge).pipe(takeUntil(this.cancelled), this.untilDestroyed).subscribe({
+    this.auth.sendTwoFactorEmailCode(challenge).pipe(takeUntil(this.cancelled), takeUntilDestroyed(this.destroyRef)).subscribe({
       next: () => {
         this.submitting.set(false);
         this.emailCodeSent.set(true);
@@ -129,7 +129,7 @@ export class ConnectedLoginPage {
       preAuthChallenge: challenge.preAuthChallenge,
       method: this.method(),
       code: this.codeForm.controls.code.value,
-    }).pipe(takeUntil(this.cancelled), this.untilDestroyed).subscribe({
+    }).pipe(takeUntil(this.cancelled), takeUntilDestroyed(this.destroyRef)).subscribe({
       next: () => { this.submitting.set(false); this.finish(); },
       error: (error: unknown) => {
         this.submitting.set(false);
