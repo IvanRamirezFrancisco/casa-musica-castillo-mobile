@@ -46,8 +46,7 @@
         @if(added()){<p role="status" class="action-notice">Producto agregado a tu carrito.</p>}
         @if(cart.notice();as err){<p role="alert">{{err}}</p>}
         <p class="muted"><cmc-icon name="security"/> Precio y existencias se verifican al agregar. No se realiza ningún pago.</p>
-      </div>}@else if(publicDemo){<p class="muted" role="note">Catálogo de solo lectura</p>}
-      @else{<p class="muted" role="note">Agregar productos reales al carrito requiere la próxima etapa de integración. Este producto no se enviará al carrito DEMO.</p>}
+      </div>}
     </section></div>
     <section class="surface"><h2>Descripción</h2><div class="description" [class.expanded]="descriptionExpanded()||product.description.length<=400"><cmc-product-description [description]="product.description"/></div>@if(product.description.length>400){<button class="store-button" [attr.aria-expanded]="descriptionExpanded()" (click)="descriptionExpanded.update(invert)">{{descriptionExpanded()?'Leer menos':'Leer descripción completa'}} <cmc-icon name="down"/></button>}</section>
     <section class="surface"><h2>Especificaciones</h2><dl class="spec-list">

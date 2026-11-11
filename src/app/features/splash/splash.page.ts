@@ -1,23 +1,17 @@
 import { ChangeDetectionStrategy, Component, DestroyRef, OnInit, inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { IonContent, IonIcon } from '@ionic/angular';
-import { addIcons } from 'ionicons';
-import { musicalNotesOutline } from 'ionicons/icons';
+import { IonContent } from '@ionic/angular';
 
 @Component({
   selector: 'app-splash',
   templateUrl: './splash.page.html',
   styleUrls: ['./splash.page.scss'],
   standalone: true,
-  imports: [IonContent, IonIcon],
+  imports: [IonContent],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SplashPage implements OnInit {
   private router = inject(Router);
-
-  constructor() {
-    addIcons({ musicalNotesOutline });
-  }
 
   private readonly destroyRef = inject(DestroyRef);
 
