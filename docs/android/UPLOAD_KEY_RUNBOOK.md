@@ -7,7 +7,7 @@ La clave de carga permanece fuera del repositorio. Play App Signing conserva la 
 Abre una terminal local sin transcripción y ejecuta desde el worktree de la rama integral. Se requieren Node.js, Python, JDK 21, Android SDK y las dependencias ya instaladas en el repositorio.
 
 ```powershell
-Set-Location -LiteralPath 'C:\Users\ivanf\Documents\Desarrollo Movil Integral\casa-musica-mobile\reports\movil-integral'
+Set-Location -LiteralPath 'C:\Users\ivanf\Documents\Desarrollo Movil Integral\casa-musica-mobile\reports\antigravity-cierre-produccion-mobile'
 .\scripts\sign-android-release.ps1 -KeystorePath 'C:\Users\ivanf\CMC-Keys\castillo-upload.p12' -KeyAlias 'castillo-upload' -CertificateSha256 '47:49:2A:A3:5B:3F:B2:61:73:BA:F1:EF:23:6C:3C:2B:EF:C3:3D:B8:E3:ED:C3:D5:2E:F0:C7:75:35:33:DB:C3'
 ```
 
@@ -21,6 +21,8 @@ El comando genera y verifica ambos paquetes. Las rutas de salida dentro del work
 | `reports/android-packages/production-release-signed/app-release.aab` | AAB Release firmado, verificado con jarsigner y keytool |
 | `reports/android-packages/production-release-signed/build-report.json` | SHA Git, estado del árbol, entorno y SHA-256 de los paquetes |
 | `reports/android-packages/production-release-signed/verification.json` | Huellas de ambos firmantes, hashes, metadatos y comprobaciones estáticas |
+
+Después de aceptar el backend, comprobar carrito y favoritos entre la web y Android y recibir autorización para habilitarlos en Production, añade `-EnableReviewedCommerce` al comando de firma. Confirma `reviewedCommerce: true` en el reporte del build. El modo habilita exclusivamente las mutaciones revisadas de carrito y favoritos. Checkout, pagos, transferencias y webhooks conservan sus restricciones.
 
 El éxito requiere que la ejecución termine con estado PASS. Si falla, los archivos que existan en la carpeta pueden ser de una ejecución anterior o estar pendientes de verificación. Para repetir la comprobación después de un build exitoso, sin volver a introducir la contraseña:
 
