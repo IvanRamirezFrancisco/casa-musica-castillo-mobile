@@ -15,8 +15,9 @@ for (let i = 0; i < args.length; i++) {
 }
 const config = buildOptions({ environment: value('--environment'), variant: value('--variant'), apiUrl: value('--api-url'),
   isolated: args.includes('--isolated'), requireSigning: args.includes('--require-signing') });
-const run = (command, parameters, cwd = root) => {
-  const result = spawnSync(command, parameters, { cwd, stdio: 'inherit', env: { ...process.env, NG_CLI_ANALYTICS: 'false' } });
+const webEnv = Object.fromEntries(Object.entries(process.env).filter(([name]) => !/^CMC_UPLOAD_/i.test(name)));
+const run = (command, parameters, cwd = root, env = webEnv) => {
+  const result = spawnSync(command, parameters, { cwd, stdio: 'inherit', env: { ...env, NG_CLI_ANALYTICS: 'false' } });
   if (result.error) throw result.error;
   if (result.status !== 0) process.exit(result.status ?? 1);
 };
@@ -24,10 +25,10 @@ run(process.execPath, ['node_modules/@angular/cli/bin/ng.js', 'build', `--config
 const digest = file => createHash('sha256').update(fs.readFileSync(file)).digest('hex');
 function files(dir) { return fs.readdirSync(dir, { withFileTypes: true }).flatMap(e => e.isDirectory() ? files(path.join(dir, e.name)) : [path.join(dir, e.name)]); }
 const www = path.join(root, 'www');
-const sourceSha = execFileSync('git', ['rev-parse', 'HEAD'], { cwd: root, encoding: 'utf8' }).trim();
+const sourceSha = execFileSync('git', ['rev-parse', 'HEAD'], { cwd: root, encoding: 'utf8', env: webEnv }).trim();
 const marker = { environment: config.environment, variant: config.variant, nativeVariant: config.nativeVariant, angularConfiguration: config.angularConfiguration,
   apiBaseUrl: config.apiBaseUrl, isolated: config.isolated, publicDemo: config.publicDemo, sourceSha,
-  sourceTreeDirty: Boolean(execFileSync('git', ['status', '--porcelain', '--untracked-files=normal'], { cwd: root, encoding: 'utf8' }).trim()),
+  sourceTreeDirty: Boolean(execFileSync('git', ['status', '--porcelain', '--untracked-files=normal'], { cwd: root, encoding: 'utf8', env: webEnv }).trim()),
   webFiles: Object.fromEntries(files(www).filter(f => path.basename(f) !== 'cmc-build.json').map(f => [path.relative(www, f).replaceAll('\\', '/'), digest(f)])) };
 fs.writeFileSync(path.join(www, 'cmc-build.json'), JSON.stringify(marker, null, 2));
 run(process.execPath, ['node_modules/@capacitor/cli/bin/capacitor', 'sync', 'android']);
@@ -40,10 +41,14 @@ marker.webFiles = Object.fromEntries(files(nativePublic).filter(f => path.basena
 fs.writeFileSync(path.join(nativePublic, 'cmc-build.json'), JSON.stringify(marker, null, 2));
 const native = config.nativeVariant;
 const tasks = [`assemble${native[0].toUpperCase()}${native.slice(1)}`];
-if (native === 'release') tasks.push('bundleRelease');
-if (process.platform === 'win32') run('cmd.exe', ['/d', '/s', '/c', `gradlew.bat ${tasks.join(' ')} --no-daemon`], android);
-else run('./gradlew', [...tasks, '--no-daemon'], android);
-const destination = path.join(root, 'reports/android-packages', `${config.environment}-${config.variant}`);
+if (native === 'release') tasks.push('verifyReleaseBundleMetadata');
+const gradleEnv = config.signing === 'external-upload-key' ? process.env : webEnv;
+const gradleOptions = [...tasks, '--no-daemon'];
+if (config.signing === 'external-upload-key') gradleOptions.push('--no-configuration-cache');
+if (process.platform === 'win32') run('cmd.exe', ['/d', '/s', '/c', `gradlew.bat ${gradleOptions.join(' ')}`], android, gradleEnv);
+else run('./gradlew', gradleOptions, android, gradleEnv);
+const suffix = config.signing === 'external-upload-key' ? '-signed' : '';
+const destination = path.join(root, 'reports/android-packages', `${config.environment}-${config.variant}${suffix}`);
 fs.mkdirSync(destination, { recursive: true });
 const candidates = config.variant === 'release' ? [
   config.signing === 'unsigned' ? 'android/app/build/outputs/apk/release/app-release-unsigned.apk' : 'android/app/build/outputs/apk/release/app-release.apk',

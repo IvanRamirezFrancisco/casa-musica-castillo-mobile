@@ -2,11 +2,24 @@
 from pathlib import Path
 import argparse,hashlib,json,os,re,subprocess,zipfile,xml.etree.ElementTree as ET
 
+if not __debug__:
+    raise SystemExit('Run the verifier with Python assertions enabled.')
+
 root=Path(__file__).resolve().parents[1]
-parser=argparse.ArgumentParser();parser.add_argument('--environment',choices=['production','staging'],default='production');args=parser.parse_args()
-folder=root/'reports/android-packages'/f'{args.environment}-release'
+parser=argparse.ArgumentParser()
+parser.add_argument('--environment',choices=['production','staging'],default='production')
+parser.add_argument('--certificate-sha256', help='Expected public upload certificate fingerprint for a signed Release')
+args=parser.parse_args()
+expected_certificate=None
+if args.certificate_sha256 is not None:
+    expected_certificate=args.certificate_sha256.replace(':','').lower()
+    if not re.fullmatch(r'[0-9a-f]{64}',expected_certificate):
+        parser.error('Provide the 64 hex digits of the public certificate SHA-256.')
+suffix='-signed' if expected_certificate else ''
+folder=root/'reports/android-packages'/f'{args.environment}-release{suffix}'
 report=json.loads((folder/'build-report.json').read_text(encoding='utf-8'))
 assert report['environment']==args.environment and report['variant']=='release'
+assert report['signing']==('external-upload-key' if expected_certificate else 'unsigned')
 sdk=Path(os.environ.get('ANDROID_HOME') or os.environ.get('ANDROID_SDK_ROOT') or '')
 build_tools=sorted((sdk/'build-tools').iterdir(),key=lambda p:tuple(int(n) for n in p.name.split('.') if n.isdigit()))[-1]
 exe='.exe' if os.name=='nt' else '';aapt=build_tools/('aapt2'+exe)
@@ -35,9 +48,24 @@ def resource_xml(name):
     return output(aapt,'dump','xmltree',apk,'--file',match.group(1))
 network=resource_xml('network_security_config')
 assert 'domain-config' not in network and re.search(r'cleartextTrafficPermitted[^\n]*=(?:false|0x0)(?:\s|$)',network)
-signed=subprocess.run([str(signer),'verify',str(apk)],cwd=root,capture_output=True)
-if report['signing']=='unsigned':assert signed.returncode!=0,'Unsigned technical Release must not silently use a debug/test key.'
-else:assert signed.returncode==0,'Configured Release identity did not produce a valid APK signature.'
+certificate_fingerprints={}
+if not expected_certificate:
+    signed=subprocess.run([str(signer),'verify',str(apk)],cwd=root,capture_output=True)
+    assert signed.returncode!=0,'Unsigned technical Release must not silently use a debug/test key.'
+else:
+    apk_signature=output(signer,'verify','--verbose','--print-certs',apk)
+    apk_fingerprints=re.findall(r'^Signer #\d+ certificate SHA-256 digest: ([0-9a-fA-F]{64})\s*$',apk_signature,re.M)
+    assert [digest.lower() for digest in apk_fingerprints]==[expected_certificate],'APK signer differs from the authorized certificate.'
+    java_options=['-J-Duser.language=en','-J-Duser.country=US']
+    aab_signature=output('jarsigner',*java_options,'-verify','-verbose:summary',aab)
+    assert re.search(r'^jar verified\.\s*$',aab_signature,re.M),'The AAB did not pass cryptographic signature verification.'
+    assert not re.search(r'unsigned entries|treated as unsigned',aab_signature,re.I),'The AAB contains unsigned content.'
+    aab_certificates=output('keytool',*java_options,'-printcert','-jarfile',aab)
+    signers=re.findall(r'^Signer #\d+:',aab_certificates,re.M)
+    aab_fingerprint=re.search(r'^\s*SHA256:\s*([0-9A-Fa-f:]+)\s*$',aab_certificates,re.M)
+    assert len(signers)==1 and aab_fingerprint and aab_fingerprint[1].replace(':','').lower()==expected_certificate, \
+        'AAB signer differs from the authorized certificate.'
+    certificate_fingerprints={'.apk':expected_certificate,'.aab':expected_certificate}
 inventory={}
 for kind,package in packages.items():
     recorded=next(p for p in report['packages'] if root/p['path']==package)
@@ -46,6 +74,7 @@ for kind,package in packages.items():
         names=archive.namelist();prefix='assets/public/' if kind=='.apk' else 'base/assets/public/'
         marker=json.loads(archive.read(prefix+'cmc-build.json'))
         assert marker['environment']==args.environment and marker['variant']=='release' and marker['apiBaseUrl']==report['apiBaseUrl']
+        assert marker['publicDemo'] is False and marker['apiBaseUrl'].startswith('https://')
         assert marker['sourceSha']==report['sourceSha'] and marker['sourceTreeDirty']==report['sourceTreeDirty']
         for relative,digest in marker['webFiles'].items():
             assert hashlib.sha256(archive.read(prefix+relative)).hexdigest()==digest,'Packaged web assets differ from the build inventory.'
@@ -59,6 +88,7 @@ for kind,package in packages.items():
         forbidden = re.compile(r'\bDEMO-100[1-4]\b|demo@ejemplo\.com|Guitarra acústica de estudio|Usuario Demo|foundation-preview|api-connection|https?://(?:127\.0\.0\.1|localhost|10\.0\.2\.2):\d+|jdbc:postgresql:', re.I)
         assert not forbidden.search(js), 'Fixture, diagnostic route or local origin found in Release.'
         assert not re.search(r'En esta compilación QA|Catálogo en vivo de solo lectura|próxima etapa de integración|carrito DEMO', js, re.I), 'Internal QA or demo copy found in Release.'
+        assert not re.search(r'-----BEGIN (?:[A-Z]+ )*PRIVATE KEY-----|CMC_UPLOAD_(?:STORE|KEY)_PASSWORD',js), 'Private key or signing configuration found in web assets.'
         if kind=='.aab' and report['signing']=='unsigned':assert not any(re.match(r'META-INF/.*\.(?:RSA|DSA|EC|SF)$',n) for n in names)
         config=json.loads(archive.read('assets/capacitor.config.json' if kind=='.apk' else 'base/assets/capacitor.config.json'))
         assert config['loggingBehavior']=='none' and config['android']['allowMixedContent'] is False
@@ -90,5 +120,12 @@ for name,count in [('backup_rules',9),('data_extraction_rules',18)]:
     assert compiled.count('E: exclude ')==count
     assert all('="'+domain+'"' in compiled for domain in domains)
 result={'status':'PASS','environment':args.environment,'signing':report['signing'],'packages':inventory,'permissions':permissions,'debuggable':False,'allowBackup':False,'releaseCleartext':False,'r8MappingSha256':hashlib.sha256(mapping.read_bytes()).hexdigest(),'r8BridgeMethodPreserved':True,'r8SecureStorageMethodsPreserved':True,'sourceMaps':False,'fixtureAndDiagnosticMarkersAbsent':True,'installedOrRuntimeValidated':False,'limitations':'Unsigned technical APK/AAB are not installable or ready for Play. Static packaging/R8 proof is not runtime, certificate pinning or JavaScript confidentiality.'}
+result['applicationId']='com.casademusicacastillo.app'
+result['versionCode']=1
+result['versionName']='1.0'
+result['targetSdk']=36
+result['certificateSha256']=certificate_fingerprints
+if expected_certificate:
+    result['limitations']='Signature and static checks passed. Runtime, production acceptance and Play eligibility remain separate.'
 (folder/'verification.json').write_text(json.dumps(result,indent=2)+'\n',encoding='utf-8')
 print(json.dumps(result,indent=2))

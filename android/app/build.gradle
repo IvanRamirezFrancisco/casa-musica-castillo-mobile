@@ -27,6 +27,7 @@ android {
         if (uploadValues.every { it }) {
             upload {
                 storeFile file(uploadValues[0])
+                if (storeFile.name.toLowerCase(Locale.ROOT) ==~ /.*\.(p12|pfx|pkcs12)/) storeType 'PKCS12'
                 storePassword uploadValues[1]
                 keyAlias uploadValues[2]
                 keyPassword uploadValues[3]
@@ -169,6 +170,23 @@ tasks.matching { it.name == 'prePublicDemoBuild' }.configureEach { dependsOn ver
 tasks.matching { it.name == 'preConnectedQaBuild' }.configureEach { dependsOn verifyConnectedQaWebAssets }
 tasks.matching { it.name == 'preStagingConnectedBuild' }.configureEach { dependsOn verifyStagingConnectedWebAssets }
 tasks.matching { it.name == 'preEmulatorIntegrationBuild' }.configureEach { dependsOn verifyEmulatorIntegrationWebAssets }
+
+tasks.register('verifyReleaseBundleMetadata') {
+    dependsOn 'bundleRelease'
+    doLast {
+        def bundleFile = layout.buildDirectory.file('outputs/bundle/release/app-release.aab').get().asFile
+        new java.util.zip.ZipFile(bundleFile).withCloseable { archive ->
+            def manifest = com.android.tools.build.bundletool.model.AppBundle.buildFromZip(archive).baseModule.androidManifest
+            def expected = android.defaultConfig
+            if (manifest.packageName != expected.applicationId || manifest.versionCode.orElse(null) != expected.versionCode ||
+                manifest.versionName.orElse(null) != expected.versionName ||
+                manifest.targetSdkVersion.orElse(null) != rootProject.ext.targetSdkVersion) {
+                throw new GradleException('Generated AAB manifest does not match the Release application ID, version or target SDK.')
+            }
+            logger.lifecycle("AAB manifest verified: ${manifest.packageName} ${expected.versionName} (${expected.versionCode}), target SDK ${rootProject.ext.targetSdkVersion}")
+        }
+    }
+}
 
 try {
     def servicesJSON = file('google-services.json')

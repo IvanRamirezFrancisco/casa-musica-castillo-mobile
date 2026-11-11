@@ -1,63 +1,39 @@
-# Firma Android privada — procedimiento preparado, no ejecutado
+# Firma local de Android Release con PKCS12
 
-Etapa 2B, 3 de noviembre. No se crea/importa upload key, no se firma ni se sube paquete. Reutiliza scripts/Gradle de 2A. Antes de operar: confirmar titularidad/representación/custodio del negocio y autorización expresa para generar o usar la identidad definitiva. No enviar passwords al chat.
+La clave de carga permanece fuera del repositorio. Play App Signing conserva la identidad de distribución administrada por Google. Si la aplicación ya existe en Play, compara la huella pública con el **certificado de clave de carga** de la aplicación, además de cotejar el último versionCode utilizado. [Referencia oficial](https://developer.android.com/studio/publish/app-signing)
 
-## Custodia y elección
+## Windows PowerShell
 
-Si existe upload key autorizada, reutilizar su keystore/alias/certificado, sin generar otra ni convertirla automáticamente. Play App Signing administra la firma de distribución; la upload key identifica la carga. Reemplazo/recuperación se tramita con Google; no cambiar applicationId ni usar debug key. [Referencia oficial](https://developer.android.com/studio/publish/app-signing).
-
-Acordar ruta privada absoluta fuera de ambos repositorios/artifacts y carpetas compartidas, custodio/acceso mínimo, respaldo cifrado offline y segunda copia controlada. Contraseñas en gestor privado, separadas del archivo. Terminal dedicada sin transcripciones/volcados de entorno. Datos de identidad del certificado deben ser factuales y autorizados, no inventados aquí.
-
-## Creación o reutilización manual tras autorización
+Abre una terminal local sin transcripción y ejecuta desde el worktree de la rama integral. Se requieren Node.js, Python, JDK 21, Android SDK y las dependencias ya instaladas en el repositorio.
 
 ```powershell
-$cmcKeyPath = Read-Host 'Ruta absoluta privada fuera de Git'
-$cmcKeyAlias = Read-Host 'Alias autorizado'
-# Solo si se autorizó CREAR y se verificó que la ruta no existe:
-keytool -genkeypair -keystore $cmcKeyPath -storetype PKCS12 -alias $cmcKeyAlias -keyalg RSA -keysize 2048 -validity 10000
-# Para una identidad existente, omitir genkeypair y comprobar el archivo autorizado:
-keytool -list -v -keystore $cmcKeyPath -alias $cmcKeyAlias
+Set-Location -LiteralPath 'C:\Users\ivanf\Documents\Desarrollo Movil Integral\casa-musica-mobile\reports\movil-integral'
+.\scripts\sign-android-release.ps1 -KeystorePath 'C:\Users\ivanf\CMC-Keys\castillo-upload.p12' -KeyAlias 'castillo-upload' -CertificateSha256 '47:49:2A:A3:5B:3F:B2:61:73:BA:F1:EF:23:6C:3C:2B:EF:C3:3D:B8:E3:ED:C3:D5:2E:F0:C7:75:35:33:DB:C3'
 ```
 
-keytool solicita passwords privadamente; no añadir `-storepass`/`-keypass` en comandos compartidos. PKCS12 normalmente usa el mismo password de almacén/clave; verificar tipo/condiciones de la identidad elegida. Registrar solo certificado SHA-256, alias, tipo, fecha/custodio por canal autorizado. La huella de certificado no es el hash del paquete. Un certificado público exportado debe ir fuera de Git; nunca compartir clave privada.
+Introduce la contraseña cuando aparezca el prompt enmascarado. Este flujo usa la misma contraseña para el almacén y la entrada privada PKCS12. El script comprueba el alias y la huella antes de compilar. Usa las cuatro variables `CMC_UPLOAD_*` en el proceso de firma y las elimina incluso si falla. Angular y Capacitor Sync se ejecutan sin esas variables. Gradle usa `--no-daemon` y desactiva la caché de configuración para esta compilación. La contraseña se convierte temporalmente a texto en memoria para que Java y Gradle puedan leerla.
 
-## Variables solo de proceso y build autorizado
+El comando genera y verifica ambos paquetes. Las rutas de salida dentro del worktree son:
+
+| Archivo | Resultado |
+|---|---|
+| `reports/android-packages/production-release-signed/app-release.apk` | APK Release firmado, verificado con apksigner |
+| `reports/android-packages/production-release-signed/app-release.aab` | AAB Release firmado, verificado con jarsigner y keytool |
+| `reports/android-packages/production-release-signed/build-report.json` | SHA Git, estado del árbol, entorno y SHA-256 de los paquetes |
+| `reports/android-packages/production-release-signed/verification.json` | Huellas de ambos firmantes, hashes, metadatos y comprobaciones estáticas |
+
+El éxito requiere que la ejecución termine con estado PASS. Si falla, los archivos que existan en la carpeta pueden ser de una ejecución anterior o estar pendientes de verificación. Para repetir la comprobación después de un build exitoso, sin volver a introducir la contraseña:
 
 ```powershell
-$env:CMC_UPLOAD_STORE_FILE = $cmcKeyPath
-$env:CMC_UPLOAD_KEY_ALIAS = $cmcKeyAlias
-$cmcStoreSecret = Read-Host 'Password almacén (privado)' -AsSecureString
-$cmcKeySecret = Read-Host 'Password clave (privado)' -AsSecureString
-try {
-  $env:CMC_UPLOAD_STORE_PASSWORD = [Net.NetworkCredential]::new('', $cmcStoreSecret).Password
-  $env:CMC_UPLOAD_KEY_PASSWORD = [Net.NetworkCredential]::new('', $cmcKeySecret).Password
-  node scripts/build-android.mjs --environment production --variant release --require-signing
-  if ($LASTEXITCODE -ne 0) { throw 'Build no completado' }
-  npm run android:verify-release
-  if ($LASTEXITCODE -ne 0) { throw 'Verificación técnica falló' }
-} finally {
-  Remove-Item Env:CMC_UPLOAD_STORE_FILE,Env:CMC_UPLOAD_KEY_ALIAS,Env:CMC_UPLOAD_STORE_PASSWORD,Env:CMC_UPLOAD_KEY_PASSWORD -ErrorAction SilentlyContinue
-  $cmcStoreSecret.Dispose()
-  $cmcKeySecret.Dispose()
-}
+python scripts/verify-android-release.py --certificate-sha256 '47:49:2A:A3:5B:3F:B2:61:73:BA:F1:EF:23:6C:3C:2B:EF:C3:3D:B8:E3:ED:C3:D5:2E:F0:C7:75:35:33:DB:C3'
+Get-FileHash -Algorithm SHA256 -LiteralPath @(
+  'reports/android-packages/production-release-signed/app-release.apk'
+  'reports/android-packages/production-release-signed/app-release.aab'
+)
 ```
 
-La conversión a variables de proceso permite que Gradle lea passwords; no es cifrado en memoria. No imprimirlas, persistirlas globalmente ni activar `--debug`. Cerrar terminal/procesos después. Una configuración parcial falla y nunca se usa debug key para Release. No se configuran secretos remotos en esta fase.
+Gradle valida los metadatos del manifiesto dentro del AAB y aapt2 verifica los del APK. La configuración actual conserva `com.casademusicacastillo.app`, versión 1.0, versionCode 1 y target SDK 36. Los paquetes técnicos sin firma se conservan en `production-release`.
 
-## Verificación obligatoria de identidad e integridad
+La APK firmada con la clave de carga solo puede actualizar una instalación con certificado compatible. Para una instalación entregada por Google Play, coteja el certificado de distribución antes de intentar la actualización. [Play App Signing](https://developer.android.com/studio/publish/app-signing)
 
-El verificador 2A de entorno/manifest/R8/firma APK no sustituye la verificación criptográfica del AAB y su identidad:
-
-```powershell
-$cmcTools = Join-Path $env:ANDROID_HOME 'build-tools/36.0.0'
-& (Join-Path $cmcTools 'apksigner.bat') verify --verbose --print-certs reports/android-packages/production-release/app-release.apk
-jarsigner -J-Duser.language=en -J-Duser.country=US -verify -verbose -certs reports/android-packages/production-release/app-release.aab
-keytool -printcert -jarfile reports/android-packages/production-release/app-release.aab
-Get-FileHash reports/android-packages/production-release/app-release.apk,reports/android-packages/production-release/app-release.aab -Algorithm SHA256
-```
-
-Exigir firma válida APK, `jar verified` y firmante presente AAB; no aceptar solo exit 0 (un JAR sin firma puede no fallar). Comparar ambas huellas con el certificado autorizado de keytool. Clasificar warnings de certificado autofirmado/cadena sin confundir confianza CA e integridad ni ignorar firmas inválidas. Registrar SHA del commit limpio, entorno, herramientas, huellas y hashes, sin valores privados.
-
-Instalar APK firmado en A55 solo con autorización y ejecutar matriz funcional Release/puente/plugins. Firma incompatible al actualizar no autoriza desinstalar/borrar datos. AAB no se instala directamente; distribución/pruebas mediante paquetes derivados o Play necesitan su proceso autorizado. No probar con pagos, compras o eliminación de cuentas comerciales.
-
-No afirmar Play readiness por build/R8/firma: aún requiere aceptación de dispositivo, política/contacto/procedimiento de eliminación, Data Safety y Console reales.
+La verificación de firma y contenido acredita el paquete técnico. La aceptación de login y carrito en Production, la aceptación física y los requisitos de privacidad siguen siendo hitos separados. Este flujo termina en archivos locales.
