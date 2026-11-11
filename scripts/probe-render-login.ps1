@@ -159,7 +159,7 @@ try {
         $unauthenticatedMeStatus = $null
         if (-not $SkipWarmup -or $WarmupHealth) {
             try {
-                $healthResp = $client.GetAsync("$normalizedOrigin/api/health").GetAwaiter().GetResult()
+                $healthResp = $client.GetAsync("$normalizedOrigin/actuator/health").GetAwaiter().GetResult()
                 $warmupStatus = [int]$healthResp.StatusCode
                 $healthResp.Dispose()
             } catch {

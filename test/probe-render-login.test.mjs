@@ -252,7 +252,7 @@ test('probe-render-login: cold-start warmup runs automatically, probes /api/auth
   let meCalls = 0;
   let loginCalls = 0;
   const srv = await withServer((req, res) => {
-    if (req.url === '/api/health') {
+    if (req.url === '/actuator/health') {
       healthCalls++;
       res.writeHead(200, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ status: 'UP' }));
