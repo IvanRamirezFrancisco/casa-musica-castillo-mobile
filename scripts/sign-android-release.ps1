@@ -40,7 +40,7 @@ try {
         if ($LASTEXITCODE -ne 0) { throw 'Falló la generación de los paquetes Release firmados.' }
     } finally {
         foreach ($name in $uploadVariables) { Remove-Item "Env:$name" -ErrorAction SilentlyContinue }
-        if ($null -ne $secret) { $secret.Dispose() }
+        if ($null -ne $secret -and $secret -is [System.IDisposable]) { $secret.Dispose() }
     }
     & python scripts/verify-android-release.py --certificate-sha256 $expectedFingerprint
     if ($LASTEXITCODE -ne 0) { throw 'Falló la verificación de ambos paquetes. Revisa la salida antes de utilizar los archivos.' }

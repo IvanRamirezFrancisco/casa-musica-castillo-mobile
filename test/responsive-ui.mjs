@@ -73,6 +73,12 @@ function fixture(method, pathname) {
   if (pathname === '/api/2fa/methods') {
     return wrap({ EMAIL: emailEnabled, GOOGLE_AUTHENTICATOR: false, BACKUP_CODES: false });
   }
+  if (pathname === '/api/2fa/backup-codes/status') {
+    return wrap({ enabled: false, available: 0, total: 0, used: 0, hasActiveCodes: false, canGenerate: false });
+  }
+  if (pathname === '/api/users/security-settings') {
+    return wrap({ twoFactorEnabled: emailEnabled, googleAuthEnabled: false, emailEnabled, backupCodesEnabled: false, emailVerified: true, passwordChangeRevokesSessions: true });
+  }
   if (pathname === '/api/users/profile') return wrap(user);
   if (pathname === '/api/cart' || pathname === '/api/cart/summary') return cart;
   if (pathname === '/api/orders/my') return emptyPage;
@@ -294,9 +300,9 @@ try {
     await capture(label, 'detalle');
     if (!baseline && ['320x640', '375x667', 'abierto', 'tablet-horizontal', 'telefono-horizontal'].includes(label)) {
       await click('.cover-action');
-      await wait("document.querySelector('.photo-viewer')?.open");
+      await wait("document.querySelector('.photo-viewer')?.open && document.querySelector('.viewer-photo')?.classList.contains('is-ready')");
       await click('[aria-label="Ampliar zoom"]');
-      assert.equal(await read("document.querySelector('.viewer-photo').style.width"), '150%');
+      assert.match(await read("document.querySelector('[aria-label=\"Restablecer zoom\"]').textContent.trim()"), /^150\s*%$/);
       assert.ok(await read("document.querySelector('[aria-label=\"Cerrar visor\"]').getBoundingClientRect().height >= 44"));
       assert.ok(await read("document.querySelector('.photo-viewer').getBoundingClientRect().width <= innerWidth"));
       await capture(label, 'galeria');
@@ -318,10 +324,20 @@ try {
     await click('app-connected-profile-view .profile-card[aria-label="Accesos de tu cuenta"] cmc-button:last-child button');
     await wait("location.pathname==='/profile/security' && !!document.querySelector('app-account-security main section')");
     await capture(label, 'seguridad');
-    if (!baseline) await capture(label, 'seguridad-final', 'app-account-security section:last-child button');
+    if (!baseline) {
+      const secPass = 'app-account-security cmc-input[formcontrolname=password] input';
+      await read(find(secPass) + '.scrollIntoView({ block: "center" })');
+      await read(find(secPass) + '.focus()');
+      if (label === '375x667') {
+        await rpc('Input.insertText', { text: 'Cl4ve-Segura' });
+        await wait("document.querySelector('app-account-security .password-strength')?.getAttribute('data-feedback') === 'positive'");
+      }
+      await capture(label, 'seguridad-final', 'app-account-security section:last-child button');
+    }
     if (!baseline && label === '375x667') {
       await click('#security-email ~ cmc-button button');
       await wait("document.querySelector('#security-email ~ .security-state')?.textContent === 'Activado'");
+      await read("document.querySelector('app-account-security .security-summary').scrollIntoView({ block: 'start' })");
       await capture(label, 'seguridad-confirmada');
       await go('/login', 'app-connected-login input[type=email]');
       await submitLogin();

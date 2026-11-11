@@ -9,7 +9,9 @@ import { CmcButtonComponent } from '../../shared/ui/button/cmc-button.component'
 import { CmcIconComponent } from '../../shared/ui/icon/cmc-icon.component';
 import { AuthService } from '../../core/services/auth.service';
 import { describeApiError } from '../../core/api/api-error-message';
-import { FIELD_MESSAGES, passwordValidator, passwordsMatch } from '../../core/validation/auth-fields.validation';
+import {
+ FIELD_LIMITS, FIELD_MESSAGES, passwordByteLength, passwordCharacterTypes, passwordValidator, passwordsMatch,
+} from '../../core/validation/auth-fields.validation';
 import { CmcInputComponent } from '../../shared/ui/input/cmc-input.component';
 @Component({
  selector: 'app-account-security', standalone: true,
@@ -28,6 +30,10 @@ export class AccountSecurityPage {
  readonly disabling=signal(false); readonly generating=signal(false); code='';
  readonly backupCount=signal<number|null>(null);
  readonly passwordChangeAvailable=signal(false);
+ readonly passwordFocused=signal(false);
+ readonly limits=FIELD_LIMITS;
+ readonly ringRadius=46;
+ readonly ringCircumference=289.03;
  readonly passwordForm=inject(NonNullableFormBuilder).group({
   currentPassword: ['', [Validators.required, Validators.maxLength(255)]],
   password: ['', [passwordValidator]],
@@ -44,6 +50,27 @@ export class AccountSecurityPage {
  ionViewWillEnter():void {if(this.cached){this.cached=false;this.reload();}}
  clearSecrets():void {this.cancelled.next();this.busy.set(false);this.enrollment.set(null);this.codes.set([]);this.code='';this.generating.set(false);this.disabling.set(false);this.passwordForm.reset();}
  validCode():boolean {return /^\d{6}$/.test(this.code);}
+ activeControlsCount(m: SecurityMethods): number {
+  return [m.EMAIL, m.GOOGLE_AUTHENTICATOR, m.BACKUP_CODES].filter(Boolean).length;
+ }
+ ringStrokeDashoffset(m: SecurityMethods): number {
+  const completed = this.activeControlsCount(m);
+  return Number((this.ringCircumference * (1 - completed / 3)).toFixed(2));
+ }
+ passwordChecklist() {
+  const value = this.passwordForm.controls.password.value;
+  const length = value.length >= FIELD_LIMITS.passwordMin && value.length <= FIELD_LIMITS.passwordMax;
+  const tooLong = value.length > FIELD_LIMITS.passwordMax || passwordByteLength(value) > FIELD_LIMITS.passwordMaxBytes;
+  const variety = passwordCharacterTypes(value) === 4;
+  const valid = this.passwordForm.controls.password.valid;
+  const feedback: 'negative' | 'warning' | 'positive' = valid ? 'positive' : !tooLong && (length || variety) ? 'warning' : 'negative';
+  const strength = valid ? 'Fuerte' : feedback === 'warning' ? 'Media' : 'Débil';
+  const level = valid ? 3 : feedback === 'warning' ? 2 : value ? 1 : 0;
+  return { length, variety, tooLong, feedback, strength, level } as const;
+ }
+ passwordsCoincide(): boolean {
+  return !!this.passwordForm.controls.confirmPassword.value && !this.passwordForm.hasError('passwordMismatch');
+ }
  reload():void {
   this.run(forkJoin({
    methods: this.repo.methods(),

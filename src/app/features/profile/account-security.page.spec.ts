@@ -38,9 +38,28 @@ describe('Security enrollment lifecycle with synthetic data',()=>{
    page.methods.set({ ...methods, EMAIL: true, BACKUP_CODES: true });
    fixture.detectChanges();
    expect(summary().textContent).toContain('Segundo factor y recuperación');
+   expect(summary().textContent).toContain('3/3');
    expect(summary().textContent).toContain('Guarda tus códigos');
    expect(summary().querySelectorAll('.security-checks .is-active')).toHaveLength(3);
+   expect(summary().querySelector('svg.security-ring')).toBeTruthy();
    expect(summary().textContent).not.toContain('%');
+   fixture.destroy();
+ });
+ it('computes progressive password strength and requirement checklist in the password change form', () => {
+   repo.passwordChangeRevokesSessions.mockReturnValue(of(true));
+   const fixture = TestBed.createComponent(AccountSecurityPage);
+   const page = fixture.componentInstance;
+   fixture.detectChanges();
+   expect(page.passwordChecklist().feedback).toBe('negative');
+   expect(page.passwordChecklist().strength).toBe('Débil');
+   page.passwordForm.controls.password.setValue('abcdefgh');
+   expect(page.passwordChecklist().feedback).toBe('warning');
+   expect(page.passwordChecklist().strength).toBe('Media');
+   page.passwordForm.controls.password.setValue('Synthetic@9zN');
+   expect(page.passwordChecklist().feedback).toBe('positive');
+   expect(page.passwordChecklist().strength).toBe('Fuerte');
+   page.passwordForm.controls.confirmPassword.setValue('Synthetic@9zN');
+   expect(page.passwordsCoincide()).toBe(true);
    fixture.destroy();
  });
  it('renders methods, enrollment, confirmation and recovery controls accessibly',async()=>{const f=TestBed.createComponent(AccountSecurityPage);const p=f.componentInstance;f.detectChanges();expect(f.nativeElement.textContent).toContain('Seguridad de la cuenta');p.methods.set({...methods,GOOGLE_AUTHENTICATOR:false});f.detectChanges();p.setup();f.detectChanges();expect(f.nativeElement.querySelector('img').src).toContain('data:image/png');expect(f.nativeElement.querySelector('input').inputMode).toBe('numeric');p.disabling.set(true);p.generating.set(true);p.codes.set(['0000-0000']);p.notice.set('Guardado');p.error.set('Error de prueba');f.detectChanges();expect(f.nativeElement.textContent).toContain('0000-0000');p.busy.set(true);f.detectChanges();expect(f.nativeElement.textContent).toContain('Procesando');p.clearSecrets();p.methods.set({...methods,EMAIL:true,BACKUP_CODES:true});f.detectChanges();await p.copyKey();p.setup();Object.defineProperty(navigator,'clipboard',{configurable:true,value:{writeText:vi.fn().mockRejectedValue(new Error())}});await p.copyKey();expect(p.notice()).toContain('manualmente');Object.defineProperty(navigator,'clipboard',{configurable:true,value:{writeText:vi.fn().mockResolvedValue(undefined)}});await p.copyKey();expect(p.notice()).toContain('copiada');f.destroy();});

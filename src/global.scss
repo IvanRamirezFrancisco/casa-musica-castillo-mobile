@@ -1,5 +1,7 @@
 @use './app/shared/ui/styles/discovery';
 @use './app/shared/ui/styles/commerce';
+@use './app/shared/ui/styles/security' as sec;
+@include sec.security-ring-and-guide;
 /* =====================================================
  * Casa de Música Castillo
  * Global styles

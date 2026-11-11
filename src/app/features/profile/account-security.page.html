@@ -8,16 +8,39 @@
 <ion-content class="cmc-page">
   <main class="cmc-page-container cmc-account security-page">
     <header class="security-summary">
-      <div class="security-heading">
-        <span class="security-mark" aria-hidden="true"><cmc-icon name="security"/></span>
-        <div>
-          <h1 class="cmc-title">Seguridad de la cuenta</h1>
-          @if (methods(); as m) {
-            <span class="security-level" [class.is-active]="m.EMAIL || m.GOOGLE_AUTHENTICATOR">
-              {{ m.BACKUP_CODES && (m.EMAIL || m.GOOGLE_AUTHENTICATOR) ? 'Segundo factor y recuperación' :
-                m.EMAIL || m.GOOGLE_AUTHENTICATOR ? 'Segundo factor activo' : 'Configuración básica' }}
-            </span>
-          }
+      <div class="security-hero-row">
+        @if (methods(); as m) {
+          <div class="security-ring-card" role="group" aria-label="Resumen visual de controles de seguridad">
+            <svg class="security-ring" viewBox="0 0 112 112" aria-hidden="true">
+              <circle class="security-ring__track" cx="56" cy="56" [attr.r]="ringRadius" />
+              <circle
+                class="security-ring__progress"
+                cx="56"
+                cy="56"
+                [attr.r]="ringRadius"
+                [attr.stroke-dasharray]="ringCircumference"
+                [attr.stroke-dashoffset]="ringStrokeDashoffset(m)"
+              />
+            </svg>
+            <div class="security-ring-center">
+              <strong class="security-ring-score">{{ activeControlsCount(m) }}/3</strong>
+              <span class="security-ring-caption">Controles</span>
+            </div>
+          </div>
+        } @else {
+          <span class="security-mark" aria-hidden="true"><cmc-icon name="security"/></span>
+        }
+        <div class="security-heading">
+          <span class="security-mark security-mark--inline" aria-hidden="true"><cmc-icon name="security"/></span>
+          <div>
+            <h1 class="cmc-title">Seguridad de la cuenta</h1>
+            @if (methods(); as m) {
+              <span class="security-level" [class.is-active]="m.EMAIL || m.GOOGLE_AUTHENTICATOR">
+                {{ m.BACKUP_CODES && (m.EMAIL || m.GOOGLE_AUTHENTICATOR) ? 'Segundo factor y recuperación' :
+                  m.EMAIL || m.GOOGLE_AUTHENTICATOR ? 'Segundo factor activo' : 'Configuración básica' }}
+              </span>
+            }
+          </div>
         </div>
       </div>
       @if (methods(); as m) {
@@ -133,17 +156,48 @@
         </section>
         @if (passwordChangeAvailable()) {
           <section class="security-card" aria-labelledby="security-password">
-            <h2 id="security-password">Cambiar contraseña</h2>
+            <div class="security-card__header">
+              <h2 id="security-password">Cambiar contraseña</h2>
+              <span class="security-state is-active">Revoca sesiones</span>
+            </div>
             <p>Introduce tu contraseña actual para confirmar el cambio. Tendrás que volver a iniciar sesión en tus dispositivos.</p>
-            <form class="security-panel" [formGroup]="passwordForm" (ngSubmit)="changePassword()" novalidate>
+            @let checks = passwordChecklist();
+            <form class="security-panel password-change-panel" [formGroup]="passwordForm" (ngSubmit)="changePassword()" novalidate>
               <cmc-input type="password" label="Contraseña actual" formControlName="currentPassword"
                 autocomplete="current-password" [error]="passwordError('currentPassword')" required />
               <cmc-input type="password" label="Contraseña nueva" formControlName="password"
-                autocomplete="new-password" [error]="passwordError('password')"
+                (focusin)="passwordFocused.set(true)" (focusout)="passwordFocused.set(false)"
+                autocomplete="new-password" [error]="passwordFocused() ? '' : passwordError('password')"
+                [feedback]="passwordFocused() || passwordForm.controls.password.touched || passwordForm.controls.password.value ? checks.feedback : null"
                 hint="Usa al menos 8 caracteres, con mayúscula, minúscula, número y símbolo." required />
+              @if (passwordFocused() || passwordForm.controls.password.value) {
+                <div class="password-guide" aria-label="Indicador de fortaleza de contraseña">
+                  <div class="password-strength" [attr.data-feedback]="checks.feedback">
+                    <span>Fortaleza</span><strong>{{checks.strength}}</strong>
+                    <progress max="3" [value]="checks.level" aria-label="Fortaleza de la contraseña nueva"
+                      [attr.aria-valuetext]="checks.strength"></progress>
+                  </div>
+                  <ul class="password-requirements">
+                    @for (req of [
+                      {met: checks.length, label: 'Al menos ' + limits.passwordMin + ' caracteres'},
+                      {met: checks.variety, label: 'Incluye minúscula, mayúscula, número y símbolo'}
+                    ]; track req.label) {
+                      <li [class.requirement-met]="req.met">
+                        @if (req.met) { <cmc-icon name="available"/> }
+                        @else { <span class="requirement-circle" aria-hidden="true"></span> }
+                        <span>{{req.label}}</span>
+                      </li>
+                    }
+                  </ul>
+                </div>
+              }
               <cmc-input type="password" label="Confirma la contraseña nueva" formControlName="confirmPassword"
-                autocomplete="new-password" [error]="passwordError('confirmPassword')" required />
-              <cmc-button type="submit" [loading]="busy()" loadingLabel="Actualizando contraseña">Actualizar contraseña</cmc-button>
+                autocomplete="new-password" [error]="passwordError('confirmPassword')"
+                [feedback]="passwordsCoincide() ? 'positive' : null" required />
+              @if (passwordsCoincide()) {
+                <p class="field-feedback field-success" role="status">Las contraseñas coinciden.</p>
+              }
+              <cmc-button type="submit" [disabled]="busy() || passwordForm.invalid" [loading]="busy()" loadingLabel="Actualizando contraseña">Actualizar contraseña</cmc-button>
             </form>
           </section>
         }
