@@ -7,10 +7,12 @@ import { HttpAccountSecurityRepository } from '../../core/infrastructure/http-ac
 import { AuthService } from '../../core/services/auth.service';
 describe('Security enrollment lifecycle with synthetic data',()=>{
  const ended=new Subject<void>();
+ const clearAfterPasswordChange=vi.fn(() => Promise.resolve());
  const methods={EMAIL:false,GOOGLE_AUTHENTICATOR:true,BACKUP_CODES:false};
  const enrollment={manualEntryKey:'ABCDEFGHIJKLMNOP',qrCode:'data:image/png;base64,AAAA'};
- const repo={methods:vi.fn(),setup:vi.fn(),confirm:vi.fn(),email:vi.fn(),disableTotp:vi.fn(),generate:vi.fn()};
- beforeEach(()=>{vi.resetAllMocks();repo.methods.mockReturnValue(of(methods));repo.setup.mockReturnValue(of(enrollment));repo.confirm.mockReturnValue(of(undefined));repo.email.mockReturnValue(of(undefined));repo.disableTotp.mockReturnValue(of(undefined));repo.generate.mockReturnValue(of(['0000-0000']));TestBed.configureTestingModule({providers:[provideRouter([]),{provide:HttpAccountSecurityRepository,useValue:repo},{provide:AuthService,useValue:{sessionEnded$:ended}}]});});
+ const repo={methods:vi.fn(),setup:vi.fn(),confirm:vi.fn(),email:vi.fn(),disableTotp:vi.fn(),generate:vi.fn(),
+   availableBackupCodes:vi.fn(() => of(0)),passwordChangeRevokesSessions:vi.fn(() => of(false)),changePassword:vi.fn()};
+ beforeEach(()=>{vi.resetAllMocks();repo.methods.mockReturnValue(of(methods));repo.setup.mockReturnValue(of(enrollment));repo.confirm.mockReturnValue(of(undefined));repo.email.mockReturnValue(of(undefined));repo.disableTotp.mockReturnValue(of(undefined));repo.generate.mockReturnValue(of(['0000-0000']));TestBed.configureTestingModule({providers:[provideRouter([]),{provide:HttpAccountSecurityRepository,useValue:repo},{provide:AuthService,useValue:{sessionEnded$:ended,clearAfterPasswordChange}}]});});
  it('loads the protected security route',async()=>{const {routes}=await import('../../app.routes');const route=routes.find(r=>r.path==='profile/security');expect(route?.canActivate?.length).toBe(1);expect(await route?.loadComponent?.()).toBe(AccountSecurityPage);});
  it('operates security controls through the rendered UI',()=>{const f=TestBed.createComponent(AccountSecurityPage);const p=f.componentInstance;
  const click=(label:string)=>{f.detectChanges();const b=Array.from(f.nativeElement.querySelectorAll('button')) as HTMLButtonElement[];const found=b.find(x=>x.textContent?.trim()===label);expect(found).toBeTruthy();found?.click();f.detectChanges();};
@@ -48,4 +50,21 @@ describe('Security enrollment lifecycle with synthetic data',()=>{
  it('generates, replaces and hides backup codes; clears on destruction',()=>{const f=TestBed.createComponent(AccountSecurityPage);const p=f.componentInstance;p.generate();expect(p.codes()).toHaveLength(1);repo.generate.mockReturnValue(of(['0000-0001']));p.generate();expect(p.codes()).toEqual(['0000-0001']);p.ionViewDidLeave();expect(p.codes()).toEqual([]);p.generate();f.destroy();expect(p.codes()).toEqual([]);});
  it('email and disabling call backend and refresh methods',()=>{const f=TestBed.createComponent(AccountSecurityPage);const p=f.componentInstance;p.changeEmail(true);expect(repo.email).toHaveBeenCalledWith(true);p.requestDisable();expect(p.disabling()).toBe(true);p.disable();expect(repo.disableTotp).toHaveBeenCalled();expect(p.disabling()).toBe(false);f.destroy();});
  it('never duplicates an active request',()=>{repo.methods.mockReturnValue(new Subject());const f=TestBed.createComponent(AccountSecurityPage);f.componentInstance.reload();expect(repo.methods).toHaveBeenCalledTimes(2);expect(f.componentInstance.busy()).toBe(true);f.destroy();});
+ it('only submits a valid password change against the revoking contract and clears all fields', () => {
+   const fixture = TestBed.createComponent(AccountSecurityPage);
+   const page = fixture.componentInstance;
+   page.changePassword();
+   expect(repo.changePassword).not.toHaveBeenCalled();
+   repo.passwordChangeRevokesSessions.mockReturnValue(of(true));
+   page.reload();
+   page.passwordForm.setValue({currentPassword: 'Synthetic@8kM', password: 'Synthetic@9zN', confirmPassword: 'different'});
+   page.changePassword();
+   expect(repo.changePassword).not.toHaveBeenCalled();
+   repo.changePassword.mockReturnValue(of(undefined));
+   page.passwordForm.controls.confirmPassword.setValue('Synthetic@9zN');
+   page.changePassword();
+   expect(repo.changePassword).toHaveBeenCalledWith('Synthetic@8kM', 'Synthetic@9zN');
+   expect(clearAfterPasswordChange).toHaveBeenCalledOnce();
+   expect(page.passwordForm.getRawValue()).toEqual({currentPassword: '', password: '', confirmPassword: ''});
+ });
 });

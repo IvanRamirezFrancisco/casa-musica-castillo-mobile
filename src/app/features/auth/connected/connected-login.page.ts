@@ -51,6 +51,8 @@ export class ConnectedLoginPage {
   protected readonly errorMessage = signal('');
   protected readonly verificationSuggested = signal(false);
   protected readonly infoMessage = signal('');
+  protected readonly passwordChanged = signal(false);
+  protected readonly continueTo = signal<string | null>(null);
   protected readonly challenge = signal<TwoFactorChallenge | null>(null);
   protected readonly method = signal<TwoFactorMethod>('EMAIL');
   protected readonly emailCodeSent = signal(false);
@@ -71,7 +73,7 @@ export class ConnectedLoginPage {
   }
 
   protected submit(): void {
-    if (this.connectedQa || this.submitting()) return;
+    if (this.connectedQa || this.submitting() || this.continueTo()) return;
     if (this.form.invalid) { this.form.markAllAsTouched(); return; }
     this.submitting.set(true);
     this.errorMessage.set('');
@@ -156,6 +158,12 @@ export class ConnectedLoginPage {
     this.form.controls.password.reset('');
     this.verificationSuggested.set(false);
     this.emailCodeSent.set(false);
+    this.continueTo.set(null);
+    this.passwordChanged.set(false);
+  }
+
+  ionViewWillEnter(): void {
+    this.passwordChanged.set(this.router.currentNavigation()?.extras.state?.['passwordChanged'] === true);
   }
 
   protected emailError(): string {
@@ -175,7 +183,10 @@ export class ConnectedLoginPage {
   }
 
   private finish(): void {
-    this.ionViewWillLeave();
-    void this.router.navigateByUrl(safeReturnUrl(this.route.snapshot.queryParamMap.get('returnUrl')), { replaceUrl: true });
+    const destination = safeReturnUrl(this.route.snapshot.queryParamMap.get('returnUrl'));
+    this.cancelSecondFactor();
+    this.form.controls.password.reset('');
+    this.continueTo.set(destination);
+    void this.router.navigateByUrl(destination, { replaceUrl: true }).catch(() => false);
   }
 }

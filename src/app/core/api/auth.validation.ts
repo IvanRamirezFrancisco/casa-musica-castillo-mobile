@@ -72,6 +72,10 @@ export function parseLoginResponse(body: unknown): LoginOutcome {
   if (data['twoFactorRequired'] === true) {
     const challenge = data['preAuthChallenge'];
     const available = data['availableMethods'];
+    // The legacy web challenge identified the account but did not bind the factor to a password check.
+    if (challenge === undefined && object(available) && object(data['user'])) {
+      throw new ApiError('incompatible-mfa', 200);
+    }
     if (typeof challenge !== 'string' || !CHALLENGE_SHAPE.test(challenge) || !object(available)) throw invalid();
     const methods = KNOWN_METHODS.filter((method) => available[method] === true);
     if (methods.length === 0) throw invalid();

@@ -18,7 +18,10 @@
       @if (auth.storageFailure()) {
         <p class="auth-alert auth-alert--error" role="alert">No se pudo acceder al almacenamiento seguro de la sesión. No se pudo confirmar su conservación o borrado. Reintenta; si el problema continúa, borra los datos de la aplicación desde Ajustes de Android.</p>
       }
-      @if (step() === 'credentials') {
+      @if (continueTo(); as destination) {
+        <p class="auth-alert auth-alert--success" role="status">Tu sesión está activa.</p>
+        <a class="cmc-link" [routerLink]="destination" [replaceUrl]="true">Continuar</a>
+      } @else if (step() === 'credentials') {
         <div class="auth-card-header">
           <h2 class="cmc-title">Bienvenido de nuevo</h2>
           @if (connectedQa) {
@@ -30,6 +33,9 @@
 
         @if (auth.sessionExpired()) {
           <p class="auth-alert auth-alert--info" role="status">Tu sesión expiró. Inicia sesión de nuevo para continuar.</p>
+        }
+        @if (passwordChanged()) {
+          <p class="auth-alert auth-alert--success" role="status">Contraseña actualizada. Inicia sesión con la nueva contraseña.</p>
         }
         @if (errorMessage()) {
           <p class="auth-alert auth-alert--error" role="alert">{{ errorMessage() }}</p>

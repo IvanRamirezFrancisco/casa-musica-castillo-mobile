@@ -170,6 +170,10 @@ export class AuthService {
     this.expired.set(false);
   }
 
+  clearAfterPasswordChange(): Promise<void> {
+    return this.endSession(false);
+  }
+
   private establish(session: AuthSession): Observable<void> {
     const previous = this.current();
     const revision = ++this.revision;

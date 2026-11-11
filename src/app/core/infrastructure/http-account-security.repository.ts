@@ -14,6 +14,20 @@ export function securityData(raw: unknown): Record<string, unknown> {
 @Injectable({ providedIn: 'root' })
 export class HttpAccountSecurityRepository {
   private readonly api = inject(ApiClientService);
+  passwordChangeRevokesSessions() {
+    return this.api.get<unknown>('/api/users/security-settings', undefined, { auth: true })
+      .pipe(map(raw => securityData(raw)['passwordChangeRevokesSessions'] === true));
+  }
+  availableBackupCodes() {
+    return this.api.get<unknown>('/api/2fa/backup-codes/status', undefined, { auth: true }).pipe(map(raw => {
+      const available = securityData(raw)['available'];
+      if (typeof available !== 'number' || !Number.isSafeInteger(available) || available < 0) throw invalid();
+      return available;
+    }));
+  }
+  changePassword(currentPassword: string, newPassword: string) {
+    return this.action('/api/users/change-password', { currentPassword, newPassword });
+  }
   methods() { return this.api.get<unknown>('/api/2fa/methods', undefined, { auth: true }).pipe(map(raw => {
     const d = securityData(raw);
     if (['EMAIL', 'GOOGLE_AUTHENTICATOR', 'BACKUP_CODES'].some(k => typeof d[k] !== 'boolean')) throw invalid();
