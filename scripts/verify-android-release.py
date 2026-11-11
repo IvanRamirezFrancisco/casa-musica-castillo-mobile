@@ -9,6 +9,7 @@ root=Path(__file__).resolve().parents[1]
 parser=argparse.ArgumentParser()
 parser.add_argument('--environment',choices=['production','staging'],default='production')
 parser.add_argument('--certificate-sha256', help='Expected public upload certificate fingerprint for a signed Release')
+parser.add_argument('--reviewed-commerce', action='store_true', help='Expect explicitly enabled cart and wishlist writes')
 args=parser.parse_args()
 expected_certificate=None
 if args.certificate_sha256 is not None:
@@ -20,6 +21,8 @@ folder=root/'reports/android-packages'/f'{args.environment}-release{suffix}'
 report=json.loads((folder/'build-report.json').read_text(encoding='utf-8'))
 assert report['environment']==args.environment and report['variant']=='release'
 assert report['signing']==('external-upload-key' if expected_certificate else 'unsigned')
+assert not args.reviewed_commerce or (expected_certificate and args.environment=='production')
+assert report.get('reviewedCommerce',False) is args.reviewed_commerce
 sdk=Path(os.environ.get('ANDROID_HOME') or os.environ.get('ANDROID_SDK_ROOT') or '')
 build_tools=sorted((sdk/'build-tools').iterdir(),key=lambda p:tuple(int(n) for n in p.name.split('.') if n.isdigit()))[-1]
 exe='.exe' if os.name=='nt' else '';aapt=build_tools/('aapt2'+exe)
@@ -75,6 +78,7 @@ for kind,package in packages.items():
         marker=json.loads(archive.read(prefix+'cmc-build.json'))
         assert marker['environment']==args.environment and marker['variant']=='release' and marker['apiBaseUrl']==report['apiBaseUrl']
         assert marker['publicDemo'] is False and marker['apiBaseUrl'].startswith('https://')
+        assert marker.get('reviewedCommerce',False) is args.reviewed_commerce
         assert marker['sourceSha']==report['sourceSha'] and marker['sourceTreeDirty']==report['sourceTreeDirty']
         for relative,digest in marker['webFiles'].items():
             assert hashlib.sha256(archive.read(prefix+relative)).hexdigest()==digest,'Packaged web assets differ from the build inventory.'
@@ -124,6 +128,7 @@ result['applicationId']='com.casademusicacastillo.app'
 result['versionCode']=1
 result['versionName']='1.0'
 result['targetSdk']=36
+result['reviewedCommerce']=args.reviewed_commerce
 result['certificateSha256']=certificate_fingerprints
 if expected_certificate:
     result['limitations']='Signature and static checks passed. Runtime, production acceptance and Play eligibility remain separate.'

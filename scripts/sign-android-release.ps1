@@ -1,7 +1,8 @@
 param(
     [Parameter(Mandatory)] [string] $KeystorePath,
     [Parameter(Mandatory)] [string] $KeyAlias,
-    [Parameter(Mandatory)] [string] $CertificateSha256
+    [Parameter(Mandatory)] [string] $CertificateSha256,
+    [switch] $EnableReviewedCommerce
 )
 
 $ErrorActionPreference = 'Stop'
@@ -36,13 +37,17 @@ try {
             throw 'El alias no contiene la clave privada correspondiente a la huella autorizada.'
         }
 
-        & node scripts/build-android.mjs --environment production --variant release --require-signing
+        $buildArguments = @('--environment', 'production', '--variant', 'release', '--require-signing')
+        if ($EnableReviewedCommerce) { $buildArguments += '--enable-reviewed-commerce' }
+        & node scripts/build-android.mjs @buildArguments
         if ($LASTEXITCODE -ne 0) { throw 'Falló la generación de los paquetes Release firmados.' }
     } finally {
         foreach ($name in $uploadVariables) { Remove-Item "Env:$name" -ErrorAction SilentlyContinue }
         if ($null -ne $secret -and $secret -is [System.IDisposable]) { $secret.Dispose() }
     }
-    & python scripts/verify-android-release.py --certificate-sha256 $expectedFingerprint
+    $verifyArguments = @('--certificate-sha256', $expectedFingerprint)
+    if ($EnableReviewedCommerce) { $verifyArguments += '--reviewed-commerce' }
+    & python scripts/verify-android-release.py @verifyArguments
     if ($LASTEXITCODE -ne 0) { throw 'Falló la verificación de ambos paquetes. Revisa la salida antes de utilizar los archivos.' }
 } finally {
     Pop-Location

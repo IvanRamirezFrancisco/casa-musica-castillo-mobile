@@ -5,7 +5,7 @@ const source = fs.readFileSync(fileURLToPath(new URL('../src/environments/enviro
 export const productionApiUrl = source.match(/PRODUCTION_API_BASE_URL = '([^']+)'/)[1];
 export const emulatorIntegrationApiUrl = source.match(/EMULATOR_INTEGRATION_API_BASE_URL = '([^']+)'/)[1];
 
-export function buildOptions({ environment, variant, apiUrl, isolated = false, requireSigning = false }, env = process.env) {
+export function buildOptions({ environment, variant, apiUrl, isolated = false, requireSigning = false, enableReviewedCommerce = false }, env = process.env) {
   if (!['development', 'device', 'staging', 'production', 'demo'].includes(environment) || !['debug', 'qa', 'emulator', 'release'].includes(variant)) {
     throw new Error('Choose an explicit environment and debug/qa/emulator/release variant.');
   }
@@ -48,12 +48,18 @@ export function buildOptions({ environment, variant, apiUrl, isolated = false, r
   const supplied = signingNames.filter(name => Boolean(env[name]));
   if (supplied.length && supplied.length !== signingNames.length) throw new Error('Private upload signing configuration is incomplete.');
   if (requireSigning && (variant !== 'release' || supplied.length !== signingNames.length)) throw new Error('Upload signing is available only for Release with an authorized identity.');
+  if (enableReviewedCommerce) {
+    if (environment !== 'production' || variant !== 'release' || !requireSigning) {
+      throw new Error('Reviewed cart and wishlist writes require an explicitly signed Production release.');
+    }
+    defines.push('--define=CMC_REVIEWED_COMMERCE=true');
+  }
   const publicDemo = environment === 'production' && variant === 'debug';
   const angularConfiguration = publicDemo ? 'production,public-demo' : environment === 'device' ? 'development' : environment;
   const nativeVariant = publicDemo ? 'publicDemo' : variant === 'qa' ? 'connectedQa'
     : emulatorIntegration ? 'emulatorIntegration'
     : environment === 'staging' && variant === 'debug' ? 'stagingConnected' : variant;
   return { environment, variant, nativeVariant, angularConfiguration, publicDemo,
-    apiBaseUrl: endpoint, isolated: environment === 'staging' && isolated, defines,
+    apiBaseUrl: endpoint, isolated: environment === 'staging' && isolated, defines, enableReviewedCommerce,
     signing: variant !== 'release' ? 'android-debug-key' : supplied.length ? 'external-upload-key' : 'unsigned' };
 }

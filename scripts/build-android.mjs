@@ -8,13 +8,14 @@ import { buildOptions } from './android-build-config.mjs';
 const root = fileURLToPath(new URL('../', import.meta.url));
 const args = process.argv.slice(2);
 const value = flag => { const i = args.indexOf(flag); return i < 0 ? undefined : args[i + 1]; };
-const allowed = new Set(['--environment', '--variant', '--api-url', '--isolated', '--require-signing']);
+const allowed = new Set(['--environment', '--variant', '--api-url', '--isolated', '--require-signing', '--enable-reviewed-commerce']);
 for (let i = 0; i < args.length; i++) {
   if (!allowed.has(args[i])) throw new Error('Unknown Android build option.');
   if (['--environment', '--variant', '--api-url'].includes(args[i])) i++;
 }
 const config = buildOptions({ environment: value('--environment'), variant: value('--variant'), apiUrl: value('--api-url'),
-  isolated: args.includes('--isolated'), requireSigning: args.includes('--require-signing') });
+  isolated: args.includes('--isolated'), requireSigning: args.includes('--require-signing'),
+  enableReviewedCommerce: args.includes('--enable-reviewed-commerce') });
 const webEnv = Object.fromEntries(Object.entries(process.env).filter(([name]) => !/^CMC_UPLOAD_/i.test(name)));
 const run = (command, parameters, cwd = root, env = webEnv) => {
   const result = spawnSync(command, parameters, { cwd, stdio: 'inherit', env: { ...env, NG_CLI_ANALYTICS: 'false' } });
@@ -27,7 +28,8 @@ function files(dir) { return fs.readdirSync(dir, { withFileTypes: true }).flatMa
 const www = path.join(root, 'www');
 const sourceSha = execFileSync('git', ['rev-parse', 'HEAD'], { cwd: root, encoding: 'utf8', env: webEnv }).trim();
 const marker = { environment: config.environment, variant: config.variant, nativeVariant: config.nativeVariant, angularConfiguration: config.angularConfiguration,
-  apiBaseUrl: config.apiBaseUrl, isolated: config.isolated, publicDemo: config.publicDemo, sourceSha,
+  apiBaseUrl: config.apiBaseUrl, isolated: config.isolated, publicDemo: config.publicDemo,
+  reviewedCommerce: config.enableReviewedCommerce, sourceSha,
   sourceTreeDirty: Boolean(execFileSync('git', ['status', '--porcelain', '--untracked-files=normal'], { cwd: root, encoding: 'utf8', env: webEnv }).trim()),
   webFiles: Object.fromEntries(files(www).filter(f => path.basename(f) !== 'cmc-build.json').map(f => [path.relative(www, f).replaceAll('\\', '/'), digest(f)])) };
 fs.writeFileSync(path.join(www, 'cmc-build.json'), JSON.stringify(marker, null, 2));

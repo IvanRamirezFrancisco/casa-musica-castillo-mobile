@@ -19,6 +19,17 @@ test('production is fixed centrally and cannot be overridden by a caller', () =>
   assert.equal(debug.nativeVariant, 'publicDemo');
   assert.equal(buildOptions({ environment: 'production', variant: 'release' }, {}).publicDemo, false);
 });
+test('reviewed commerce is opt-in and restricted to explicitly signed Production Release', () => {
+  const env = Object.fromEntries(['STORE_FILE', 'STORE_PASSWORD', 'KEY_ALIAS', 'KEY_PASSWORD']
+    .map(name => [`CMC_UPLOAD_${name}`, 'test-fixture']));
+  const release = { environment: 'production', variant: 'release', requireSigning: true };
+  assert.equal(buildOptions(release, env).enableReviewedCommerce, false);
+  assert.throws(() => buildOptions({ ...release, requireSigning: false, enableReviewedCommerce: true }, env));
+  assert.throws(() => buildOptions({ ...release, enableReviewedCommerce: true }, {}));
+  const enabled = buildOptions({ ...release, enableReviewedCommerce: true }, env);
+  assert.equal(enabled.enableReviewedCommerce, true);
+  assert.deepEqual(enabled.defines, ['--define=CMC_REVIEWED_COMMERCE=true']);
+});
 test('staging requires an explicitly isolated HTTPS origin, distinct from production', () => {
   for (const apiUrl of [undefined, productionApiUrl, 'http://isolated.example.test', 'https://user:password@isolated.example.test', 'https://isolated.example.test/?token=fixture',
     'https://localhost', 'https://test.localhost', 'https://postgres.internal', 'https://192.168.1.2', 'https://[::1]']) {
