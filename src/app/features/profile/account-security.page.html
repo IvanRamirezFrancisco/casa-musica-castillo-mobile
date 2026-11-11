@@ -85,6 +85,17 @@
           <p class="security-state" [class.is-active]="m.EMAIL">{{m.EMAIL ? 'Activado' : 'Desactivado'}}</p>
           <p>Recibe un código de un solo uso en el correo de tu cuenta al iniciar sesión.</p>
           <cmc-button variant="secondary" [disabled]="busy()" (click)="changeEmail(!m.EMAIL)">{{m.EMAIL ? 'Desactivar correo' : 'Activar correo'}}</cmc-button>
+          @if (disablingEmail()) {
+            <div class="security-panel">
+              <p>Confirma tu contraseña actual para desactivar el código por correo.</p>
+              <label for="email-stepup-password">Contraseña actual</label>
+              <input id="email-stepup-password" type="password" autocomplete="current-password" maxlength="255" [(ngModel)]="stepUpPassword" />
+              <div class="security-actions">
+                <cmc-button [disabled]="busy() || !validStepUp()" (click)="confirmDisableEmail()">Confirmar desactivación</cmc-button>
+                <cmc-button variant="ghost" (click)="disablingEmail.set(false); stepUpPassword = ''">Cancelar</cmc-button>
+              </div>
+            </div>
+          }
         </section>
 
         <section class="security-card" aria-labelledby="security-totp">
@@ -98,10 +109,12 @@
           }
           @if (disabling()) {
             <div class="security-panel">
-              <p>Perderás este método de acceso. Confirma para enviar la solicitud al servidor.</p>
+              <p>Perderás este método de acceso. Confirma tu contraseña actual para enviar la solicitud al servidor.</p>
+              <label for="totp-stepup-password">Contraseña actual</label>
+              <input id="totp-stepup-password" type="password" autocomplete="current-password" maxlength="255" [(ngModel)]="stepUpPassword" />
               <div class="security-actions">
-                <cmc-button [disabled]="busy()" (click)="disable()">Confirmar desactivación</cmc-button>
-                <cmc-button variant="ghost" (click)="disabling.set(false)">Cancelar</cmc-button>
+                <cmc-button [disabled]="busy() || !validStepUp()" (click)="disable()">Confirmar desactivación</cmc-button>
+                <cmc-button variant="ghost" (click)="disabling.set(false); stepUpPassword = ''">Cancelar</cmc-button>
               </div>
             </div>
           }
@@ -136,13 +149,31 @@
           @if (!m.GOOGLE_AUTHENTICATOR) {
             <p>Usa «Configurar autenticador» en la tarjeta anterior y confirma el código de seis dígitos. Después podrás generar códigos de recuperación.</p>
           }
-          <cmc-button variant="secondary" [disabled]="busy() || !m.GOOGLE_AUTHENTICATOR" (click)="generating.set(true)">Generar o regenerar</cmc-button>
+          <div class="security-actions">
+            <cmc-button variant="secondary" [disabled]="busy() || !m.GOOGLE_AUTHENTICATOR" (click)="stepUpPassword = ''; generating.set(true)">Generar o regenerar</cmc-button>
+            @if (m.BACKUP_CODES) {
+              <cmc-button variant="ghost" [disabled]="busy()" (click)="stepUpPassword = ''; disablingBackup.set(true)">Desactivar códigos</cmc-button>
+            }
+          </div>
           @if (generating()) {
             <div class="security-panel">
-              <p>¿Invalidar los códigos anteriores y generar diez nuevos?</p>
+              <p>¿Invalidar los códigos anteriores y generar diez nuevos? Confirma tu contraseña actual.</p>
+              <label for="backup-stepup-password">Contraseña actual</label>
+              <input id="backup-stepup-password" type="password" autocomplete="current-password" maxlength="255" [(ngModel)]="stepUpPassword" />
               <div class="security-actions">
-                <cmc-button [disabled]="busy()" (click)="generate()">Confirmar generación</cmc-button>
-                <cmc-button variant="ghost" (click)="generating.set(false)">Cancelar</cmc-button>
+                <cmc-button [disabled]="busy() || !validStepUp()" (click)="generate()">Confirmar generación</cmc-button>
+                <cmc-button variant="ghost" (click)="generating.set(false); stepUpPassword = ''">Cancelar</cmc-button>
+              </div>
+            </div>
+          }
+          @if (disablingBackup()) {
+            <div class="security-panel">
+              <p>Se invalidarán todos tus códigos de recuperación disponibles. Confirma tu contraseña actual.</p>
+              <label for="backup-disable-password">Contraseña actual</label>
+              <input id="backup-disable-password" type="password" autocomplete="current-password" maxlength="255" [(ngModel)]="stepUpPassword" />
+              <div class="security-actions">
+                <cmc-button [disabled]="busy() || !validStepUp()" (click)="disableBackup()">Confirmar desactivación</cmc-button>
+                <cmc-button variant="ghost" (click)="disablingBackup.set(false); stepUpPassword = ''">Cancelar</cmc-button>
               </div>
             </div>
           }

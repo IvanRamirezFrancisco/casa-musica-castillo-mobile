@@ -5,6 +5,7 @@ param(
     [ValidateRange(1, 120)]
     [int]$TimeoutSeconds = 45,
     [switch]$WarmupHealth,
+    [switch]$SkipWarmup,
     [switch]$NonInteractive
 )
 
@@ -155,13 +156,23 @@ try {
 
     try {
         $warmupStatus = $null
-        if ($WarmupHealth) {
+        $unauthenticatedMeStatus = $null
+        if (-not $SkipWarmup -or $WarmupHealth) {
             try {
-                $healthResp = $client.GetAsync("$normalizedOrigin/actuator/health").GetAwaiter().GetResult()
+                $healthResp = $client.GetAsync("$normalizedOrigin/api/health").GetAwaiter().GetResult()
                 $warmupStatus = [int]$healthResp.StatusCode
                 $healthResp.Dispose()
             } catch {
                 $warmupStatus = -1
+            }
+            if ($warmupStatus -gt 0) {
+                try {
+                    $meResp = $client.GetAsync("$normalizedOrigin/api/auth/me").GetAwaiter().GetResult()
+                    $unauthenticatedMeStatus = [int]$meResp.StatusCode
+                    $meResp.Dispose()
+                } catch {
+                    $unauthenticatedMeStatus = -1
+                }
             }
         }
 
@@ -203,6 +214,9 @@ try {
             }
             if ($null -ne $warmupStatus) {
                 $result['warmupHealthStatus'] = $warmupStatus
+            }
+            if ($null -ne $unauthenticatedMeStatus) {
+                $result['unauthenticatedMeStatus'] = $unauthenticatedMeStatus
             }
             if ($response.Headers.Contains('rndr-id')) {
                 $result['renderRequestId'] = ($response.Headers.GetValues('rndr-id') | Select-Object -First 1)
@@ -338,6 +352,9 @@ try {
             }
             if ($null -ne $warmupStatus) {
                 $errResult['warmupHealthStatus'] = $warmupStatus
+            }
+            if ($null -ne $unauthenticatedMeStatus) {
+                $errResult['unauthenticatedMeStatus'] = $unauthenticatedMeStatus
             }
             $errResult | ConvertTo-Json -Depth 4
             exit 1

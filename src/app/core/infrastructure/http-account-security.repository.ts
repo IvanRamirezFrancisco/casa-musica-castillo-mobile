@@ -40,13 +40,18 @@ export class HttpAccountSecurityRepository {
     return { manualEntryKey: d['manualEntryKey'], qrCode: d['qrCode'] } as TotpEnrollment;
   })); }
   confirm(code: string) { return this.action('/api/2fa/google/confirm', { code }); }
-  email(enabled: boolean) { return this.action(enabled ? '/api/2fa/email/enable' : '/api/2fa/email/disable'); }
-  disableTotp() { return this.action('/api/2fa/google/disable'); }
-  generate() { return this.api.post<unknown>('/api/2fa/backup-codes/generate', {}, { auth: true }).pipe(map(raw => {
+  email(enabled: boolean, currentPassword?: string) {
+    return enabled
+      ? this.action('/api/2fa/email/enable')
+      : this.action('/api/2fa/email/disable', { currentPassword: currentPassword ?? '' });
+  }
+  disableTotp(currentPassword: string) { return this.action('/api/2fa/google/disable', { currentPassword }); }
+  generate(currentPassword: string) { return this.api.post<unknown>('/api/2fa/backup-codes/generate', { currentPassword }, { auth: true }).pipe(map(raw => {
     const d = securityData(raw); const codes = d['codes'];
     if (d['count'] !== 10 || !Array.isArray(codes) || codes.length !== 10 || !codes.every(c => typeof c === 'string' && /^\d{4}-\d{4}$/.test(c)) || new Set(codes).size !== 10) throw invalid();
     return codes as string[];
   })); }
+  disableBackupCodes(currentPassword: string) { return this.action('/api/2fa/backup-codes/disable', { currentPassword }); }
   private action(path: `/api/${string}`, body: object = {}) {
     return this.api.post<unknown>(path, body, { auth: true }).pipe(map(raw => { unwrapApiResponse(raw); }));
   }

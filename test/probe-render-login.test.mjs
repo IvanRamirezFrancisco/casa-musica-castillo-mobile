@@ -246,3 +246,45 @@ test('probe-render-login: classifies timeout, TCP error, and DNS error without t
   assert.equal(rDns.parsed.transportOk, false);
   assert.equal(rDns.parsed.category, 'dns_error');
 });
+
+test('probe-render-login: cold-start warmup runs automatically, probes /api/auth/me, and never repeats login attempts', async () => {
+  let healthCalls = 0;
+  let meCalls = 0;
+  let loginCalls = 0;
+  const srv = await withServer((req, res) => {
+    if (req.url === '/api/health') {
+      healthCalls++;
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ status: 'UP' }));
+      return;
+    }
+    if (req.url === '/api/auth/me') {
+      meCalls++;
+      res.writeHead(500, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ status: 500, error: 'Internal Server Error', secretOtp: '987654' }));
+      return;
+    }
+    if (req.url === '/api/auth/login') {
+      loginCalls++;
+      res.writeHead(401, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ success: false, message: 'Bad credentials', leakedOtp: '654321' }));
+      return;
+    }
+    res.writeHead(404);
+    res.end();
+  });
+  try {
+    const res = await runProbe(srv.origin);
+    assert.equal(res.exitCode, 0);
+    assert.equal(healthCalls, 1);
+    assert.equal(meCalls, 1);
+    assert.equal(loginCalls, 1);
+    assert.equal(res.parsed.warmupHealthStatus, 200);
+    assert.equal(res.parsed.unauthenticatedMeStatus, 500);
+    assert.equal(res.parsed.status, 401);
+    assert.equal(res.parsed.category, 'invalid_credentials');
+    assert.doesNotMatch(res.stdout, /987654|654321/);
+  } finally {
+    await srv.close();
+  }
+});

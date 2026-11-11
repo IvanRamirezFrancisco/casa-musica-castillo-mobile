@@ -27,7 +27,10 @@ export class AccountSecurityPage {
  readonly codes=signal<string[]>([]); readonly busy=signal(false); readonly error=signal(''); readonly notice=signal('');
  private readonly cancelled=new Subject<void>();
  private cached = false;
- readonly disabling=signal(false); readonly generating=signal(false); code='';
+ readonly disabling=signal(false); readonly disablingEmail=signal(false); readonly disablingBackup=signal(false);
+ readonly generating=signal(false); code=''; private readonly stepUp=signal('');
+ get stepUpPassword():string {return this.stepUp();}
+ set stepUpPassword(value:string) {this.stepUp.set(value);}
  readonly backupCount=signal<number|null>(null);
  readonly passwordChangeAvailable=signal(false);
  readonly passwordFocused=signal(false);
@@ -48,8 +51,13 @@ export class AccountSecurityPage {
  ionViewWillLeave():void {this.cached=true;this.clearSecrets();}
  ionViewDidLeave():void {this.clearSecrets();}
  ionViewWillEnter():void {if(this.cached){this.cached=false;this.reload();}}
- clearSecrets():void {this.cancelled.next();this.busy.set(false);this.enrollment.set(null);this.codes.set([]);this.code='';this.generating.set(false);this.disabling.set(false);this.passwordForm.reset();}
+ clearSecrets():void {
+  this.cancelled.next();this.busy.set(false);this.enrollment.set(null);this.codes.set([]);this.code='';
+  this.stepUpPassword='';this.generating.set(false);this.disabling.set(false);this.disablingEmail.set(false);
+  this.disablingBackup.set(false);this.passwordForm.reset();
+ }
  validCode():boolean {return /^\d{6}$/.test(this.code);}
+ validStepUp():boolean {return this.stepUpPassword.trim().length > 0 && this.stepUpPassword.length <= 255;}
  activeControlsCount(m: SecurityMethods): number {
   return [m.EMAIL, m.GOOGLE_AUTHENTICATOR, m.BACKUP_CODES].filter(Boolean).length;
  }
@@ -84,10 +92,32 @@ export class AccountSecurityPage {
  }
  setup():void {if(this.busy())return;this.clearSecrets();this.run(this.repo.setup(),e=>this.enrollment.set(e));}
  confirm():void {if(!this.validCode())return;this.run(this.repo.confirm(this.code),()=>{this.clearSecrets();this.notice.set('Autenticador confirmado por el servidor.');this.reload();});}
- changeEmail(enabled:boolean):void {this.run(this.repo.email(enabled),()=>{this.notice.set('Método actualizado por el servidor.');this.reload();});}
- requestDisable():void {this.disabling.set(true);}
- disable():void {this.run(this.repo.disableTotp(),()=>{this.clearSecrets();this.reload();});}
- generate():void {this.codes.set([]);this.run(this.repo.generate(),codes=>{this.generating.set(false);this.codes.set(codes);this.backupCount.set(codes.length);});}
+ changeEmail(enabled:boolean):void {
+  if(!enabled){this.stepUpPassword='';this.disablingEmail.set(true);return;}
+  this.run(this.repo.email(true),()=>{this.notice.set('Método actualizado por el servidor.');this.reload();});
+ }
+ confirmDisableEmail():void {
+  if(!this.validStepUp())return;
+  const pwd=this.stepUpPassword;
+  this.run(this.repo.email(false,pwd),()=>{this.clearSecrets();this.notice.set('Método actualizado por el servidor.');this.reload();});
+ }
+ requestDisable():void {this.stepUpPassword='';this.disabling.set(true);}
+ disable():void {
+  if(!this.validStepUp())return;
+  const pwd=this.stepUpPassword;
+  this.run(this.repo.disableTotp(pwd),()=>{this.clearSecrets();this.reload();});
+ }
+ generate():void {
+  if(!this.validStepUp())return;
+  const pwd=this.stepUpPassword;
+  this.codes.set([]);
+  this.run(this.repo.generate(pwd),codes=>{this.stepUpPassword='';this.generating.set(false);this.codes.set(codes);this.backupCount.set(codes.length);});
+ }
+ disableBackup():void {
+  if(!this.validStepUp())return;
+  const pwd=this.stepUpPassword;
+  this.run(this.repo.disableBackupCodes(pwd),()=>{this.clearSecrets();this.notice.set('Códigos de recuperación desactivados.');this.reload();});
+ }
  passwordError(field: 'currentPassword' | 'password' | 'confirmPassword'): string {
   const control = this.passwordForm.controls[field];
   if (!control.touched) return '';

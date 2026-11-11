@@ -103,7 +103,7 @@ try:
     token=verified['data']['accessToken'];tokens.append(token);last_token=token
     check(request('POST','/api/2fa/verify',{**factor,'code':code})[0]==401,'Desafío MFA consumido no se reutiliza')
     check(request('GET','/api/auth/me',token=token)[0]==200,'JWT emitido tras MFA funciona con PostgreSQL real')
-    check(request('POST','/api/2fa/email/disable',{},token)[0]==200,'Cuenta sintética vuelve a su configuración inicial')
+    check(request('POST','/api/2fa/email/disable',{'currentPassword':'Only-Local-123'},token)[0]==200,'Cuenta sintética vuelve a su configuración inicial')
     check(request('POST','/api/auth/logout',{},token)[0]==200 and request('GET','/api/auth/me',token=token)[0]==401,'Revocación final de sesión MFA')
     result['status']='PASS'
 finally:
