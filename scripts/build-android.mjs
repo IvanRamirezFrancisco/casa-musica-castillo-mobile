@@ -1,6 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
-import { createHash } from 'node:crypto';
+import { createHash, X509Certificate } from 'node:crypto';
 import { spawnSync, execFileSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { buildOptions } from './android-build-config.mjs';
@@ -8,15 +8,38 @@ import { buildOptions } from './android-build-config.mjs';
 const root = fileURLToPath(new URL('../', import.meta.url));
 const args = process.argv.slice(2);
 const value = flag => { const i = args.indexOf(flag); return i < 0 ? undefined : args[i + 1]; };
-const allowed = new Set(['--environment', '--variant', '--api-url', '--isolated', '--require-signing', '--enable-reviewed-commerce']);
+const allowed = new Set(['--environment', '--variant', '--api-url', '--isolated', '--require-signing', '--enable-reviewed-commerce', '--lan-ca']);
 for (let i = 0; i < args.length; i++) {
   if (!allowed.has(args[i])) throw new Error('Unknown Android build option.');
-  if (['--environment', '--variant', '--api-url'].includes(args[i])) i++;
+  if (['--environment', '--variant', '--api-url', '--lan-ca'].includes(args[i])) i++;
 }
 const config = buildOptions({ environment: value('--environment'), variant: value('--variant'), apiUrl: value('--api-url'),
   isolated: args.includes('--isolated'), requireSigning: args.includes('--require-signing'),
   enableReviewedCommerce: args.includes('--enable-reviewed-commerce') });
 const webEnv = Object.fromEntries(Object.entries(process.env).filter(([name]) => !/^CMC_UPLOAD_/i.test(name)));
+const lanCaPath = value('--lan-ca');
+let lanCaSha256;
+if (Boolean(lanCaPath) !== (config.nativeVariant === 'stagingLan')) {
+  throw new Error('Only the LAN staging build requires and accepts a private staging CA certificate.');
+}
+if (lanCaPath) {
+  const pem = fs.readFileSync(lanCaPath, 'utf8');
+  if (!/^\s*-----BEGIN CERTIFICATE-----[\s\S]+?-----END CERTIFICATE-----\s*$/.test(pem)
+      || (pem.match(/-----BEGIN /g) ?? []).length !== 1) throw new Error('Expected one public CA certificate.');
+  const ca = new X509Certificate(pem);
+  if (!ca.ca || !ca.verify(ca.publicKey) || Date.parse(ca.validFrom) > Date.now() || Date.parse(ca.validTo) <= Date.now()) {
+    throw new Error('LAN staging CA must be a valid, self-signed CA certificate.');
+  }
+  const res = path.join(root, 'android/app/build/generated/cmc-lan/res');
+  fs.mkdirSync(path.join(res, 'raw'), { recursive: true });
+  fs.mkdirSync(path.join(res, 'xml'), { recursive: true });
+  const certificate = ca.toString();
+  lanCaSha256 = createHash('sha256').update(certificate).digest('hex');
+  fs.writeFileSync(path.join(res, 'raw/cmc_lan_ca.crt'), certificate);
+  const host = new URL(config.apiBaseUrl).hostname;
+  fs.writeFileSync(path.join(res, 'xml/network_security_config.xml'),
+    `<network-security-config><base-config cleartextTrafficPermitted="false"/><domain-config cleartextTrafficPermitted="false"><domain>${host}</domain><trust-anchors><certificates src="@raw/cmc_lan_ca" /></trust-anchors></domain-config></network-security-config>\n`);
+}
 const run = (command, parameters, cwd = root, env = webEnv) => {
   const result = spawnSync(command, parameters, { cwd, stdio: 'inherit', env: { ...env, NG_CLI_ANALYTICS: 'false' } });
   if (result.error) throw result.error;
@@ -28,7 +51,7 @@ function files(dir) { return fs.readdirSync(dir, { withFileTypes: true }).flatMa
 const www = path.join(root, 'www');
 const sourceSha = execFileSync('git', ['rev-parse', 'HEAD'], { cwd: root, encoding: 'utf8', env: webEnv }).trim();
 const marker = { environment: config.environment, variant: config.variant, nativeVariant: config.nativeVariant, angularConfiguration: config.angularConfiguration,
-  apiBaseUrl: config.apiBaseUrl, isolated: config.isolated, publicDemo: config.publicDemo,
+  apiBaseUrl: config.apiBaseUrl, isolated: config.isolated, publicDemo: config.publicDemo, lanCaSha256,
   reviewedCommerce: config.enableReviewedCommerce, sourceSha,
   sourceTreeDirty: Boolean(execFileSync('git', ['status', '--porcelain', '--untracked-files=normal'], { cwd: root, encoding: 'utf8', env: webEnv }).trim()),
   webFiles: Object.fromEntries(files(www).filter(f => path.basename(f) !== 'cmc-build.json').map(f => [path.relative(www, f).replaceAll('\\', '/'), digest(f)])) };

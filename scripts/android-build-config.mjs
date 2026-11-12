@@ -6,10 +6,14 @@ export const productionApiUrl = source.match(/PRODUCTION_API_BASE_URL = '([^']+)
 export const emulatorIntegrationApiUrl = source.match(/EMULATOR_INTEGRATION_API_BASE_URL = '([^']+)'/)[1];
 
 export function buildOptions({ environment, variant, apiUrl, isolated = false, requireSigning = false, enableReviewedCommerce = false }, env = process.env) {
-  if (!['development', 'device', 'staging', 'production', 'demo'].includes(environment) || !['debug', 'qa', 'emulator', 'release'].includes(variant)) {
+  if (!['development', 'device', 'staging', 'production', 'demo'].includes(environment) || !['debug', 'qa', 'emulator', 'lan', 'release'].includes(variant)) {
     throw new Error('Choose an explicit environment and debug/qa/emulator/release variant.');
   }
   const emulatorIntegration = variant === 'emulator';
+  const lanIntegration = variant === 'lan';
+  if (lanIntegration && (environment !== 'staging' || !isolated || !apiUrl)) {
+    throw new Error('LAN acceptance requires an explicit isolated staging origin.');
+  }
   if (emulatorIntegration && (environment !== 'staging' || !isolated || apiUrl !== undefined)) {
     throw new Error('Emulator integration uses a fixed host-loopback origin and requires explicit staging isolation.');
   }
@@ -30,7 +34,13 @@ export function buildOptions({ environment, variant, apiUrl, isolated = false, r
     if (url.username || url.password || url.search || url.hash || url.pathname !== '/') throw new Error('API URL must be a public configuration origin, never credentials or parameters.');
     if (environment === 'staging') {
       const productionHost = new URL(productionApiUrl).hostname;
-      if (!isolated || url.protocol !== 'https:' || !/\.[a-z][a-z0-9-]*$/i.test(url.hostname)
+      if (lanIntegration) {
+        if (url.protocol !== 'https:' || !/^(?:10\.|192\.168\.|172\.(?:1[6-9]|2\d|3[01])\.)/.test(url.hostname)
+            || !/^\d+(?:\.\d+){3}$/.test(url.hostname)) {
+          throw new Error('LAN acceptance requires HTTPS on a private IPv4 address.');
+        }
+        defines.push('--define=CMC_LAN_INTEGRATION=true');
+      } else if (!isolated || url.protocol !== 'https:' || !/\.[a-z][a-z0-9-]*$/i.test(url.hostname)
           || /\.(localhost|local|internal)$/i.test(url.hostname)
           || url.hostname === productionHost || url.hostname.endsWith(`.${productionHost}`)) {
         throw new Error('Staging requires explicit isolation confirmation and HTTPS distinct from production.');
@@ -57,7 +67,7 @@ export function buildOptions({ environment, variant, apiUrl, isolated = false, r
   const publicDemo = environment === 'production' && variant === 'debug';
   const angularConfiguration = publicDemo ? 'production,public-demo' : environment === 'device' ? 'development' : environment;
   const nativeVariant = publicDemo ? 'publicDemo' : variant === 'qa' ? 'connectedQa'
-    : emulatorIntegration ? 'emulatorIntegration'
+    : emulatorIntegration ? 'emulatorIntegration' : lanIntegration ? 'stagingLan'
     : environment === 'staging' && variant === 'debug' ? 'stagingConnected' : variant;
   return { environment, variant, nativeVariant, angularConfiguration, publicDemo,
     apiBaseUrl: endpoint, isolated: environment === 'staging' && isolated, defines, enableReviewedCommerce,

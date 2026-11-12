@@ -44,6 +44,22 @@ test('staging requires an explicitly isolated HTTPS origin, distinct from produc
   assert.equal(debug.angularConfiguration, 'staging');
   assert.equal(debug.publicDemo, false);
 });
+test('LAN acceptance only enables authenticated staging at an isolated private HTTPS origin', () => {
+  const args = { environment: 'staging', variant: 'lan', isolated: true, apiUrl: 'https://192.168.1.107:18443' };
+  const config = buildOptions(args, {});
+  assert.equal(config.nativeVariant, 'stagingLan');
+  assert.equal(config.angularConfiguration, 'staging');
+  assert.equal(config.signing, 'android-debug-key');
+  assert.equal(config.publicDemo, false);
+  assert.ok(config.defines.includes('--define=CMC_LAN_INTEGRATION=true'));
+  for (const apiUrl of ['http://192.168.1.107', 'https://8.8.8.8', 'https://127.0.0.1', productionApiUrl]) {
+    assert.throws(() => buildOptions({ ...args, apiUrl }, {}));
+  }
+  for (const override of [{ isolated: false }, { environment: 'production' }, { variant: 'release' }]) {
+    assert.throws(() => buildOptions({ ...args, ...override }, {}));
+  }
+});
+
 test('Connected QA uses Production routes and a Debug identity without changing publicDemo', () => {
   const qa = buildOptions({ environment: 'production', variant: 'qa' }, {});
   assert.equal(qa.apiBaseUrl, productionApiUrl);
