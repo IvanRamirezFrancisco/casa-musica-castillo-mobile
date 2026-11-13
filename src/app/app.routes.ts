@@ -7,6 +7,7 @@ export const routes: Routes = [
   { path: 'privacy', loadComponent: () => import('./features/privacy/privacy.page').then(m => m.PrivacyPage) },
   ...extraRoutes,
   { path: 'privacy/my-data', canActivate: [authGuard], loadComponent: () => import('./features/privacy/my-data.page').then(m => m.MyPrivacyDataPage) },
+  { path: 'privacy/delete-account', canActivate: [authGuard], loadComponent: () => import('./features/privacy/deletion-request.page').then(m => m.DeletionRequestPage) },
   {
     path: '',
     redirectTo: 'splash',

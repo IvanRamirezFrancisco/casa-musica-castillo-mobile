@@ -9,6 +9,8 @@ import { CmcIconComponent } from '../../../shared/ui/icon/cmc-icon.component';
 import { CmcButtonComponent } from '../../../shared/ui/button/cmc-button.component';
 import { describeApiError } from '../../../core/api/api-error-message';
 import { AuthService } from '../../../core/services/auth.service';
+import { ApiClientService } from '../../../core/api/api-client.service';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   FIELD_LIMITS, FIELD_MESSAGES, emailValidator, optionalPhoneValidator, passwordByteLength, passwordCharacterTypes, passwordValidator,
   passwordsMatch, personNameValidator, usernameValidator,
@@ -39,6 +41,9 @@ export class ConnectedRegisterPage {
   protected readonly errorMessage = signal('');
   protected readonly limits = FIELD_LIMITS;
   protected readonly phoneDigits = 10;
+  protected readonly legal = signal<{ required: boolean; termsVersion: string; privacyVersion: string } | null>(null);
+  protected readonly termsAccepted = signal(false);
+  protected readonly privacyRead = signal(false);
 
   protected readonly form = this.fb.group({
     username: ['', [usernameValidator]],
@@ -50,7 +55,19 @@ export class ConnectedRegisterPage {
     confirmPassword: ['', [Validators.required]],
   }, { validators: passwordsMatch });
 
-  constructor() { addIcons({ arrowBackOutline }); }
+  constructor() {
+    addIcons({ arrowBackOutline });
+    inject(ApiClientService).get<{ required: boolean; termsVersion: string; privacyVersion: string }>('/api/public/legal/registration')
+      .pipe(takeUntilDestroyed()).subscribe({
+        next: documents => {
+          if (documents?.required === true && typeof documents.termsVersion === 'string' &&
+              typeof documents.privacyVersion === 'string') this.legal.set(documents);
+        },
+        error: () => undefined,
+      });
+  }
+
+  protected checked(event: Event): boolean { return (event.target as HTMLInputElement).checked; }
 
   protected fieldError(name: 'username' | 'firstName' | 'lastName' | 'email' | 'phone' | 'password'): string {
     const control = this.form.controls[name];
@@ -110,11 +127,20 @@ export class ConnectedRegisterPage {
     if (this.submitting() || this.registered()) return;
     if (this.form.invalid) { this.form.markAllAsTouched(); return; }
     const value = this.form.getRawValue();
+    const legal = this.legal();
+    if (legal?.required && (!this.termsAccepted() || !this.privacyRead())) {
+      this.errorMessage.set('Confirma por separado los términos y la lectura del aviso de privacidad.');
+      return;
+    }
     this.submitting.set(true);
     this.errorMessage.set('');
     this.auth.register({
       username: value.username, firstName: value.firstName, lastName: value.lastName,
       email: value.email, password: value.password, phone: value.phone,
+      ...(legal?.required ? { legalAcceptance: {
+        termsAccepted: this.termsAccepted(), privacyRead: this.privacyRead(),
+        termsVersion: legal.termsVersion, privacyVersion: legal.privacyVersion,
+      } } : {}),
     }).subscribe({
       next: () => {
         this.submitting.set(false);

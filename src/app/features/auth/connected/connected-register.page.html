@@ -18,7 +18,7 @@
           <h2 class="cmc-title">Revisa tu correo</h2>
         </div>
         <p class="auth-alert auth-alert--success" role="status">
-          Si tu cuenta puede activarse, recibirás un mensaje de verificación. También puedes retomar una activación pendiente.
+          Si tu cuenta puede activarse, recibirás un mensaje de verificación. Debes verificarla antes de iniciar sesión.
         </p>
         <div class="step-actions">
           <cmc-button fullWidth (click)="goBack()">Ir a iniciar sesión</cmc-button>
@@ -29,6 +29,15 @@
           <p class="auth-alert auth-alert--error" role="alert">{{ errorMessage() }}</p>
         }
         <form [formGroup]="form" (ngSubmit)="submit()" class="auth-form" novalidate>
+          @if (legal()?.required) {
+            <fieldset>
+              <legend>Documentos de registro</legend>
+              <p><a href="https://casa-musica-castillo.vercel.app/terminos" target="_blank" rel="noopener">Términos y Condiciones</a></p>
+              <label><input type="checkbox" [checked]="termsAccepted()" (change)="termsAccepted.set(checked($event))"> He leído y acepto los Términos y Condiciones.</label>
+              <p><a href="https://casa-musica-castillo.vercel.app/privacidad" target="_blank" rel="noopener">Aviso de Privacidad</a></p>
+              <label><input type="checkbox" [checked]="privacyRead()" (change)="privacyRead.set(checked($event))"> Confirmo que leí el Aviso de Privacidad.</label>
+            </fieldset>
+          }
           <cmc-input
             formControlName="username"
             autocomplete="username"

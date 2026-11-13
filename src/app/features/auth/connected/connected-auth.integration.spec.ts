@@ -48,7 +48,11 @@ describe('autenticación conectada (integración)', () => {
     router = TestBed.inject(Router);
     auth = TestBed.inject(AuthService);
   });
-  afterEach(() => http.verify());
+  afterEach(() => {
+    http.match(`${base}/api/public/legal/registration`).forEach(request =>
+      request.flush({ required: false, termsVersion: '', privacyVersion: '' }));
+    http.verify();
+  });
 
   it('permite Inicio público sin sesión y sin invocar login',async()=>{
     const harness=await RouterTestingHarness.create();await harness.navigateByUrl('/main/home');
@@ -413,7 +417,7 @@ describe('autenticación conectada (integración)', () => {
     login['form'].setValue({ email, password: 'Cl4ve-Segura' }); login['submit']();
     const verify = TestBed.createComponent(VerifyEmailPage).componentInstance;
     verify['resendForm'].setValue({ email }); verify['resend']();
-    http.expectNone(() => true, 'Los formularios inválidos no emiten solicitudes HTTP');
+    http.expectNone(request => request.method !== 'GET', 'Los formularios inválidos no envían sus datos');
   });
 
   it('registro normaliza nombres y teléfono validado antes de enviar; mantiene DTO y bloqueo doble', () => {

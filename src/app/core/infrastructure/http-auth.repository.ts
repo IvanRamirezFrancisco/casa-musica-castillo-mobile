@@ -60,7 +60,7 @@ export class HttpAuthRepository implements AuthRepository {
   }
 
   register(input: RegisterInput) {
-    const body: Record<string, string> = {
+    const body: Record<string, unknown> = {
       username: input.username.trim(),
       firstName: normalizePersonName(input.firstName),
       lastName: normalizePersonName(input.lastName),
@@ -68,6 +68,7 @@ export class HttpAuthRepository implements AuthRepository {
       password: input.password,
     };
     if (input.phone?.trim()) body['phone'] = normalizePhone(input.phone);
+    if (input.legalAcceptance) body['legalAcceptance'] = input.legalAcceptance;
     return this.api.post<unknown>('/api/auth/register', body).pipe(map((response) => void unwrapApiResponse(response)));
   }
 
