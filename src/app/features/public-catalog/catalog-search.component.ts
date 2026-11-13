@@ -21,7 +21,7 @@ import { PublicImageComponent } from './public-product-grid.component';
           [value]="term()" (input)="update(field.value)" (focus)="suggest(field.value)"
           (keydown.enter)="$event.preventDefault(); submit(field)" />
         @if (term()) {
-          <button type="button" aria-label="Limpiar búsqueda" (click)="update(''); field.focus()"><cmc-icon name="close" /></button>
+          <button type="button" aria-label="Limpiar búsqueda" (click)="clear(field)"><cmc-icon name="close" /></button>
         }
         <button type="submit" aria-label="Buscar instrumentos"><cmc-icon name="arrow" /></button>
       </form>
@@ -114,6 +114,12 @@ export class CatalogSearchComponent {
     const keyword = value.trim();
     this.suggesting.set(keyword.length >= 2);
     this.query.next({ keyword, categoryId: this.category() });
+  }
+
+  clear(field: HTMLInputElement): void {
+    field.value = '';
+    this.update('');
+    field.focus();
   }
 
   leave(event: FocusEvent): void {
