@@ -5,8 +5,13 @@ import { IonContent, IonHeader, IonTitle, IonToolbar } from '@ionic/angular';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ApiClientService } from '../../core/api/api-client.service';
 import { describeApiError } from '../../core/api/api-error-message';
+import { AuthService } from '../../core/services/auth.service';
 
-interface Receipt { requestId: string; status: 'RECEIVED'; receivedAt: string }
+interface Receipt {
+  requestId: string;
+  status: 'RECEIVED' | 'REVIEW_REQUIRED' | 'COMPLETED';
+  receivedAt: string;
+}
 
 @Component({
   selector: 'app-deletion-request',
@@ -21,8 +26,15 @@ interface Receipt { requestId: string; status: 'RECEIVED'; receivedAt: string }
           <h1>Solicitud de eliminación</h1>
           <p>La eliminación afecta el acceso a tu cuenta, tus favoritos y tu carrito. Algunos registros de pedidos podrían conservarse por obligaciones aplicables.</p>
           @if (receipt(); as result) {
-            <p role="status">Solicitud recibida. Identificador: {{ result.requestId }}.</p>
-            <p>Tu cuenta sigue activa mientras se procesa la solicitud.</p>
+            @if (result.status === 'COMPLETED') {
+              <p role="status">La eliminación de tu cuenta se completó.</p>
+              <a routerLink="/login" class="cmc-link">Volver al inicio de sesión</a>
+            } @else if (result.status === 'REVIEW_REQUIRED') {
+              <p role="status">Recibimos la solicitud. Los datos asociados requieren revisión.</p>
+            } @else {
+              <p role="status">Solicitud recibida.</p>
+            }
+            <p>Guarda el identificador para consultar el estado en el sitio web: {{ result.requestId }}.</p>
           } @else if (available() === null) {
             <p role="status">Consultando disponibilidad…</p>
           } @else if (!available()) {
@@ -50,6 +62,7 @@ interface Receipt { requestId: string; status: 'RECEIVED'; receivedAt: string }
 })
 export class DeletionRequestPage {
   private readonly api = inject(ApiClientService);
+  private readonly auth = inject(AuthService);
   private readonly availability = takeUntilDestroyed<{ available: boolean }>();
   private readonly requests = takeUntilDestroyed<Receipt>();
   readonly available = signal<boolean | null>(null);
@@ -79,7 +92,11 @@ export class DeletionRequestPage {
     const body = { currentPassword: this.password, confirmed: true };
     this.password = '';
     this.api.post<Receipt>('/api/users/me/deletion-requests', body, { auth: true }).pipe(this.requests).subscribe({
-      next: receipt => { this.receipt.set(receipt); this.busy.set(false); },
+      next: receipt => {
+        this.receipt.set(receipt);
+        this.busy.set(false);
+        if (receipt.status === 'COMPLETED') void this.auth.clearAfterPasswordChange();
+      },
       error: error => { this.error.set(describeApiError(error, 'form')); this.busy.set(false); },
     });
   }
