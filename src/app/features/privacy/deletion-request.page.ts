@@ -1,4 +1,5 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, input, output, signal } from '@angular/core';
+import { NgTemplateOutlet } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { IonContent, IonHeader, IonTitle, IonToolbar } from '@ionic/angular';
@@ -6,6 +7,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ApiClientService } from '../../core/api/api-client.service';
 import { describeApiError } from '../../core/api/api-error-message';
 import { AuthService } from '../../core/services/auth.service';
+import { ActionDialogComponent } from '../../shared/ui/action-dialog/action-dialog.component';
 
 interface Receipt {
   requestId: string;
@@ -15,15 +17,25 @@ interface Receipt {
 
 @Component({
   selector: 'app-deletion-request',
-  imports: [FormsModule, RouterLink, IonContent, IonHeader, IonTitle, IonToolbar],
+  imports: [FormsModule, RouterLink, IonContent, IonHeader, IonTitle, IonToolbar, NgTemplateOutlet, ActionDialogComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <ion-header><ion-toolbar><ion-title>Eliminar mi cuenta</ion-title></ion-toolbar></ion-header>
-    <ion-content class="cmc-page cmc-standalone-page">
-      <main class="cmc-page-container cmc-account">
-        <a routerLink="/privacy" class="cmc-link">Volver a privacidad</a>
-        <section class="surface">
-          <h1>Solicitud de eliminación</h1>
+    @if (dialog()) {
+      <cmc-action-dialog #panel [open]="true" title="Solicitud de eliminación" [content]="body"
+        [busy]="busy()" [dirty]="!!password || confirmed" (closed)="closeRequest()"/>
+    } @else {
+      <ion-header><ion-toolbar><ion-title>Eliminar mi cuenta</ion-title></ion-toolbar></ion-header>
+      <ion-content class="cmc-page cmc-standalone-page">
+        <main class="cmc-page-container cmc-account">
+          <a routerLink="/privacy" class="cmc-link">Volver a privacidad</a>
+          <section class="surface">
+            <h1>Solicitud de eliminación</h1>
+            <ng-container [ngTemplateOutlet]="body"/>
+          </section>
+        </main>
+      </ion-content>
+    }
+    <ng-template #body>
           <p>La eliminación afecta el acceso a tu cuenta, tus favoritos y tu carrito. Algunos registros de pedidos podrían conservarse por obligaciones aplicables.</p>
           @if (receipt(); as result) {
             @if (result.status === 'COMPLETED') {
@@ -49,9 +61,7 @@ interface Receipt {
             </form>
           }
           @if (error()) { <p role="alert">{{ error() }}</p> }
-        </section>
-      </main>
-    </ion-content>
+    </ng-template>
   `,
   styles: `
     form { display: grid; gap: .8rem; }
@@ -61,6 +71,8 @@ interface Receipt {
   `,
 })
 export class DeletionRequestPage {
+  readonly dialog = input(false);
+  readonly closed = output<void>();
   private readonly api = inject(ApiClientService);
   private readonly auth = inject(AuthService);
   private readonly availability = takeUntilDestroyed<{ available: boolean }>();
@@ -85,6 +97,11 @@ export class DeletionRequestPage {
 
   ionViewWillLeave(): void { this.password = ''; this.confirmed = false; }
 
+  closeRequest(): void {
+    this.ionViewWillLeave();
+    this.closed.emit();
+  }
+
   submit(): void {
     if (!this.available() || this.busy() || !this.confirmed || !this.password.trim()) return;
     this.busy.set(true);
@@ -94,6 +111,7 @@ export class DeletionRequestPage {
     this.api.post<Receipt>('/api/users/me/deletion-requests', body, { auth: true }).pipe(this.requests).subscribe({
       next: receipt => {
         this.receipt.set(receipt);
+        this.confirmed = false;
         this.busy.set(false);
         if (receipt.status === 'COMPLETED') void this.auth.clearAfterPasswordChange();
       },

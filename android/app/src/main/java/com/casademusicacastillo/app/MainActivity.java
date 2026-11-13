@@ -13,6 +13,7 @@ public class MainActivity extends BridgeActivity {
     public void onCreate(Bundle savedInstanceState) {
         SplashScreen.installSplashScreen(this);
         super.onCreate(savedInstanceState);
+        getBridge().getWebView().setBackgroundColor(getColor(R.color.ic_launcher_background));
         boolean debug = (getApplicationInfo().flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0;
         // Manifest controls debugging, even if an asset configuration were to request it.
         WebView.setWebContentsDebuggingEnabled(debug);

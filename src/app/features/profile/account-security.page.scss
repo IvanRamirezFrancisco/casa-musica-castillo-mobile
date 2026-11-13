@@ -32,7 +32,7 @@ ion-content.cmc-page { --padding-bottom: var(--cmc-space-4); }
 }
 .security-card .security-state.is-active { background: var(--cmc-success-surface); color: var(--cmc-success-text); }
 .security-panel { padding: var(--cmc-space-3); border-radius: var(--cmc-radius-md); background: var(--cmc-surface-alt); }
-.security-panel img { inline-size: min(15rem, 100%); }
+.security-panel img { inline-size: min(15rem, 100%); justify-self: center; }
 .security-panel input { min-height: 48px; inline-size: 100%; padding: .5rem; font-size: 1rem; border: 1px solid var(--cmc-primary); border-radius: var(--cmc-radius-md); }
 .security-actions { display: flex; flex-wrap: wrap; gap: var(--cmc-space-2); }
 .security-feedback { margin-block-end: var(--cmc-space-4); }
@@ -68,9 +68,3 @@ ion-content.cmc-page { --padding-bottom: var(--cmc-space-4); }
 .security-dot { flex: none; width: .75rem; height: .75rem; border: 1px solid var(--cmc-text-secondary); border-radius: 50%; }
 .security-recommendation { margin: .625rem 0 0; color: var(--cmc-text-secondary); font-size: .875rem; }
 .security-card p { margin: 0; color: var(--cmc-text-secondary); line-height: 1.5; }
-.password-disclosure > summary {
-  min-height: 44px;
-  color: var(--cmc-primary);
-  font-weight: 700;
-  cursor: pointer;
-}

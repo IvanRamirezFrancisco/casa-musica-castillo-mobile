@@ -13,11 +13,6 @@
 .hero-photo { position: absolute; z-index: -2; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 55% 46%; }
 .store-hero::before { content: ''; position: absolute; z-index: -1; inset: 0; background: linear-gradient(96deg, #361820f5 0%, #4c202ada 42%, #722f374d 100%); }
 .hero-copy { max-width: 31rem; }
-.store-search input::-webkit-search-cancel-button { appearance: none; }
-.store-suggestions { background: var(--cmc-surface); border: 1px solid var(--cmc-border); border-radius: var(--cmc-radius-md); margin-top: .35rem; }
-.store-suggestions ul { list-style: none; padding: 0; margin: 0; }
-.store-suggestions a { display: flex; align-items: center; min-height: 44px; padding: .6rem 1rem; overflow-wrap: anywhere; }
-.store-suggestions p { margin: 0; padding: .8rem 1rem; }
 .store-hero h2{font-size:clamp(1.6rem,5vw,2.6rem);font-weight:650;line-height:1.12;letter-spacing:-.035em;color:white;margin-bottom:14px;}
 .store-hero p{max-width:440px;line-height:1.6;font-size:.9rem;margin-bottom:20px;}
 .store-hero .eyebrow{color:var(--cmc-promo-mamey);font-size:.75rem;margin-bottom:12px;}

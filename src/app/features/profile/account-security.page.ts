@@ -1,7 +1,8 @@
 import { Component, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule, NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
+import { DatePipe } from '@angular/common';
 import { IonHeader, IonToolbar, IonTitle, IonButtons, IonBackButton, IonContent } from '@ionic/angular';
 import { Observable, Subject, catchError, forkJoin, of, takeUntil } from 'rxjs';
 import { AccountSession, HttpAccountSecurityRepository, SecurityMethods, TotpEnrollment } from '../../core/infrastructure/http-account-security.repository';
@@ -13,9 +14,11 @@ import {
  FIELD_LIMITS, FIELD_MESSAGES, passwordByteLength, passwordCharacterTypes, passwordValidator, passwordsMatch,
 } from '../../core/validation/auth-fields.validation';
 import { CmcInputComponent } from '../../shared/ui/input/cmc-input.component';
+import { ActionDialogComponent } from '../../shared/ui/action-dialog/action-dialog.component';
+import { DeletionRequestPage } from '../privacy/deletion-request.page';
 @Component({
  selector: 'app-account-security', standalone: true,
- imports: [FormsModule, ReactiveFormsModule, RouterLink, IonHeader, IonToolbar, IonTitle, IonButtons, IonBackButton, IonContent, CmcButtonComponent, CmcIconComponent, CmcInputComponent],
+ imports: [FormsModule, ReactiveFormsModule, DatePipe, IonHeader, IonToolbar, IonTitle, IonButtons, IonBackButton, IonContent, CmcButtonComponent, CmcIconComponent, CmcInputComponent, ActionDialogComponent, DeletionRequestPage],
  templateUrl: './account-security.page.html',
  styleUrl: './account-security.page.scss',
 })
@@ -35,6 +38,9 @@ export class AccountSecurityPage {
  readonly passwordChangeAvailable=signal(false);
  readonly passwordFocused=signal(false);
  readonly passwordExpanded=signal(false);
+ readonly enablingEmail=signal(false);
+ readonly sessionsOpen=signal(false);
+ readonly deletionOpen=signal(false);
  readonly sessions=signal<readonly AccountSession[]|null>(null);
  readonly limits=FIELD_LIMITS;
  readonly ringRadius=46;
@@ -50,14 +56,16 @@ export class AccountSecurityPage {
   });
   this.destroyRef.onDestroy(()=>this.clearSecrets()); this.reload();
  }
- ionViewWillLeave():void {this.cached=true;this.clearSecrets();}
+ ionViewWillLeave():void {this.cached=true;this.clearSecrets();this.deletionOpen.set(false);}
  ionViewDidLeave():void {this.clearSecrets();}
  ionViewWillEnter():void {if(this.cached){this.cached=false;this.reload();}}
  clearSecrets():void {
   this.cancelled.next();this.busy.set(false);this.enrollment.set(null);this.codes.set([]);this.code='';
   this.stepUpPassword='';this.generating.set(false);this.disabling.set(false);this.disablingEmail.set(false);
   this.disablingBackup.set(false);this.passwordForm.reset();this.passwordExpanded.set(false);this.sessions.set(null);
+  this.enablingEmail.set(false); this.sessionsOpen.set(false); this.passwordFocused.set(false); this.error.set('');
  }
+ openSessions():void { this.sessionsOpen.set(true); this.loadSessions(); }
  loadSessions():void {
   this.run(this.repo.sessions(), sessions => this.sessions.set(sessions));
  }
@@ -68,14 +76,17 @@ export class AccountSecurityPage {
    this.notice.set('Sesión cerrada.');
   });
  }
- onPasswordToggle(event: Event): void {
-  const open = (event.target as HTMLDetailsElement).open;
-  this.passwordExpanded.set(open);
-  if (!open && !this.busy()) {
-   this.passwordForm.reset();
-   this.passwordFocused.set(false);
-  }
+ revokeOtherSessions(): void {
+  const others = this.sessions()?.filter(session => !session.current) ?? [];
+  if (this.busy() || !others.length || !this.sessions()?.some(session => session.current)) return;
+  this.run(forkJoin(others.map(session => this.repo.revokeSession(session.id).pipe(
+   catchError(() => of(null)),
+  ))), () => {
+   this.loadSessions();
+   this.notice.set('Se actualizó el listado. Comprueba las sesiones que siguen activas.');
+  });
  }
+ passwordHasValues(): boolean { return Object.values(this.passwordForm.getRawValue()).some(Boolean); }
  validCode():boolean {return /^\d{6}$/.test(this.code);}
  validStepUp():boolean {return this.stepUpPassword.trim().length > 0 && this.stepUpPassword.length <= 255;}
  activeControlsCount(m: SecurityMethods): number {
@@ -114,7 +125,7 @@ export class AccountSecurityPage {
  confirm():void {if(!this.validCode())return;this.run(this.repo.confirm(this.code),()=>{this.clearSecrets();this.notice.set('Autenticador confirmado por el servidor.');this.reload();});}
  changeEmail(enabled:boolean):void {
   if(!enabled){this.stepUpPassword='';this.disablingEmail.set(true);return;}
-  this.run(this.repo.email(true),()=>{this.notice.set('Método actualizado por el servidor.');this.reload();});
+  this.run(this.repo.email(true),()=>{this.enablingEmail.set(false);this.notice.set('Método actualizado por el servidor.');this.reload();});
  }
  confirmDisableEmail():void {
   if(!this.validStepUp())return;

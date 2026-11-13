@@ -15,17 +15,14 @@ export class SplashPage implements OnInit {
 
   private readonly destroyRef = inject(DestroyRef);
 
-  private timer: ReturnType<typeof setTimeout> | undefined;
+  private leaving = false;
 
   ngOnInit() {
-    this.timer = setTimeout(() => {
-      this.router.navigate(['/main/home'], { replaceUrl: true });
-    }, 2500);
-    this.destroyRef.onDestroy(() => this.stopTimer());
+    this.destroyRef.onDestroy(() => { this.leaving = true; });
+    queueMicrotask(() => {
+      if (!this.leaving) void this.router.navigate(['/main/home'], { replaceUrl: true });
+    });
   }
   // Ionic can cache a page after navigation; leaving must cancel startup navigation too.
-  ionViewWillLeave(): void { this.stopTimer(); }
-  private stopTimer(): void {
-    if (this.timer !== undefined) { clearTimeout(this.timer); this.timer = undefined; }
-  }
+  ionViewWillLeave(): void { this.leaving = true; }
 }

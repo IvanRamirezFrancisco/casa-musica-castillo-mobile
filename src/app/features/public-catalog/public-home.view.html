@@ -3,30 +3,7 @@
   @if(!publicDemo){<a class="icon-action" routerLink="/favorites" aria-label="Abrir Favoritos"><cmc-icon name="heart"/></a>}
 </div></ion-toolbar></ion-header>
 <ion-content class="cmc-page cmc-root-page"><main class="cmc-store">
-  <div class="store-search-area" (keydown.escape)="showSuggestions.set(false)">
-    <form class="store-search" (submit)="$event.preventDefault();search()" role="search">
-      <cmc-icon name="search"/><input #searchField type="search" maxlength="100" aria-label="Buscar en el catálogo"
-        placeholder="Buscar instrumentos" [value]="term()" (input)="update($event)" (focus)="showSuggestions.set(term().trim().length >= 2)"
-        (keydown.enter)="$event.preventDefault();search()"/>
-      @if (term()) { <button type="button" aria-label="Limpiar búsqueda" (click)="setTerm('');searchField.focus()">×</button> }
-      <button type="submit" aria-label="Buscar instrumentos"><cmc-icon name="arrow"/></button>
-    </form>
-    @if (showSuggestions()) {
-      <div class="store-suggestions" aria-label="Sugerencias del catálogo">
-        @switch (suggestionStatus()) {
-          @case ('loading') { <p role="status">Buscando…</p> }
-          @case ('error') { <p role="status">Sugerencias sin conexión. Puedes intentar la búsqueda en el catálogo.</p> }
-          @case ('ready') {
-            @if (suggestions().length) {
-              <ul>@for (product of suggestions(); track product.id) {
-                <li><a [routerLink]="['/products', product.id]" (click)="showSuggestions.set(false)">{{ product.name }}</a></li>
-              }</ul>
-            } @else { <p role="status">Sin coincidencias.</p> }
-          }
-        }
-      </div>
-    }
-  </div>
+  <cmc-catalog-search fieldId="home-search" [term]="term()" (termChange)="term.set($event)" (searched)="search($event)" />
   <section class="store-hero" aria-labelledby="store-welcome">
     <img class="hero-photo" alt="" aria-hidden="true" fetchpriority="high" decoding="async"
       src="https://res.cloudinary.com/dy3ibnjl7/image/upload/f_auto,q_auto,w_960/v1790057931/negocio1_dfuoko.png"

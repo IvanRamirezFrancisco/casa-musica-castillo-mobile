@@ -9,6 +9,7 @@ export interface AccountSession {
   id: string;
   device: string;
   current: boolean;
+  lastActivity?: string;
 }
 const invalid = () => new ApiError('invalid-response', 200);
 export function securityData(raw: unknown): Record<string, unknown> {
@@ -39,10 +40,12 @@ export class HttpAccountSecurityRepository {
       if (!Array.isArray(list)) throw invalid();
       return list.map((entry: unknown): AccountSession => {
         if (!entry || typeof entry !== 'object') throw invalid();
-        const { id, deviceInfo, isCurrent } = entry as Record<string, unknown>;
+        const { id, deviceInfo, isCurrent, lastActivity } = entry as Record<string, unknown>;
         if (typeof id !== 'string' || !/^[\w-]{1,128}$/.test(id) ||
             typeof deviceInfo !== 'string' || typeof isCurrent !== 'boolean') throw invalid();
-        return { id, device: deviceInfo, current: isCurrent };
+        const hasActivity = typeof lastActivity === 'string' && /^\d{4}-\d{2}-\d{2}T/.test(lastActivity) &&
+          Number.isFinite(Date.parse(lastActivity));
+        return { id, device: deviceInfo, current: isCurrent, ...(hasActivity ? { lastActivity } : {}) };
       });
     }));
   }

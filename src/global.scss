@@ -177,6 +177,86 @@ a {
   }
 }
 /* Bubble Navigation spacing */
+ion-modal.cmc-action-dialog {
+  --width: 100%;
+  --height: auto;
+  --max-height: calc(100dvh - var(--cmc-safe-area-top) - var(--cmc-safe-area-bottom) - 12px);
+  --border-radius: 20px 20px 0 0;
+  --backdrop-opacity: .48;
+  align-items: end;
+  padding-block-end: var(--cmc-safe-area-bottom);
+}
+
+.cmc-action-dialog__frame {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  max-height: calc(100dvh - var(--cmc-safe-area-top) - var(--cmc-safe-area-bottom) - 12px);
+  background: var(--cmc-surface);
+}
+
+.cmc-action-dialog__handle {
+  align-self: center;
+  width: 32px;
+  height: 4px;
+  flex: none;
+  border-radius: 4px;
+  margin-block-start: 10px;
+  background: var(--cmc-border-strong);
+}
+
+.cmc-action-dialog__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 8px 20px 4px;
+}
+
+.cmc-action-dialog__header h2 { margin: 0; font-size: 1.15rem; }
+.cmc-action-dialog__close {
+  min-width: 48px;
+  min-height: 48px;
+  border-radius: 50%;
+  background: var(--cmc-surface-alt);
+  color: var(--cmc-text-primary);
+  font-size: 1.5rem;
+}
+
+.cmc-action-dialog__body {
+  min-height: 0;
+  overflow: auto;
+  overscroll-behavior: contain;
+  padding: 0 20px 20px;
+  scroll-padding-block: 12px;
+}
+
+@media (min-width: 600px), (horizontal-viewport-segments: 2), (vertical-viewport-segments: 2) {
+  ion-modal.cmc-action-dialog {
+    --width: min(480px, calc(100% - 32px));
+    --border-radius: 20px;
+    align-items: center;
+  }
+  .cmc-action-dialog__handle { display: none; }
+}
+
+@media (horizontal-viewport-segments: 2) {
+  ion-modal.cmc-action-dialog {
+    --width: min(480px, calc(env(viewport-segment-width 0 0) - 24px));
+    justify-content: start;
+    padding-inline-start: max(12px, calc((env(viewport-segment-width 0 0) - 480px) / 2));
+  }
+}
+
+@media (vertical-viewport-segments: 2) {
+  ion-modal.cmc-action-dialog,
+  .cmc-action-dialog__frame {
+    --max-height: calc(env(viewport-segment-height 0 0) - 24px);
+    max-height: var(--max-height);
+  }
+  ion-modal.cmc-action-dialog { inset-block-end: auto; height: env(viewport-segment-height 0 0); max-height: none; }
+}
+
 :root {
   --cmc-bubble-nav-height: 64px;
 }
