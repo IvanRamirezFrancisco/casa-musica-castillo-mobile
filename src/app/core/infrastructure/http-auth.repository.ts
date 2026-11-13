@@ -33,7 +33,7 @@ export class HttpAuthRepository implements AuthRepository {
   /** The candidate token is used only for /me; no user or role is trusted before Spring validates it. */
   restoreUser(token: string) {
     return this.http.get<unknown>(`${this.base}/api/auth/me`, {
-      headers: { Authorization: `Bearer ${token}` }, credentials: 'omit', cache: 'no-store', timeout: 15_000,
+      headers: { Authorization: `Bearer ${token}` }, credentials: 'omit', redirect: 'error', cache: 'no-store', timeout: 15_000,
     }).pipe(map(parseAuthUser));
   }
 
@@ -60,7 +60,7 @@ export class HttpAuthRepository implements AuthRepository {
   }
 
   register(input: RegisterInput) {
-    const body: Record<string, string> = {
+    const body: Record<string, unknown> = {
       username: input.username.trim(),
       firstName: normalizePersonName(input.firstName),
       lastName: normalizePersonName(input.lastName),
@@ -68,6 +68,7 @@ export class HttpAuthRepository implements AuthRepository {
       password: input.password,
     };
     if (input.phone?.trim()) body['phone'] = normalizePhone(input.phone);
+    if (input.legalAcceptance) body['legalAcceptance'] = input.legalAcceptance;
     return this.api.post<unknown>('/api/auth/register', body).pipe(map((response) => void unwrapApiResponse(response)));
   }
 
@@ -80,6 +81,11 @@ export class HttpAuthRepository implements AuthRepository {
   verifyEmail(token: string) {
     return this.api
       .post<unknown>('/api/auth/verify-email', { token: token.trim() })
+      .pipe(map((body) => void unwrapApiResponse(body)));
+  }
+
+  verifyEmailCode(email: string, code: string) {
+    return this.api.post<unknown>('/api/auth/verify-email-code', { email: email.trim(), code })
       .pipe(map((body) => void unwrapApiResponse(body)));
   }
 
@@ -98,7 +104,7 @@ export class HttpAuthRepository implements AuthRepository {
   logout(token: string) {
     // Snapshot token: local logout does not wait for network revocation, and cannot revoke a later session.
     return this.http.post<unknown>(`${this.base}/api/auth/logout`, {}, {
-      headers: { Authorization: `Bearer ${token}` }, credentials: 'omit', timeout: 15_000,
+      headers: { Authorization: `Bearer ${token}` }, credentials: 'omit', redirect: 'error', timeout: 15_000,
     }).pipe(map(() => undefined));
   }
 }

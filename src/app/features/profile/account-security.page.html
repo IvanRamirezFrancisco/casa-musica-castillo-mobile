@@ -8,16 +8,39 @@
 <ion-content class="cmc-page">
   <main class="cmc-page-container cmc-account security-page">
     <header class="security-summary">
-      <div class="security-heading">
-        <span class="security-mark" aria-hidden="true"><cmc-icon name="security"/></span>
-        <div>
-          <h1 class="cmc-title">Seguridad de la cuenta</h1>
-          @if (methods(); as m) {
-            <span class="security-level" [class.is-active]="m.EMAIL || m.GOOGLE_AUTHENTICATOR">
-              {{ m.BACKUP_CODES && (m.EMAIL || m.GOOGLE_AUTHENTICATOR) ? 'Segundo factor y recuperación' :
-                m.EMAIL || m.GOOGLE_AUTHENTICATOR ? 'Segundo factor activo' : 'Configuración básica' }}
-            </span>
-          }
+      <div class="security-hero-row">
+        @if (methods(); as m) {
+          <div class="security-ring-card" role="group" aria-label="Resumen visual de controles de seguridad">
+            <svg class="security-ring" viewBox="0 0 112 112" aria-hidden="true">
+              <circle class="security-ring__track" cx="56" cy="56" [attr.r]="ringRadius" />
+              <circle
+                class="security-ring__progress"
+                cx="56"
+                cy="56"
+                [attr.r]="ringRadius"
+                [attr.stroke-dasharray]="ringCircumference"
+                [attr.stroke-dashoffset]="ringStrokeDashoffset(m)"
+              />
+            </svg>
+            <div class="security-ring-center">
+              <strong class="security-ring-score">{{ activeControlsCount(m) }}/3</strong>
+              <span class="security-ring-caption">Controles</span>
+            </div>
+          </div>
+        } @else {
+          <span class="security-mark" aria-hidden="true"><cmc-icon name="security"/></span>
+        }
+        <div class="security-heading">
+          <span class="security-mark security-mark--inline" aria-hidden="true"><cmc-icon name="security"/></span>
+          <div>
+            <h1 class="cmc-title">Seguridad de la cuenta</h1>
+            @if (methods(); as m) {
+              <span class="security-level" [class.is-active]="m.EMAIL || m.GOOGLE_AUTHENTICATOR">
+                {{ m.BACKUP_CODES && (m.EMAIL || m.GOOGLE_AUTHENTICATOR) ? 'Segundo factor y recuperación' :
+                  m.EMAIL || m.GOOGLE_AUTHENTICATOR ? 'Segundo factor activo' : 'Configuración básica' }}
+              </span>
+            }
+          </div>
         </div>
       </div>
       @if (methods(); as m) {
@@ -61,7 +84,32 @@
           <h2 id="security-email">Correo electrónico</h2>
           <p class="security-state" [class.is-active]="m.EMAIL">{{m.EMAIL ? 'Activado' : 'Desactivado'}}</p>
           <p>Recibe un código de un solo uso en el correo de tu cuenta al iniciar sesión.</p>
-          <cmc-button variant="secondary" [disabled]="busy()" (click)="changeEmail(!m.EMAIL)">{{m.EMAIL ? 'Desactivar correo' : 'Activar correo'}}</cmc-button>
+          <cmc-button variant="secondary" [disabled]="busy()" (click)="m.EMAIL ? changeEmail(false) : enablingEmail.set(true)">{{m.EMAIL ? 'Desactivar correo' : 'Activar correo'}}</cmc-button>
+          @if (enablingEmail()) {
+            <ng-template #enableEmailBody>
+              <div class="security-panel">
+                <p>Al iniciar sesión, recibirás un código de un solo uso en el correo de tu cuenta.</p>
+                @if (error()) { <p role="alert">{{error()}}</p> }
+                <cmc-button [disabled]="busy()" (click)="changeEmail(true)">Confirmar activación</cmc-button>
+              </div>
+            </ng-template>
+            <cmc-action-dialog [open]="true" title="Activar correo" [content]="enableEmailBody" [busy]="busy()" (closed)="clearSecrets()" />
+          }
+          @if (disablingEmail()) {
+            <ng-template #actionBody>
+              @if (error()) { <p role="alert">{{error()}}</p> }
+              @if (notice()) { <p role="status">{{notice()}}</p> }
+            <div class="security-panel">
+              <p>Confirma tu contraseña actual para desactivar el código por correo.</p>
+              <label for="email-stepup-password">Contraseña actual</label>
+              <input id="email-stepup-password" type="password" autocomplete="current-password" maxlength="255" [(ngModel)]="stepUpPassword" />
+              <div class="security-actions">
+                <cmc-button [disabled]="busy() || !validStepUp()" (click)="confirmDisableEmail()">Confirmar desactivación</cmc-button>
+              </div>
+            </div>
+            </ng-template>
+            <cmc-action-dialog #dialog [open]="true" title="Desactivar correo" [content]="actionBody" [busy]="busy()" [dirty]="!!stepUpPassword" (closed)="clearSecrets()"></cmc-action-dialog>
+          }
         </section>
 
         <section class="security-card" aria-labelledby="security-totp">
@@ -74,15 +122,24 @@
             <cmc-button variant="secondary" [disabled]="busy()" (click)="requestDisable()">Desactivar autenticador</cmc-button>
           }
           @if (disabling()) {
+            <ng-template #actionBody>
+              @if (error()) { <p role="alert">{{error()}}</p> }
+              @if (notice()) { <p role="status">{{notice()}}</p> }
             <div class="security-panel">
-              <p>Perderás este método de acceso. Confirma para enviar la solicitud al servidor.</p>
+              <p>Perderás este método de acceso. Confirma tu contraseña actual para enviar la solicitud al servidor.</p>
+              <label for="totp-stepup-password">Contraseña actual</label>
+              <input id="totp-stepup-password" type="password" autocomplete="current-password" maxlength="255" [(ngModel)]="stepUpPassword" />
               <div class="security-actions">
-                <cmc-button [disabled]="busy()" (click)="disable()">Confirmar desactivación</cmc-button>
-                <cmc-button variant="ghost" (click)="disabling.set(false)">Cancelar</cmc-button>
+                <cmc-button [disabled]="busy() || !validStepUp()" (click)="disable()">Confirmar desactivación</cmc-button>
               </div>
             </div>
+            </ng-template>
+            <cmc-action-dialog #dialog [open]="true" title="Desactivar autenticador" [content]="actionBody" [busy]="busy()" [dirty]="!!stepUpPassword" (closed)="clearSecrets()"></cmc-action-dialog>
           }
           @if (enrollment(); as e) {
+            <ng-template #actionBody>
+              @if (error()) { <p role="alert">{{error()}}</p> }
+              @if (notice()) { <p role="status">{{notice()}}</p> }
             <div class="security-panel">
               <p><strong>En este mismo teléfono:</strong> copia la clave y elige introducir una clave de configuración en tu autenticador. Vuelve aquí e introduce el código de seis dígitos.</p>
               <p><strong>En otro dispositivo:</strong> escanea el QR desde su autenticador. Mantén privada la clave y esta pantalla.</p>
@@ -93,38 +150,167 @@
               <input id="totp-confirm" inputmode="numeric" autocomplete="one-time-code" maxlength="6" [(ngModel)]="code" />
               <div class="security-actions">
                 <cmc-button [disabled]="busy() || !validCode()" (click)="confirm()">Confirmar activación</cmc-button>
-                <cmc-button variant="ghost" (click)="clearSecrets()">Ocultar configuración</cmc-button>
+                <cmc-button variant="ghost" (click)="dialog.close()">Ocultar configuración</cmc-button>
               </div>
             </div>
+            </ng-template>
+            <cmc-action-dialog #dialog [open]="true" title="Configurar autenticador" [content]="actionBody" [busy]="busy()" [dirty]="true" (closed)="clearSecrets()"></cmc-action-dialog>
           }
         </section>
 
         <section class="security-card" aria-labelledby="security-recovery">
           <h2 id="security-recovery">Códigos de recuperación</h2>
-          <p class="security-state" [class.is-active]="m.BACKUP_CODES">{{m.BACKUP_CODES ? 'Método activo' : 'Sin códigos activos'}}</p>
+          <p class="security-state" [class.is-active]="m.BACKUP_CODES">
+            @let count = backupCount();
+            @if (count !== null) {
+              {{count === 1 ? '1 código disponible' : count + ' códigos disponibles'}}
+            } @else {
+              {{m.BACKUP_CODES ? 'Método activo' : 'Sin códigos activos'}}
+            }
+          </p>
           <p>Se generan diez códigos de un solo uso. Regenerar invalida todos los anteriores. Necesitas el autenticador activado.</p>
           @if (!m.GOOGLE_AUTHENTICATOR) {
             <p>Usa «Configurar autenticador» en la tarjeta anterior y confirma el código de seis dígitos. Después podrás generar códigos de recuperación.</p>
           }
-          <cmc-button variant="secondary" [disabled]="busy() || !m.GOOGLE_AUTHENTICATOR" (click)="generating.set(true)">Generar o regenerar</cmc-button>
+          <div class="security-actions">
+            <cmc-button variant="secondary" [disabled]="busy() || !m.GOOGLE_AUTHENTICATOR" (click)="stepUpPassword = ''; generating.set(true)">Generar o regenerar</cmc-button>
+            @if (m.BACKUP_CODES) {
+              <cmc-button variant="ghost" [disabled]="busy()" (click)="stepUpPassword = ''; disablingBackup.set(true)">Desactivar códigos</cmc-button>
+            }
+          </div>
           @if (generating()) {
+            <ng-template #actionBody>
+              @if (error()) { <p role="alert">{{error()}}</p> }
+              @if (notice()) { <p role="status">{{notice()}}</p> }
             <div class="security-panel">
-              <p>¿Invalidar los códigos anteriores y generar diez nuevos?</p>
+              <p>¿Invalidar los códigos anteriores y generar diez nuevos? Confirma tu contraseña actual.</p>
+              <label for="backup-stepup-password">Contraseña actual</label>
+              <input id="backup-stepup-password" type="password" autocomplete="current-password" maxlength="255" [(ngModel)]="stepUpPassword" />
               <div class="security-actions">
-                <cmc-button [disabled]="busy()" (click)="generate()">Confirmar generación</cmc-button>
-                <cmc-button variant="ghost" (click)="generating.set(false)">Cancelar</cmc-button>
+                <cmc-button [disabled]="busy() || !validStepUp()" (click)="generate()">Confirmar generación</cmc-button>
               </div>
             </div>
+            </ng-template>
+            <cmc-action-dialog #dialog [open]="true" title="Generar códigos de recuperación" [content]="actionBody" [busy]="busy()" [dirty]="!!stepUpPassword" (closed)="clearSecrets()"></cmc-action-dialog>
+          }
+          @if (disablingBackup()) {
+            <ng-template #actionBody>
+              @if (error()) { <p role="alert">{{error()}}</p> }
+              @if (notice()) { <p role="status">{{notice()}}</p> }
+            <div class="security-panel">
+              <p>Se invalidarán todos tus códigos de recuperación disponibles. Confirma tu contraseña actual.</p>
+              <label for="backup-disable-password">Contraseña actual</label>
+              <input id="backup-disable-password" type="password" autocomplete="current-password" maxlength="255" [(ngModel)]="stepUpPassword" />
+              <div class="security-actions">
+                <cmc-button [disabled]="busy() || !validStepUp()" (click)="disableBackup()">Confirmar desactivación</cmc-button>
+              </div>
+            </div>
+            </ng-template>
+            <cmc-action-dialog #dialog [open]="true" title="Desactivar códigos de recuperación" [content]="actionBody" [busy]="busy()" [dirty]="!!stepUpPassword" (closed)="clearSecrets()"></cmc-action-dialog>
           }
           @if (codes().length) {
+            <ng-template #actionBody>
+              @if (error()) { <p role="alert">{{error()}}</p> }
+              @if (notice()) { <p role="status">{{notice()}}</p> }
             <div class="security-panel">
               <p>Guárdalos ahora en un lugar seguro, por ejemplo un gestor de contraseñas. No se guardan en esta aplicación.</p>
               <ul class="security-codes">@for (item of codes(); track item) { <li><code>{{item}}</code></li> }</ul>
-              <cmc-button variant="ghost" (click)="clearSecrets()">Ocultar códigos</cmc-button>
+              <cmc-button variant="ghost" (click)="dialog.close()">Ocultar códigos</cmc-button>
             </div>
+            </ng-template>
+            <cmc-action-dialog #dialog [open]="true" title="Tus códigos de recuperación" [content]="actionBody" [busy]="busy()"  (closed)="clearSecrets()"></cmc-action-dialog>
           }
+        </section>
+        @if (passwordChangeAvailable()) {
+          <section class="security-card" aria-labelledby="security-password">
+            <div class="security-card__header">
+              <h2 id="security-password">Cambiar contraseña</h2>
+              <span class="security-state is-active">Revoca sesiones</span>
+            </div>
+            <p>Introduce tu contraseña actual para confirmar el cambio. Tendrás que volver a iniciar sesión en tus dispositivos.</p>
+            <cmc-button variant="secondary" [disabled]="busy()" (click)="passwordExpanded.set(true)">Cambiar contraseña</cmc-button>
+            @if (passwordExpanded()) {
+            <ng-template #passwordBody>
+              @if (error()) { <p role="alert">{{error()}}</p> }
+
+            @let checks = passwordChecklist();
+            <form class="security-panel password-change-panel" [formGroup]="passwordForm" (ngSubmit)="changePassword()" novalidate>
+              <cmc-input type="password" label="Contraseña actual" formControlName="currentPassword"
+                autocomplete="current-password" [error]="passwordError('currentPassword')" required />
+              <cmc-input type="password" label="Contraseña nueva" formControlName="password"
+                (focusin)="passwordFocused.set(true)" (focusout)="passwordFocused.set(false)"
+                autocomplete="new-password" [error]="passwordFocused() ? '' : passwordError('password')"
+                [feedback]="passwordFocused() || passwordForm.controls.password.touched || passwordForm.controls.password.value ? checks.feedback : null"
+                hint="Usa al menos 8 caracteres, con mayúscula, minúscula, número y símbolo." required />
+              @if (passwordFocused() || passwordForm.controls.password.value) {
+                <div class="password-guide" aria-label="Indicador de fortaleza de contraseña">
+                  <div class="password-strength" [attr.data-feedback]="checks.feedback">
+                    <span>Fortaleza</span><strong>{{checks.strength}}</strong>
+                    <progress max="3" [value]="checks.level" aria-label="Fortaleza de la contraseña nueva"
+                      [attr.aria-valuetext]="checks.strength"></progress>
+                  </div>
+                  <ul class="password-requirements">
+                    @for (req of [
+                      {met: checks.length, label: 'Al menos ' + limits.passwordMin + ' caracteres'},
+                      {met: checks.variety, label: 'Incluye minúscula, mayúscula, número y símbolo'}
+                    ]; track req.label) {
+                      <li [class.requirement-met]="req.met">
+                        @if (req.met) { <cmc-icon name="available"/> }
+                        @else { <span class="requirement-circle" aria-hidden="true"></span> }
+                        <span>{{req.label}}</span>
+                      </li>
+                    }
+                  </ul>
+                </div>
+              }
+              <cmc-input type="password" label="Confirma la contraseña nueva" formControlName="confirmPassword"
+                autocomplete="new-password" [error]="passwordError('confirmPassword')"
+                [feedback]="passwordsCoincide() ? 'positive' : null" required />
+              @if (passwordsCoincide()) {
+                <p class="field-feedback field-success" role="status">Las contraseñas coinciden.</p>
+              }
+              <cmc-button type="submit" [disabled]="busy() || passwordForm.invalid" [loading]="busy()" loadingLabel="Actualizando contraseña">Actualizar contraseña</cmc-button>
+            </form>
+            </ng-template>
+            <cmc-action-dialog [open]="true" title="Cambiar contraseña" [content]="passwordBody"
+              [busy]="busy()" [dirty]="passwordHasValues()" (closed)="clearSecrets()" />
+            }
+          </section>
+        }
+        <section class="security-card" aria-labelledby="account-sessions">
+          <h2 id="account-sessions">Sesiones y dispositivos</h2>
+          <cmc-button variant="secondary" [disabled]="busy()" (click)="openSessions()">Consultar sesiones</cmc-button>
+          @if (sessionsOpen()) {
+          <ng-template #sessionsBody>
+          @if (busy()) { <p role="status">Consultando sesiones…</p> }
+          @if (error()) { <p role="alert">{{error()}}</p><cmc-button variant="secondary" (click)="loadSessions()">Reintentar</cmc-button> }
+          @if (sessions(); as active) {
+            @if (active.length > 1) {
+              <cmc-button variant="secondary" [disabled]="busy()" (click)="revokeOtherSessions()">Cerrar otras sesiones</cmc-button>
+            }
+            @for (session of active; track session.id) {
+              <div class="security-panel">
+                <strong>{{ session.device }}</strong>
+                @if (session.lastActivity) { <p>Última actividad: {{session.lastActivity | date:'medium'}}</p> }
+                @if (session.current) { <p>Este dispositivo</p> }
+                @else {
+                  <cmc-button variant="ghost" [disabled]="busy()" (click)="revokeSession(session)">Cerrar sesión</cmc-button>
+                }
+              </div>
+            } @empty { <p>No hay sesiones activas.</p> }
+          }
+          </ng-template>
+          <cmc-action-dialog [open]="true" title="Tus sesiones activas" [content]="sessionsBody" [busy]="busy()" (closed)="clearSecrets()" />
+          }
+        </section>
+        <section class="security-card" aria-labelledby="account-deletion">
+          <h2 id="account-deletion">Acciones delicadas</h2>
+          <cmc-button variant="ghost" (click)="deletionOpen.set(true)">Solicitar eliminación de cuenta</cmc-button>
         </section>
       </div>
     }
   </main>
 </ion-content>
+@if (deletionOpen()) {
+  <app-deletion-request [dialog]="true" (closed)="deletionOpen.set(false)" />
+}

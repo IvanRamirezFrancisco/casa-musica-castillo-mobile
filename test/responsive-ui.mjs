@@ -50,6 +50,9 @@ const cart = { cartId: 9, items: [{
 couponCode: null, canCheckout: true, warningMessage: null };
 let useSecondFactor = false;
 let emailEnabled = false;
+let totpEnabled = false;
+let backupCodesEnabled = false;
+const qrPng = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKAAAACgCAIAAAAErfB6AAADUklEQVR4nO3dQW4cIRAFUB8hyxzC979esrLUmtLYNFDQlN+Xl9QUn+dNJGvy8U9K52P3BSQ3gIsHcPEALh7AxQO4eAAXD+DiAVw8gIsHcPEALh7AxXMD+PPvn6f9tN8z4+QDu8cABnxaScDXAAZ8WknA1wAGfFpJwNeMArePD2Zwe4blvHLTLh8DuOnkud0BN508tzvgppPndgfcdPLc7oCbTp7bHXDTyXO7pwC3v9HgZ9r+YwCX2h4DuNT2GMCltscALrU9BnCp7TGAS22PKQg82CjjnoABAwYM+G4Ad655WslbjQCfV/JWI8DnlbzVCPDTSy77VXhg9xjApbrHAC7VPQZwqe4xgEt1jwFcqnsM4FLdYwr+VWXGa57SPQbw5PGMAP75JODcNeMBDPi7k4Bz14wHMODvTgLuXLP3Z/A5MtT3do8BDPi0koCvAQz4tJKArwEM+LSSgK8p+I3vy34/jgjgpvHlJaYFcNP48hLTArhpfHmJaQHcNL68xLQAbhpfXmJaADeNLy8xLZv/qnJwfBBjb6OMRTGAAS+/JWDAgAE/vlHGohjAgJffEvAe4MGrZ4y3f+YpvzSD3WMAA/42gLsbAZ55JcCdAdzdCPDMKwHuDODuRo8DHnyOZe++7DMfuD0GMOD7V89ofsoTAwYMGHDv9hjAgO9fPaP5KU98MPApGXmO7f+Qnf6ZgPvHAe8J4GsA948D3hPA1wDuHwe8J4CvKfgdHYOXbx/PODm9O2DAky4EeO57NhYHDHjShQDPfc/G4oABT7oQ4Lnv2Vj8t3zje/vJverTAxjwVwAvuNL0AAb8FcALrjQ9gAF/BfCCK03Pb/n/gwefeFmj6ZcH3N8dMGDAgAHnbR/sDhgwYMCA724fbLRs0eDJxgAGPOmWgAEDBgz4ZgADnnRLwIDnNF+2fe/4G6XXAAZ8fw3gBeNvlF4DGPD9NYAXjL9Reg1gwPfXAF4w/kbpNQX/qnJwfNmijPEYwNsWZYzHAN62KGM8BvC2RRnjMYC3LcoYjwG8bVHGeAzgbYsyxmMKfkfHspMZ44OLYgADzrwlYMCAATfcM+MkYMCJT9eoBhiwnBzAxQO4eAAXD+DiAVw8gIsHcPEALh7AxQO4eAAXD+Di+Q8W7IxdQi/0CgAAAABJRU5ErkJggg==";
 function fixture(method, pathname) {
   if (pathname === '/api/auth/login' && method === 'POST') {
     return useSecondFactor
@@ -63,6 +66,21 @@ function fixture(method, pathname) {
     emailEnabled = true;
     return wrap({});
   }
+  if (method === 'POST' && pathname === '/api/2fa/email/disable') {
+    emailEnabled = false;
+    return wrap({});
+  }
+  if (method === 'POST' && pathname === '/api/2fa/google/setup') {
+    return wrap({ manualEntryKey: 'JBSWY3DPEHPK3PXP', qrCode: qrPng });
+  }
+  if (method === 'POST' && pathname === '/api/2fa/google/confirm') {
+    totpEnabled = true;
+    return wrap({});
+  }
+  if (method === 'POST' && pathname === '/api/2fa/backup-codes/generate') {
+    backupCodesEnabled = true;
+    return wrap({ count: 10, codes: ['8492-1034', '7319-4820', '5920-3841', '1049-2938', '6648-2019', '9910-4482', '3182-7741', '4401-8829', '2749-6103', '5018-9374'] });
+  }
   if (method !== 'GET') return undefined;
   if (pathname === '/api/auth/me') return user;
   if (pathname === '/api/wishlist') return {
@@ -71,7 +89,13 @@ function fixture(method, pathname) {
     totalItems: 1,
   };
   if (pathname === '/api/2fa/methods') {
-    return wrap({ EMAIL: emailEnabled, GOOGLE_AUTHENTICATOR: false, BACKUP_CODES: false });
+    return wrap({ EMAIL: emailEnabled, GOOGLE_AUTHENTICATOR: totpEnabled, BACKUP_CODES: backupCodesEnabled });
+  }
+  if (pathname === '/api/2fa/backup-codes/status') {
+    return wrap({ enabled: backupCodesEnabled, available: backupCodesEnabled ? 10 : 0, total: backupCodesEnabled ? 10 : 0, used: 0, hasActiveCodes: backupCodesEnabled, canGenerate: totpEnabled });
+  }
+  if (pathname === '/api/users/security-settings') {
+    return wrap({ twoFactorEnabled: emailEnabled || totpEnabled, googleAuthEnabled: totpEnabled, emailEnabled, backupCodesEnabled, emailVerified: true, passwordChangeRevokesSessions: true });
   }
   if (pathname === '/api/users/profile') return wrap(user);
   if (pathname === '/api/cart' || pathname === '/api/cart/summary') return cart;
@@ -294,9 +318,9 @@ try {
     await capture(label, 'detalle');
     if (!baseline && ['320x640', '375x667', 'abierto', 'tablet-horizontal', 'telefono-horizontal'].includes(label)) {
       await click('.cover-action');
-      await wait("document.querySelector('.photo-viewer')?.open");
+      await wait("document.querySelector('.photo-viewer')?.open && document.querySelector('.viewer-photo')?.classList.contains('is-ready')");
       await click('[aria-label="Ampliar zoom"]');
-      assert.equal(await read("document.querySelector('.viewer-photo').style.width"), '150%');
+      assert.match(await read("document.querySelector('[aria-label=\"Restablecer zoom\"]').textContent.trim()"), /^150\s*%$/);
       assert.ok(await read("document.querySelector('[aria-label=\"Cerrar visor\"]').getBoundingClientRect().height >= 44"));
       assert.ok(await read("document.querySelector('.photo-viewer').getBoundingClientRect().width <= innerWidth"));
       await capture(label, 'galeria');
@@ -318,11 +342,44 @@ try {
     await click('app-connected-profile-view .profile-card[aria-label="Accesos de tu cuenta"] cmc-button:last-child button');
     await wait("location.pathname==='/profile/security' && !!document.querySelector('app-account-security main section')");
     await capture(label, 'seguridad');
-    if (!baseline) await capture(label, 'seguridad-final', 'app-account-security section:last-child button');
+    if (!baseline) {
+      const secPass = 'app-account-security cmc-input[formcontrolname=password] input';
+      await read(find(secPass) + '.scrollIntoView({ block: "center" })');
+      await read(find(secPass) + '.focus()');
+      if (label === '375x667') {
+        await rpc('Input.insertText', { text: 'Cl4ve-Segura' });
+        await wait("document.querySelector('app-account-security .password-strength')?.getAttribute('data-feedback') === 'positive'");
+      }
+      await capture(label, 'seguridad-final', 'app-account-security section:last-child button');
+    }
     if (!baseline && label === '375x667') {
       await click('#security-email ~ cmc-button button');
       await wait("document.querySelector('#security-email ~ .security-state')?.textContent === 'Activado'");
+      await read("document.querySelector('app-account-security .security-summary').scrollIntoView({ block: 'start' })");
       await capture(label, 'seguridad-confirmada');
+      await click('#security-email ~ cmc-button button');
+      await wait("!!document.querySelector('#email-stepup-password')");
+      await read("document.querySelector('[aria-labelledby=\"security-email\"]').scrollIntoView({ block: 'center' })");
+      await capture(label, 'seguridad-mfa-email');
+      await click('[aria-labelledby="security-email"] .security-actions cmc-button:last-child button');
+      await click('#security-totp ~ cmc-button button');
+      await wait("!!document.querySelector('#totp-confirm')");
+      await read("document.querySelector('[aria-labelledby=\"security-totp\"]').scrollIntoView({ block: 'center' })");
+      await capture(label, 'seguridad-google-auth');
+      await read(find('#totp-confirm') + '.focus()');
+      await rpc('Input.insertText', { text: '123456' });
+      await click('[aria-labelledby="security-totp"] .security-actions cmc-button:first-child button');
+      await wait("document.querySelector('#security-totp ~ .security-state')?.textContent === 'Activado'");
+      await click('[aria-labelledby="security-recovery"] .security-actions cmc-button:first-child button');
+      await wait("!!document.querySelector('#backup-stepup-password')");
+      await read(find('#backup-stepup-password') + '.focus()');
+      await rpc('Input.insertText', { text: 'Cl4ve-Segura' });
+      await click('[aria-labelledby="security-recovery"] .security-panel .security-actions cmc-button:first-child button');
+      await wait("document.querySelectorAll('.security-codes li').length === 10");
+      await read("document.querySelector('[aria-labelledby=\"security-recovery\"]').scrollIntoView({ block: 'center' })");
+      await capture(label, 'seguridad-codigos-respaldo');
+      totpEnabled = false;
+      backupCodesEnabled = false;
       await go('/login', 'app-connected-login input[type=email]');
       await submitLogin();
       await wait("location.pathname==='/main/home'");

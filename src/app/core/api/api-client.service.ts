@@ -49,6 +49,7 @@ export class ApiClientService {
       params,
       timeout: 60_000,
       credentials: 'omit' as const,
+      redirect: 'error' as const,
       context: new HttpContext().set(REQUIRES_AUTH, options.auth === true),
     };
   }

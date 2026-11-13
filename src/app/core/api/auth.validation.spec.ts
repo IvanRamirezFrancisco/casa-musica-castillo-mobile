@@ -25,6 +25,11 @@ describe('auth.validation', () => {
     expect(JSON.stringify(outcome)).not.toContain('accessToken');
   });
 
+  it('identifica el contrato anterior sin aceptar el desafío ni crear sesión', () => {
+    const legacy = { success: true, data: { twoFactorRequired: true, user: userDto(), availableMethods: { EMAIL: true } } };
+    expect(() => parseLoginResponse(legacy)).toThrow(expect.objectContaining({ kind: 'incompatible-mfa', status: 200 }));
+  });
+
   it.each([
     ['success false', { success: false, message: 'x', data: {} }],
     ['sin data', { success: true, message: 'x' }],

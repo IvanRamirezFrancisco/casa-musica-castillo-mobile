@@ -37,6 +37,7 @@ describe('sesión, interceptor y guard (integración)', () => {
     const secured = http.expectOne(`${base}/api/cart`);
     expect(secured.request.headers.get('Authorization')).toBe(`Bearer ${session.token}`);
     expect(secured.request.withCredentials).toBe(false);
+    expect(secured.request.redirect).toBe('error');
     secured.flush({});
     http.verify();
   });

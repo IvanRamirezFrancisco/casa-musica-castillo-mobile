@@ -17,6 +17,14 @@ describe('cart.validation', () => {
     expect([cart.totalItems, cart.subtotal, cart.couponCode]).toEqual([2, 0, null]);
   });
 
+  it('bloquea el checkout ante un resumen en cero con una partida disponible de MX$7,500', () => {
+    const lines = [cartItemDto({ quantity: 1, unitPrice: 7500, subtotal: 7500 })];
+    expect(parseCart(cartDto(lines, { subtotal: 0, tax: 0, total: 0 }), base))
+      .toEqual(expect.objectContaining({ amountsVerified: false, canCheckout: false }));
+    expect(parseCart(cartDto(lines, { subtotal: 7500, tax: 1200, total: 8700 }), base))
+      .toEqual(expect.objectContaining({ amountsVerified: true, canCheckout: true, total: 8700 }));
+  });
+
   it.each([
     ['no objeto', null],
     ['cartId inválido', cartDto([], { cartId: 0 })],

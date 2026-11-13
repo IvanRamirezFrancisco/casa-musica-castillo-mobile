@@ -22,16 +22,33 @@
         </div>
       } @else {
         <div class="auth-card-header">
-          <h2 class="cmc-title">Ingresa tu código</h2>
+          <ion-icon name="mail-outline" aria-hidden="true"></ion-icon>
+          <h2 class="cmc-title">Revisa tu correo</h2>
           <p class="cmc-body cmc-text-secondary instruction-text">
-            Pega el enlace de verificación completo o el código que aparece después de token=.
+            Usa el código de activación o el enlace del correo. Si no lo encuentras, revisa Spam o No deseados.
           </p>
+          @if (maskedEmail(); as address) { <p class="cmc-caption">Correo de activación: {{ address }}</p> }
         </div>
+        <form [formGroup]="resendForm" (ngSubmit)="resend()" class="auth-form" novalidate>
+          <cmc-input formControlName="email" autocomplete="email" label="Correo de la cuenta" type="email"
+            [error]="emailError()" required />
+          @if (resendForm.valid) {
+            <cmc-otp-input fieldId="activation-code" label="Código de activación de seis dígitos" [value]="digits()" [busy]="submitting()"
+              [invalid]="!!errorMessage()" (digitsChange)="updateDigits($event)" />
+            @if (submitting()) { <p role="status">Procesando solicitud…</p> }
+            @if (retryCode()) { <cmc-button (click)="verifyCode()">Reintentar verificación</cmc-button> }
+          }
+          <cmc-button type="submit" variant="secondary" fullWidth [disabled]="submitting() || resendSeconds() > 0">
+            Reenviar enlace y código @if (resendSeconds() > 0) { ({{ resendSeconds() }} s) }
+          </cmc-button>
+        </form>
+        <details class="step-actions">
+          <summary>Usar el enlace de activación</summary>
         <form [formGroup]="form" (ngSubmit)="verify()" class="auth-form" novalidate>
           <cmc-input
             formControlName="token"
             autocomplete="one-time-code"
-            label="Enlace o código de verificación"
+            label="Enlace de verificación"
             type="text"
             [error]="tokenError()"
            required></cmc-input>
@@ -40,24 +57,7 @@
           </cmc-button>
         </form>
 
-        <div class="step-actions">
-          @if (showResend()) {
-            <form [formGroup]="resendForm" (ngSubmit)="resend()" class="auth-form" novalidate>
-              <cmc-input
-                formControlName="email"
-                autocomplete="email"
-                label="Correo de la cuenta"
-                type="email"
-                [error]="emailError()"
-               required></cmc-input>
-              <cmc-button type="submit" variant="secondary" fullWidth [loading]="submitting()" loadingLabel="Enviando">
-                Reenviar código
-              </cmc-button>
-            </form>
-          } @else {
-            <button type="button" class="cmc-link cmc-font-bold" (click)="showResend.set(true)">No recibí el código</button>
-          }
-        </div>
+        </details>
       }
 
       <div class="auth-separator"></div>

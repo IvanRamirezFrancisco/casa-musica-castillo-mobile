@@ -1,13 +1,13 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './core/security/auth.guard';
 
+import { extraRoutes, page } from './app-page-loaders';
+
 export const routes: Routes = [
   { path: 'privacy', loadComponent: () => import('./features/privacy/privacy.page').then(m => m.PrivacyPage) },
+  ...extraRoutes,
   { path: 'privacy/my-data', canActivate: [authGuard], loadComponent: () => import('./features/privacy/my-data.page').then(m => m.MyPrivacyDataPage) },
-  {
-    path: 'api-connection',
-    loadComponent: () => import('./features/api-connection/api-connection.page').then((m) => m.ApiConnectionPage),
-  },
+  { path: 'privacy/delete-account', canActivate: [authGuard], loadComponent: () => import('./features/privacy/deletion-request.page').then(m => m.DeletionRequestPage) },
   {
     path: '',
     redirectTo: 'splash',
@@ -19,15 +19,15 @@ export const routes: Routes = [
   },
   {
     path: 'login',
-    loadComponent: () => import('./features/auth/login/login.page').then((m) => m.LoginPage),
+    loadComponent: page.login,
   },
   {
     path: 'register',
-    loadComponent: () => import('./features/auth/register/register.page').then((m) => m.RegisterPage),
+    loadComponent: page.register,
   },
   {
     path: 'forgot-password',
-    loadComponent: () => import('./features/auth/forgot-password/forgot-password.page').then((m) => m.ForgotPasswordPage),
+    loadComponent: page.recover,
   },
   {
     path: 'verify-email',
@@ -39,26 +39,26 @@ export const routes: Routes = [
     children: [
       {
         path: 'home',
-        loadComponent: () => import('./features/home/home.page').then((m) => m.HomePage),
+        loadComponent: page.home,
       },
       {
         path: 'catalog',
-        loadComponent: () => import('./features/catalog/catalog.page').then((m) => m.CatalogPage),
+        loadComponent: page.catalog,
       },
       {
         path: 'cart',
         canActivate: [authGuard],
-        loadComponent: () => import('./features/cart/cart.page').then((m) => m.CartPage),
+        loadComponent: page.cart,
       },
       {
         path: 'orders',
         canActivate: [authGuard],
-        loadComponent: () => import('./features/orders/orders.page').then((m) => m.OrdersPage),
+        loadComponent: page.orders,
       },
       {
         path: 'profile',
         canActivate: [authGuard],
-        loadComponent: () => import('./features/profile/profile.page').then((m) => m.ProfilePage),
+        loadComponent: page.profile,
       },
       {
         path: '',
@@ -68,36 +68,19 @@ export const routes: Routes = [
     ]
   },
   {
-    path: 'foundation-preview',
-    loadComponent: () =>
-      import('./features/foundation-preview/foundation-preview.page').then(
-        (m) => m.FoundationPreviewPage,
-      ),
-  },
-  {
-    path: 'checkout',
-    canActivate: [authGuard],
-    loadChildren: () => import('./features/checkout/checkout.routes').then((m) => m.routes),
-  },
-  {
     path: 'orders/:id',
     canActivate: [authGuard],
-    loadComponent: () => import('./features/orders/order-detail/order-detail.page').then((m) => m.OrderDetailPage),
+    loadComponent: page.orderDetail,
   },
   { path: 'profile/security', canActivate: [authGuard], loadComponent: () => import('./features/profile/account-security.page').then(m => m.AccountSecurityPage) },
   {
-    path: 'profile/edit',
-    canActivate: [authGuard],
-    loadComponent: () => import('./features/profile/edit-profile/edit-profile.page').then((m) => m.EditProfilePage),
-  },
-  {
     path: 'favorites',
     canActivate: [authGuard],
-    loadComponent: () => import('./features/favorites/favorites.page').then(m => m.FavoritesPage),
+    loadComponent: page.favorites,
   },
   {
     path: 'products/:id',
-    loadComponent: () => import('./features/catalog/product-detail/product-detail.page').then(m => m.ProductDetailPage),
+    loadComponent: page.product,
   },
   {
     path: 'not-found',

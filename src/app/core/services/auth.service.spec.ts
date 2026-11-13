@@ -13,7 +13,7 @@ import { AuthService } from './auth.service';
 function setup(store: SessionStore = new MemorySessionStore()) {
   const repo = {
     login: vi.fn(), sendTwoFactorEmailCode: vi.fn(), verifyTwoFactor: vi.fn(), register: vi.fn(),
-    resendVerification: vi.fn(), verifyEmail: vi.fn(), requestPasswordReset: vi.fn(),
+    resendVerification: vi.fn(), verifyEmail: vi.fn(), verifyEmailCode: vi.fn(), requestPasswordReset: vi.fn(),
     confirmPasswordReset: vi.fn(), logout: vi.fn(), restoreUser: vi.fn().mockReturnValue(of(testSession().user)),
   } satisfies Record<keyof AuthRepository, ReturnType<typeof vi.fn>>;
   TestBed.configureTestingModule({ providers: [
@@ -217,7 +217,7 @@ describe('AuthService', () => {
     expect(service.user()).toEqual(serverUser);
   });
 
-  it.each([401, 403, 0])('no concede una sesión restaurada si Spring rechaza /me o no hay red (%i)', async (status) => {
+  it.each([401, 403])('no concede una sesión restaurada si Spring rechaza /me (%i)', async (status) => {
     const stored: SessionStore = { persistent: true, save: vi.fn(),
       load: vi.fn().mockResolvedValue(testSession()), clear: vi.fn().mockResolvedValue(undefined) };
     const { repo, service } = setup(stored);
@@ -226,6 +226,21 @@ describe('AuthService', () => {
     expect(service.user()).toBeNull();
     expect(service.validToken()).toBeNull();
     expect(stored.clear).toHaveBeenCalled();
+  });
+
+  it.each([0, 429, 503])('retiene el estado cifrado sin conceder sesión y revalida /me tras un fallo temporal (%i)', async (status) => {
+    const session = testSession();
+    const stored: SessionStore = { persistent: true, save: vi.fn(),
+      load: vi.fn().mockResolvedValue(session), clear: vi.fn().mockResolvedValue(undefined) };
+    const { repo, service } = setup(stored);
+    repo.restoreUser.mockReturnValueOnce(throwError(() => new ApiError('http', status)));
+    await service.restore();
+    expect(service.user()).toBeNull();
+    expect(service.validToken()).toBeNull();
+    expect(stored.clear).not.toHaveBeenCalled();
+    await Promise.all([service.restore(), service.restore()]);
+    expect(repo.restoreUser).toHaveBeenCalledTimes(2);
+    expect(service.user()).toEqual(session.user);
   });
 
   it('rechaza una identidad distinta al revalidar /me', async () => {
@@ -284,6 +299,28 @@ describe('AuthService', () => {
     await firstValueFrom(service.login({ email: 'b@gmail.com', password: 'x' }));
     pending.next(testSession().user); pending.complete(); await restoration;
     expect(service.user()?.id).toBe(99);
+  });
+
+  it('una restauración pendiente no abre la cuenta anterior durante el MFA de otro login', async () => {
+    const session = testSession();
+    const stored: SessionStore = { persistent: true, save: vi.fn(),
+      load: vi.fn().mockResolvedValue(session), clear: vi.fn().mockResolvedValue(undefined) };
+    const { repo, service } = setup(stored);
+    const validation = new Subject<typeof session.user>();
+    repo.restoreUser.mockReturnValue(validation);
+    const restore = service.restore();
+    await Promise.resolve();
+    expect(repo.restoreUser).toHaveBeenCalled();
+    const login = new Subject();
+    repo.login.mockReturnValue(login);
+    const result = firstValueFrom(service.login({ email: 'otra@gmail.com', password: 'x' }));
+    validation.next(session.user);
+    await restore;
+    expect(service.validToken()).toBeNull();
+    login.next({ kind: 'two-factor', challenge: { preAuthChallenge: CHALLENGE, methods: ['EMAIL'] } });
+    await expect(result).resolves.toMatchObject({ kind: 'two-factor' });
+    expect(service.user()).toBeNull();
+    expect(stored.clear).toHaveBeenCalledOnce();
   });
 
   it('un login tardío no vuelve a autenticar después de logout', () => {

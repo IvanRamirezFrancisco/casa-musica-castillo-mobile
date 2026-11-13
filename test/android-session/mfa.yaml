@@ -18,10 +18,10 @@ name: TT05 - Logout conservado y MFA antes de persistir
 - assertVisible: "Verificación en dos pasos"
 - tapOn: "Enviar código por correo"
 - tapOn:
-    id: "cmc-input-2"
+    id: "login-mfa-code"
 - inputText: "123456"
-- hideKeyboard
-- tapOn: "Verificar y entrar"
-- assertVisible: "MFA Sesion"
+- extendedWaitUntil:
+    visible: "MFA Sesion"
+    timeout: 15000
 - assertVisible: "2FA activo"
 - takeScreenshot: reports/android-session/mfa-native

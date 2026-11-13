@@ -18,17 +18,26 @@
           <h2 class="cmc-title">Revisa tu correo</h2>
         </div>
         <p class="auth-alert auth-alert--success" role="status">
-          Si los datos son válidos, te enviamos un mensaje para verificar tu cuenta. Debes verificarla antes de iniciar sesión.
+          Si tu cuenta puede activarse, recibirás un mensaje de verificación. Debes verificarla antes de iniciar sesión.
         </p>
         <div class="step-actions">
           <cmc-button fullWidth (click)="goBack()">Ir a iniciar sesión</cmc-button>
-          <a routerLink="/verify-email" class="cmc-link cmc-font-bold">Ya tengo mi código de verificación</a>
+          <a routerLink="/verify-email" [state]="{ activationEmail: form.controls.email.value }" class="cmc-link cmc-font-bold">Verificar mi correo</a>
         </div>
       } @else {
         @if (errorMessage()) {
           <p class="auth-alert auth-alert--error" role="alert">{{ errorMessage() }}</p>
         }
         <form [formGroup]="form" (ngSubmit)="submit()" class="auth-form" novalidate>
+          @if (legal()?.required) {
+            <fieldset>
+              <legend>Documentos de registro</legend>
+              <p><a href="https://casa-musica-castillo.vercel.app/terminos" target="_blank" rel="noopener">Términos y Condiciones</a></p>
+              <label><input type="checkbox" [checked]="termsAccepted()" (change)="termsAccepted.set(checked($event))"> He leído y acepto los Términos y Condiciones.</label>
+              <p><a href="https://casa-musica-castillo.vercel.app/privacidad" target="_blank" rel="noopener">Aviso de Privacidad</a></p>
+              <label><input type="checkbox" [checked]="privacyRead()" (change)="privacyRead.set(checked($event))"> Confirmo que leí el Aviso de Privacidad.</label>
+            </fieldset>
+          }
           <cmc-input
             formControlName="username"
             autocomplete="username"
@@ -103,7 +112,7 @@
               </div>
               <ul class="password-requirements">
                 @for (requirement of [{met: checks.length, label: 'Al menos ' + limits.passwordMin + ' caracteres'},
-                  {met: checks.variety, label: 'Combina 3 tipos: minúsculas, mayúsculas, números o símbolos'}]; track requirement.label) {
+                  {met: checks.variety, label: 'Incluye minúscula, mayúscula, número y símbolo'}]; track requirement.label) {
                   <li [class.requirement-met]="requirement.met">
                     @if (requirement.met) { <cmc-icon name="available"/> }
                     @else { <span class="requirement-circle" aria-hidden="true"></span> }

@@ -15,9 +15,9 @@
       <p class="eyebrow">{{product.category}}</p><h1>{{product.name}}</h1><p class="muted">{{product.brand}}</p>
       @if(product.reviewCount && product.averageRating!==null){<p class="rating"><cmc-icon name="star"/>{{product.averageRating}} / 5 <span>· {{product.reviewCount}} opiniones</span></p>}
     </section>
-    <section class="product-gallery" aria-label="Galería del producto">
+    <section #gallery class="product-gallery" aria-label="Galería del producto" tabindex="-1">
       @if(activeImage(); as image){
-        <button type="button" class="cover cover-action" aria-label="Ampliar fotografía del producto" (click)="viewer.open()">
+        <button #coverTrigger type="button" class="cover cover-action" aria-label="Ampliar fotografía del producto" (click)="viewer.open(coverTrigger, gallery)">
           <cmc-public-image [src]="image" [alt]="product.name" (unavailable)="markPhotoUnavailable($event)"/>
         </button>
         @if(galleryImages().length > 1){
@@ -29,7 +29,7 @@
             }
           </div>
         }
-        <p class="muted gallery-position">Imagen {{imageNumber()}} de {{galleryImages().length}}</p>
+        @if(galleryImages().length > 1){<p class="muted gallery-position">Imagen {{imageNumber()}} de {{galleryImages().length}}</p>}
       }@else{
         <div class="cover cover-empty"><cmc-public-image [alt]="product.name"/></div>
       }
@@ -46,7 +46,7 @@
         @if(added()){<p role="status" class="action-notice">Producto agregado a tu carrito.</p>}
         @if(cart.notice();as err){<p role="alert">{{err}}</p>}
         <p class="muted"><cmc-icon name="security"/> Precio y existencias se verifican al agregar. No se realiza ningún pago.</p>
-      </div>}@else{<p class="muted" role="note">Agregar productos reales al carrito requiere la próxima etapa de integración. Este producto no se enviará al carrito DEMO.</p>}
+      </div>}
     </section></div>
     <section class="surface"><h2>Descripción</h2><div class="description" [class.expanded]="descriptionExpanded()||product.description.length<=400"><cmc-product-description [description]="product.description"/></div>@if(product.description.length>400){<button class="store-button" [attr.aria-expanded]="descriptionExpanded()" (click)="descriptionExpanded.update(invert)">{{descriptionExpanded()?'Leer menos':'Leer descripción completa'}} <cmc-icon name="down"/></button>}</section>
     <section class="surface"><h2>Especificaciones</h2><dl class="spec-list">

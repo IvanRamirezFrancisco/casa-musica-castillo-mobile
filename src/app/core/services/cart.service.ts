@@ -1,5 +1,5 @@
 import { Injectable, computed, inject, signal } from '@angular/core';
-import { Observable, finalize, tap } from 'rxjs';
+import { Observable, defer, finalize, tap } from 'rxjs';
 import { describeApiError } from '../api/api-error-message';
 import { CART_LIMITS, type Cart, type CartSummary, type CartValidation } from '../models/cart.model';
 import { CART_REPOSITORY } from '../repositories/cart.repository';
@@ -59,23 +59,17 @@ export class CartService {
 
   /** Consulta ligera del resumen (`GET /api/cart/summary`), sin crear carrito. */
   refreshSummary(): Observable<CartSummary> {
-    return this.repository.summary().pipe(tap((summary) => this.summaryCount.set(summary.totalItems)));
+    return defer(() => {
+      const seq = this.loadSeq;
+      return this.repository.summary().pipe(tap((summary) => {
+        if (seq === this.loadSeq) this.summaryCount.set(summary.totalItems);
+      }));
+    });
   }
 
   /** Agrega un producto por `productId` (`POST /api/cart/items`). */
   addProduct(productId: number, quantity = 1): Observable<Cart> {
-    this.mutatingState.set(true);
-    this.actionMessage.set(null);
-    const session = this.auth.sessionVersion;
-    return this.repository.addItem(productId, quantity).pipe(
-      tap({
-        next: (cart) => { if (this.auth.sessionVersion === session) this.applyCart(cart); },
-        error: (error: unknown) => {
-          if (this.auth.sessionVersion === session) this.actionMessage.set(describeApiError(error, 'form'));
-        },
-      }),
-      finalize(() => { if (this.auth.sessionVersion === session) this.mutatingState.set(false); }),
-    );
+    return this.mutation(this.repository.addItem(productId, quantity), cart => this.applyCart(cart), 'form');
   }
 
   /** Actualiza la cantidad de una partida por `itemId` (`PUT /api/cart/items/{itemId}`). */
@@ -85,69 +79,33 @@ export class CartService {
       this.actionMessage.set(`La cantidad permitida es de ${CART_LIMITS.minQuantity} a ${CART_LIMITS.maxQuantity} unidades.`);
       return;
     }
-    this.mutatingState.set(true);
-    this.actionMessage.set(null);
-    this.repository.updateItemQuantity(itemId, quantity).subscribe({
-      next: (cart) => { this.mutatingState.set(false); this.applyCart(cart); },
-      error: (error: unknown) => {
-        this.mutatingState.set(false);
-        this.actionMessage.set(describeApiError(error, 'form'));
-      },
-    });
+    this.mutation(this.repository.updateItemQuantity(itemId, quantity), cart => this.applyCart(cart), 'form')
+      .subscribe({ error: () => undefined });
   }
 
   /** Elimina una partida por `itemId` (`DELETE /api/cart/items/{itemId}`). */
   removeItem(itemId: number): void {
     if (this.mutatingState()) return;
-    this.mutatingState.set(true);
-    this.actionMessage.set(null);
-    this.repository.removeItem(itemId).subscribe({
-      next: (cart) => { this.mutatingState.set(false); this.applyCart(cart); },
-      error: (error: unknown) => {
-        this.mutatingState.set(false);
-        this.actionMessage.set(describeApiError(error));
-      },
-    });
+    this.mutation(this.repository.removeItem(itemId), cart => this.applyCart(cart))
+      .subscribe({ error: () => undefined });
   }
 
   /** Vacía el carrito (`DELETE /api/cart`) sin invocar `GET /api/cart` después. */
   clear(): void {
     if (this.mutatingState()) return;
-    this.mutatingState.set(true);
-    this.actionMessage.set(null);
-    this.repository.clear().subscribe({
-      next: () => {
-        this.mutatingState.set(false);
-        const existing = this.current();
-        if (existing) {
-          this.applyCart({
-            ...existing, items: [], totalItems: 0, subtotal: 0, tax: 0, discount: 0, total: 0,
-            couponCode: null, canCheckout: false, warningMessage: null,
-          });
-        } else {
-          this.summaryCount.set(0);
-        }
-      },
-      error: (error: unknown) => {
-        this.mutatingState.set(false);
-        this.actionMessage.set(describeApiError(error));
-      },
-    });
+    this.mutation(this.repository.clear(), () => {
+      const existing = this.current();
+      if (!existing) { this.reset(); this.summaryCount.set(0); return; }
+      this.applyCart({
+        ...existing, items: [], totalItems: 0, subtotal: 0, tax: 0, discount: 0, total: 0,
+        couponCode: null, canCheckout: false, warningMessage: null,
+      });
+    }).subscribe({ error: () => undefined });
   }
 
   /** Valida existencias antes de continuar (`GET /api/cart/validate`). */
   validate(): Observable<CartValidation> {
-    this.mutatingState.set(true);
-    this.actionMessage.set(null);
-    return this.repository.validate().pipe(
-      tap({
-        next: (result) => { this.mutatingState.set(false); this.validationState.set(result); },
-        error: (error: unknown) => {
-          this.mutatingState.set(false);
-          this.actionMessage.set(describeApiError(error));
-        },
-      }),
-    );
+    return this.mutation(this.repository.validate(), result => this.validationState.set(result));
   }
 
   reset(): void {
@@ -162,8 +120,25 @@ export class CartService {
   }
 
   private applyCart(cart: Cart): void {
+    this.loadSeq++;
+    this.loadingState.set(false);
+    this.loadError.set(null);
     this.current.set(cart);
     this.summaryCount.set(cart.totalItems);
     this.validationState.set(null);
+  }
+
+  private mutation<T>(request: Observable<T>, accept: (value: T) => void, context?: 'form'): Observable<T> {
+    return defer(() => {
+      const session = this.auth.sessionVersion;
+      this.mutatingState.set(true);
+      this.actionMessage.set(null);
+      return request.pipe(tap({
+        next: (value) => { if (session === this.auth.sessionVersion) accept(value); },
+        error: (error: unknown) => {
+          if (session === this.auth.sessionVersion) this.actionMessage.set(describeApiError(error, context));
+        },
+      }), finalize(() => { if (session === this.auth.sessionVersion) this.mutatingState.set(false); }));
+    });
   }
 }

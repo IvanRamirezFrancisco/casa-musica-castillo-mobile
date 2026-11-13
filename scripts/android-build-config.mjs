@@ -3,24 +3,46 @@ import { fileURLToPath } from 'node:url';
 
 const source = fs.readFileSync(fileURLToPath(new URL('../src/environments/environment-settings.ts', import.meta.url)), 'utf8');
 export const productionApiUrl = source.match(/PRODUCTION_API_BASE_URL = '([^']+)'/)[1];
+export const emulatorIntegrationApiUrl = source.match(/EMULATOR_INTEGRATION_API_BASE_URL = '([^']+)'/)[1];
 
-export function buildOptions({ environment, variant, apiUrl, isolated = false, requireSigning = false }, env = process.env) {
-  if (!['development', 'device', 'staging', 'production', 'demo'].includes(environment) || !['debug', 'release'].includes(variant)) {
-    throw new Error('Choose an explicit environment and debug/release variant.');
+export function buildOptions({ environment, variant, apiUrl, isolated = false, requireSigning = false, enableReviewedCommerce = false }, env = process.env) {
+  if (!['development', 'device', 'staging', 'production', 'demo'].includes(environment) || !['debug', 'qa', 'emulator', 'lan', 'release'].includes(variant)) {
+    throw new Error('Choose an explicit environment and debug/qa/emulator/release variant.');
   }
+  const emulatorIntegration = variant === 'emulator';
+  const lanIntegration = variant === 'lan';
+  if (lanIntegration && (environment !== 'staging' || !isolated || !apiUrl)) {
+    throw new Error('LAN acceptance requires an explicit isolated staging origin.');
+  }
+  if (emulatorIntegration && (environment !== 'staging' || !isolated || apiUrl !== undefined)) {
+    throw new Error('Emulator integration uses a fixed host-loopback origin and requires explicit staging isolation.');
+  }
+  if (variant === 'qa' && environment !== 'production') throw new Error('Connected QA requires the fixed production origin.');
   if (variant === 'release' && !['production', 'staging'].includes(environment)) {
     throw new Error('Release cannot package local or DEMO web assets.');
   }
   if (apiUrl && !['staging', 'device'].includes(environment)) throw new Error('This environment does not accept an endpoint override.');
   const defines = [];
+  if (variant === 'qa') defines.push('--define=CMC_CONNECTED_QA=true');
   let endpoint = environment === 'production' ? productionApiUrl : environment === 'demo' ? 'https://demo.invalid' : 'http://10.0.2.2:8080';
-  if (['staging', 'device'].includes(environment)) {
+  if (emulatorIntegration) {
+    endpoint = emulatorIntegrationApiUrl;
+    defines.push('--define=CMC_EMULATOR_INTEGRATION=true');
+  } else if (['staging', 'device'].includes(environment)) {
     if (!apiUrl) throw new Error('An explicit public API origin is required; no backend is provisioned automatically.');
     const url = new URL(apiUrl);
     if (url.username || url.password || url.search || url.hash || url.pathname !== '/') throw new Error('API URL must be a public configuration origin, never credentials or parameters.');
     if (environment === 'staging') {
       const productionHost = new URL(productionApiUrl).hostname;
-      if (!isolated || url.protocol !== 'https:' || url.hostname === productionHost || url.hostname.endsWith(`.${productionHost}`)) {
+      if (lanIntegration) {
+        if (url.protocol !== 'https:' || !/^(?:10\.|192\.168\.|172\.(?:1[6-9]|2\d|3[01])\.)/.test(url.hostname)
+            || !/^\d+(?:\.\d+){3}$/.test(url.hostname)) {
+          throw new Error('LAN acceptance requires HTTPS on a private IPv4 address.');
+        }
+        defines.push('--define=CMC_LAN_INTEGRATION=true');
+      } else if (!isolated || url.protocol !== 'https:' || !/\.[a-z][a-z0-9-]*$/i.test(url.hostname)
+          || /\.(localhost|local|internal)$/i.test(url.hostname)
+          || url.hostname === productionHost || url.hostname.endsWith(`.${productionHost}`)) {
         throw new Error('Staging requires explicit isolation confirmation and HTTPS distinct from production.');
       }
     } else if (url.protocol !== 'https:' && !(url.protocol === 'http:' && ['localhost', '127.0.0.1', '10.0.2.2'].includes(url.hostname))) {
@@ -35,8 +57,19 @@ export function buildOptions({ environment, variant, apiUrl, isolated = false, r
   const signingNames = ['CMC_UPLOAD_STORE_FILE', 'CMC_UPLOAD_STORE_PASSWORD', 'CMC_UPLOAD_KEY_ALIAS', 'CMC_UPLOAD_KEY_PASSWORD'];
   const supplied = signingNames.filter(name => Boolean(env[name]));
   if (supplied.length && supplied.length !== signingNames.length) throw new Error('Private upload signing configuration is incomplete.');
-  if (requireSigning && supplied.length !== signingNames.length) throw new Error('No authorized upload identity supplied. Only unsigned technical Release artifacts can be generated.');
-  return { environment, variant, angularConfiguration: environment === 'device' ? 'development' : environment,
-    apiBaseUrl: endpoint, isolated: environment === 'staging' && isolated, defines,
-    signing: variant === 'debug' ? 'android-debug-key' : supplied.length ? 'external-upload-key' : 'unsigned' };
+  if (requireSigning && (variant !== 'release' || supplied.length !== signingNames.length)) throw new Error('Upload signing is available only for Release with an authorized identity.');
+  if (enableReviewedCommerce) {
+    if (environment !== 'production' || variant !== 'release' || !requireSigning) {
+      throw new Error('Reviewed cart and wishlist writes require an explicitly signed Production release.');
+    }
+    defines.push('--define=CMC_REVIEWED_COMMERCE=true');
+  }
+  const publicDemo = environment === 'production' && variant === 'debug';
+  const angularConfiguration = publicDemo ? 'production,public-demo' : environment === 'device' ? 'development' : environment;
+  const nativeVariant = publicDemo ? 'publicDemo' : variant === 'qa' ? 'connectedQa'
+    : emulatorIntegration ? 'emulatorIntegration' : lanIntegration ? 'stagingLan'
+    : environment === 'staging' && variant === 'debug' ? 'stagingConnected' : variant;
+  return { environment, variant, nativeVariant, angularConfiguration, publicDemo,
+    apiBaseUrl: endpoint, isolated: environment === 'staging' && isolated, defines, enableReviewedCommerce,
+    signing: variant !== 'release' ? 'android-debug-key' : supplied.length ? 'external-upload-key' : 'unsigned' };
 }

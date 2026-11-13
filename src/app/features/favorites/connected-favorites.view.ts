@@ -39,6 +39,8 @@ import { CmcLoadingComponent } from '../../shared/ui/loading/cmc-loading.compone
  }
  </div></main></ion-content>`,})
 export class ConnectedFavoritesComponent {
+ private entered = false;
+ ionViewWillEnter():void { if (this.entered) this.reload(); this.entered = true; }
  private readonly favorites=inject(ProductFavoritesService);
  private readonly repo=inject(WISHLIST_REPOSITORY);private readonly destroyRef=inject(DestroyRef);private readonly cancel=new Subject<void>();
  readonly removing=signal(false);

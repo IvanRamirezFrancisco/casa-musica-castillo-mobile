@@ -5,7 +5,7 @@ const MAX_SERVER_MESSAGE = 200;
 
 export class ApiError extends Error {
   constructor(
-    public readonly kind: 'connection' | 'http' | 'invalid-response',
+    public readonly kind: 'connection' | 'http' | 'invalid-response' | 'incompatible-mfa',
     public readonly status: number,
     /** Mensaje de negocio del backend (solo 4xx), saneado y acotado. Nunca de 5xx. */
     public readonly serverMessage?: string,
@@ -14,7 +14,7 @@ export class ApiError extends Error {
   ) {
     super(kind === 'connection'
       ? 'No se pudo conectar con la API. Revisa red, servidor, CORS o tiempo de espera.'
-      : kind === 'invalid-response'
+      : kind === 'invalid-response' || kind === 'incompatible-mfa'
         ? 'La API devolvió una respuesta incompatible con el contrato esperado.'
         : `La API respondió con HTTP ${status}.`);
     this.name = 'ApiError';

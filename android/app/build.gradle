@@ -14,8 +14,8 @@ android {
         applicationId "com.casademusicacastillo.app"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 1
-        versionName "1.0"
+        versionCode 2
+        versionName "1.1"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         aaptOptions {
              // Files and dirs to omit from the packaged assets dir, modified to accommodate modern web apps.
@@ -27,6 +27,7 @@ android {
         if (uploadValues.every { it }) {
             upload {
                 storeFile file(uploadValues[0])
+                if (storeFile.name.toLowerCase(Locale.ROOT) ==~ /.*\.(p12|pfx|pkcs12)/) storeType 'PKCS12'
                 storePassword uploadValues[1]
                 keyAlias uploadValues[2]
                 keyPassword uploadValues[3]
@@ -34,6 +35,31 @@ android {
         }
     }
     buildTypes {
+        publicDemo {
+            initWith debug
+            applicationIdSuffix ".publicdemo"
+            matchingFallbacks = ['debug']
+        }
+        connectedQa {
+            initWith debug
+            applicationIdSuffix ".qa"
+            matchingFallbacks = ['debug']
+        }
+        stagingConnected {
+            initWith debug
+            applicationIdSuffix ".staging"
+            matchingFallbacks = ['debug']
+        }
+        stagingLan {
+            initWith debug
+            applicationIdSuffix ".staging.lan"
+            matchingFallbacks = ['debug']
+        }
+        emulatorIntegration {
+            initWith debug
+            applicationIdSuffix ".integration"
+            matchingFallbacks = ['debug']
+        }
         release {
             debuggable false
             jniDebuggable false
@@ -42,6 +68,9 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             if (uploadValues.every { it }) signingConfig signingConfigs.upload
         }
+    }
+    sourceSets {
+        stagingLan.res.srcDir 'build/generated/cmc-lan/res'
     }
 }
 
@@ -65,12 +94,11 @@ dependencies {
 
 apply from: 'capacitor.build.gradle'
 
-// Protect direct Gradle invocations too: optimized Release must never package DEMO/local assets.
-def verifyReleaseWebAssets = tasks.register('verifyReleaseWebAssets') {
-    doLast {
+// Protect direct Gradle invocations against stale assets from another build.
+def verifyConnectedWebAssets = { String nativeVariant ->
         def assets = file('src/main/assets/public')
         def marker = new File(assets, 'cmc-build.json')
-        if (!marker.isFile()) throw new GradleException('Build assets with npm run android:release before packaging Release.')
+        if (!marker.isFile()) throw new GradleException('Build and sync the selected web assets with scripts/build-android.mjs first.')
         def build = new groovy.json.JsonSlurper().parse(marker)
         def capacitor = new groovy.json.JsonSlurper().parse(file('src/main/assets/capacitor.config.json'))
         if (capacitor.loggingBehavior != 'none' || capacitor.android?.allowMixedContent != false ||
@@ -79,17 +107,57 @@ def verifyReleaseWebAssets = tasks.register('verifyReleaseWebAssets') {
         }
         def settings = rootProject.file('../src/environments/environment-settings.ts').text
         def expectedProduction = (settings =~ /PRODUCTION_API_BASE_URL = '([^']+)'/)[0][1]
-        if (!(build.environment in ['production', 'staging']) || build.variant != 'release') {
+        def expectedEmulator = (settings =~ /EMULATOR_INTEGRATION_API_BASE_URL = '([^']+)'/)[0][1]
+        if (build.nativeVariant != nativeVariant) {
+            throw new GradleException('Web assets do not match the requested Android variant.')
+        }
+        if (nativeVariant == 'publicDemo' && (build.environment != 'production' || build.variant != 'debug' ||
+            build.publicDemo != true || build.angularConfiguration != 'production,public-demo')) {
+            throw new GradleException('Public demo requires the read-only Production Debug web assets.')
+        }
+        if (nativeVariant == 'connectedQa' && (build.environment != 'production' || build.variant != 'qa' ||
+            build.publicDemo != false || build.angularConfiguration != 'production')) {
+            throw new GradleException('Connected QA requires the Production routes with the QA transport restriction.')
+        }
+        if (nativeVariant == 'stagingConnected' && (build.environment != 'staging' || build.variant != 'debug' ||
+            build.publicDemo != false || build.angularConfiguration != 'staging')) {
+            throw new GradleException('Connected Staging requires explicitly isolated staging web assets.')
+        }
+        def emulatorIntegration = nativeVariant == 'emulatorIntegration'
+        def lanIntegration = nativeVariant == 'stagingLan'
+        if (lanIntegration && (build.environment != 'staging' || build.variant != 'lan' ||
+            !build.isolated || build.publicDemo != false || build.angularConfiguration != 'staging')) {
+            throw new GradleException('LAN requires explicitly isolated staging web assets.')
+        }
+        if (emulatorIntegration && (build.environment != 'staging' || build.variant != 'emulator' ||
+            !build.isolated || build.publicDemo != false || build.angularConfiguration != 'staging' ||
+            build.apiBaseUrl != expectedEmulator)) {
+            throw new GradleException('Emulator integration requires the fixed isolated backend origin.')
+        }
+        if (nativeVariant == 'release' && (!(build.environment in ['production', 'staging']) || build.variant != 'release' || build.publicDemo == true)) {
             throw new GradleException('Release requires production or explicitly isolated staging web assets.')
         }
         def endpoint = new URI(build.apiBaseUrl as String)
-        if (endpoint.scheme != 'https' || endpoint.userInfo || endpoint.query || endpoint.fragment || !(endpoint.path in ['', '/'])) {
+        if ((!emulatorIntegration && endpoint.scheme != 'https') || endpoint.userInfo || endpoint.query || endpoint.fragment || !(endpoint.path in ['', '/'])) {
             throw new GradleException('Release requires an HTTPS API origin without credentials or URL parameters.')
         }
         if ((build.environment == 'production' && build.apiBaseUrl != expectedProduction) ||
-            (build.environment == 'staging' && (!build.isolated || endpoint.host == new URI(expectedProduction).host ||
-                endpoint.host.endsWith('.' + new URI(expectedProduction).host)))) {
+            (build.environment == 'staging' && !emulatorIntegration && !lanIntegration && (!build.isolated || !endpoint.host ||
+                !(endpoint.host ==~ /(?i).*\.[a-z][a-z0-9-]*/) || endpoint.host ==~ /(?i).*\.(localhost|local|internal)/ ||
+                endpoint.host.equalsIgnoreCase(new URI(expectedProduction).host) ||
+                endpoint.host.toLowerCase(Locale.ROOT).endsWith('.' + new URI(expectedProduction).host)))) {
             throw new GradleException('Release environment and API origin do not match the selected build.')
+        }
+        if (lanIntegration) {
+            def host = endpoint.host ?: ''
+            def res = file('build/generated/cmc-lan/res')
+            def ca = new File(res, 'raw/cmc_lan_ca.crt')
+            def trust = new File(res, 'xml/network_security_config.xml')
+            if (!(host ==~ /(?:10\.|192\.168\.|172\.(?:1[6-9]|2\d|3[01])\.)[\d.]+/) ||
+                !ca.isFile() || !trust.isFile() || !trust.text.contains("<domain>${host}</domain>") ||
+                java.security.MessageDigest.getInstance('SHA-256').digest(ca.bytes).encodeHex().toString() != build.lanCaSha256) {
+                throw new GradleException('LAN origin and staging trust resources do not match.')
+            }
         }
         def actualFiles = fileTree(assets).files.collect { assets.toPath().relativize(it.toPath()).toString().replace('\\', '/') }.findAll { it != 'cmc-build.json' }.sort()
         if (!build.webFiles || actualFiles != build.webFiles.keySet().toList().sort()) {
@@ -103,11 +171,50 @@ def verifyReleaseWebAssets = tasks.register('verifyReleaseWebAssets') {
             }
         }
         if (!fileTree(assets).matching { include '**/*.map' }.isEmpty()) {
-            throw new GradleException('Release assets must not contain source maps.')
+            throw new GradleException('Public demo and Release assets must not contain source maps.')
+        }
+}
+def verifyReleaseWebAssets = tasks.register('verifyReleaseWebAssets') {
+    doLast { verifyConnectedWebAssets('release') }
+}
+def verifyPublicDemoWebAssets = tasks.register('verifyPublicDemoWebAssets') {
+    doLast { verifyConnectedWebAssets('publicDemo') }
+}
+def verifyConnectedQaWebAssets = tasks.register('verifyConnectedQaWebAssets') {
+    doLast { verifyConnectedWebAssets('connectedQa') }
+}
+def verifyStagingConnectedWebAssets = tasks.register('verifyStagingConnectedWebAssets') {
+    doLast { verifyConnectedWebAssets('stagingConnected') }
+}
+def verifyStagingLanWebAssets = tasks.register('verifyStagingLanWebAssets') {
+    doLast { verifyConnectedWebAssets('stagingLan') }
+}
+def verifyEmulatorIntegrationWebAssets = tasks.register('verifyEmulatorIntegrationWebAssets') {
+    doLast { verifyConnectedWebAssets('emulatorIntegration') }
+}
+tasks.matching { it.name == 'preReleaseBuild' }.configureEach { dependsOn verifyReleaseWebAssets }
+tasks.matching { it.name == 'prePublicDemoBuild' }.configureEach { dependsOn verifyPublicDemoWebAssets }
+tasks.matching { it.name == 'preConnectedQaBuild' }.configureEach { dependsOn verifyConnectedQaWebAssets }
+tasks.matching { it.name == 'preStagingConnectedBuild' }.configureEach { dependsOn verifyStagingConnectedWebAssets }
+tasks.matching { it.name == 'preStagingLanBuild' }.configureEach { dependsOn verifyStagingLanWebAssets }
+tasks.matching { it.name == 'preEmulatorIntegrationBuild' }.configureEach { dependsOn verifyEmulatorIntegrationWebAssets }
+
+tasks.register('verifyReleaseBundleMetadata') {
+    dependsOn 'bundleRelease'
+    doLast {
+        def bundleFile = layout.buildDirectory.file('outputs/bundle/release/app-release.aab').get().asFile
+        new java.util.zip.ZipFile(bundleFile).withCloseable { archive ->
+            def manifest = com.android.tools.build.bundletool.model.AppBundle.buildFromZip(archive).baseModule.androidManifest
+            def expected = android.defaultConfig
+            if (manifest.packageName != expected.applicationId || manifest.versionCode.orElse(null) != expected.versionCode ||
+                manifest.versionName.orElse(null) != expected.versionName ||
+                manifest.targetSdkVersion.orElse(null) != rootProject.ext.targetSdkVersion) {
+                throw new GradleException('Generated AAB manifest does not match the Release application ID, version or target SDK.')
+            }
+            logger.lifecycle("AAB manifest verified: ${manifest.packageName} ${expected.versionName} (${expected.versionCode}), target SDK ${rootProject.ext.targetSdkVersion}")
         }
     }
 }
-tasks.matching { it.name == 'preReleaseBuild' }.configureEach { dependsOn verifyReleaseWebAssets }
 
 try {
     def servicesJSON = file('google-services.json')

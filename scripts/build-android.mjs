@@ -1,6 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
-import { createHash } from 'node:crypto';
+import { createHash, X509Certificate } from 'node:crypto';
 import { spawnSync, execFileSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { buildOptions } from './android-build-config.mjs';
@@ -8,15 +8,40 @@ import { buildOptions } from './android-build-config.mjs';
 const root = fileURLToPath(new URL('../', import.meta.url));
 const args = process.argv.slice(2);
 const value = flag => { const i = args.indexOf(flag); return i < 0 ? undefined : args[i + 1]; };
-const allowed = new Set(['--environment', '--variant', '--api-url', '--isolated', '--require-signing']);
+const allowed = new Set(['--environment', '--variant', '--api-url', '--isolated', '--require-signing', '--enable-reviewed-commerce', '--lan-ca']);
 for (let i = 0; i < args.length; i++) {
   if (!allowed.has(args[i])) throw new Error('Unknown Android build option.');
-  if (['--environment', '--variant', '--api-url'].includes(args[i])) i++;
+  if (['--environment', '--variant', '--api-url', '--lan-ca'].includes(args[i])) i++;
 }
 const config = buildOptions({ environment: value('--environment'), variant: value('--variant'), apiUrl: value('--api-url'),
-  isolated: args.includes('--isolated'), requireSigning: args.includes('--require-signing') });
-const run = (command, parameters, cwd = root) => {
-  const result = spawnSync(command, parameters, { cwd, stdio: 'inherit', env: { ...process.env, NG_CLI_ANALYTICS: 'false' } });
+  isolated: args.includes('--isolated'), requireSigning: args.includes('--require-signing'),
+  enableReviewedCommerce: args.includes('--enable-reviewed-commerce') });
+const webEnv = Object.fromEntries(Object.entries(process.env).filter(([name]) => !/^CMC_UPLOAD_/i.test(name)));
+const lanCaPath = value('--lan-ca');
+let lanCaSha256;
+if (Boolean(lanCaPath) !== (config.nativeVariant === 'stagingLan')) {
+  throw new Error('Only the LAN staging build requires and accepts a private staging CA certificate.');
+}
+if (lanCaPath) {
+  const pem = fs.readFileSync(lanCaPath, 'utf8');
+  if (!/^\s*-----BEGIN CERTIFICATE-----[\s\S]+?-----END CERTIFICATE-----\s*$/.test(pem)
+      || (pem.match(/-----BEGIN /g) ?? []).length !== 1) throw new Error('Expected one public CA certificate.');
+  const ca = new X509Certificate(pem);
+  if (!ca.ca || !ca.verify(ca.publicKey) || Date.parse(ca.validFrom) > Date.now() || Date.parse(ca.validTo) <= Date.now()) {
+    throw new Error('LAN staging CA must be a valid, self-signed CA certificate.');
+  }
+  const res = path.join(root, 'android/app/build/generated/cmc-lan/res');
+  fs.mkdirSync(path.join(res, 'raw'), { recursive: true });
+  fs.mkdirSync(path.join(res, 'xml'), { recursive: true });
+  const certificate = ca.toString();
+  lanCaSha256 = createHash('sha256').update(certificate).digest('hex');
+  fs.writeFileSync(path.join(res, 'raw/cmc_lan_ca.crt'), certificate);
+  const host = new URL(config.apiBaseUrl).hostname;
+  fs.writeFileSync(path.join(res, 'xml/network_security_config.xml'),
+    `<network-security-config><base-config cleartextTrafficPermitted="false"/><domain-config cleartextTrafficPermitted="false"><domain>${host}</domain><trust-anchors><certificates src="@raw/cmc_lan_ca" /></trust-anchors></domain-config></network-security-config>\n`);
+}
+const run = (command, parameters, cwd = root, env = webEnv) => {
+  const result = spawnSync(command, parameters, { cwd, stdio: 'inherit', env: { ...env, NG_CLI_ANALYTICS: 'false' } });
   if (result.error) throw result.error;
   if (result.status !== 0) process.exit(result.status ?? 1);
 };
@@ -24,10 +49,11 @@ run(process.execPath, ['node_modules/@angular/cli/bin/ng.js', 'build', `--config
 const digest = file => createHash('sha256').update(fs.readFileSync(file)).digest('hex');
 function files(dir) { return fs.readdirSync(dir, { withFileTypes: true }).flatMap(e => e.isDirectory() ? files(path.join(dir, e.name)) : [path.join(dir, e.name)]); }
 const www = path.join(root, 'www');
-const sourceSha = execFileSync('git', ['rev-parse', 'HEAD'], { cwd: root, encoding: 'utf8' }).trim();
-const marker = { environment: config.environment, variant: config.variant, angularConfiguration: config.angularConfiguration,
-  apiBaseUrl: config.apiBaseUrl, isolated: config.isolated, sourceSha,
-  sourceTreeDirty: Boolean(execFileSync('git', ['status', '--porcelain', '--untracked-files=normal'], { cwd: root, encoding: 'utf8' }).trim()),
+const sourceSha = execFileSync('git', ['rev-parse', 'HEAD'], { cwd: root, encoding: 'utf8', env: webEnv }).trim();
+const marker = { environment: config.environment, variant: config.variant, nativeVariant: config.nativeVariant, angularConfiguration: config.angularConfiguration,
+  apiBaseUrl: config.apiBaseUrl, isolated: config.isolated, publicDemo: config.publicDemo, lanCaSha256,
+  reviewedCommerce: config.enableReviewedCommerce, sourceSha,
+  sourceTreeDirty: Boolean(execFileSync('git', ['status', '--porcelain', '--untracked-files=normal'], { cwd: root, encoding: 'utf8', env: webEnv }).trim()),
   webFiles: Object.fromEntries(files(www).filter(f => path.basename(f) !== 'cmc-build.json').map(f => [path.relative(www, f).replaceAll('\\', '/'), digest(f)])) };
 fs.writeFileSync(path.join(www, 'cmc-build.json'), JSON.stringify(marker, null, 2));
 run(process.execPath, ['node_modules/@capacitor/cli/bin/capacitor', 'sync', 'android']);
@@ -38,15 +64,21 @@ const nativePublic = path.join(android, 'app/src/main/assets/public');
 marker.webFiles = Object.fromEntries(files(nativePublic).filter(f => path.basename(f) !== 'cmc-build.json')
   .map(f => [path.relative(nativePublic, f).replaceAll('\\', '/'), digest(f)]));
 fs.writeFileSync(path.join(nativePublic, 'cmc-build.json'), JSON.stringify(marker, null, 2));
-const tasks = config.variant === 'release' ? ['assembleRelease', 'bundleRelease'] : ['assembleDebug'];
-if (process.platform === 'win32') run('cmd.exe', ['/d', '/s', '/c', `gradlew.bat ${tasks.join(' ')} --no-daemon`], android);
-else run('./gradlew', [...tasks, '--no-daemon'], android);
-const destination = path.join(root, 'reports/android-packages', `${config.environment}-${config.variant}`);
+const native = config.nativeVariant;
+const tasks = [`assemble${native[0].toUpperCase()}${native.slice(1)}`];
+if (native === 'release') tasks.push('verifyReleaseBundleMetadata');
+const gradleEnv = config.signing === 'external-upload-key' ? process.env : webEnv;
+const gradleOptions = [...tasks, '--no-daemon'];
+if (config.signing === 'external-upload-key') gradleOptions.push('--no-configuration-cache');
+if (process.platform === 'win32') run('cmd.exe', ['/d', '/s', '/c', `gradlew.bat ${gradleOptions.join(' ')}`], android, gradleEnv);
+else run('./gradlew', gradleOptions, android, gradleEnv);
+const suffix = config.signing === 'external-upload-key' ? '-signed' : '';
+const destination = path.join(root, 'reports/android-packages', `${config.environment}-${config.variant}${suffix}`);
 fs.mkdirSync(destination, { recursive: true });
 const candidates = config.variant === 'release' ? [
   config.signing === 'unsigned' ? 'android/app/build/outputs/apk/release/app-release-unsigned.apk' : 'android/app/build/outputs/apk/release/app-release.apk',
   'android/app/build/outputs/bundle/release/app-release.aab',
-] : ['android/app/build/outputs/apk/debug/app-debug.apk'];
+] : [`android/app/build/outputs/apk/${native}/app-${native}.apk`];
 const packages = candidates.map(relative => {
   if (!fs.existsSync(path.join(root, relative))) throw new Error(`Expected Android artifact is missing: ${relative}`);
   const source = path.join(root, relative); const target = path.join(destination, path.basename(source));

@@ -159,6 +159,13 @@ import { CmcIconComponent } from '../../shared/ui/icon/cmc-icon.component';
   `,
 })
 export class ConnectedProfileComponent implements OnInit {
+  private entered = false;
+
+  ionViewWillEnter(): void {
+    if (this.entered) this.reload();
+    this.entered = true;
+  }
+
   readonly privacy = inject(PrivacyPreferencesService);
   protected readonly auth = inject(AuthService);
   private readonly repository = inject(PROFILE_REPOSITORY);
