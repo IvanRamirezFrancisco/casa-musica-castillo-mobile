@@ -2,8 +2,44 @@
 
 @include feedback;
 
+.mfa-page {
+  --mfa-bottom-space: calc(var(--cmc-space-6) + var(--cmc-safe-area-bottom));
+  --padding-bottom: var(--mfa-bottom-space);
+}
+
+.mfa-page::part(scroll) {
+  scroll-padding-block: var(--cmc-space-3) var(--mfa-bottom-space);
+}
+
+/* Keep the code and its actions high in the scrollable area when the viewport shrinks. */
+.mfa-page .auth-hero {
+  padding-block: var(--cmc-space-3) 0;
+}
+
+.mfa-page .brand-info {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--cmc-space-3);
+}
+
+.mfa-page .auth-brand-icon {
+  flex: none;
+  margin: 0;
+  padding: var(--cmc-space-2);
+  font-size: 1.25rem;
+}
+
+.mfa-page .auth-brand-subtitle {
+  display: none;
+}
+
+.mfa-page .auth-form {
+  margin-block: var(--cmc-space-3);
+}
+
 .factor-card { border-block-start: 3px solid var(--cmc-primary); }
-.factor-header { margin-top: 0; }
+.factor-card .factor-header { margin-block: 0 var(--cmc-space-4); }
 .factor-eyebrow { color: var(--cmc-primary); font-weight: 700; margin-block: 0.75rem 0.25rem; }
 .factor-method, .factor-help { margin: 0; overflow-wrap: anywhere; }
 .factor-method { padding: 0.75rem; background: var(--cmc-surface-alt); border-radius: var(--cmc-radius-md); font-weight: 600; }

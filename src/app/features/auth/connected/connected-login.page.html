@@ -1,4 +1,4 @@
-<ion-content class="cmc-page cmc-standalone-page auth-page">
+<ion-content class="cmc-page cmc-standalone-page auth-page" [class.mfa-page]="step() === 'second-factor'">
   <div class="auth-hero">
     <div class="auth-top-bar">
       <a class="auth-back-pill" routerLink="/main/home">
