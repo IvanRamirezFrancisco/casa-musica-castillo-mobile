@@ -99,7 +99,7 @@
               <legend class="cmc-body cmc-font-bold">Método de verificación</legend>
               @for (option of pending.methods; track option) {
                 <label class="method-option">
-                  <input type="radio" name="method" [value]="option" [checked]="method() === option" (change)="selectMethod(option)" />
+                  <input type="radio" name="method" [value]="option" [checked]="method() === option" [disabled]="submitting()" (change)="selectMethod(option)" />
                   <span>{{ methodLabels[option] }}</span>
                 </label>
               }
@@ -111,29 +111,28 @@
 
         <form [formGroup]="codeForm" (ngSubmit)="verify()" class="auth-form" novalidate>
           @if (method() === 'EMAIL' && !emailCodeSent()) {
-            <p class="factor-help">Solicita un código y revisa el correo asociado a tu cuenta.</p>
-            <cmc-button fullWidth [loading]="submitting()" loadingLabel="Enviando código" (click)="sendEmailCode()">
+            <p class="factor-help">Envía un código a {{ maskedEmail() }}.</p>
+            <cmc-button fullWidth [disabled]="resendSeconds() > 0" [loading]="submitting()" loadingLabel="Enviando código" (click)="sendEmailCode()">
               Enviar código por correo
             </cmc-button>
           } @else {
-            <cmc-input
-              formControlName="code"
-              [inputMode]="method() === 'BACKUP_CODE' ? 'text' : 'numeric'"
-              autocomplete="one-time-code"
-              [label]="method() === 'BACKUP_CODE' ? 'Código de respaldo' : 'Código de 6 dígitos'"
-              type="text"
-              [error]="codeError()"
-             required></cmc-input>
+            @if (method() === 'BACKUP_CODE') {
+              <cmc-input formControlName="code" autocomplete="one-time-code" label="Código de respaldo"
+                type="text" [error]="codeError()" required></cmc-input>
+              <cmc-button type="submit" fullWidth [loading]="submitting()" loadingLabel="Verificando">Verificar y entrar</cmc-button>
+            } @else {
+              <cmc-otp-input [value]="codeForm.controls.code.value" [busy]="submitting()" [invalid]="!!errorMessage()"
+                (digitsChange)="updateDigits($event)" />
+              @if (submitting()) { <p role="status">Verificando código…</p> }
+              @if (retryCode()) {
+                <cmc-button fullWidth (click)="verify()">Reintentar verificación</cmc-button>
+              }
+            }
 
             @if (method() === 'EMAIL') {
-              <p class="factor-help">Si el código venció, solicita uno nuevo.</p>
-            }
-            <cmc-button type="submit" fullWidth [loading]="submitting()" loadingLabel="Verificando">
-              Verificar y entrar
-            </cmc-button>
-            @if (method() === 'EMAIL') {
-              <cmc-button variant="ghost" fullWidth [disabled]="submitting()" (click)="sendEmailCode()">
-                Reenviar código
+              <p class="factor-help">Código para {{ maskedEmail() }}. Si venció, solicita uno nuevo.</p>
+              <cmc-button variant="ghost" fullWidth [disabled]="submitting() || resendSeconds() > 0" (click)="sendEmailCode()">
+                Reenviar código @if (resendSeconds() > 0) { ({{ resendSeconds() }} s) }
               </cmc-button>
             }
           }

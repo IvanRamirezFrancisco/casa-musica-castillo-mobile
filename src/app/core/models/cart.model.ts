@@ -33,6 +33,7 @@ export interface Cart {
   readonly tax: number;
   readonly discount: number;
   readonly total: number;
+  readonly amountsVerified?: boolean;
   readonly couponCode: string | null;
   readonly canCheckout: boolean;
   readonly warningMessage: string | null;

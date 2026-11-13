@@ -95,16 +95,19 @@ describe('autenticación conectada (integración)', () => {
     const resend = Array.from<HTMLButtonElement>(page.nativeElement.querySelectorAll('button'))
       .find(button => button.textContent?.includes('Reenviar código'))!;
     resend.click();
-    const retry = http.expectOne(`${base}/api/2fa/send-login-code`);
     page.detectChanges();
     expect(resend.disabled).toBe(true);
-    retry.flush({ success: true, message: 'ok' });
+    http.expectNone(`${base}/api/2fa/send-login-code`);
 
     page.componentInstance['verify']();
     http.expectNone(`${base}/api/2fa/verify`);
-    page.componentInstance['codeForm'].setValue({ code: '123456' });
-    page.componentInstance['verify']();
-    http.expectOne(`${base}/api/2fa/verify`).flush({ success: false }, { status: 401, statusText: 'Unauthorized' });
+    const otp = page.nativeElement.querySelector('input[autocomplete="one-time-code"]') as HTMLInputElement;
+    otp.value = '012 345';
+    otp.dispatchEvent(new Event('input', { bubbles: true }));
+    otp.dispatchEvent(new Event('input', { bubbles: true }));
+    const request = http.expectOne(`${base}/api/2fa/verify`);
+    expect(request.request.body.code).toBe('012345');
+    request.flush({ success: false }, { status: 401, statusText: 'Unauthorized' });
     page.detectChanges();
     expect(page.nativeElement.textContent).toContain('Código inválido o vencido');
     expect(page.componentInstance['codeForm'].controls.code.value).toBe('');
@@ -353,9 +356,8 @@ describe('autenticación conectada (integración)', () => {
     const page = TestBed.createComponent(VerifyEmailPage);
     page.detectChanges();
     page.componentInstance['verify']();
-    expect(page.componentInstance['tokenError']()).toContain('código');
+    expect(page.componentInstance['tokenError']()).toContain('enlace');
 
-    page.componentInstance['showResend'].set(true);
     page.detectChanges();
     page.componentInstance['resend']();
     expect(page.componentInstance['emailError']()).toContain('correo');
@@ -365,7 +367,7 @@ describe('autenticación conectada (integración)', () => {
     page.componentInstance['resend']();
     http.expectOne(`${base}/api/auth/resend-verification`).flush({ success: true, message: 'ok' });
     page.detectChanges();
-    expect(page.nativeElement.textContent).toContain('enviamos un nuevo código');
+    expect(page.nativeElement.textContent).toContain('revisa la bandeja de entrada');
 
     page.componentInstance['form'].setValue({ token: 'http://127.0.0.1:4200/verify-account?token=token-test' });
     page.componentInstance['verify']();

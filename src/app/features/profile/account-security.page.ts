@@ -34,6 +34,7 @@ export class AccountSecurityPage {
  readonly backupCount=signal<number|null>(null);
  readonly passwordChangeAvailable=signal(false);
  readonly passwordFocused=signal(false);
+ readonly passwordExpanded=signal(false);
  readonly limits=FIELD_LIMITS;
  readonly ringRadius=46;
  readonly ringCircumference=289.03;
@@ -54,7 +55,15 @@ export class AccountSecurityPage {
  clearSecrets():void {
   this.cancelled.next();this.busy.set(false);this.enrollment.set(null);this.codes.set([]);this.code='';
   this.stepUpPassword='';this.generating.set(false);this.disabling.set(false);this.disablingEmail.set(false);
-  this.disablingBackup.set(false);this.passwordForm.reset();
+  this.disablingBackup.set(false);this.passwordForm.reset();this.passwordExpanded.set(false);
+ }
+ onPasswordToggle(event: Event): void {
+  const open = (event.target as HTMLDetailsElement).open;
+  this.passwordExpanded.set(open);
+  if (!open && !this.busy()) {
+   this.passwordForm.reset();
+   this.passwordFocused.set(false);
+  }
  }
  validCode():boolean {return /^\d{6}$/.test(this.code);}
  validStepUp():boolean {return this.stepUpPassword.trim().length > 0 && this.stepUpPassword.length <= 255;}

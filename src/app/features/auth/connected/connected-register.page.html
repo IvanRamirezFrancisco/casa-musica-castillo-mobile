@@ -18,11 +18,11 @@
           <h2 class="cmc-title">Revisa tu correo</h2>
         </div>
         <p class="auth-alert auth-alert--success" role="status">
-          Si los datos son válidos, te enviamos un mensaje para verificar tu cuenta. Debes verificarla antes de iniciar sesión.
+          Si tu cuenta puede activarse, recibirás un mensaje de verificación. También puedes retomar una activación pendiente.
         </p>
         <div class="step-actions">
           <cmc-button fullWidth (click)="goBack()">Ir a iniciar sesión</cmc-button>
-          <a routerLink="/verify-email" class="cmc-link cmc-font-bold">Ya tengo mi código de verificación</a>
+          <a routerLink="/verify-email" [state]="{ activationEmail: form.controls.email.value }" class="cmc-link cmc-font-bold">Verificar mi correo</a>
         </div>
       } @else {
         @if (errorMessage()) {

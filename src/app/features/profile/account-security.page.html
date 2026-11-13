@@ -192,6 +192,8 @@
               <span class="security-state is-active">Revoca sesiones</span>
             </div>
             <p>Introduce tu contraseña actual para confirmar el cambio. Tendrás que volver a iniciar sesión en tus dispositivos.</p>
+            <details class="password-disclosure" [open]="passwordExpanded()" (toggle)="onPasswordToggle($event)">
+              <summary>Cambiar contraseña</summary>
             @let checks = passwordChecklist();
             <form class="security-panel password-change-panel" [formGroup]="passwordForm" (ngSubmit)="changePassword()" novalidate>
               <cmc-input type="password" label="Contraseña actual" formControlName="currentPassword"
@@ -230,6 +232,7 @@
               }
               <cmc-button type="submit" [disabled]="busy() || passwordForm.invalid" [loading]="busy()" loadingLabel="Actualizando contraseña">Actualizar contraseña</cmc-button>
             </form>
+            </details>
           </section>
         }
       </div>

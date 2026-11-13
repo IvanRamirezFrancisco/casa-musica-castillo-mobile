@@ -83,6 +83,11 @@ export class HttpAuthRepository implements AuthRepository {
       .pipe(map((body) => void unwrapApiResponse(body)));
   }
 
+  verifyEmailCode(email: string, code: string) {
+    return this.api.post<unknown>('/api/auth/verify-email-code', { email: email.trim(), code })
+      .pipe(map((body) => void unwrapApiResponse(body)));
+  }
+
   requestPasswordReset(email: string) {
     return this.api
       .post<unknown>('/api/auth/password-reset/request', { email: email.trim() })

@@ -100,6 +100,10 @@ import { CmcLoadingComponent } from '../../shared/ui/loading/cmc-loading.compone
           </div>
 
           <div><section class="summary" aria-label="Resumen del carrito">
+            @if (data.amountsVerified === false) {
+              <p class="warn" role="status">Aún no pudimos confirmar los importes. Actualiza el carrito para continuar.</p>
+              <cmc-button variant="secondary" fullWidth (click)="cart.load()">Actualizar importes</cmc-button>
+            } @else {
             <div class="row"><span>Subtotal</span><strong>{{ data.subtotal | currency:'MXN' }}</strong></div>
             @if (data.discount > 0) {
               <div class="row"><span>Descuento</span><strong>-{{ data.discount | currency:'MXN' }}</strong></div>
@@ -107,6 +111,7 @@ import { CmcLoadingComponent } from '../../shared/ui/loading/cmc-loading.compone
             <div class="row"><span>Impuestos</span><strong>{{ data.tax | currency:'MXN' }}</strong></div>
             <div class="row"><span class="cmc-title">Total en carrito</span><strong class="cmc-title">{{ data.total | currency:'MXN' }}</strong></div>
             <p class="cmc-caption">Importes calculados por el servidor. El envío se cotiza en el siguiente paso.</p>
+            }
           </section>
 
           <div class="actions">
@@ -153,6 +158,7 @@ export class ConnectedCartComponent {
   }
 
   proceed(): void {
+    if (!this.cart.cart()?.canCheckout) return;
     this.cart.validate().subscribe({
       next: (result) => {
         if (result.valid && result.canCheckout) void this.router.navigate(['/checkout']);

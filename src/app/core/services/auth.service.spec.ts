@@ -13,7 +13,7 @@ import { AuthService } from './auth.service';
 function setup(store: SessionStore = new MemorySessionStore()) {
   const repo = {
     login: vi.fn(), sendTwoFactorEmailCode: vi.fn(), verifyTwoFactor: vi.fn(), register: vi.fn(),
-    resendVerification: vi.fn(), verifyEmail: vi.fn(), requestPasswordReset: vi.fn(),
+    resendVerification: vi.fn(), verifyEmail: vi.fn(), verifyEmailCode: vi.fn(), requestPasswordReset: vi.fn(),
     confirmPasswordReset: vi.fn(), logout: vi.fn(), restoreUser: vi.fn().mockReturnValue(of(testSession().user)),
   } satisfies Record<keyof AuthRepository, ReturnType<typeof vi.fn>>;
   TestBed.configureTestingModule({ providers: [

@@ -68,3 +68,9 @@ ion-content.cmc-page { --padding-bottom: var(--cmc-space-4); }
 .security-dot { flex: none; width: .75rem; height: .75rem; border: 1px solid var(--cmc-text-secondary); border-radius: 50%; }
 .security-recommendation { margin: .625rem 0 0; color: var(--cmc-text-secondary); font-size: .875rem; }
 .security-card p { margin: 0; color: var(--cmc-text-secondary); line-height: 1.5; }
+.password-disclosure > summary {
+  min-height: 44px;
+  color: var(--cmc-primary);
+  font-weight: 700;
+  cursor: pointer;
+}

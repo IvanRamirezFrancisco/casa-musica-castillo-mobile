@@ -135,6 +135,7 @@ export class AuthService {
   register(input: RegisterInput): Observable<void> { return this.repository.register(input); }
   resendVerification(email: string): Observable<void> { return this.repository.resendVerification(email); }
   verifyEmail(token: string): Observable<void> { return this.repository.verifyEmail(token); }
+  verifyEmailCode(email: string, code: string): Observable<void> { return this.repository.verifyEmailCode(email, code); }
   requestPasswordReset(email: string): Observable<void> { return this.repository.requestPasswordReset(email); }
   confirmPasswordReset(token: string, newPassword: string): Observable<void> {
     return this.repository.confirmPasswordReset(token, newPassword);

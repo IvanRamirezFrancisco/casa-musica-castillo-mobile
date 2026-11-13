@@ -32,7 +32,9 @@ assert set(packages)=={'.apk','.aab'},'Both APK and AAB must be generated.'
 def output(*command):return subprocess.check_output([str(c) for c in command],cwd=root,stderr=subprocess.STDOUT).decode('utf-8',errors='replace')
 apk=packages['.apk'];aab=packages['.aab']
 badging=output(aapt,'dump','badging',apk)
-assert "name='com.casademusicacastillo.app'" in badging and "versionCode='1'" in badging and "versionName='1.0'" in badging
+version_code=re.search(r'(?m)^\s*versionCode\s+(\d+)\s*$',(root/'android/app/build.gradle').read_text(encoding='utf-8'))[1]
+version_name=re.search(r'(?m)^\s*versionName\s+"([^"]+)"\s*$',(root/'android/app/build.gradle').read_text(encoding='utf-8'))[1]
+assert "name='com.casademusicacastillo.app'" in badging and f"versionCode='{version_code}'" in badging and f"versionName='{version_name}'" in badging
 assert re.search(r"(?:minSdkVersion|sdkVersion):'24'",badging) and "targetSdkVersion:'36'" in badging
 assert 'application-debuggable' not in badging
 permissions=re.findall(r"uses-permission: name='([^']+)'",badging)
@@ -125,8 +127,8 @@ for name,count in [('backup_rules',9),('data_extraction_rules',18)]:
     assert all('="'+domain+'"' in compiled for domain in domains)
 result={'status':'PASS','environment':args.environment,'signing':report['signing'],'packages':inventory,'permissions':permissions,'debuggable':False,'allowBackup':False,'releaseCleartext':False,'r8MappingSha256':hashlib.sha256(mapping.read_bytes()).hexdigest(),'r8BridgeMethodPreserved':True,'r8SecureStorageMethodsPreserved':True,'sourceMaps':False,'fixtureAndDiagnosticMarkersAbsent':True,'installedOrRuntimeValidated':False,'limitations':'Unsigned technical APK/AAB are not installable or ready for Play. Static packaging/R8 proof is not runtime, certificate pinning or JavaScript confidentiality.'}
 result['applicationId']='com.casademusicacastillo.app'
-result['versionCode']=1
-result['versionName']='1.0'
+result['versionCode']=int(version_code)
+result['versionName']=version_name
 result['targetSdk']=36
 result['reviewedCommerce']=args.reviewed_commerce
 result['certificateSha256']=certificate_fingerprints
