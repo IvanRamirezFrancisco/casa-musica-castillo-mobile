@@ -121,7 +121,7 @@
                 type="text" [error]="codeError()" required></cmc-input>
               <cmc-button type="submit" fullWidth [loading]="submitting()" loadingLabel="Verificando">Verificar y entrar</cmc-button>
             } @else {
-              <cmc-otp-input [value]="codeForm.controls.code.value" [busy]="submitting()" [invalid]="!!errorMessage()"
+              <cmc-otp-input fieldId="login-mfa-code" [value]="codeForm.controls.code.value" [busy]="submitting()" [invalid]="!!errorMessage()"
                 (digitsChange)="updateDigits($event)" />
               @if (submitting()) { <p role="status">Verificando código…</p> }
               @if (retryCode()) {

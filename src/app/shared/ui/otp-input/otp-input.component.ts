@@ -7,7 +7,7 @@ import { ChangeDetectionStrategy, Component, input, output } from '@angular/core
     <label class="otp">
       <span>{{ label() }}</span>
       <span class="control" [class.invalid]="invalid()">
-        <input type="text" inputmode="numeric" autocomplete="one-time-code"
+        <input [id]="fieldId()" type="text" inputmode="numeric" autocomplete="one-time-code"
           enterkeyhint="done" autocapitalize="off" spellcheck="false" [value]="value()"
           [readOnly]="busy()" [attr.aria-invalid]="invalid()" [attr.aria-busy]="busy()"
           (input)="update($event)">
@@ -24,7 +24,8 @@ import { ChangeDetectionStrategy, Component, input, output } from '@angular/core
     .otp { display: grid; gap: .65rem; font-weight: 700; }
     .control { position: relative; display: block; border-radius: .75rem; }
     .control:focus-within { outline: 2px solid var(--cmc-primary); outline-offset: 4px; }
-    input { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; font-size: 1rem; }
+    input { position: absolute; inset: 0; width: 100%; height: 100%; color: transparent;
+      caret-color: transparent; background: transparent; border: 0; font-size: 1rem; }
     .digits { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: clamp(4px, 2vw, 12px); pointer-events: none; }
     .digits > span { display: grid; place-items: center; min-height: 3rem; border-radius: .65rem;
       border: 1px solid var(--cmc-border); background: var(--cmc-surface-alt);
@@ -34,6 +35,7 @@ import { ChangeDetectionStrategy, Component, input, output } from '@angular/core
   `,
 })
 export class OtpInputComponent {
+  readonly fieldId = input.required<string>();
   readonly label = input('Código de seis dígitos');
   readonly value = input('');
   readonly busy = input(false);

@@ -5,6 +5,11 @@ import { unwrapApiResponse } from '../api/auth.validation';
 import { ApiError } from '../api/api-error';
 export interface SecurityMethods { EMAIL: boolean; GOOGLE_AUTHENTICATOR: boolean; BACKUP_CODES: boolean; }
 export interface TotpEnrollment { manualEntryKey: string; qrCode: string; }
+export interface AccountSession {
+  id: string;
+  device: string;
+  current: boolean;
+}
 const invalid = () => new ApiError('invalid-response', 200);
 export function securityData(raw: unknown): Record<string, unknown> {
   const data = unwrapApiResponse(raw)['data'];
@@ -27,6 +32,22 @@ export class HttpAccountSecurityRepository {
   }
   changePassword(currentPassword: string, newPassword: string) {
     return this.action('/api/users/change-password', { currentPassword, newPassword });
+  }
+  sessions() {
+    return this.api.get<unknown>('/api/auth/sessions', undefined, { auth: true }).pipe(map(raw => {
+      const list: unknown = securityData(raw)['sessions'];
+      if (!Array.isArray(list)) throw invalid();
+      return list.map((entry: unknown): AccountSession => {
+        if (!entry || typeof entry !== 'object') throw invalid();
+        const { id, deviceInfo, isCurrent } = entry as Record<string, unknown>;
+        if (typeof id !== 'string' || !/^[\w-]{1,128}$/.test(id) ||
+            typeof deviceInfo !== 'string' || typeof isCurrent !== 'boolean') throw invalid();
+        return { id, device: deviceInfo, current: isCurrent };
+      });
+    }));
+  }
+  revokeSession(id: string) {
+    return this.api.delete<unknown>(`/api/auth/sessions/${encodeURIComponent(id)}`, { auth: true });
   }
   methods() { return this.api.get<unknown>('/api/2fa/methods', undefined, { auth: true }).pipe(map(raw => {
     const d = securityData(raw);

@@ -235,6 +235,25 @@
             </details>
           </section>
         }
+        <section class="security-card" aria-labelledby="account-sessions">
+          <h2 id="account-sessions">Sesiones y dispositivos</h2>
+          <cmc-button variant="secondary" [disabled]="busy()" (click)="loadSessions()">Consultar sesiones</cmc-button>
+          @if (sessions(); as active) {
+            @for (session of active; track session.id) {
+              <div class="security-panel">
+                <strong>{{ session.device }}</strong>
+                @if (session.current) { <p>Este dispositivo</p> }
+                @else {
+                  <cmc-button variant="ghost" [disabled]="busy()" (click)="revokeSession(session)">Cerrar sesión</cmc-button>
+                }
+              </div>
+            } @empty { <p>No hay sesiones activas.</p> }
+          }
+        </section>
+        <section class="security-card" aria-labelledby="account-deletion">
+          <h2 id="account-deletion">Acciones delicadas</h2>
+          <a routerLink="/privacy/delete-account" class="cmc-link">Solicitar eliminación de cuenta</a>
+        </section>
       </div>
     }
   </main>

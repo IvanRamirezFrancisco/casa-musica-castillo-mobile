@@ -33,7 +33,7 @@
           <cmc-input formControlName="email" autocomplete="email" label="Correo de la cuenta" type="email"
             [error]="emailError()" required />
           @if (resendForm.valid) {
-            <cmc-otp-input label="Código de activación de seis dígitos" [value]="digits()" [busy]="submitting()"
+            <cmc-otp-input fieldId="activation-code" label="Código de activación de seis dígitos" [value]="digits()" [busy]="submitting()"
               [invalid]="!!errorMessage()" (digitsChange)="updateDigits($event)" />
             @if (submitting()) { <p role="status">Procesando solicitud…</p> }
             @if (retryCode()) { <cmc-button (click)="verifyCode()">Reintentar verificación</cmc-button> }

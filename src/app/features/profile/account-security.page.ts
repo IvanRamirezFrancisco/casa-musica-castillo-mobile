@@ -1,10 +1,10 @@
 import { Component, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule, NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { IonHeader, IonToolbar, IonTitle, IonButtons, IonBackButton, IonContent } from '@ionic/angular';
 import { Observable, Subject, catchError, forkJoin, of, takeUntil } from 'rxjs';
-import { HttpAccountSecurityRepository, SecurityMethods, TotpEnrollment } from '../../core/infrastructure/http-account-security.repository';
+import { AccountSession, HttpAccountSecurityRepository, SecurityMethods, TotpEnrollment } from '../../core/infrastructure/http-account-security.repository';
 import { CmcButtonComponent } from '../../shared/ui/button/cmc-button.component';
 import { CmcIconComponent } from '../../shared/ui/icon/cmc-icon.component';
 import { AuthService } from '../../core/services/auth.service';
@@ -15,7 +15,7 @@ import {
 import { CmcInputComponent } from '../../shared/ui/input/cmc-input.component';
 @Component({
  selector: 'app-account-security', standalone: true,
- imports: [FormsModule, ReactiveFormsModule, IonHeader, IonToolbar, IonTitle, IonButtons, IonBackButton, IonContent, CmcButtonComponent, CmcIconComponent, CmcInputComponent],
+ imports: [FormsModule, ReactiveFormsModule, RouterLink, IonHeader, IonToolbar, IonTitle, IonButtons, IonBackButton, IonContent, CmcButtonComponent, CmcIconComponent, CmcInputComponent],
  templateUrl: './account-security.page.html',
  styleUrl: './account-security.page.scss',
 })
@@ -35,6 +35,7 @@ export class AccountSecurityPage {
  readonly passwordChangeAvailable=signal(false);
  readonly passwordFocused=signal(false);
  readonly passwordExpanded=signal(false);
+ readonly sessions=signal<readonly AccountSession[]|null>(null);
  readonly limits=FIELD_LIMITS;
  readonly ringRadius=46;
  readonly ringCircumference=289.03;
@@ -55,7 +56,17 @@ export class AccountSecurityPage {
  clearSecrets():void {
   this.cancelled.next();this.busy.set(false);this.enrollment.set(null);this.codes.set([]);this.code='';
   this.stepUpPassword='';this.generating.set(false);this.disabling.set(false);this.disablingEmail.set(false);
-  this.disablingBackup.set(false);this.passwordForm.reset();this.passwordExpanded.set(false);
+  this.disablingBackup.set(false);this.passwordForm.reset();this.passwordExpanded.set(false);this.sessions.set(null);
+ }
+ loadSessions():void {
+  this.run(this.repo.sessions(), sessions => this.sessions.set(sessions));
+ }
+ revokeSession(session: AccountSession):void {
+  if (session.current || this.busy()) return;
+  this.run(this.repo.revokeSession(session.id), () => {
+   this.sessions.update(sessions => sessions?.filter(item => item.id !== session.id) ?? null);
+   this.notice.set('Sesión cerrada.');
+  });
  }
  onPasswordToggle(event: Event): void {
   const open = (event.target as HTMLDetailsElement).open;
