@@ -6,7 +6,8 @@
   <div class="store-search-area" (keydown.escape)="showSuggestions.set(false)">
     <form class="store-search" (submit)="$event.preventDefault();search()" role="search">
       <cmc-icon name="search"/><input #searchField type="search" maxlength="100" aria-label="Buscar en el catálogo"
-        placeholder="Buscar instrumentos" [value]="term()" (input)="update($event)" (focus)="showSuggestions.set(term().trim().length >= 2)"/>
+        placeholder="Buscar instrumentos" [value]="term()" (input)="update($event)" (focus)="showSuggestions.set(term().trim().length >= 2)"
+        (keydown.enter)="$event.preventDefault();search()"/>
       @if (term()) { <button type="button" aria-label="Limpiar búsqueda" (click)="setTerm('');searchField.focus()">×</button> }
       <button type="submit" aria-label="Buscar instrumentos"><cmc-icon name="arrow"/></button>
     </form>
