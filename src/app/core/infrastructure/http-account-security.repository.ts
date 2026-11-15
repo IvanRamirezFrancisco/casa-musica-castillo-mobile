@@ -11,7 +11,77 @@ export interface AccountSession {
   current: boolean;
   lastActivity?: string;
 }
+export type AccountDeletionStatus = 'RECEIVED' | 'REVIEW_REQUIRED' | 'COMPLETED';
+export interface AccountDeletionReceipt {
+  requestId: string;
+  status: AccountDeletionStatus;
+  receivedAt: string;
+  completedAt: string | null;
+}
+export interface AccountDeletionPolicy {
+  available: boolean;
+  publicEmailRequestEnabled: boolean;
+  automaticDeletionEnabled: boolean;
+  supportEmail: string;
+  tokenValidityMinutes: number;
+  retentionPolicyVersion: string;
+}
+const UUID_PATTERN = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/;
+const ISO_DATE_PATTERN = /^\d{4}-\d{2}-\d{2}T/;
+const DELETION_STATUSES: ReadonlySet<string> = new Set(['RECEIVED', 'REVIEW_REQUIRED', 'COMPLETED']);
 const invalid = () => new ApiError('invalid-response', 200);
+function isIsoTimestamp(value: unknown): value is string {
+  return typeof value === 'string' && ISO_DATE_PATTERN.test(value) && Number.isFinite(Date.parse(value));
+}
+export function parseAccountDeletionPolicy(raw: unknown): AccountDeletionPolicy {
+  if (!raw || typeof raw !== 'object' || Array.isArray(raw)) throw invalid();
+  const data = raw as Record<string, unknown>;
+  if (typeof data['available'] !== 'boolean') throw invalid();
+  const publicEmailRequestEnabled = data['publicEmailRequestEnabled'];
+  if (publicEmailRequestEnabled !== undefined && typeof publicEmailRequestEnabled !== 'boolean') throw invalid();
+  const automaticDeletionEnabled = data['automaticDeletionEnabled'];
+  if (automaticDeletionEnabled !== undefined && typeof automaticDeletionEnabled !== 'boolean') throw invalid();
+  const supportEmail = data['supportEmail'];
+  if (supportEmail !== undefined && (typeof supportEmail !== 'string' || !supportEmail.includes('@'))) throw invalid();
+  const tokenValidityMinutes = data['tokenValidityMinutes'];
+  if (
+    tokenValidityMinutes !== undefined &&
+    (typeof tokenValidityMinutes !== 'number' || !Number.isSafeInteger(tokenValidityMinutes) || tokenValidityMinutes <= 0)
+  ) {
+    throw invalid();
+  }
+  const retentionPolicyVersion = data['retentionPolicyVersion'];
+  if (retentionPolicyVersion !== undefined && typeof retentionPolicyVersion !== 'string') throw invalid();
+  return {
+    available: data['available'],
+    publicEmailRequestEnabled: publicEmailRequestEnabled === true,
+    automaticDeletionEnabled: automaticDeletionEnabled === true,
+    supportEmail: typeof supportEmail === 'string' ? supportEmail : 'soporte@casamusicacastillo.com',
+    tokenValidityMinutes: typeof tokenValidityMinutes === 'number' ? tokenValidityMinutes : 30,
+    retentionPolicyVersion: typeof retentionPolicyVersion === 'string' ? retentionPolicyVersion : 'v1',
+  };
+}
+export function parseAccountDeletionReceipt(raw: unknown): AccountDeletionReceipt {
+  if (!raw || typeof raw !== 'object' || Array.isArray(raw)) throw invalid();
+  const data = raw as Record<string, unknown>;
+  const { requestId, status, receivedAt, completedAt } = data;
+  if (
+    typeof requestId !== 'string' ||
+    !UUID_PATTERN.test(requestId) ||
+    typeof status !== 'string' ||
+    !DELETION_STATUSES.has(status) ||
+    !isIsoTimestamp(receivedAt)
+  ) {
+    throw invalid();
+  }
+  if (completedAt !== undefined && completedAt !== null && !isIsoTimestamp(completedAt)) throw invalid();
+  return {
+    requestId,
+    status: status as AccountDeletionStatus,
+    receivedAt,
+    completedAt: typeof completedAt === 'string' ? completedAt : null,
+  };
+}
 export function securityData(raw: unknown): Record<string, unknown> {
   const data = unwrapApiResponse(raw)['data'];
   if (!data || typeof data !== 'object' || Array.isArray(data)) throw invalid();
@@ -76,6 +146,20 @@ export class HttpAccountSecurityRepository {
     return codes as string[];
   })); }
   disableBackupCodes(currentPassword: string) { return this.action('/api/2fa/backup-codes/disable', { currentPassword }); }
+  deletionAvailability() {
+    return this.api.get<unknown>('/api/public/legal/deletion').pipe(map(parseAccountDeletionPolicy));
+  }
+  ownDeletionRequest() {
+    return this.api.get<unknown>('/api/users/me/deletion-requests', undefined, { auth: true }).pipe(map(parseAccountDeletionReceipt));
+  }
+  requestAccountDeletion(currentPassword: string, confirmed: boolean) {
+    return this.api.post<unknown>('/api/users/me/deletion-requests', { currentPassword, confirmed }, { auth: true })
+      .pipe(map(parseAccountDeletionReceipt));
+  }
+  trackAccountDeletion(requestId: string) {
+    return this.api.post<unknown>('/api/public/legal/deletion/status', { requestId: requestId.trim() })
+      .pipe(map(parseAccountDeletionReceipt));
+  }
   private action(path: `/api/${string}`, body: object = {}) {
     return this.api.post<unknown>(path, body, { auth: true }).pipe(map(raw => { unwrapApiResponse(raw); }));
   }

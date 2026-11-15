@@ -36,3 +36,11 @@ El requisito consultado para apps nuevas/actualizaciones es target API 36 y se c
 Las cuentas personales nuevas requieren al menos 12 participantes inscritos continuamente durante 14 días en prueba cerrada antes de solicitar acceso a producción; no garantiza aprobación. [Pruebas requeridas](https://support.google.com/googleplay/android-developer/answer/14151465?hl=en-419). La entrega académica del 26 de noviembre no sustituye esos plazos ni verificaciones.
 
 Faltan firma autorizada, aceptación Release en Android, staging aislado, sesión segura y decisiones de privacidad. AAB técnico sin firma no está listo para Play. Etapas 2B/3A/3B/3C/4 son trabajo futuro y no se ejecutan automáticamente.
+
+---
+
+## Actualización operativa 2026-11-15 (`versionCode 3`, `versionName 1.2`, Railway + Vercel)
+
+- **Backend en Railway (`https://casa-musica-castillo-backend-production.up.railway.app`):** migración Flyway V57 habilita solicitudes públicas sin sesión (`POST /api/public/legal/deletion/request`, `/confirm`, `/status`), flujo autenticado (`/api/users/me/deletion-requests`) y desvinculación de registros comerciales concluidos (`CFF Art. 30`).
+- **Rutas web públicas en Vercel:** Aviso de Privacidad en `https://casa-musica-castillo.vercel.app/privacidad` y eliminación web externa sin sesión en `https://casa-musica-castillo.vercel.app/eliminar-cuenta`.
+- **Flujo in-app Android (`DeletionRequestPage` + `HttpAccountSecurityRepository`):** ofrece eliminación autenticada, transparencia de conservación y consulta pública por folio UUID (`trackAccountDeletion`), junto con enlace directo al portal web externo.

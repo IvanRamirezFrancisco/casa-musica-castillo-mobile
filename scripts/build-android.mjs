@@ -57,6 +57,14 @@ const marker = { environment: config.environment, variant: config.variant, nativ
   webFiles: Object.fromEntries(files(www).filter(f => path.basename(f) !== 'cmc-build.json').map(f => [path.relative(www, f).replaceAll('\\', '/'), digest(f)])) };
 fs.writeFileSync(path.join(www, 'cmc-build.json'), JSON.stringify(marker, null, 2));
 run(process.execPath, ['node_modules/@capacitor/cli/bin/capacitor', 'sync', 'android']);
+for (const gradleFile of ['android/capacitor.settings.gradle', 'android/app/capacitor.build.gradle']) {
+  const fullPath = path.join(root, gradleFile);
+  if (fs.existsSync(fullPath)) {
+    const raw = fs.readFileSync(fullPath, 'utf8');
+    const normalized = raw.replace(/new File\('[^']*?\/node_modules\//g, "new File('../node_modules/");
+    if (normalized !== raw) fs.writeFileSync(fullPath, normalized);
+  }
+}
 const android = path.join(root, 'android');
 // Capacitor adds its Cordova bridge shims during sync. Bind the complete native asset tree,
 // including those generated files, before Gradle verifies and packages it.

@@ -2,7 +2,7 @@
 
 > Fecha de verificación: `2026-11-15`  
 > Paquete Android: `com.casademusicacastillo.app`  
-> Target SDK verificado: **API 36** (`versionCode 2`, `versionName 1.1`)  
+> Target SDK verificado: **API 36** (`versionCode 3`, `versionName 1.2`)  
 > Política operativa: Preparación completa hasta pista cerrada; **nunca publicar a producción abierta** sin aprobación explícita.
 
 ---
@@ -35,8 +35,8 @@ Si la cuenta de Google Play Developer es de tipo **Personal** creada recientemen
 | Sección Play Console | Estado / Valor requerido basado en el código real |
 |---|---|
 | **App access (Acceso con credenciales)** | La app permite navegación pública sin cuenta (Inicio, Catálogo, Detalle, Ayuda, Políticas). Si el revisor de Google Play evalúa flujo autenticado, proporcionar credenciales de una cuenta de pruebas dedicada (sin MFA bloqueante o con código TOTP/instrucciones) en *App content -> App access* |
-| **Privacy Policy URL** | Configurar URL pública HTTPS en producción (por ejemplo `https://casa-musica-castillo.vercel.app/...` o página legal pública servida por el frontend / `/api/public/legal/registration`) y confirmar HTTP 200 |
-| **Account deletion (Eliminación de cuenta)** | Soportada en app y respaldada por backend V56 (`/api/public/legal/deletion`). Declarar la URL web de eliminación de cuenta exigida por Google Play en *Data safety* |
+| **Privacy Policy URL** | Configurar URL pública HTTPS en producción: `https://casa-musica-castillo.vercel.app/privacidad` (HTTP 200 sin sesión) |
+| **Account deletion (Eliminación de cuenta)** | Soportada dentro de la app (`DeletionRequestPage` -> `POST /api/users/me/deletion-requests` y `POST /api/public/legal/deletion/status`) y externamente sin sesión vía `https://casa-musica-castillo.vercel.app/eliminar-cuenta` respaldada por backend Flyway V57 (`/api/public/legal/deletion/request` y `/confirm`). Declarar `https://casa-musica-castillo.vercel.app/eliminar-cuenta` en *Data safety -> Delete account URL* |
 | **Data safety** | Llenar exactamente conforme a [`DATA_SAFETY_ASSESSMENT.md`](./DATA_SAFETY_ASSESSMENT.md) (TLS en tránsito, almacenamiento seguro cifrado para sesión, sin Advertising ID, sin geolocalización/cámara/contactos) |
 | **Ads (Anuncios)** | **No**, la aplicación no integra SDKs de publicidad ni muestra anuncios (`No` a "¿Contiene anuncios?") |
 | **Target audience (Público objetivo)** | **18+ / Solo adultos** (tienda de comercio electrónico, facturación, compras y envíos físicos; no dirigida a niños) |

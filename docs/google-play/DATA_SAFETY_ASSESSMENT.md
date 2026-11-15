@@ -1,8 +1,8 @@
 # Evaluación de Seguridad de Datos (Google Play Data Safety) — Casa de Música Castillo
 
 > Fecha de auditoría de código: `2026-11-15`  
-> Paquete evaluado: `com.casademusicacastillo.app` (`targetSdk 36`)  
-> Base de evidencia: Inspección directa de `AndroidManifest.xml`, `network_security_config.xml`, `capacitor.config.ts`, `verification.json`, servicios Angular/Ionic y backend Spring Boot V56.
+> Paquete evaluado: `com.casademusicacastillo.app` (`targetSdk 36`, `versionCode 3`, `versionName 1.2`)  
+> Base de evidencia: Inspección directa de `AndroidManifest.xml`, `network_security_config.xml`, `capacitor.config.ts`, `verification.json`, servicios Angular/Ionic y backend Spring Boot con migración Flyway V57.
 
 ---
 
@@ -40,7 +40,7 @@
 1. **¿Los datos se cifran en tránsito?**  
    **Sí** (`TLS / HTTPS` obligatorio; `cleartextTrafficPermitted="false"` en Android Release).
 2. **¿Los usuarios pueden solicitar la eliminación de su cuenta y datos?**  
-   **Sí.** El backend (Flyway V55/V56 `track account deletion outcomes`) expone reglas de retención/eliminación (`/api/public/legal/deletion`) y gestión de cuenta autenticada, y la app móvil / web ofrecen flujo de solicitud de eliminación. Declarar en Play Console la URL web accesible sin requerir la app instalada.
+   **Sí.** El backend (Flyway V55/V56/V57) expone `GET /api/public/legal/deletion`, inicio público sin sesión por correo (`POST /api/public/legal/deletion/request` con enlace seguro de un solo uso y anti-enumeración), confirmación (`POST /api/public/legal/deletion/confirm`), seguimiento por folio (`POST /api/public/legal/deletion/status`) y flujo autenticado (`POST/GET /api/users/me/deletion-requests`). La app Android (`DeletionRequestPage` y `HttpAccountSecurityRepository`) tramita la eliminación dentro de la app, enlaza a la ruta web externa [`https://casa-musica-castillo.vercel.app/eliminar-cuenta`](https://casa-musica-castillo.vercel.app/eliminar-cuenta) y el backend conserva únicamente registros fiscales desvinculados (`CFF Art. 30`, hasta 5 años) o bloquea para revisión manual (`REVIEW_REQUIRED`) cuentas con pedidos activos.
 3. **Recopilación opcional vs. obligatoria:**  
    - **Obligatoria al crear cuenta:** correo electrónico, nombre, identificador de sesión y contraseña (almacenada con hash en backend).  
    - **Opcional al navegar catálogo público:** ninguna (el catálogo, detalle de producto y centro de ayuda son públicos sin registro).  
