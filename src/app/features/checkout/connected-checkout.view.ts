@@ -24,12 +24,48 @@ const DELIVERY_OPTIONS: readonly { readonly value: RealDeliveryOption; readonly 
   { value: 'NATIONAL', label: 'Envío nacional (sujeto a cotización)' },
 ];
 
-const PAYMENT_OPTIONS: readonly { readonly value: RealPaymentMethod; readonly label: string }[] = [
-  { value: 'BANK_TRANSFER', label: 'Transferencia bancaria' },
-  { value: 'MERCADO_PAGO', label: 'Mercado Pago' },
-  { value: 'CASH_ON_DELIVERY', label: 'Pago contra entrega' },
-  { value: 'DEBIT_CARD', label: 'Tarjeta de débito' },
-  { value: 'CREDIT_CARD', label: 'Tarjeta de crédito' },
+const PAYMENT_OPTIONS: readonly {
+  readonly value: RealPaymentMethod;
+  readonly label: string;
+  readonly availability: string;
+  readonly description: string;
+  readonly condition: string;
+}[] = [
+  {
+    value: 'BANK_TRANSFER',
+    label: 'Transferencia bancaria',
+    availability: 'Consulta preparatoria · confirmación en web',
+    description: 'Transferencia SPEI / CLABE directa a la cuenta oficial de Casa de Música Castillo.',
+    condition: 'Requiere adjuntar comprobante y validación manual desde la web.',
+  },
+  {
+    value: 'MERCADO_PAGO',
+    label: 'Mercado Pago',
+    availability: 'Consulta preparatoria · pasarela en web',
+    description: 'Tarjetas, saldo en cuenta o efectivo mediante Checkout Pro.',
+    condition: 'La pasarela Mercado Pago no se inicia desde la aplicación móvil.',
+  },
+  {
+    value: 'CASH_ON_DELIVERY',
+    label: 'Pago contra entrega',
+    availability: 'Sujeto a entrega local o sucursal',
+    description: 'Liquidación directa al recoger en sucursal Huejutla o en entrega local autorizada.',
+    condition: 'No disponible para envíos nacionales por paquetería.',
+  },
+  {
+    value: 'DEBIT_CARD',
+    label: 'Tarjeta de débito',
+    availability: 'Sucursal física o pasarela web',
+    description: 'Pago con tarjeta de débito mediante terminal autorizada o sitio web.',
+    condition: 'La aplicación móvil no captura ni procesa datos de tarjeta.',
+  },
+  {
+    value: 'CREDIT_CARD',
+    label: 'Tarjeta de crédito',
+    availability: 'Sucursal física o pasarela web',
+    description: 'Pago con tarjeta de crédito mediante terminal autorizada o sitio web.',
+    condition: 'La aplicación móvil no captura ni procesa datos de tarjeta.',
+  },
 ];
 
 /**
@@ -64,8 +100,10 @@ const PAYMENT_OPTIONS: readonly { readonly value: RealPaymentMethod; readonly la
     '.safety-banner { background: #fff6e0; color: #5c4300; border-left: 4px solid #c59b27; padding: 12px 14px; border-radius: 8px; font-size: 0.9rem; display: flex; gap: 10px; align-items: flex-start; }',
     '.error-banner { background: #fdecea; color: #7a1c14; padding: 12px 14px; border-radius: 8px; font-size: 0.9rem; }',
     '.radio-list { display: grid; gap: 8px; border: 0; padding: 0; margin: 0; }',
-    '.radio-item { display: flex; align-items: center; gap: 10px; min-height: 44px; padding: 8px 10px; border: 1px solid rgba(0,0,0,0.12); border-radius: 10px; }',
-    '.radio-item input { width: 20px; height: 20px; accent-color: var(--cmc-primary, #722f37); }',
+    '.radio-item { display: flex; align-items: flex-start; gap: 10px; min-height: 44px; padding: 10px; border: 1px solid rgba(0,0,0,0.12); border-radius: 10px; }',
+    '.radio-item input { width: 20px; height: 20px; margin-top: 2px; accent-color: var(--cmc-primary, #722f37); }',
+    '.pm-copy { display: grid; gap: 2px; font-size: 0.85rem; }',
+    '.pm-meta { color: var(--cmc-text-secondary, #5a5a5a); font-size: 0.8rem; }',
     '.summary-row { display: flex; justify-content: space-between; align-items: center; gap: 12px; }',
     '.summary-total { border-top: 1px solid rgba(0,0,0,0.1); padding-top: 10px; font-weight: 700; font-size: 1.05rem; }',
   ],
@@ -111,9 +149,12 @@ const PAYMENT_OPTIONS: readonly { readonly value: RealPaymentMethod; readonly la
           @if (!writeEnabled) {
             <div class="safety-banner" role="note">
               <ion-icon name="shield-checkmark-outline" aria-hidden="true"></ion-icon>
-              <span>
-                Modo seguro activo: puedes consultar una cotización. La confirmación de compras no está disponible en esta versión; no se generarán pedidos ni cobros.
-              </span>
+              <div>
+                <strong>Finalización de compras próximamente</strong>
+                <p class="cmc-body">
+                  Puedes preparar tu carrito y consultar las opciones de entrega y pago. La confirmación de pedidos desde la aplicación estará disponible próximamente.
+                </p>
+              </div>
             </div>
           }
 
@@ -215,7 +256,12 @@ const PAYMENT_OPTIONS: readonly { readonly value: RealPaymentMethod; readonly la
                 @for (pm of paymentOptions; track pm.value) {
                   <label class="radio-item">
                     <input type="radio" formControlName="paymentMethod" [value]="pm.value" />
-                    <span>{{ pm.label }}</span>
+                    <span class="pm-copy">
+                      <strong>{{ pm.label }}</strong>
+                      <span class="pm-meta">{{ pm.availability }}</span>
+                      <span>{{ pm.description }}</span>
+                      <span class="pm-meta">{{ pm.condition }}</span>
+                    </span>
                   </label>
                 }
               </fieldset>
@@ -226,6 +272,26 @@ const PAYMENT_OPTIONS: readonly { readonly value: RealPaymentMethod; readonly la
                 placeholder="Indicaciones adicionales"
               ></cmc-input>
 
+              <section class="checkout-card" aria-labelledby="prep-summary-heading">
+                <h2 class="cmc-title" id="prep-summary-heading">4. Resumen de preparación</h2>
+                <div class="summary-row">
+                  <span>Carrito</span>
+                  <strong>{{ cart.cart()?.totalItems ?? 0 }} artículo(s)</strong>
+                </div>
+                <div class="summary-row">
+                  <span>Modalidad de entrega</span>
+                  <strong>{{ selectedDeliveryLabel() }}</strong>
+                </div>
+                <div class="summary-row">
+                  <span>Método de pago</span>
+                  <strong>{{ selectedPaymentOption().label }}</strong>
+                </div>
+                <div class="summary-row summary-total">
+                  <span>Importe calculado</span>
+                  <span class="cmc-primary">{{ (pricePreview()?.total ?? cart.cart()?.total ?? 0) | currency:'MXN' }}</span>
+                </div>
+              </section>
+
               <cmc-button
                 type="submit"
                 fullWidth
@@ -233,7 +299,7 @@ const PAYMENT_OPTIONS: readonly { readonly value: RealPaymentMethod; readonly la
                 [loading]="submitting()"
                 loadingLabel="Confirmando pedido"
               >
-                {{ writeEnabled ? 'Confirmar pedido real' : 'Confirmación real bloqueada por seguridad' }}
+                {{ writeEnabled ? 'Confirmar pedido real' : 'Finalización de compras próximamente' }}
               </cmc-button>
             </section>
           </form>
@@ -274,6 +340,16 @@ export class ConnectedCheckoutComponent implements OnInit {
 
   protected requiresShippingAddress(): boolean {
     return (this.pricePreview()?.requiresAddress ?? false) || this.form.controls.deliveryOption.value !== 'PICKUP';
+  }
+
+  protected selectedDeliveryLabel(): string {
+    const selected = this.form.controls.deliveryOption.value;
+    return this.deliveryOptions.find((opt) => opt.value === selected)?.label ?? selected;
+  }
+
+  protected selectedPaymentOption() {
+    const selected = this.form.controls.paymentMethod.value;
+    return this.paymentOptions.find((pm) => pm.value === selected) ?? this.paymentOptions[0];
   }
 
   constructor() {
@@ -320,7 +396,7 @@ export class ConnectedCheckoutComponent implements OnInit {
   submit(): void {
     if (!this.writeEnabled) {
       this.errorMessage.set(
-        'La confirmación real de pedidos está bloqueada por seguridad. Solo se permite en un entorno aislado autorizado.',
+        'Puedes preparar tu carrito y consultar las opciones de entrega y pago. La confirmación de pedidos desde la aplicación estará disponible próximamente.',
       );
       return;
     }

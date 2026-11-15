@@ -8,8 +8,10 @@ Abre una terminal local sin transcripción y ejecuta desde el worktree de la ram
 
 ```powershell
 Set-Location -LiteralPath 'C:\Users\ivanf\Documents\Desarrollo Movil Integral\casa-musica-mobile\reports\antigravity-cierre-produccion-mobile'
-.\scripts\sign-android-release.ps1 -KeystorePath 'C:\Users\ivanf\CMC-Keys\castillo-upload.p12' -KeyAlias 'castillo-upload' -CertificateSha256 '47:49:2A:A3:5B:3F:B2:61:73:BA:F1:EF:23:6C:3C:2B:EF:C3:3D:B8:E3:ED:C3:D5:2E:F0:C7:75:35:33:DB:C3'
+.\scripts\sign-android-release.ps1
 ```
+
+Los parámetros `-KeystorePath` (`C:\Users\ivanf\CMC-Keys\castillo-upload.p12`), `-KeyAlias` (`castillo-upload`) y `-CertificateSha256` (`47:49:2A:A3:5B:3F:B2:61:73:BA:F1:EF:23:6C:3C:2B:EF:C3:3D:B8:E3:ED:C3:D5:2E:F0:C7:75:35:33:DB:C3`) están preconfigurados por defecto, y el modo `--enable-reviewed-commerce` se activa por defecto (usa `-DisableReviewedCommerce` solo si deseas desactivarlo). Aun así puedes sobrescribir cualquiera de los parámetros explícitamente al invocar el script.
 
 Introduce la contraseña cuando aparezca el prompt enmascarado. Este flujo usa la misma contraseña para el almacén y la entrada privada PKCS12. El script comprueba el alias y la huella antes de compilar. Usa las cuatro variables `CMC_UPLOAD_*` en el proceso de firma y las elimina incluso si falla. Angular y Capacitor Sync se ejecutan sin esas variables. Gradle usa `--no-daemon` y desactiva la caché de configuración para esta compilación. La contraseña se convierte temporalmente a texto en memoria para que Java y Gradle puedan leerla.
 
@@ -22,7 +24,7 @@ El comando genera y verifica ambos paquetes. Las rutas de salida dentro del work
 | `reports/android-packages/production-release-signed/build-report.json` | SHA Git, estado del árbol, entorno y SHA-256 de los paquetes |
 | `reports/android-packages/production-release-signed/verification.json` | Huellas de ambos firmantes, hashes, metadatos y comprobaciones estáticas |
 
-Después de aceptar el backend, comprobar carrito y favoritos entre la web y Android y recibir autorización para habilitarlos en Production, añade `-EnableReviewedCommerce` al comando de firma. Confirma `reviewedCommerce: true` en el reporte del build. El modo habilita exclusivamente las mutaciones revisadas de carrito y favoritos. Checkout, pagos, transferencias y webhooks conservan sus restricciones.
+El modo `--enable-reviewed-commerce` habilita en `productionCommerceInterceptor` exclusivamente las operaciones autorizadas de carrito (`POST /api/cart/items`, `PUT /api/cart/items/{id}`, `DELETE /api/cart/items/{id}`, `DELETE /api/cart`), favoritos (`POST /api/wishlist`, `DELETE /api/wishlist/{id}`) y cálculo de vista previa de envío/totales (`POST /api/checkout/price-preview`). La confirmación de pedidos (`POST /api/checkout`), pagos (`POST /api/payments`), Mercado Pago, transferencias y reseñas conservan bloqueo estricto tanto en cliente como en interceptor. Confirma `reviewedCommerce: true` en `build-report.json`.
 
 El éxito requiere que la ejecución termine con estado PASS. Si falla, los archivos que existan en la carpeta pueden ser de una ejecución anterior o estar pendientes de verificación. Para repetir la comprobación después de un build exitoso, sin volver a introducir la contraseña:
 

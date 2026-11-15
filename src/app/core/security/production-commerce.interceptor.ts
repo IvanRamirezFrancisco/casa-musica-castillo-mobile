@@ -13,9 +13,9 @@ export const REVIEWED_COMMERCE = new InjectionToken<boolean>('REVIEWED_COMMERCE'
 
 const protectedCommerce = /^\/api\/(?:cart|checkout|orders|wishlist|reviews|payments)(?:\/|$)/;
 const reviewedWrites: Record<string, RegExp> = {
-  POST: /^\/api\/(?:cart\/items|wishlist)$/,
+  POST: /^\/api\/(?:cart\/items|wishlist|checkout\/price-preview)$/,
   PUT: /^\/api\/cart\/items\/[1-9]\d*$/,
-  DELETE: /^\/api\/(?:cart\/items|wishlist)\/[1-9]\d*$/,
+  DELETE: /^\/api\/(?:(?:cart\/items|wishlist)\/[1-9]\d*|cart)$/,
 };
 
 /** Commercial writes require contract acceptance and explicit authorization. */

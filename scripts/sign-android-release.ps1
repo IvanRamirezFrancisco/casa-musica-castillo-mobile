@@ -1,8 +1,9 @@
-param(
-    [Parameter(Mandatory)] [string] $KeystorePath,
-    [Parameter(Mandatory)] [string] $KeyAlias,
-    [Parameter(Mandatory)] [string] $CertificateSha256,
-    [switch] $EnableReviewedCommerce
+﻿param(
+    [string] $KeystorePath = 'C:\Users\ivanf\CMC-Keys\castillo-upload.p12',
+    [string] $KeyAlias = 'castillo-upload',
+    [string] $CertificateSha256 = '47:49:2A:A3:5B:3F:B2:61:73:BA:F1:EF:23:6C:3C:2B:EF:C3:3D:B8:E3:ED:C3:D5:2E:F0:C7:75:35:33:DB:C3',
+    [switch] $EnableReviewedCommerce,
+    [switch] $DisableReviewedCommerce
 )
 
 $ErrorActionPreference = 'Stop'
@@ -37,8 +38,9 @@ try {
             throw 'El alias no contiene la clave privada correspondiente a la huella autorizada.'
         }
 
+        $useReviewedCommerce = if ($DisableReviewedCommerce) { $false } elseif ($EnableReviewedCommerce) { $true } else { $true }
         $buildArguments = @('--environment', 'production', '--variant', 'release', '--require-signing')
-        if ($EnableReviewedCommerce) { $buildArguments += '--enable-reviewed-commerce' }
+        if ($useReviewedCommerce) { $buildArguments += '--enable-reviewed-commerce' }
         & node scripts/build-android.mjs @buildArguments
         if ($LASTEXITCODE -ne 0) { throw 'Falló la generación de los paquetes Release firmados.' }
     } finally {
@@ -46,7 +48,7 @@ try {
         if ($null -ne $secret -and $secret -is [System.IDisposable]) { $secret.Dispose() }
     }
     $verifyArguments = @('--certificate-sha256', $expectedFingerprint)
-    if ($EnableReviewedCommerce) { $verifyArguments += '--reviewed-commerce' }
+    if ($useReviewedCommerce) { $verifyArguments += '--reviewed-commerce' }
     & python scripts/verify-android-release.py @verifyArguments
     if ($LASTEXITCODE -ne 0) { throw 'Falló la verificación de ambos paquetes. Revisa la salida antes de utilizar los archivos.' }
 } finally {

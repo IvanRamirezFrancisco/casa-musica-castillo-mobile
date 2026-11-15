@@ -64,14 +64,14 @@ Se verificó la existencia de la llave de subida oficial en la estación local:
 En PowerShell dentro de la raíz del worktree móvil:
 
 ```powershell
-# Compilación estándar (lectura pública + login/perfil; escritura comercial bloqueada por interceptor)
+# Firma Release con valores por defecto y operaciones revisadas de carrito/favoritos/cotización activadas
 .\scripts\sign-android-release.ps1
 ```
 
-Si se requiere compilar con **escrituras revisadas de carrito/favoritos habilitadas** (`--enable-reviewed-commerce` en `build-android.mjs`):
+Por defecto emplea `-KeystorePath 'C:\Users\ivanf\CMC-Keys\castillo-upload.p12'`, `-KeyAlias 'castillo-upload'`, `-CertificateSha256 '47:49:2A:A3:5B:3F:B2:61:73:BA:F1:EF:23:6C:3C:2B:EF:C3:3D:B8:E3:ED:C3:D5:2E:F0:C7:75:35:33:DB:C3'` y `--enable-reviewed-commerce` activado. Si necesitas compilar un Release firmado con las mutaciones revisadas desactivadas, pasa `-DisableReviewedCommerce`:
 
 ```powershell
-.\scripts\sign-android-release.ps1 -EnableReviewedCommerce
+.\scripts\sign-android-release.ps1 -DisableReviewedCommerce
 ```
 
 Variables opcionales de entorno aceptadas por `scripts/build-android.mjs` (en sesión efímera, nunca en archivos):
@@ -92,6 +92,6 @@ Salida esperada del script firmado:
 
 1. **`productionCommerceInterceptor` (`src/app/core/security/production-commerce.interceptor.ts`):**
    - Por defecto en `release`, bloquea escrituras (`POST`/`PUT`/`DELETE` salvo rutas permitidas de auth) hacia `PRODUCTION_API_BASE_URL` devolviendo HTTP `403` local (`"La operación comercial todavía no está habilitada."`).
-   - Al compilar con `--enable-reviewed-commerce` (`CMC_REVIEWED_COMMERCE`), permite únicamente operaciones revisadas de carrito (`/api/cart/items`, `/api/cart/items/{id}`) y favoritos (`/api/wishlist`).
+   - Al compilar con `--enable-reviewed-commerce` (`CMC_REVIEWED_COMMERCE`, activo por defecto en `sign-android-release.ps1`), permite únicamente operaciones revisadas de carrito (`POST /api/cart/items`, `PUT /api/cart/items/{id}`, `DELETE /api/cart/items/{id}`, `DELETE /api/cart`), favoritos (`POST /api/wishlist`, `DELETE /api/wishlist/{id}`) y cálculo de vista previa (`POST /api/checkout/price-preview`). Las rutas de creación de pedidos (`POST /api/checkout`), pagos (`POST /api/payments`), Mercado Pago, transferencias y reseñas permanecen bloqueadas con HTTP `403`.
 2. **`REAL_CHECKOUT_WRITE_ENABLED` (`src/app/core/repositories/checkout.repository.ts`):**
    - Permanece en `false` por defecto para evitar envíos reales accidentales de `POST /api/checkout` contra producción desde pruebas sin autorización explícita.

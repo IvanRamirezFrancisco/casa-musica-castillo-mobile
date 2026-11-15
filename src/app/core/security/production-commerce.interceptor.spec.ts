@@ -40,8 +40,8 @@ describe('Protección de operaciones comerciales en Production', () => {
     const transport = TestBed.inject(HttpTestingController);
     const context = new HttpContext().set(REQUIRES_AUTH, true);
     for (const [method, path] of [
-      ['POST', 'cart/items'], ['PUT', 'cart/items/1'], ['DELETE', 'cart/items/1'],
-      ['POST', 'wishlist'], ['DELETE', 'wishlist/2'],
+      ['POST', 'cart/items'], ['PUT', 'cart/items/1'], ['DELETE', 'cart/items/1'], ['DELETE', 'cart'],
+      ['POST', 'wishlist'], ['DELETE', 'wishlist/2'], ['POST', 'checkout/price-preview'],
     ]) {
       const url = `${PRODUCTION_API_BASE_URL}/api/${path}`;
       const approved = firstValueFrom(http.request(method, url, { context }));
@@ -51,8 +51,8 @@ describe('Protección de operaciones comerciales en Production', () => {
       transport.expectNone(url);
     }
     for (const [method, path] of [
-      ['POST', 'checkout'], ['POST', 'checkout/price-preview'], ['POST', 'payments'],
-      ['POST', 'cart/transfer'], ['POST', 'cart/coupon'], ['DELETE', 'cart'], ['PUT', 'cart/items/0'],
+      ['POST', 'checkout'], ['POST', 'payments'], ['POST', 'payments/preference'], ['POST', 'orders/1'], ['POST', 'reviews'],
+      ['POST', 'cart/transfer'], ['POST', 'cart/coupon'], ['PUT', 'cart/items/0'],
       ['POST', '%63art/items'], ['POST', 'cart/items?extra=true'], ['DELETE', 'wishlist/1/extra'],
     ]) {
       const url = `${PRODUCTION_API_BASE_URL}/api/${path}`;

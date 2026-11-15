@@ -41,7 +41,7 @@ Si la cuenta de Google Play Developer es de tipo **Personal** creada recientemen
 | **Ads (Anuncios)** | **No**, la aplicación no integra SDKs de publicidad ni muestra anuncios (`No` a "¿Contiene anuncios?") |
 | **Target audience (Público objetivo)** | **18+ / Solo adultos** (tienda de comercio electrónico, facturación, compras y envíos físicos; no dirigida a niños) |
 | **Content rating (IARC)** | Completar cuestionario en Play Console declarando aplicación comercial / catálogo e-commerce sin contenido violento ni juego |
-| **Financial features / Bienes físicos** | Venta de **bienes físicos** (instrumentos y accesorios musicales de Casa de Música Castillo, Huejutla de Reyes) pagados mediante transferencia bancaria o Mercado Pago (bienes físicos están exentos de Google Play Billing) |
+| **Financial features / Bienes físicos** | Catálogo y preparación de carrito para **bienes físicos** (instrumentos y accesorios musicales de Casa de Música Castillo, Huejutla de Reyes); la aplicación móvil no ejecuta pagos ni confirma pedidos (bienes físicos y flujo web exentos de Google Play Billing) |
 | **News / COVID / Government / Health apps** | Seleccionar **No** en todas las declaraciones especiales aplicables |
 
 ---
@@ -51,7 +51,7 @@ Si la cuenta de Google Play Developer es de tipo **Personal** creada recientemen
 > Base verificada en `reports/android-packages/production-release/FICHA-PLAY-CANDIDATA.md`. Ajustar recursos gráficos definitivos antes de enviar a revisión.
 
 - **Nombre de la app:** `Casa de Música Castillo`
-- **Descripción breve (<= 80 caracteres):** `Catálogo de instrumentos musicales, carrito y pedidos de Casa Castillo.`
+- **Descripción breve (<= 80 caracteres):** `Explora instrumentos, gestiona tu carrito y favoritos de Casa Castillo.`
 - **Categoría sugerida:** `Compras` (`Shopping`)
 - **Idioma principal:** Español (México / Latinoamérica) (`es-MX` / `es-419`)
 - **Activos gráficos requeridos en Play Console:**
@@ -65,5 +65,5 @@ Si la cuenta de Google Play Developer es de tipo **Personal** creada recientemen
 ## 5. Compuerta Final Antes de Enviar a Revisión
 
 1. Firmware/dispositivo real probado: **Galaxy A55** conectado vía ADB / Play Internal o Closed Testing track con flujo completo sobre Railway.
-2. En el `Android` AAB candidato final a distribución comercial, decidir expresamente si se compila con `-EnableReviewedCommerce` para habilitar escritura revisada de carrito/favoritos y probar en vivo el comportamiento completo con cuenta de prueba.
+2. `.\scripts\sign-android-release.ps1` activa `--enable-reviewed-commerce` por defecto para habilitar carrito, favoritos y cotización de envío (`POST /api/checkout/price-preview`) conservando bloqueadas la confirmación de pedidos (`POST /api/checkout`) y las pasarelas de cobro (`Finalización de compras próximamente`); probar en vivo el comportamiento completo con cuenta de prueba antes de promover a pista cerrada.
 3. Verificar que `vercel.app` está sirviendo el commit actualizado (`deploy/vercel-frontend` tras merge de PR #63) y que Railway tiene `APP_JOBS_BACKUP_DATABASE_ENABLED=false`, `APP_JOBS_INVENTORY_AUDIT_ENABLED=false` (solo después de verificar Neon History window V56) y `APP_MERCADOPAGO_RECONCILIATION_ENABLED=true`.

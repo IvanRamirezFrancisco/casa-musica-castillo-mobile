@@ -51,7 +51,13 @@ describe('checkout real seguro conectado (integración)', () => {
     previewReq.flush(pricePreviewDto({ deliveryMethod: 'PICKUP', deliveryLabel: 'Recoger en sucursal', requiresAddress: false, shipping: 0, total: 15080 }));
     page.detectChanges();
 
-    expect(page.nativeElement.textContent).toContain('Modo seguro activo');
+    expect(page.nativeElement.textContent).toContain('Finalización de compras próximamente');
+    expect(page.nativeElement.textContent).toContain(
+      'Puedes preparar tu carrito y consultar las opciones de entrega y pago. La confirmación de pedidos desde la aplicación estará disponible próximamente.',
+    );
+    expect(page.nativeElement.textContent).toContain('Transferencia SPEI / CLABE');
+    expect(page.nativeElement.textContent).toContain('Mercado Pago');
+    expect(page.nativeElement.textContent).toContain('Resumen de preparación');
     expect(page.nativeElement.textContent).toContain('$15,080.00');
 
     const view = page.debugElement.children[0].componentInstance;
@@ -59,13 +65,16 @@ describe('checkout real seguro conectado (integración)', () => {
     view.submit();
     page.detectChanges();
     http.expectNone(`${base}/api/checkout`);
-    expect(page.nativeElement.textContent).toContain('bloqueada por seguridad');
+    http.expectNone(`${base}/api/payments`);
+    http.expectNone(`${base}/api/payments/preference`);
+    expect(page.nativeElement.textContent).toContain('estará disponible próximamente');
 
     const repo = TestBed.inject(CHECKOUT_REPOSITORY);
     await expect(
       firstValueFrom(repo.submitCheckout({ deliveryOption: 'PICKUP', billingAddress: 'Calle 1', paymentMethod: 'BANK_TRANSFER' })),
     ).rejects.toThrow();
     http.expectNone(`${base}/api/checkout`);
+    http.expectNone(`${base}/api/payments`);
   });
 
   it('en entorno aislado autorizado (writeEnabled=true) valida domicilios, cotiza, valida carrito y envía POST /api/checkout', async () => {
