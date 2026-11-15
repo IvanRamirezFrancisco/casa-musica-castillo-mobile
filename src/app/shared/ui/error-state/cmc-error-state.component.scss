@@ -1,0 +1,17 @@
+@use '../styles/mixins' as *;
+
+:host {
+  display: block;
+}
+
+.cmc-error-state {
+  @include cmc-state-layout;
+}
+
+.cmc-error-state__heading {
+  @include cmc-state-heading;
+}
+
+.cmc-error-state__description {
+  @include cmc-state-description;
+}

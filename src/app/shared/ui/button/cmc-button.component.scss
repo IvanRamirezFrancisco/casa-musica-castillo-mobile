@@ -1,0 +1,168 @@
+@use '../styles/mixins' as *;
+
+:host {
+  display: inline-block;
+}
+
+:host(.cmc-button-host--full) {
+  display: block;
+}
+
+:host(.cmc-button-host--full) .cmc-button {
+  width: 100%;
+}
+
+/* A disabled button must not react to pointer events at all. */
+:host(.cmc-button-host--disabled) {
+  pointer-events: none;
+}
+
+.cmc-button {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--cmc-space-2);
+  min-height: 48px;
+  min-width: 48px;
+  padding: var(--cmc-space-2) var(--cmc-space-6);
+  border: 1px solid transparent;
+  border-radius: var(--cmc-radius-md);
+  font-family: 'Montserrat', 'Roboto', sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 24px;
+  text-align: center;
+  cursor: pointer;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  transition:
+    background-color var(--cmc-transition-fast),
+    border-color var(--cmc-transition-fast),
+    color var(--cmc-transition-fast),
+    transform var(--cmc-transition-fast),
+    box-shadow var(--cmc-transition-fast);
+
+  &:focus-visible {
+    outline: 3px solid var(--cmc-primary);
+    outline-offset: 2px;
+  }
+
+  &:active:not(:disabled):not([aria-disabled='true']) {
+    transform: scale(0.98);
+  }
+
+  /* Compact typography retains a real 48px touch target. */
+  &--compact {
+    min-height: 48px;
+    padding: 0 var(--cmc-space-4);
+    font-size: 14px;
+    line-height: 20px;
+
+  }
+
+  /* ---------- Variants ---------- */
+
+  &--primary {
+    background: var(--cmc-primary);
+    color: var(--cmc-text-on-primary);
+    box-shadow: var(--cmc-shadow-brand);
+
+    &:active:not(:disabled):not([aria-disabled='true']) {
+      background: var(--cmc-primary-dark);
+    }
+  }
+
+  &--commercial {
+    background: var(--cmc-cta);
+    color: var(--cmc-text-on-primary);
+    box-shadow: var(--cmc-shadow-cta);
+
+    &:active:not(:disabled):not([aria-disabled='true']) {
+      background: var(--cmc-cta-dark);
+    }
+  }
+
+  &--secondary {
+    background: var(--cmc-surface);
+    border-color: var(--cmc-primary);
+    color: var(--cmc-primary);
+
+    &:active:not(:disabled):not([aria-disabled='true']) {
+      background: var(--cmc-surface-alt);
+    }
+  }
+
+  &--ghost {
+    background: transparent;
+    color: var(--cmc-primary);
+
+    &:active:not(:disabled):not([aria-disabled='true']) {
+      background: var(--cmc-surface-alt);
+    }
+  }
+
+  @media (hover: hover) {
+    &--primary:hover:not(:disabled):not([aria-disabled='true']) {
+      background: var(--cmc-primary-soft);
+    }
+
+    &--commercial:hover:not(:disabled):not(:active):not([aria-disabled='true']) {
+      background: var(--cmc-cta-hover);
+    }
+
+    &--secondary:hover:not(:disabled):not([aria-disabled='true']),
+    &--ghost:hover:not(:disabled):not([aria-disabled='true']) {
+      background: var(--cmc-surface-alt);
+    }
+  }
+
+  /* ---------- States ---------- */
+
+  &--loading {
+    cursor: progress;
+  }
+
+  &:disabled {
+    background: var(--cmc-surface-alt);
+    border-color: var(--cmc-border);
+    color: var(--cmc-text-disabled);
+    box-shadow: none;
+    cursor: not-allowed;
+  }
+
+  &__label {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--cmc-space-2);
+  }
+
+  &__spinner {
+    flex: none;
+    width: 18px;
+    height: 18px;
+    border: 2px solid currentcolor;
+    border-right-color: transparent;
+    border-radius: var(--cmc-radius-full);
+    animation: cmc-button-spin 700ms linear infinite;
+  }
+
+  &__sr-only {
+    @include cmc-visually-hidden;
+  }
+}
+
+@keyframes cmc-button-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Keep an "in progress" cue without motion; the label is announced anyway. */
+@media (prefers-reduced-motion: reduce) {
+  .cmc-button__spinner {
+    animation: none;
+  }
+}

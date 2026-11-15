@@ -1,0 +1,341 @@
+{
+  "info": {
+    "name": "Casa Música - integración API verificada",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "Contrato leído en backend_ 46bc32d8. Solo ambiente de pruebas autorizado; no checkout/pedidos cliente inexistentes."
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": ""
+    },
+    {
+      "key": "missingProductId",
+      "value": "9223372036854775807"
+    }
+  ],
+  "event": [
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "pm.test(\"Errores sin traza interna\", () => { if (pm.response.code >= 400) pm.expect(/java\\.lang\\.|org\\.springframework\\.|SQLException|stackTrace/i.test(pm.response.text()), \"sin detalles internos\").to.equal(false); });",
+          "pm.test(\"No exponer secretos en lectura\", () => { if (pm.request.method === \"GET\" && pm.response.code === 200) pm.expect(/\"(?:password|passwordHash|secret|accessToken|refreshToken)\"\\s*:/i.test(pm.response.text()), \"sin campos secretos\").to.equal(false); });"
+        ]
+      }
+    }
+  ],
+  "item": [
+    {
+      "name": "PUBLIC_CONTRACT",
+      "item": [
+        {
+          "name": "API-HU05-01 catálogo 200",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/public/products/catalog?page=0&size=5",
+            "header": []
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"Página y límite\", () => { const b=pm.response.json(); pm.expect(b.content).to.be.an(\"array\"); pm.expect(b.content.length).to.be.at.most(5); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "API-HU06-01 búsqueda sin resultados",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/public/products/catalog?keyword=cmc-nonexistent-fixture-2026",
+            "header": []
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"Colección paginada\", () => pm.expect(pm.response.json().content).to.be.an(\"array\"));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "API-HU07-01 identificador inválido 400",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/public/products/not-a-number",
+            "header": []
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 400\", () => pm.response.to.have.status(400));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "API-HU07-02 producto inexistente 404",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/public/products/{{missingProductId}}",
+            "header": []
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 404\", () => pm.response.to.have.status(404));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "API-HU01-01 login inválido 400",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/auth/login",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"email\": \"invalid\", \"password\": \"\"}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 400\", () => pm.response.to.have.status(400));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "API-HU01-02 refresh inválido 401",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/auth/refresh",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer invalid-test-token"
+              }
+            ]
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 401\", () => pm.response.to.have.status(401));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "API-HU09-01 carrito sin sesión 401",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/cart",
+            "header": []
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 401\", () => pm.response.to.have.status(401));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "API-HU14-01 perfil con token inválido 401",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/users/profile",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer invalid-test-token"
+              }
+            ]
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 401\", () => pm.response.to.have.status(401));"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "AUTHENTICATED_CONTRACT",
+      "item": [
+        {
+          "name": "API-HU14-02 perfil propio 200",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/users/profile",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{userToken}}"
+              }
+            ]
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"Perfil corresponde al usuario de prueba\", () => pm.expect(String(pm.response.json().data.id)).to.equal(pm.environment.get(\"userId\")));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "API-HU09-02 carrito propio 200",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/cart",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{userToken}}"
+              }
+            ]
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"Carrito del usuario de prueba\", () => pm.expect(String(pm.response.json().userId)).to.equal(pm.environment.get(\"userId\")));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "API-HU12-01 usuario no accede a administración 403",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/admin/orders",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{userToken}}"
+              }
+            ]
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 403\", () => pm.response.to.have.status(403));"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "LOGIN_CONTRACT",
+      "item": [
+        {
+          "name": "API-HU01-03 login válido 200",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/auth/login",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"email\": \"{{email}}\", \"password\": \"{{password}}\"}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"Autenticación real o desafío 2FA\", () => { const d=pm.response.json().data; pm.expect(Boolean(d?.jwtResponse?.accessToken) || d?.twoFactorRequired === true).to.be.true; });"
+                ]
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.request.body.update(JSON.stringify({email: pm.environment.get(\"email\"), password: pm.environment.get(\"password\")}));"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+<ion-tabs>
+  <ion-tab-bar slot="bottom" class="cmc-bubble-nav" aria-label="Navegación principal">
+    <ion-tab-button tab="home">
+      <ion-icon aria-hidden="true" name="home-outline"></ion-icon>
+      <ion-label>Inicio</ion-label>
+    </ion-tab-button>
+
+    <ion-tab-button tab="catalog">
+      <ion-icon aria-hidden="true" name="grid-outline"></ion-icon>
+      <ion-label>Catálogo</ion-label>
+    </ion-tab-button>
+
+    <ion-tab-button tab="cart">
+      <ion-icon aria-hidden="true" name="cart-outline"></ion-icon>
+      <ion-label>Carrito</ion-label>
+      <!-- Texto solo para lector de pantalla: el nombre accesible queda "Carrito, N productos". -->
+      <span class="cart-sr-only">{{ cartStatusText() }}</span>
+      @if (cartCount() > 0) {
+        <ion-badge class="cart-badge" aria-hidden="true">{{ cartBadgeText() }}</ion-badge>
+      }
+    </ion-tab-button>
+
+    <ion-tab-button tab="orders">
+      <ion-icon aria-hidden="true" name="receipt-outline"></ion-icon>
+      <ion-label>Pedidos</ion-label>
+    </ion-tab-button>
+
+    <ion-tab-button tab="profile">
+      <ion-icon aria-hidden="true" name="person-outline"></ion-icon>
+      <ion-label>Perfil</ion-label>
+    </ion-tab-button>
+  </ion-tab-bar>
+</ion-tabs>

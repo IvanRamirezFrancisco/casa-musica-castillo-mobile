@@ -1,0 +1,4867 @@
+{
+  "checkedAtUtc": "2026-10-29T14:39:19.841465+00:00",
+  "clientDate": "2026-10-29",
+  "clientTimezone": "America/Mexico_City",
+  "branch": "feature/actividad-4-integracion-movil",
+  "baseHead": "efe9767082040971278e66595aad8c0bf82c4b81",
+  "dirtyTree": true,
+  "sourceAggregateSha256": "c3b18bf36c61c8b6e0e0f268709bac1bc4a19d74b14f17552d3521356b0c45f1",
+  "sourceSha256": {
+    "src/global.scss": "738f432e0ab4bc096d85aa4c5ce4652323372f066493730cae52c04d79047f2c",
+    "src/index.html": "54d86ded89b731f4819548f0dd7813789e22a22867f66f943daba1b3d9f7de07",
+    "src/main.ts": "ca8c3c52a2da086b0b2b21edb1f22dc823bd7529b2305ece11aba88336d9c928",
+    "src/test-setup.ts": "8ef7aebecb688537d309a0b838a6982a0a27858fd4022caebff55bfcf07ec3db",
+    "src/app/app.component.html": "c930814f148b3ee251cf158b3f95465c4ee2f07368dd5b7fd70632d55039bdaf",
+    "src/app/app.component.scss": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "src/app/app.component.spec.ts": "3e4369f1994b6a5ba1efccb3f57b231f89c275c1417b22823045a92f8f2d3a66",
+    "src/app/app.component.ts": "94e0922515c548c4736a996ada688a0e329704815296c873267c4e37e576e110",
+    "src/app/app.routes.integration.spec.ts": "d3cf256a5ec8e9cd36574805445118152df74d53cf34a77c70930fd0021c8dc7",
+    "src/app/app.routes.ts": "2bc0f5681da17d747128cc2e327457b1c3b59d22d4b51bf1f406174e3d503d89",
+    "src/assets/shapes.svg": "cf1b68281716f452dd620f81fd31d98bfef7dd521b8098433710bda7a32918f2",
+    "src/environments/environment.demo.ts": "0a3394e50294466f3c5a1951ebfd6303ebb2af1ab2ef9e67cc5c0c29885337e7",
+    "src/environments/environment.prod.ts": "d446ebdba746dbadd705b7c7bcba7e14ca06c0939325084010cc6b8ed1290c95",
+    "src/environments/environment.ts": "35a0943c31f2b9c02ac66196e6d24213866efcd31390a70e7d7094d27d78941b",
+    "src/theme/variables.scss": "917f4a2d8eb81803bd4e6e139b96d168029c5ba087f0b5d22df49f70e1f3005a",
+    "src/assets/icon/favicon.png": "e820db45563316ad63b8557a3cb9a681a9f59faf899c250393113fcbe885d2cd",
+    "src/app/features/demo-purchase.integration.spec.ts": "7682f53d36b8c0274e61bc952f035cef266e13fa4a64e0f053bfbdad1e58fb65",
+    "src/app/shared/ui/commerce-controls.spec.ts": "6331b29e81e69244eb896904ed870407d6912d798de18683e14a6bc37c27a3d4",
+    "src/app/shared/ui/badge/cmc-badge.component.html": "cca40df4c3a723c789c175d49e98eab5b1841bf7c02c3ce5a5fb29b6252d36ad",
+    "src/app/shared/ui/badge/cmc-badge.component.scss": "595901216cfa5fc40629342f7a6419822fca020c3b738d7913ee01949425c883",
+    "src/app/shared/ui/badge/cmc-badge.component.spec.ts": "25f7fc4a4289c378350c9972ec81b7a630c76ac998533aac0fda7e667f7d66b0",
+    "src/app/shared/ui/badge/cmc-badge.component.ts": "6319f352a45f70db6ddba2b98b438246b792679909fc73754a3469ab33b430ba",
+    "src/app/shared/ui/button/cmc-button.component.html": "3492989d5143614148161138c7ddf353b945652bd36868e9f935d9074fd2961a",
+    "src/app/shared/ui/button/cmc-button.component.scss": "84e4b71553784ad49ce3ab961bd0eefc996306415cf8aec52e244a3131384598",
+    "src/app/shared/ui/button/cmc-button.component.spec.ts": "9cf96c438e1758557a48d10b574874a2265c27119fa4a4e113ce7a9a65b4dac6",
+    "src/app/shared/ui/button/cmc-button.component.ts": "3d75caca81a3107aa461c2344704c6fd26e097f1c6c53ba1031946e028d10fa1",
+    "src/app/shared/ui/empty-state/cmc-empty-state.component.html": "9a509c9d2bcbc7d421ae02a5a00f4ebd0e2a60a11dbbcfe2c20678932e3bb136",
+    "src/app/shared/ui/empty-state/cmc-empty-state.component.scss": "4ed6a5512ad865a2dc2afac783e80a1dbf7518ffc8c2e2f013365eb086fd4a36",
+    "src/app/shared/ui/empty-state/cmc-empty-state.component.spec.ts": "9ef9d4b6edb6d5891141d2cb39cc60a3eab9c5034f9da32202c35ca797ba1bf2",
+    "src/app/shared/ui/empty-state/cmc-empty-state.component.ts": "f1e959bd093fbe7e878ac89380adc3aab41f70b6377eea248d5bc6bc76e4c532",
+    "src/app/shared/ui/error-state/cmc-error-state.component.html": "fcf8fbea8969fda5c7bf1e0fae77a0497f96422701c6cdfb8cc2443a34a02697",
+    "src/app/shared/ui/error-state/cmc-error-state.component.scss": "a7a95d99f0002877d98b07420bc27b183b0d25a7313daa08d92d4006092f7263",
+    "src/app/shared/ui/error-state/cmc-error-state.component.spec.ts": "ae254b6f9eb7860530f61dc41bf883634ae62818a8314fc8735abccbafcf30b3",
+    "src/app/shared/ui/error-state/cmc-error-state.component.ts": "fe124f05fab1ab6ade0f57953a58e684950fead1b2d8ec3c38e5a248bbb8b94c",
+    "src/app/shared/ui/icon/cmc-icon.component.ts": "38b20d0a61026f010cfa1971a64fcb753b389f7bf47d9035060a8e5cd33702d5",
+    "src/app/shared/ui/input/cmc-input.component.html": "b2d830373930083b84ff625974e390e108104d83453a4ff26b48bdc313bccf33",
+    "src/app/shared/ui/input/cmc-input.component.scss": "eed273195df00b64d070dfa03168ac87d83757a678bb8124671dd51db11bb04e",
+    "src/app/shared/ui/input/cmc-input.component.spec.ts": "f7a0c3d824c751f70aedff17764bc64f292cc7115afdc70f675b70db32b254af",
+    "src/app/shared/ui/input/cmc-input.component.ts": "3eccf04bda64c20dac36d52bb2e71ef5d60f852db4c83e649e6c672b01795378",
+    "src/app/shared/ui/loading/cmc-loading.component.html": "ddf1dd0d9b46b9ec1b12b5d95bdb81ff5de9a82a00690d2305328157df970b6d",
+    "src/app/shared/ui/loading/cmc-loading.component.scss": "18f9f85ad68a5313850a9f48237b337635e9ddbd741ab7f943c3ab96f443d6e3",
+    "src/app/shared/ui/loading/cmc-loading.component.spec.ts": "f36e12baf18ae16dc2d73c41fd8461548fe956c9fbe5e6d8ed7133a7e80004d0",
+    "src/app/shared/ui/loading/cmc-loading.component.ts": "7dbbcb100b9ea603d9d23619335815ea8093ba6a2ebed274c9359a1f9b02187b",
+    "src/app/shared/ui/money/cmc-money.pipe.ts": "5b51b33f54eb9c6efa35a13189f68b01312604a3cb1ebb82e24afe7b0dd65e26",
+    "src/app/shared/ui/quantity/cmc-quantity.component.ts": "5e25ddc840d1c1d0b5f4bb5039b3c7f0f8cf33ee7772ff91a6f7683f6ad9ecb3",
+    "src/app/shared/ui/styles/_auth-shell.scss": "a25e8ce01efad63d91a64ac230a6d30f96e5607a6ebf21ac939f994f755602b1",
+    "src/app/shared/ui/styles/_checkout-options.scss": "b4881092119667811c41a6932abde064877e9dd436fc7db848687ad501ed2d77",
+    "src/app/shared/ui/styles/_commerce.scss": "f3a1fc223dd5dfe4834edc8e3e76fbffda5c41ea467f253b03d802f5c20899d7",
+    "src/app/shared/ui/styles/_discovery.scss": "288f3f7e4f70dca15a1e948bfbed9df2ea7538d64136f60f6e6ae7955e3eefe0",
+    "src/app/shared/ui/styles/_mixins.scss": "c8eea6ba2ab25acce02765e979b17e41256e909dd7e779ee796ae19eba2e1b3f",
+    "src/app/layout/main-navigation/main-navigation.component.html": "062f9544aac750ae49c024188609a2dee93068e4b833d77c8c2f39b1ce4dc7d5",
+    "src/app/layout/main-navigation/main-navigation.component.scss": "2134841b78873fc75fd511f893c34d1dcb1af62b10980a49b0c76144d7069f95",
+    "src/app/layout/main-navigation/main-navigation.component.spec.ts": "e9450a1a1fe4ca608dfd95c7eebee7e6331962ea2135c0ad7b66d839753c1069",
+    "src/app/layout/main-navigation/main-navigation.component.ts": "5943e8f8d3747b87e5da2cbca62d80815d0839db7c3402f8599da0e40ce3f1fc",
+    "src/app/features/api-connection/api-connection.page.spec.ts": "a4076f62318d091e81c473ec5972a45afe095bdcfcfe594399686fcf66a82546",
+    "src/app/features/api-connection/api-connection.page.ts": "11518fba90db0fb5c28034c306180e0807c58e77d642c22d7e5fb6e57c8cd790",
+    "src/app/features/cart/cart.page.html": "ae37f6b641307400a0b02f6e5abcd51f72ef4951f367a76ca70f4e2ea2931637",
+    "src/app/features/cart/cart.page.scss": "23213c81f2db215d4227d0d9faa1c75e4fee3f5225cf7ed57e7e2e72fc3504f6",
+    "src/app/features/cart/cart.page.spec.ts": "3b0c4f42479fdbe0fae6f98e9541e04f435f560d1b2581fee649b6d289e56bf5",
+    "src/app/features/cart/cart.page.ts": "be3393a68ca16a6c33e95238da095222f5601591f645706dc0eb0cfec9bed33a",
+    "src/app/features/cart/connected-cart.integration.spec.ts": "a3f8e39cd3750d460dbf93a888e093788787c827d5fc395a93aa8ddef9de0637",
+    "src/app/features/cart/connected-cart.view.ts": "570f85e71def0541ad1708fa7ce523078c7a09a533fa8b7bf32a1fbbcdeff2f1",
+    "src/app/features/catalog/catalog-demo.data.ts": "9a0f57b9b02104f51da425cbdf90071834b39e8f8dc05834b932aabefe0a8894",
+    "src/app/features/catalog/catalog.page.html": "92d6f6cde17a5974e9a031a417bd935bc911df2ddf3f6f9abc09537a9ee3b309",
+    "src/app/features/catalog/catalog.page.scss": "a57bf772947386cdd490193e548b5751b7c557ab919db490f0b6e0030195f290",
+    "src/app/features/catalog/catalog.page.spec.ts": "6436f0d6accd281bfaf4a1c588fec0b0bb2c75cb448cb6f8b3f9d31265f7a353",
+    "src/app/features/catalog/catalog.page.ts": "170bb9a4898d9a36296737a09e0ffbccdbc2990fa92aba9ad9ccff5f7bb06020",
+    "src/app/features/checkout/checkout.routes.ts": "22cc945aad04e4183f304c1947b7bad10be3438ec26cdc22e078269e2ed83e7e",
+    "src/app/features/checkout/connected-checkout.integration.spec.ts": "d2120428bc7a5b1b3073b4bfcc21a1c6e9aac6693a08e690a6b015216f8e8841",
+    "src/app/features/checkout/connected-checkout.view.ts": "5a3fd2cef838e1a25ead15b1e22a8d87a54998aab2decdd0e8fc1fb7dc61c652",
+    "src/app/features/dummy/dummy.page.html": "05a0162c3e762998f2c150493e2189301cf8483cb2c7221a1d128e5cceddc9b2",
+    "src/app/features/dummy/dummy.page.ts": "a8083f1012c68f3e904693fa64188f5c0e13b0cfa8a86aaa5a56b5fa7c38aa98",
+    "src/app/features/favorites/connected-favorites.integration.spec.ts": "f372793d27ae0ea553af5d7fee496c9f4a6b37ed055b8b0cab7fe7a5f0044885",
+    "src/app/features/favorites/connected-favorites.view.ts": "14d7580c11900e9de75206212ef9d9534f3787789300f7529a2cef8e4cdb1b3e",
+    "src/app/features/favorites/favorites.page.ts": "a65131352e441bc68d4f30bcabc068314ea56f3905f9ebf0bed6d15dcc780c50",
+    "src/app/features/foundation-preview/foundation-preview.page.html": "7216c6b9996ebafd0d602861dba27dc92acd9afbb30ac1d08cd454137b17d639",
+    "src/app/features/foundation-preview/foundation-preview.page.scss": "a8cfe9b7a46e3a9c1c293062ad074755dc79e43929597de6a88255f09b071cbc",
+    "src/app/features/foundation-preview/foundation-preview.page.spec.ts": "c7fa9d2a67519694382323f96bac28cba7a72d5d0cd7de22776de7d8b7bee20b",
+    "src/app/features/foundation-preview/foundation-preview.page.ts": "27a0140f3cb9cbb2417d641a91eeb2dbb64b364229e6e44887c486b993cf36cf",
+    "src/app/features/home/home.page.html": "04cff0c5eb0ab13a3b768c0e93b65bc8e5b661736589eeda23cddd6e4afb88e8",
+    "src/app/features/home/home.page.scss": "64ef7df35a3e3d50c325f79527bc494a6acf7847b96223491d4c5233e23b8eac",
+    "src/app/features/home/home.page.spec.ts": "d8fab71127cbd9e4872ed20fcf04ea22d3318c4197ebacdebe656744ee4ccdf0",
+    "src/app/features/home/home.page.ts": "138101064f1a03bcee750c201810c94bcb55cdf9f33a91a769b838d5733a64dc",
+    "src/app/features/not-found/not-found.page.ts": "f009da263957af2e5942ded615b3bf1d27ed0b7904e48776779bc142c0a4b5e7",
+    "src/app/features/orders/connected-orders.integration.spec.ts": "bc2673ae5058ccf6362c8d5a4bd42e15f8b6769059f0cc32ccf7c059cf8f178e",
+    "src/app/features/orders/connected-orders.view.ts": "bc84957cbde02349375244e01195446bf7840aeabf8c7f353917ec19f55084a9",
+    "src/app/features/orders/orders.page.html": "3d65cd858fed16b0cbe60391d1857478114c9cf28c7d9ee4f04a86a0e1131c3e",
+    "src/app/features/orders/orders.page.scss": "508c0a992fc9c783e322b761fff44e6e1578e2263db56b3cf29297d44c56c7b7",
+    "src/app/features/orders/orders.page.spec.ts": "1165f3356c3490075d8e88b3b6cff54139cc4d0ab7b616f1cb60b1ea36eadb54",
+    "src/app/features/orders/orders.page.ts": "95c1939915eb19022800d5ab8d84e17b09c99a3e017a740448411e66f698970c",
+    "src/app/features/profile/account-security.page.spec.ts": "cc818adcf91200befd0ad6b39956b18a6c5c3a96d3b4402ff1f8544d77513263",
+    "src/app/features/profile/account-security.page.ts": "d7f44eb7b853df2729a6dfc17e10d77ae07735c5120d5508d32be614125de2ae",
+    "src/app/features/profile/connected-profile.integration.spec.ts": "e1ceea4e2e962cfc8cf635fb6144795e6f6772057c3c7de665777f310bb69f5f",
+    "src/app/features/profile/connected-profile.view.ts": "75e6e153a7d0f5ecf7656d94d49e00274312b11dcb60da0b8f7fba30f50c231c",
+    "src/app/features/profile/profile.page.html": "1236d2602adceab395883ec98c6d9860e21461fd72f219c79b446694240b0b46",
+    "src/app/features/profile/profile.page.scss": "25ad1695d5b92a2cdea113e571aba3e869f6b1c4f11be6cbc26f589891d98794",
+    "src/app/features/profile/profile.page.spec.ts": "d7f74c45867cf286c3b071de69b857adc34dda600160b49f830c6e7c98b368cd",
+    "src/app/features/profile/profile.page.ts": "a6400ba325a2fd56c4cd8777d3c767846e12fdac4a9a1ef98b1c34f15461c60a",
+    "src/app/features/public-catalog/commerce-experience.integration.spec.ts": "a3d0a57e4141b16414670f77a3be020ba79cdbbbdd7bb06727e20757def042ff",
+    "src/app/features/public-catalog/product-reviews.component.html": "4cfae72b332c3aad76475c70a8230d13bb63bd797665b22a80f8f87e5de3bc21",
+    "src/app/features/public-catalog/product-reviews.component.ts": "55c0398f94930752205443c10513dabe2cd1cd6fc4601cbc15a168c3f1177a69",
+    "src/app/features/public-catalog/public-catalog.integration.spec.ts": "e6269ceed16e3b6c9eaf4b5fa9caabd0449d17618e8a0b67745ae6d6eb699001",
+    "src/app/features/public-catalog/public-catalog.view.html": "bbae0db8a80e10c6a92abb8f8ab6030999dc654450a6dc129a75f8bcc9e46487",
+    "src/app/features/public-catalog/public-catalog.view.scss": "bdcc815c001de65d904b7806e4ad61287d28e341046e703e5efc75f2500e155f",
+    "src/app/features/public-catalog/public-catalog.view.ts": "d9bc570feef292d5c9d13c90511fa456c8a7aa3d0af21abb4d44e99da23f3748",
+    "src/app/features/public-catalog/public-home.view.html": "bd6a4a5f9f1694a6a1afcabf1b6a7feeaac2006d8e37511267ba486e6611fb11",
+    "src/app/features/public-catalog/public-home.view.scss": "ee20252a0faef2c2c7a03025cc216da1923102ab01c420600f2cc81394a7e071",
+    "src/app/features/public-catalog/public-home.view.ts": "857422da3a62b8cd8429b8eda12e2c96e7fb7e7fbcad5dcf8d512e6b56188358",
+    "src/app/features/public-catalog/public-product-detail.view.html": "d6e6fdb932c065744b1c47e4cea331e1bbed53e557a9cf1e97926761f578b30f",
+    "src/app/features/public-catalog/public-product-detail.view.scss": "5af08f75fe245b646b49deb35ea6ca9a75923977ba725ebe6060f92dc7ca8105",
+    "src/app/features/public-catalog/public-product-detail.view.ts": "33a24ee31a1df51a2975c52356663883d6374275bede01d6d41fb7184b09f8e8",
+    "src/app/features/public-catalog/public-product-grid.component.scss": "ee876372997a8fe7f2485c6879d4838a451fc43957701c37f720e57e68dad63c",
+    "src/app/features/public-catalog/public-product-grid.component.ts": "a68e99c286b5f0257ef462d230de3126ec059545a14922e79bc214d8e137d829",
+    "src/app/features/splash/splash.page.html": "76e7765a6328469804270d5bbc173e981f8b2f305463a90d06eb835451cdc442",
+    "src/app/features/splash/splash.page.scss": "850edc862b0d5628e861ce351741fa7adc7f60ada1aa5966b899719e9f5ff27a",
+    "src/app/features/splash/splash.page.spec.ts": "140139dc59ec817734508c1d0410ecfd95639f99cee9d7107273a8fe94ab34bf",
+    "src/app/features/splash/splash.page.ts": "95f3ccc6197d690010772ab9a03ee52f09b2898cebe32787151b0f006faef374",
+    "src/app/features/profile/edit-profile/edit-profile.page.html": "5093e93adefe154019ff78360d1d4c7679c4f7d641e45d1dbce289c45d0483dd",
+    "src/app/features/profile/edit-profile/edit-profile.page.scss": "025058132810b18d594e983c914b056239295879291cf391bceced4d8671f7a3",
+    "src/app/features/profile/edit-profile/edit-profile.page.spec.ts": "bb72a28bea2674661ef59f8e1d9eee7c4a6b69bebed893f13e6109cd6057e804",
+    "src/app/features/profile/edit-profile/edit-profile.page.ts": "1f5b4aff18cb9added18373fa09b36c09a94b54bced1aa5789b9ce711130d8fe",
+    "src/app/features/orders/order-detail/connected-order-detail.view.ts": "07e87da788e9d26cfbe1f1dd308df5dc8d1ee4052fed58412d890df778bb5db9",
+    "src/app/features/orders/order-detail/order-detail.page.html": "6bc0c619f7a6558d6dbbf60f280d23e3a265d48156967eb8af64d1fb6ff88a3a",
+    "src/app/features/orders/order-detail/order-detail.page.scss": "df6c868e3ebc8618a1243ac88e26046e4f737100566047dd6eca5d14030095a8",
+    "src/app/features/orders/order-detail/order-detail.page.spec.ts": "84ce9c87b8b846b18c084beec063db0cedf8253b6095af61b5c17b93c770fa63",
+    "src/app/features/orders/order-detail/order-detail.page.ts": "6216176949cfd478cf888bb6c48d2a61c6162527578c266146ef52ddf86a4cd1",
+    "src/app/features/checkout/checkout-summary/checkout-summary.page.html": "486050911fd65b104ceb7a53816165844166b0db6d861f051e87f12bf6e6a8bc",
+    "src/app/features/checkout/checkout-summary/checkout-summary.page.scss": "c7023fd2c6357a41be34866184d3f70cd27f2fb2c2534ae3d28f7bc662bcec9b",
+    "src/app/features/checkout/checkout-summary/checkout-summary.page.spec.ts": "4157ec85578b6b7c3392e16c4019f3d9cc791272bc8242e4f71e8060927c019e",
+    "src/app/features/checkout/checkout-summary/checkout-summary.page.ts": "b27004662f5c3549b1d2bb076cd0537ab8c4ace54378c51969a3f913b7dc81f2",
+    "src/app/features/checkout/confirmation/confirmation.page.html": "c671cc5ba01c6ecc5002d2375d8d0d0105185efa7878dcfc35df5eb67374b92c",
+    "src/app/features/checkout/confirmation/confirmation.page.scss": "f533c1465b8bd29cbd1034e366bb69676ee486aa30c49c218edc313a1cb32621",
+    "src/app/features/checkout/confirmation/confirmation.page.spec.ts": "9339e04f3332c1abc0556fd759cc970cafbf68ef1591aaa8f0cf459264db5674",
+    "src/app/features/checkout/confirmation/confirmation.page.ts": "b6f8dd79f99be390b58dba05154358dd1381bec4dbe3e7fa9621574a6d469c2a",
+    "src/app/features/checkout/delivery-method/delivery-method.page.html": "42f46da314ecc711c83057f61dd08d53c3eb91f7985ce943b04bbffc97b85a68",
+    "src/app/features/checkout/delivery-method/delivery-method.page.scss": "a1516d4714d37b0d29e83a7b4455100bcc66f13e794c1a6b28947245356f7b0a",
+    "src/app/features/checkout/delivery-method/delivery-method.page.spec.ts": "0b4ae3bfbbb4c530c6f64919b3e0c8f80a4cc5183fd02e1d202ccbadd197da66",
+    "src/app/features/checkout/delivery-method/delivery-method.page.ts": "318ef375b7945c05c7d352664fd5c8cb37d3914f2a95f9849ae6df05336275e8",
+    "src/app/features/checkout/payment-method/payment-method.page.html": "92e0da113c6642e35941a7df2ecefd703b08847a7bcccea70a03479acffc4e06",
+    "src/app/features/checkout/payment-method/payment-method.page.scss": "a1516d4714d37b0d29e83a7b4455100bcc66f13e794c1a6b28947245356f7b0a",
+    "src/app/features/checkout/payment-method/payment-method.page.spec.ts": "eb7497f6f52cfddd44848bccf0d450fa564127036b8ee14732c7c9bc404c77b6",
+    "src/app/features/checkout/payment-method/payment-method.page.ts": "3f9ae06b79fb84a8f41a4c3d4780800ad49bf48b44c9ec699573e584f2496946",
+    "src/app/features/catalog/product-detail/product-detail.page.ts": "98c3b7816890d73a3a01df4ffdef40f52c7b3b18bfd22992244e71922e0304ec",
+    "src/app/features/auth/connected/connected-auth.integration.spec.ts": "aaf20839a222d76312910ccaec87a6dde85b71796d1f1a5e2f563e55e741b7b6",
+    "src/app/features/auth/connected/connected-forgot-password.page.html": "2114f3a68af4f1471f1e1e82573aa21555d0f4f0a208749ed80ae7feee3f754f",
+    "src/app/features/auth/connected/connected-forgot-password.page.ts": "263cb9a8ac58733a478d48920a0a9a53184a2badbeb6097d00cbcf664dae09ee",
+    "src/app/features/auth/connected/connected-login.page.html": "895d55149e515a241fe635d4f9e4ae9353454064a83dfa203d3d8dfa4c25dcd8",
+    "src/app/features/auth/connected/connected-login.page.ts": "22ecd03f21008a4b750d668c412dc983c45cf9037d9274c927be421a464f00cf",
+    "src/app/features/auth/connected/connected-register.page.html": "2d19493ca1ec1b928c95340e56e506ecccc7cdbc5fbe84939f47a28fb528dff9",
+    "src/app/features/auth/connected/connected-register.page.ts": "e16283a3d65b4b38d41bd57f116d49c6738519a509564538aadd033f6ec31d11",
+    "src/app/features/auth/connected/verify-email.page.html": "5b6b333afba023b05a753f3ad0beff5eef36d196dbc282a94c2512adea63595b",
+    "src/app/features/auth/connected/verify-email.page.ts": "5b275676791fb40413e312f8d5bb7ad514e7d8906e9cb7973922f776c7d33ace",
+    "src/app/features/auth/forgot-password/forgot-password.page.html": "44a9e736c6c5b16c329a87a62ff3fd2cce4ac6f724721a450a430c62e6dd1ebf",
+    "src/app/features/auth/forgot-password/forgot-password.page.scss": "99a788dfac8e20dec834788d76ab019876cc479d4e8412d22184cafda9228118",
+    "src/app/features/auth/forgot-password/forgot-password.page.spec.ts": "166c281201ce0f37beacba6baee8257f8c273a30ec0c2d5402c106e1d552c8d4",
+    "src/app/features/auth/forgot-password/forgot-password.page.ts": "bd7cfb5226b06f01e36a5bd157a872179eb7c7d67d99e87324ab7f35bd072649",
+    "src/app/features/auth/login/login.page.html": "6a2d8695e3311d54d26b1848df521391ecbf9dc4813f9d8abb2d705627079aee",
+    "src/app/features/auth/login/login.page.scss": "f217a54f5b96bdf62b71f1fe99aac21b2b0603ea88f651e7efebe9f31630f0d9",
+    "src/app/features/auth/login/login.page.spec.ts": "eb7ea8418641f5d632c20491103b6399942c04b3392638e4ec3dae8b5999ba9b",
+    "src/app/features/auth/login/login.page.ts": "b3e8bb4eefe66dbbdf9be4f0e5f2ef52430544d2bae4e5753e6a2daecbe0400b",
+    "src/app/features/auth/register/register.page.html": "ed37d375c4248244e6a24112c83459c684fe3f6ac9e4178beeffedb7cc2cfbcd",
+    "src/app/features/auth/register/register.page.scss": "f217a54f5b96bdf62b71f1fe99aac21b2b0603ea88f651e7efebe9f31630f0d9",
+    "src/app/features/auth/register/register.page.spec.ts": "0d34fdb1d84e07df50c5a3c7d60f81a15f2cf2fdaa75b54e5a9132dd78e85fcb",
+    "src/app/features/auth/register/register.page.ts": "49066d02ba455458f115aa58a9ecc819da757ac68f86a33238b2b7327c988431",
+    "src/app/core/api/api-base-url.token.ts": "9b82443cfbee18383694764d6f733a1602496f840442da11b17d472780b4600d",
+    "src/app/core/api/api-client.service.spec.ts": "83acb99742a29613b37ce8b74c9443c27f62a82e0287ecba41132ce01e3a1e23",
+    "src/app/core/api/api-client.service.ts": "4c5334b38b698a6727f72274f0a10c516238d666d9d7ecd26d6c4cf9d02c4416",
+    "src/app/core/api/api-connectivity.service.spec.ts": "41482cbcd7e633d4a57087d88c27a16353b2cf8ece82d6abdb2ca6ade5487728",
+    "src/app/core/api/api-connectivity.service.ts": "05ae9ac57acea8954eb58aa90a90c1218be6ed6a9472a85ab2c0ab91d80cb49e",
+    "src/app/core/api/api-error-message.spec.ts": "72e9ed34c5091d2807768b95424b18b64030dc07b1becc95ecd542260e039b3a",
+    "src/app/core/api/api-error-message.ts": "247635844b9b10356e4ca3ce409daf2c1a909fe2b23d9b9d38e5f1abb9798677",
+    "src/app/core/api/api-error.spec.ts": "a9cb6d02ebf9b956c8a74b0be7749fd79de4544941c9c7be8804d28cde79c1f4",
+    "src/app/core/api/api-error.ts": "c2480973acff806905a5976e9f0748e06bd983e64c91720e114df66c04b8b60f",
+    "src/app/core/api/auth.testing.ts": "f395b6a17729f40eefe3e712f6f2602f878defbd7e9b8c251cc19deff6138c92",
+    "src/app/core/api/auth.validation.spec.ts": "2f3e8ea70a10600931e244da06f51badafd3141a6d5b5589cb80b52a42ed0a69",
+    "src/app/core/api/auth.validation.ts": "de0f9dd72175ad5fe820bbca364ee9c9e400fa7c17c8196be09a23c57e6740e5",
+    "src/app/core/api/cart.validation.spec.ts": "fc380120a3beeda8918a6931f4b177d722a3427f051befcf4c065f6a3d48c660",
+    "src/app/core/api/cart.validation.ts": "f3e1c2c6808a03d8445b524771e6d8a31b7bf772ac85bc7e1e366297cf87249f",
+    "src/app/core/api/checkout.validation.spec.ts": "b164363435033fcaf0385ef6a8967b2e11142fd2d269fea4611f7d52d8ee372d",
+    "src/app/core/api/checkout.validation.ts": "d54e0ca576a0a37025a57cea87db556f536a5cd2bd82595ec6c5516ef142190e",
+    "src/app/core/api/order.validation.spec.ts": "d8e5570c4e92f487927bb16908b0da4cf9e291fe26bcf938cdf58fdc4a57d963",
+    "src/app/core/api/order.validation.ts": "97f97cd61938677044e1a3a5957e5ae7fceaf5a02078102119aeaccaa774b506",
+    "src/app/core/api/profile.validation.spec.ts": "842c0f56d72fbe7f96ec021dc1fdfacd8f2dacabcfa7df8ff6602d3e82b28c6d",
+    "src/app/core/api/profile.validation.ts": "6bd0dab421c64d78944ed99dfd7044fc7f3c2e3f2a5ec923fe16d4cabeca5462",
+    "src/app/core/api/public-catalog.dto.ts": "096bba7bbf6716e7d0d23106290fdc499a3dd298582d164af14bf9db57b29cd2",
+    "src/app/core/api/public-catalog.testing.ts": "57126f6491c9f287fac4fb253be7a056ff7a927e837f6209714c5d3f6526c42a",
+    "src/app/core/api/public-catalog.validation.spec.ts": "4dee59a7f498ea42d6c8377da78160428d48744cd2ac8741611d3ca24c8fe9b0",
+    "src/app/core/api/public-catalog.validation.ts": "cf17a5ffa49d4c12ae9b7687e95824b9002e73dca1edc4bc88bea7d5f282574b",
+    "src/app/core/api/public-category.model.ts": "99b75f33dece0d7cc4e6ff0e6f04e817afc82a3e1bd3978a60d8a80f678f1fe5",
+    "src/app/core/api/public-product.mapper.ts": "4f28e424e823f3002c59f998e0ddfa8dd7ef7ae534510dd5485d1ae6d41baa64",
+    "src/app/core/config/backend-session.token.ts": "356228cdf02e8b440218c792b3c61373d6c1733bac6f9da69c69524bdda7a67f",
+    "src/app/core/factories/demo-order.factory.spec.ts": "11c92877e525c2d811ced0c6bff13fef80fc2a442a487914a5f9724b2b7b376b",
+    "src/app/core/factories/demo-order.factory.ts": "ba86bd8fb3c6b7fdeb01b048072f9d6f16da86208807484965893569555421eb",
+    "src/app/core/infrastructure/demo-catalog.data.ts": "61cf007648f287b73eae4570d02418193599a5d9df83fd482d797e79040599d4",
+    "src/app/core/infrastructure/demo-orders.data.ts": "9e3dba9487b6dcdd413276e890c18f8db14528bd2f456c06979a7648b264c5fa",
+    "src/app/core/infrastructure/http-account-security.repository.spec.ts": "aa3a2cf4480dc6a26231682ee61760d2ecf6b069a9e0115dbf3e7f3b5acba7c5",
+    "src/app/core/infrastructure/http-account-security.repository.ts": "c9e6289e9a290efb825e2a0246b5f1ff51dfd73da5f90bb6f080478cf1612624",
+    "src/app/core/infrastructure/http-auth.repository.spec.ts": "f1dfeea062028846d6701f46b30b991e79be3864b44924a210055f5a452a3732",
+    "src/app/core/infrastructure/http-auth.repository.ts": "e397cc895877ea6299afb18866aa4f9f76b3561e475c1f46c3f0e2b69d28c3cd",
+    "src/app/core/infrastructure/http-cart.repository.ts": "b00d992365fe45ba6ff3179f266a41c54b73cffde48de452e6b63067af38741e",
+    "src/app/core/infrastructure/http-checkout.repository.ts": "330fa1438439bdbe1012ac30a02508e773694048438cbee4a3cfc39246057e9d",
+    "src/app/core/infrastructure/http-profile.repository.ts": "117eb22d03045f08a007cd63ac528cba7bd357407cbaf8ab53c145bde9489d8f",
+    "src/app/core/infrastructure/http-public-catalog.repository.spec.ts": "27d597f28ecd271b92b596960aea5c540d0aa25e54e1499e2e2d05ed809c0630",
+    "src/app/core/infrastructure/http-public-catalog.repository.ts": "19c24e7d3e66fc56622ce432bc33d891401e0e9f2c5a0b807fa06f7e915c602e",
+    "src/app/core/infrastructure/http-real-order.repository.ts": "eccaa5619cc831eb1a52c29cdaf4200e51ad3d6a889c70439769a9d96cf57910",
+    "src/app/core/infrastructure/http-review.repository.ts": "55007095f251d1a8c44801cf4612646969b06b0df763bad7db69aabd869d0235",
+    "src/app/core/infrastructure/http-wishlist.repository.ts": "535ab76488658f0aa4a9d1650ace0606ad074ae2a82f5f829f93dc474625d830",
+    "src/app/core/infrastructure/in-memory-demo-order.repository.spec.ts": "e7db9663b6e6cc374bbff4748b3312139853e62ab546825a50038d96ce03d34d",
+    "src/app/core/infrastructure/in-memory-demo-order.repository.ts": "24e55f2fca8b27b8d74ed22ee986df8fa278ef82b170400e2b30640be943d46d",
+    "src/app/core/infrastructure/memory-session.store.ts": "6b62fbc289efe702c736d78a0e03a3dbd47067d4694c33183b6138407f393af6",
+    "src/app/core/models/account.model.ts": "ecf72a3386cd2d9d2d67427fda0ca80ec8b30d5903b738804f9eae75ccb26fd4",
+    "src/app/core/models/auth.model.ts": "0a1e3c12ea062fae4620bbe71c223291ff383aba83e8ae84cd3f6e47f627eedd",
+    "src/app/core/models/cart.model.ts": "9182d142980b5b164bea9c3b302ce7e95585e7e860ed10a7d129f0ac29cc9730",
+    "src/app/core/models/catalog.model.ts": "a313bcf6d003e65540e7960c5ea3a3f57cd3751ae618ddd1058f741f2dd55dcc",
+    "src/app/core/models/checkout.model.ts": "8bed230a808a9ce7619ab1913d0b76fbd63cb333abbc61aa89df7457349fb9e5",
+    "src/app/core/models/order.model.ts": "10256254217911b2f2ae556d7a4cdaa2c6865422ee58146a85cbba947a09c435",
+    "src/app/core/models/profile.model.ts": "cdd8791572c8fc6045a8fff9f606c1b028d05ebebdb2133b0cf24f04c5226047",
+    "src/app/core/models/public-product.model.ts": "312aee5f2e7891c64bc8b9d7f485116b8597ec441e9ea3cb008cbf991e96b04d",
+    "src/app/core/models/real-checkout.model.ts": "01d582779af7ac13fa3586d1d1d8cdbd159221b3f72020bec5757ed6f2fbb510",
+    "src/app/core/models/wishlist.model.ts": "2176d8aa0abbc275070ebd8e4aa00b6b259b60bf40bd1a7bad1b0df0de2b117c",
+    "src/app/core/repositories/auth.repository.ts": "0c18bcddee639f41f3e75fafb942ec9d7ca704e15d623b1e1ec29fed3ad5e887",
+    "src/app/core/repositories/cart.repository.ts": "83544fd3184c31c3446f7ff0a72b9a763fe773dbbb7a68e67a39734b59950cf3",
+    "src/app/core/repositories/checkout.repository.ts": "aa3cdf4883dda63aff105bb87906d08e7dcf75228ec2f44fc54cb0a471d06e91",
+    "src/app/core/repositories/demo-order.repository.ts": "b94a1cb1bc43c1513a671330ae130337eaf94f409dedd73af01831dbb95cca43",
+    "src/app/core/repositories/profile.repository.ts": "a85c74f4e37ba7cbf9b8deaab98d326c40456889daa85185b863e10a01a08c62",
+    "src/app/core/repositories/public-catalog.repository.ts": "09d0bb261d5a2762d4b201e17634e8ca1cb3ec818346ad39b2b4cb9169cc81ce",
+    "src/app/core/repositories/real-order.repository.ts": "a4890d3f0f8b2e78b0510ebcf018e6c8054278e84326f5fefb7f5b51a7c2a1e1",
+    "src/app/core/repositories/review.repository.ts": "e5a4b2a09f379f6c93c779e9af3b8dda10c0439185d580d3ef357ad0d3286551",
+    "src/app/core/repositories/wishlist.repository.ts": "0b76f3ee5ae832cd833315ec3c2268a352a8955f4aca58be41ebd010de2ef2d5",
+    "src/app/core/security/auth.guard.ts": "438f4c1ae8708684433373a20642ec9437ebeb7966a903357d96b728fbcf1c5f",
+    "src/app/core/security/auth.interceptor.ts": "f847a685069c88dd31deac846ca93aebb9a8b7d9ccaa6dfdb5d183e50826f574",
+    "src/app/core/security/jwt.util.spec.ts": "96d266f67687d94c7bae340012c7c505cd31b90f254558532c23b5a68d5fcde2",
+    "src/app/core/security/jwt.util.ts": "aaf118d2d9e32c96115ca4d60f1a17b21a471542ffe2dca6626223c58bac10b8",
+    "src/app/core/security/session-security.integration.spec.ts": "a5e97a3948ddef5276a58eef177fc6f19a454aced05bca05506f439a57a2726d",
+    "src/app/core/security/session-store.token.ts": "7b0c1cb2f58f858a7544b596d585822bbaef833d490a2d8dfe3d3d68ed98f1aa",
+    "src/app/core/services/auth.service.spec.ts": "67406cc78ab679be087f670a61b62575823a15fcb2aa873c2a635e4e4edf88f7",
+    "src/app/core/services/auth.service.ts": "f8458570d18bba6406f9538c559684123ddd02cba4feb2538e48b28ee2db77ca",
+    "src/app/core/services/cart.service.spec.ts": "7fe293a9db8160fadf56dc478c52eccf05888b934852c2d7cfc369dc472c0d1c",
+    "src/app/core/services/cart.service.ts": "90e3078cb119bd3b92964e7d88b83e4db69bc4ef431bfb35b38832b71ea259a8",
+    "src/app/core/services/checkout-quote-state.service.spec.ts": "c4ae00c58a699f79ec1123a9297200ac1bd899f8ab6f221ec7e9a7c427e7df0d",
+    "src/app/core/services/checkout-quote-state.service.ts": "f9d418a138cdb07b4c3998d36c3a36fd5a3be7db8ede670aff589e02964a13da",
+    "src/app/core/services/critical.integration.spec.ts": "7518737cb04409149a7894c7421efe1bcc25cdc0b534a2c7dac137150a957bc6",
+    "src/app/core/services/demo-account-state.service.spec.ts": "14ee0176f9356ab287ad5a183f4f7c1491eabf5d62c340eca54b238f3fe8340f",
+    "src/app/core/services/demo-account-state.service.ts": "6139deecd9f9133ae813d853b54e110a2c9bfa146b8dba7ba55a679da6c7ef20",
+    "src/app/core/services/demo-catalog.service.ts": "abc8a2baa6d24ad581467e79c3b8e0dac5cfe6f21f1c41cbeac11d0be0161fa3",
+    "src/app/core/services/demo-checkout-state.service.spec.ts": "afa269c0c1cee28f4f0c5e9350b478c3ffa8b4c3775eea463a99ce813d7e6d54",
+    "src/app/core/services/demo-checkout-state.service.ts": "82a4c01ae439f47a4ce484eec98f27b1f8826c397d3ed2470e5f1dd15c2cefd2",
+    "src/app/core/services/demo-purchase.spec.ts": "5c44ecee16a0decb3180a2ac7faa83a16cc0f7f6c164e85fb4fac21b018c8084",
+    "src/app/core/services/order-detail.service.spec.ts": "3414f0f8b7df1fb1ed86d40eda1a3271b13e84bd3405be44849a8732d4a25c00",
+    "src/app/core/services/order-detail.service.ts": "90e5bf1efc163f77ca8d27ba03920f62eee176ffc09c83938ce6bb2db3ce63e9",
+    "src/app/core/services/orders.service.spec.ts": "fb1274838679cf8da3387c0dc2db3f4783aab65754df0822ce3c3c9369ffdc93",
+    "src/app/core/services/orders.service.ts": "1706812d1a9e1cc707a0558f8c719b83e521f73c76a99579b43cd53acc1d88eb",
+    "src/app/core/services/public-catalog.service.spec.ts": "f978b73bfa1d9b7c8246ec63efabeec6a12f9f475446163fec8c97c8f9d435e2",
+    "src/app/core/services/public-catalog.service.ts": "1fee15462e5fac2edeea4cd0298594de138ddddd0db209dfe899db930bdd69a2",
+    "src/app/core/services/purchase-intent.service.ts": "d99fee6c9421e813b583bce2e6265143e809d89aa2fe3e251c4a42edad7c4cae",
+    "src/app/core/validation/auth-fields.validation.spec.ts": "09d01f1493abe3060d337f26f9edbadccae3387098cc7abc56c56414522e1bde",
+    "src/app/core/validation/auth-fields.validation.ts": "1ac1d462831366e0f2517878bff05988f93885cee0dfe25ac8164e9c07398149",
+    "android/app/src/debug/AndroidManifest.xml": "9b3860accfc322d3396871b28c569a0da03dcc9898a6d5b0d688d0255c4307ff",
+    "android/app/src/main/AndroidManifest.xml": "b642d0f51d088301d0107c9b94c85994fbc612e0a7b6a9cb1754113ae1be90cd",
+    "android/app/src/test/java/com/getcapacitor/myapp/ExampleUnitTest.java": "d4045ae8fac1f0807e6b24eb34e68409a9a235df9d1a3f896fb8c9a49424363d",
+    "android/app/src/main/res/drawable/ic_launcher_background.xml": "718ba51adf166bb55c3e9936bb8199a0148457f7f0191aaa2f37a94f3159d6ec",
+    "android/app/src/main/res/drawable/splash.png": "5cf98b4451bd99b20df26f9e608a46946118be6b0ae90762f9ca1786a30c76ff",
+    "android/app/src/main/res/drawable-land-hdpi/splash.png": "08cc34ad7713fe7ed58bceaa37b2387b670c53cd60264b4bd6442db3098e75dc",
+    "android/app/src/main/res/drawable-land-mdpi/splash.png": "5cf98b4451bd99b20df26f9e608a46946118be6b0ae90762f9ca1786a30c76ff",
+    "android/app/src/main/res/drawable-land-xhdpi/splash.png": "22f87e1e3bc89aa01a7dbc39c9a4db058cd0bf4ad3fe9f55712bf69eb997f4bf",
+    "android/app/src/main/res/drawable-land-xxhdpi/splash.png": "42aa26392546fcdee1b8d3ac6d4b41bfcceb41dc6a4f3a3c30c24a8a8f4db862",
+    "android/app/src/main/res/drawable-land-xxxhdpi/splash.png": "60393ce8636fd263e4e1fea3fd4ab2de948c6295e898fda9b50ac4e5283be809",
+    "android/app/src/main/res/drawable-port-hdpi/splash.png": "c5015f4ba3628392b538386c5e210f0b94f352a3160adab934fd0311972137ca",
+    "android/app/src/main/res/drawable-port-mdpi/splash.png": "07fa579e1c83e04ba7f9cbcbfcf41b68e15fe3638f2c44a04e58b809103e6b69",
+    "android/app/src/main/res/drawable-port-xhdpi/splash.png": "b73049cb37fe76d6c11b87a796766bf6af0c85483b31eb6a921657b0d764a4b9",
+    "android/app/src/main/res/drawable-port-xxhdpi/splash.png": "0c7f1212f25b7b90e9a6e1d320013e4ff3d3e03e634cbb07b7b7981cac51627f",
+    "android/app/src/main/res/drawable-port-xxxhdpi/splash.png": "3db071a03b2f8ffe0dfd4170fc59842d53cd15bba5e88af59401d58efabf7827",
+    "android/app/src/main/res/drawable-v24/ic_launcher_foreground.xml": "a8514094f754b099d3e55ce1d6e0b2de79db418b2eeacb0fc2a6bb0bfadef221",
+    "android/app/src/main/res/layout/activity_main.xml": "5d770feb791313b947020cbfc57e5c733c556dac5e9e49261a1190e527073253",
+    "android/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml": "9c3a7e0a6515c6e1a7ae834a9ae430311ebc3241f7b2e5e7f0460aa690709a7c",
+    "android/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml": "9c3a7e0a6515c6e1a7ae834a9ae430311ebc3241f7b2e5e7f0460aa690709a7c",
+    "android/app/src/main/res/mipmap-hdpi/ic_launcher.png": "72b71c3581ca3b5a23b1c168d69b9d855b3f184fa079902a01f088eb4f0607d5",
+    "android/app/src/main/res/mipmap-hdpi/ic_launcher_foreground.png": "32baa10d2632a4417454a579f992bd640e0a3cec79321423559b2c9940de58a9",
+    "android/app/src/main/res/mipmap-hdpi/ic_launcher_round.png": "bfcc1b0fa931b14bb241372c76ab4f04374b67d02363c98d9cb12edfdacdf5f3",
+    "android/app/src/main/res/mipmap-mdpi/ic_launcher.png": "27ed3603010ebc278f64f8645741ab132ff517abb5308eb9df6c8e42a48956b2",
+    "android/app/src/main/res/mipmap-mdpi/ic_launcher_foreground.png": "58e78a618778926b1f6d9472a6468de878de8530970934e94aab5ba4ba08cc00",
+    "android/app/src/main/res/mipmap-mdpi/ic_launcher_round.png": "0166fc333074c373fbd0ce6b5defd71552166165ac778121ca9c9dff6b83f0fc",
+    "android/app/src/main/res/mipmap-xhdpi/ic_launcher.png": "d35dbfff175b83c13ef59cf924abfc810f7b6a158595d7417c5498ea8c7c7ed1",
+    "android/app/src/main/res/mipmap-xhdpi/ic_launcher_foreground.png": "6f88083b8166cc559102f7044688de7525287632ebe09ac45d001ac8bf4b3eae",
+    "android/app/src/main/res/mipmap-xhdpi/ic_launcher_round.png": "40911a00922868686854a4804b93fd6e56b503664696de03f450bff690affb6d",
+    "android/app/src/main/res/mipmap-xxhdpi/ic_launcher.png": "ed346eb1e3f0280f15709393705899b3ff55c20b88f4e0308006b3c33cf5fe14",
+    "android/app/src/main/res/mipmap-xxhdpi/ic_launcher_foreground.png": "4a82bc1e9923576275869998925ce0ae021a79aa18b24a0dd87ad6b61ca85053",
+    "android/app/src/main/res/mipmap-xxhdpi/ic_launcher_round.png": "1ee4cd9ff371dcb2e3938097e434f6fb8731688ed7165e61fc63693ad5b2f455",
+    "android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png": "87cb2f2ffe992652bb4fa768c73719a37b5852ab17fbf8e170e888f7a42b0761",
+    "android/app/src/main/res/mipmap-xxxhdpi/ic_launcher_foreground.png": "bd24fd383253bf8d43f0a81f11c071d76d1d555114376dd647cd9fb38fa0a9da",
+    "android/app/src/main/res/mipmap-xxxhdpi/ic_launcher_round.png": "ab93096331e7cd8ec379f73f1e9adcaaa9ee1115c9f4ff10411a811fb9700174",
+    "android/app/src/main/res/values/ic_launcher_background.xml": "cd40bafe618ff506f4088778b135cb4faa15f25e0c9b475e22d730c74b7be115",
+    "android/app/src/main/res/values/strings.xml": "39f40313208dae97935bd2dd561f06fe5a73a5f2552ab69c8b93e8b28143c87f",
+    "android/app/src/main/res/values/styles.xml": "18ebba36575e9461347ee67361b23caf095f158ee85dbefe1b83a4669ba5bd6c",
+    "android/app/src/main/res/xml/config.xml": "e9dcda493e663c5c4db9e3cb3bd968477a6e90aa8840bcbba40d72ed54b767ce",
+    "android/app/src/main/res/xml/file_paths.xml": "a46ed43ef65c90cb6778f4581decf3556e3f0055aad8f36d69dae16f9a0e99aa",
+    "android/app/src/main/java/com/casademusicacastillo/app/MainActivity.java": "a78835643dcd0cc76540a78a6c306605d4c18cda154a1bb5452c456994b240c1",
+    "android/app/src/debug/res/xml/network_security_config.xml": "7de6a45a537d185209915d04ee6237b5609ed51686a3b2b8e5ee1ac84937fa1a",
+    "android/app/src/androidTest/java/com/getcapacitor/myapp/ExampleInstrumentedTest.java": "ff50b4c110a7434312f9af54171f9e8523b015836f707c9b387b76d4c38a97f8",
+    "test/android-layout-smoke.mjs": "0a646b5d8787365a7999b8a6b16e628c9d4f5c64a09159e222950e43ab00ded1",
+    "test/android-profile-capture.mjs": "266d8fc3d1e61f6b3ecc044adc53b6d2ae51bdb65a07769015918bbb56ed4d5b",
+    "test/android-public-smoke.mjs": "e01b47eff0dace5851c4425c9df87f47d5fc522148c70282554e13c71625632b",
+    "test/check-public-api.mjs": "e479359245ff9c67f8c9d06cd939f9eb7f79c70089ecc2f5204b2a70129dbed2",
+    "test/README.md": "20f8ffe9d6abb2ce672bb39ea7b61634957d32a4a061d3bb6e8293d15d133513",
+    "test/run-white-box.mjs": "6541b67b21abb6442fa3a759e73ee4093dc11942fa80bfda4860993249c5edcd",
+    "test/verify-evidence.mjs": "a841863e616536ed512ad2b71c5a0a19a35848fed325f8309ac87c42a266130a",
+    "test/vitest.serial.config.mjs": "d8d4aa6eaa6ffb97699cc17971da32ed679320ee600f27099219f524f6f42469",
+    "test/WHITE_BOX_MATRIX.md": "5fbc172169775bd2ef1f4cc434c25580ec1cb155dc04c2e81413405816a96e2e",
+    "package.json": "7308e3410a3a2092bdb9699f11f208b147aaa8cb1f4cadcff20e22c979a4cbec",
+    "package-lock.json": "1b4033f84f9ced8eb2bbe6a4d01ac05a64ae702c09bda18366a479e97c16353e",
+    "angular.json": "02cb6164a65dae63759ef88baf6b0fc3b2f662c21097addd2f7776ec642201ed",
+    "capacitor.config.ts": "a4caf410f0b34cba7a8e3c35247caa8a9ebe6cea42a1d5dc02dad391a9d4d9cb",
+    "tsconfig.json": "d8d8b7b12662be9383da1abe9f49a9dbe533db341284eef929ce53b9c593d195",
+    "tsconfig.app.json": "a184f5fb7f000739dc69163beecad2de028802e3d89216a0351d86eb55156e45",
+    "tsconfig.spec.json": "897f6ceed3d1326d510ab42b2d5f7ded5ef65d2fbc7c871fb7cb85722711c206",
+    "android/app/build.gradle": "20014bbf7bf35b174f3c59d7eda479e00cfb1507bda04214d08a446e1a7e4e50",
+    "android/build.gradle": "46ade7db7afeb8049ccea59fce83095dca736ceb8c9acd79cc944e988c3357d9",
+    "android/variables.gradle": "83d502c9ed8fcf1dd4791482067abeedbebae49fafe9cd14a8a1f5891deb0d88"
+  },
+  "preservation": {
+    "baselinePaths": 237,
+    "missing": [],
+    "unchangedInheritedCount": 233,
+    "changedInheritedPaths": [
+      "src/app/features/checkout/connected-checkout.integration.spec.ts",
+      "src/app/features/checkout/connected-checkout.view.ts",
+      "src/app/features/profile/connected-profile.integration.spec.ts",
+      "src/app/features/profile/edit-profile/edit-profile.page.html"
+    ],
+    "baselineArchiveSha256": "d7db361c6e0e0b840524d9758cf02c4499459851f889653635fe0ef8850ec34b"
+  },
+  "git": {
+    "trackedModifiedCount": 67,
+    "untrackedCount": 218,
+    "staged": [],
+    "deleted": [],
+    "diffCheckExitCode": 0,
+    "files": [
+      {
+        "path": ".github/workflows/acceptance.yml",
+        "git": "modified tracked",
+        "category": "inherited CI configuration",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": ".github/workflows/android-build.yml",
+        "git": "modified tracked",
+        "category": "inherited CI configuration",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": ".gitignore",
+        "git": "modified tracked",
+        "category": "configuration/tooling",
+        "inherited": false,
+        "changedThisClose": true
+      },
+      {
+        "path": ".maestro/account-demo.yaml",
+        "git": "modified tracked",
+        "category": "tests",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": ".maestro/auth-demo.yaml",
+        "git": "modified tracked",
+        "category": "tests",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": ".maestro/navigation-demo.yaml",
+        "git": "modified tracked",
+        "category": "tests",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": ".maestro/purchase-demo.yaml",
+        "git": "modified tracked",
+        "category": "tests",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "angular.json",
+        "git": "modified tracked",
+        "category": "configuration/tooling",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "capacitor.config.ts",
+        "git": "modified tracked",
+        "category": "configuration/tooling",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "docs/activity4/ANDROID.md",
+        "git": "untracked",
+        "category": "evidence/documentation",
+        "inherited": false,
+        "changedThisClose": true
+      },
+      {
+        "path": "docs/activity4/ARCHITECTURE.md",
+        "git": "untracked",
+        "category": "evidence/documentation",
+        "inherited": false,
+        "changedThisClose": true
+      },
+      {
+        "path": "docs/activity4/GIT_FLOW.md",
+        "git": "untracked",
+        "category": "evidence/documentation",
+        "inherited": false,
+        "changedThisClose": true
+      },
+      {
+        "path": "docs/activity4/PUBLICATION_REVIEW.json",
+        "git": "untracked",
+        "category": "evidence/documentation",
+        "inherited": false,
+        "changedThisClose": true
+      },
+      {
+        "path": "docs/activity4/README.md",
+        "git": "untracked",
+        "category": "evidence/documentation",
+        "inherited": false,
+        "changedThisClose": true
+      },
+      {
+        "path": "docs/activity4/TRACEABILITY.json",
+        "git": "untracked",
+        "category": "evidence/documentation",
+        "inherited": false,
+        "changedThisClose": true
+      },
+      {
+        "path": "docs/activity4/VALIDATION.json",
+        "git": "untracked",
+        "category": "evidence/documentation",
+        "inherited": false,
+        "changedThisClose": true
+      },
+      {
+        "path": "docs/activity4/android/busqueda.png",
+        "git": "untracked",
+        "category": "evidence/documentation",
+        "inherited": false,
+        "changedThisClose": true
+      },
+      {
+        "path": "docs/activity4/android/cantidad.png",
+        "git": "untracked",
+        "category": "evidence/documentation",
+        "inherited": false,
+        "changedThisClose": true
+      },
+      {
+        "path": "docs/activity4/android/cart-protegido.png",
+        "git": "untracked",
+        "category": "evidence/documentation",
+        "inherited": false,
+        "changedThisClose": true
+      },
+      {
+        "path": "docs/activity4/android/catalogo.png",
+        "git": "untracked",
+        "category": "evidence/documentation",
+        "inherited": false,
+        "changedThisClose": true
+      },
+      {
+        "path": "docs/activity4/android/detalle.png",
+        "git": "untracked",
+        "category": "evidence/documentation",
+        "inherited": false,
+        "changedThisClose": true
+      },
+      {
+        "path": "docs/activity4/android/favoritos-protegidos.png",
+        "git": "untracked",
+        "category": "evidence/documentation",
+        "inherited": false,
+        "changedThisClose": true
+      },
+      {
+        "path": "docs/activity4/android/filtros.png",
+        "git": "untracked",
+        "category": "evidence/documentation",
+        "inherited": false,
+        "changedThisClose": true
+      },
+      {
+        "path": "docs/activity4/android/incidents/system-ui-anr.png",
+        "git": "untracked",
+        "category": "evidence/documentation",
+        "inherited": false,
+        "changedThisClose": true
+      },
+      {
+        "path": "docs/activity4/android/inicio.png",
+        "git": "untracked",
+        "category": "evidence/documentation",
+        "inherited": false,
+        "changedThisClose": true
+      },
+      {
+        "path": "docs/activity4/android/login.png",
+        "git": "untracked",
+        "category": "evidence/documentation",
+        "inherited": false,
+        "changedThisClose": true
+      },
+      {
+        "path": "docs/activity4/android/mostrar-contrasena.png",
+        "git": "untracked",
+        "category": "evidence/documentation",
+        "inherited": false,
+        "changedThisClose": true
+      },
+      {
+        "path": "docs/activity4/android/opiniones.png",
+        "git": "untracked",
+        "category": "evidence/documentation",
+        "inherited": false,
+        "changedThisClose": true
+      },
+      {
+        "path": "docs/activity4/android/orden.png",
+        "git": "untracked",
+        "category": "evidence/documentation",
+        "inherited": false,
+        "changedThisClose": true
+      },
+      {
+        "path": "docs/activity4/android/orders-protegido.png",
+        "git": "untracked",
+        "category": "evidence/documentation",
+        "inherited": false,
+        "changedThisClose": true
+      },
+      {
+        "path": "docs/activity4/android/pequeno-catalogo.png",
+        "git": "untracked",
+        "category": "evidence/documentation",
+        "inherited": false,
+        "changedThisClose": true
+      },
+      {
+        "path": "docs/activity4/android/pequeno-detalle.png",
+        "git": "untracked",
+        "category": "evidence/documentation",
+        "inherited": false,
+        "changedThisClose": true
+      },
+      {
+        "path": "docs/activity4/android/pequeno-login.png",
+        "git": "untracked",
+        "category": "evidence/documentation",
+        "inherited": false,
+        "changedThisClose": true
+      },
+      {
+        "path": "docs/activity4/android/profile-protegido.png",
+        "git": "untracked",
+        "category": "evidence/documentation",
+        "inherited": false,
+        "changedThisClose": true
+      },
+      {
+        "path": "docs/activity4/android/recuperacion.png",
+        "git": "untracked",
+        "category": "evidence/documentation",
+        "inherited": false,
+        "changedThisClose": true
+      },
+      {
+        "path": "docs/activity4/android/registro.png",
+        "git": "untracked",
+        "category": "evidence/documentation",
+        "inherited": false,
+        "changedThisClose": true
+      },
+      {
+        "path": "docs/activity4/android/reintento.png",
+        "git": "untracked",
+        "category": "evidence/documentation",
+        "inherited": false,
+        "changedThisClose": true
+      },
+      {
+        "path": "docs/activity4/android/restablecimiento.png",
+        "git": "untracked",
+        "category": "evidence/documentation",
+        "inherited": false,
+        "changedThisClose": true
+      },
+      {
+        "path": "docs/activity4/android/sin-conexion.png",
+        "git": "untracked",
+        "category": "evidence/documentation",
+        "inherited": false,
+        "changedThisClose": true
+      },
+      {
+        "path": "docs/activity4/android/verificacion.png",
+        "git": "untracked",
+        "category": "evidence/documentation",
+        "inherited": false,
+        "changedThisClose": true
+      },
+      {
+        "path": "docs/activity4/results/coverage-summary.json",
+        "git": "untracked",
+        "category": "evidence/documentation",
+        "inherited": false,
+        "changedThisClose": true
+      },
+      {
+        "path": "docs/activity4/results/integration-tests.xml",
+        "git": "untracked",
+        "category": "evidence/documentation",
+        "inherited": false,
+        "changedThisClose": true
+      },
+      {
+        "path": "docs/activity4/results/regression-tests.xml",
+        "git": "untracked",
+        "category": "evidence/documentation",
+        "inherited": false,
+        "changedThisClose": true
+      },
+      {
+        "path": "docs/activity4/results/unit-tests.xml",
+        "git": "untracked",
+        "category": "evidence/documentation",
+        "inherited": false,
+        "changedThisClose": true
+      },
+      {
+        "path": "docs/testing/ACTIVITY4_EVIDENCE.md",
+        "git": "untracked",
+        "category": "evidence/documentation",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "docs/testing/ACTIVITY4_SOURCE_MANIFEST.json",
+        "git": "untracked",
+        "category": "evidence/documentation",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "docs/testing/AUTH_PHASE1_MFA.md",
+        "git": "untracked",
+        "category": "evidence/documentation",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "docs/testing/COMMERCE_ISSUES_SNAPSHOT.json",
+        "git": "untracked",
+        "category": "evidence/documentation",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "docs/testing/COMMERCE_SOURCE_MANIFEST.json",
+        "git": "untracked",
+        "category": "evidence/documentation",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "docs/testing/COMMERCE_UI_REDESIGN.md",
+        "git": "untracked",
+        "category": "evidence/documentation",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "docs/testing/MOBILE_INTEGRATION_EVIDENCE.md",
+        "git": "untracked",
+        "category": "evidence/documentation",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "docs/testing/MOBILE_SOURCE_MANIFEST.json",
+        "git": "untracked",
+        "category": "evidence/documentation",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "docs/testing/PUBLIC_CATALOG_INTEGRATION.md",
+        "git": "untracked",
+        "category": "evidence/documentation",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "docs/testing/PUBLIC_CATALOG_ISSUES_SNAPSHOT.json",
+        "git": "untracked",
+        "category": "evidence/documentation",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "docs/testing/PUBLIC_CATALOG_SOURCE_MANIFEST.json",
+        "git": "untracked",
+        "category": "evidence/documentation",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "docs/testing/PUBLIC_CATALOG_TRACEABILITY.md",
+        "git": "untracked",
+        "category": "evidence/documentation",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "docs/testing/android/catalogo-real.png",
+        "git": "untracked",
+        "category": "evidence/documentation",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "docs/testing/android/catalogo-recuperado.png",
+        "git": "untracked",
+        "category": "evidence/documentation",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "docs/testing/android/detalle-producto.png",
+        "git": "untracked",
+        "category": "evidence/documentation",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "docs/testing/android/inicio-publico.png",
+        "git": "untracked",
+        "category": "evidence/documentation",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "docs/testing/android/inicio-sesion.png",
+        "git": "untracked",
+        "category": "evidence/documentation",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "docs/testing/android/login-320x568.png",
+        "git": "untracked",
+        "category": "evidence/documentation",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "docs/testing/android/login-tableta.png",
+        "git": "untracked",
+        "category": "evidence/documentation",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "docs/testing/android/recuperacion.png",
+        "git": "untracked",
+        "category": "evidence/documentation",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "docs/testing/android/registro.png",
+        "git": "untracked",
+        "category": "evidence/documentation",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "docs/testing/android/sin-conexion.png",
+        "git": "untracked",
+        "category": "evidence/documentation",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "docs/testing/android/verificacion.png",
+        "git": "untracked",
+        "category": "evidence/documentation",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "docs/testing/commerce-ui/busqueda.png",
+        "git": "untracked",
+        "category": "evidence/documentation",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "docs/testing/commerce-ui/cantidad.png",
+        "git": "untracked",
+        "category": "evidence/documentation",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "docs/testing/commerce-ui/catalogo-horizontal.png",
+        "git": "untracked",
+        "category": "evidence/documentation",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "docs/testing/commerce-ui/catalogo-pequeno.png",
+        "git": "untracked",
+        "category": "evidence/documentation",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "docs/testing/commerce-ui/catalogo-tableta.png",
+        "git": "untracked",
+        "category": "evidence/documentation",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "docs/testing/commerce-ui/catalogo.png",
+        "git": "untracked",
+        "category": "evidence/documentation",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "docs/testing/commerce-ui/detalle-pequeno.png",
+        "git": "untracked",
+        "category": "evidence/documentation",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "docs/testing/commerce-ui/detalle-tableta.png",
+        "git": "untracked",
+        "category": "evidence/documentation",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "docs/testing/commerce-ui/detalle.png",
+        "git": "untracked",
+        "category": "evidence/documentation",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "docs/testing/commerce-ui/favoritos-protegidos.png",
+        "git": "untracked",
+        "category": "evidence/documentation",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "docs/testing/commerce-ui/filtros.png",
+        "git": "untracked",
+        "category": "evidence/documentation",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "docs/testing/commerce-ui/inicio-pequeno.png",
+        "git": "untracked",
+        "category": "evidence/documentation",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "docs/testing/commerce-ui/inicio-tableta.png",
+        "git": "untracked",
+        "category": "evidence/documentation",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "docs/testing/commerce-ui/inicio.png",
+        "git": "untracked",
+        "category": "evidence/documentation",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "docs/testing/commerce-ui/login-320x568.png",
+        "git": "untracked",
+        "category": "evidence/documentation",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "docs/testing/commerce-ui/login-360x800.png",
+        "git": "untracked",
+        "category": "evidence/documentation",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "docs/testing/commerce-ui/login-393x852.png",
+        "git": "untracked",
+        "category": "evidence/documentation",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "docs/testing/commerce-ui/login-412x915.png",
+        "git": "untracked",
+        "category": "evidence/documentation",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "docs/testing/commerce-ui/login-horizontal.png",
+        "git": "untracked",
+        "category": "evidence/documentation",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "docs/testing/commerce-ui/login-tableta.png",
+        "git": "untracked",
+        "category": "evidence/documentation",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "docs/testing/commerce-ui/login-texto-ampliado.png",
+        "git": "untracked",
+        "category": "evidence/documentation",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "docs/testing/commerce-ui/login.png",
+        "git": "untracked",
+        "category": "evidence/documentation",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "docs/testing/commerce-ui/mostrar-contrasena.png",
+        "git": "untracked",
+        "category": "evidence/documentation",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "docs/testing/commerce-ui/opiniones.png",
+        "git": "untracked",
+        "category": "evidence/documentation",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "docs/testing/commerce-ui/orden.png",
+        "git": "untracked",
+        "category": "evidence/documentation",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "docs/testing/commerce-ui/recuperacion.png",
+        "git": "untracked",
+        "category": "evidence/documentation",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "docs/testing/commerce-ui/registro.png",
+        "git": "untracked",
+        "category": "evidence/documentation",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "docs/testing/commerce-ui/reintento.png",
+        "git": "untracked",
+        "category": "evidence/documentation",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "docs/testing/commerce-ui/restablecimiento.png",
+        "git": "untracked",
+        "category": "evidence/documentation",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "docs/testing/commerce-ui/sin-conexion.png",
+        "git": "untracked",
+        "category": "evidence/documentation",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "docs/testing/commerce-ui/verificacion.png",
+        "git": "untracked",
+        "category": "evidence/documentation",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "package.json",
+        "git": "modified tracked",
+        "category": "configuration/tooling",
+        "inherited": false,
+        "changedThisClose": true
+      },
+      {
+        "path": "src/app/app.routes.integration.spec.ts",
+        "git": "modified tracked",
+        "category": "tests",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/app.routes.ts",
+        "git": "modified tracked",
+        "category": "application",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/core/api/api-client.service.ts",
+        "git": "modified tracked",
+        "category": "application",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/core/api/api-error-message.spec.ts",
+        "git": "untracked",
+        "category": "tests",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/core/api/api-error-message.ts",
+        "git": "untracked",
+        "category": "application",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/core/api/api-error.spec.ts",
+        "git": "untracked",
+        "category": "tests",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/core/api/api-error.ts",
+        "git": "modified tracked",
+        "category": "application",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/core/api/auth.testing.ts",
+        "git": "untracked",
+        "category": "application",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/core/api/auth.validation.spec.ts",
+        "git": "untracked",
+        "category": "tests",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/core/api/auth.validation.ts",
+        "git": "untracked",
+        "category": "application",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/core/api/cart.validation.spec.ts",
+        "git": "untracked",
+        "category": "tests",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/core/api/cart.validation.ts",
+        "git": "untracked",
+        "category": "application",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/core/api/checkout.validation.spec.ts",
+        "git": "untracked",
+        "category": "tests",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/core/api/checkout.validation.ts",
+        "git": "untracked",
+        "category": "application",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/core/api/order.validation.spec.ts",
+        "git": "untracked",
+        "category": "tests",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/core/api/order.validation.ts",
+        "git": "untracked",
+        "category": "application",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/core/api/profile.validation.spec.ts",
+        "git": "untracked",
+        "category": "tests",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/core/api/profile.validation.ts",
+        "git": "untracked",
+        "category": "application",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/core/api/public-catalog.dto.ts",
+        "git": "untracked",
+        "category": "application",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/core/api/public-catalog.testing.ts",
+        "git": "untracked",
+        "category": "application",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/core/api/public-catalog.validation.spec.ts",
+        "git": "untracked",
+        "category": "tests",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/core/api/public-catalog.validation.ts",
+        "git": "untracked",
+        "category": "application",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/core/api/public-category.model.ts",
+        "git": "modified tracked",
+        "category": "application",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/core/api/public-product.mapper.ts",
+        "git": "untracked",
+        "category": "application",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/core/config/backend-session.token.ts",
+        "git": "untracked",
+        "category": "application",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/core/factories/demo-order.factory.spec.ts",
+        "git": "untracked",
+        "category": "tests",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/core/factories/demo-order.factory.ts",
+        "git": "untracked",
+        "category": "application",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/core/infrastructure/demo-catalog.data.ts",
+        "git": "untracked",
+        "category": "application",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/core/infrastructure/demo-orders.data.ts",
+        "git": "untracked",
+        "category": "application",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/core/infrastructure/http-account-security.repository.spec.ts",
+        "git": "untracked",
+        "category": "tests",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/core/infrastructure/http-account-security.repository.ts",
+        "git": "untracked",
+        "category": "application",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/core/infrastructure/http-auth.repository.spec.ts",
+        "git": "untracked",
+        "category": "tests",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/core/infrastructure/http-auth.repository.ts",
+        "git": "untracked",
+        "category": "application",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/core/infrastructure/http-cart.repository.ts",
+        "git": "untracked",
+        "category": "application",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/core/infrastructure/http-checkout.repository.ts",
+        "git": "untracked",
+        "category": "application",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/core/infrastructure/http-profile.repository.ts",
+        "git": "untracked",
+        "category": "application",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/core/infrastructure/http-public-catalog.repository.spec.ts",
+        "git": "untracked",
+        "category": "tests",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/core/infrastructure/http-public-catalog.repository.ts",
+        "git": "untracked",
+        "category": "application",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/core/infrastructure/http-real-order.repository.ts",
+        "git": "untracked",
+        "category": "application",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/core/infrastructure/http-review.repository.ts",
+        "git": "untracked",
+        "category": "application",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/core/infrastructure/http-wishlist.repository.ts",
+        "git": "untracked",
+        "category": "application",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/core/infrastructure/in-memory-demo-order.repository.spec.ts",
+        "git": "untracked",
+        "category": "tests",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/core/infrastructure/in-memory-demo-order.repository.ts",
+        "git": "untracked",
+        "category": "application",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/core/infrastructure/memory-session.store.ts",
+        "git": "untracked",
+        "category": "application",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/core/models/auth.model.ts",
+        "git": "untracked",
+        "category": "application",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/core/models/cart.model.ts",
+        "git": "untracked",
+        "category": "application",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/core/models/catalog.model.ts",
+        "git": "untracked",
+        "category": "application",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/core/models/order.model.ts",
+        "git": "untracked",
+        "category": "application",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/core/models/profile.model.ts",
+        "git": "untracked",
+        "category": "application",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/core/models/public-product.model.ts",
+        "git": "untracked",
+        "category": "application",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/core/models/real-checkout.model.ts",
+        "git": "untracked",
+        "category": "application",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/core/models/wishlist.model.ts",
+        "git": "untracked",
+        "category": "application",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/core/repositories/auth.repository.ts",
+        "git": "untracked",
+        "category": "application",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/core/repositories/cart.repository.ts",
+        "git": "untracked",
+        "category": "application",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/core/repositories/checkout.repository.ts",
+        "git": "untracked",
+        "category": "application",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/core/repositories/demo-order.repository.ts",
+        "git": "untracked",
+        "category": "application",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/core/repositories/profile.repository.ts",
+        "git": "untracked",
+        "category": "application",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/core/repositories/public-catalog.repository.ts",
+        "git": "untracked",
+        "category": "application",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/core/repositories/real-order.repository.ts",
+        "git": "untracked",
+        "category": "application",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/core/repositories/review.repository.ts",
+        "git": "untracked",
+        "category": "application",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/core/repositories/wishlist.repository.ts",
+        "git": "untracked",
+        "category": "application",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/core/security/auth.guard.ts",
+        "git": "untracked",
+        "category": "application",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/core/security/auth.interceptor.ts",
+        "git": "untracked",
+        "category": "application",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/core/security/jwt.util.spec.ts",
+        "git": "untracked",
+        "category": "tests",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/core/security/jwt.util.ts",
+        "git": "untracked",
+        "category": "application",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/core/security/session-security.integration.spec.ts",
+        "git": "untracked",
+        "category": "tests",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/core/security/session-store.token.ts",
+        "git": "untracked",
+        "category": "application",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/core/services/auth.service.spec.ts",
+        "git": "untracked",
+        "category": "tests",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/core/services/auth.service.ts",
+        "git": "untracked",
+        "category": "application",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/core/services/cart.service.spec.ts",
+        "git": "untracked",
+        "category": "tests",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/core/services/cart.service.ts",
+        "git": "untracked",
+        "category": "application",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/core/services/checkout-quote-state.service.spec.ts",
+        "git": "untracked",
+        "category": "tests",
+        "inherited": false,
+        "changedThisClose": true
+      },
+      {
+        "path": "src/app/core/services/checkout-quote-state.service.ts",
+        "git": "untracked",
+        "category": "application",
+        "inherited": false,
+        "changedThisClose": true
+      },
+      {
+        "path": "src/app/core/services/demo-account-state.service.ts",
+        "git": "modified tracked",
+        "category": "application",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/core/services/demo-catalog.service.ts",
+        "git": "untracked",
+        "category": "application",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/core/services/demo-checkout-state.service.ts",
+        "git": "modified tracked",
+        "category": "application",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/core/services/demo-purchase.spec.ts",
+        "git": "untracked",
+        "category": "tests",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/core/services/order-detail.service.ts",
+        "git": "modified tracked",
+        "category": "application",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/core/services/orders.service.ts",
+        "git": "modified tracked",
+        "category": "application",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/core/services/public-catalog.service.spec.ts",
+        "git": "untracked",
+        "category": "tests",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/core/services/public-catalog.service.ts",
+        "git": "untracked",
+        "category": "application",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/core/services/purchase-intent.service.ts",
+        "git": "untracked",
+        "category": "application",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/core/validation/auth-fields.validation.spec.ts",
+        "git": "untracked",
+        "category": "tests",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/core/validation/auth-fields.validation.ts",
+        "git": "untracked",
+        "category": "application",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/features/auth/connected/connected-auth.integration.spec.ts",
+        "git": "untracked",
+        "category": "tests",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/features/auth/connected/connected-forgot-password.page.html",
+        "git": "untracked",
+        "category": "application",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/features/auth/connected/connected-forgot-password.page.ts",
+        "git": "untracked",
+        "category": "application",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/features/auth/connected/connected-login.page.html",
+        "git": "untracked",
+        "category": "application",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/features/auth/connected/connected-login.page.ts",
+        "git": "untracked",
+        "category": "application",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/features/auth/connected/connected-register.page.html",
+        "git": "untracked",
+        "category": "application",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/features/auth/connected/connected-register.page.ts",
+        "git": "untracked",
+        "category": "application",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/features/auth/connected/verify-email.page.html",
+        "git": "untracked",
+        "category": "application",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/features/auth/connected/verify-email.page.ts",
+        "git": "untracked",
+        "category": "application",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/features/auth/forgot-password/forgot-password.page.html",
+        "git": "modified tracked",
+        "category": "application",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/features/auth/forgot-password/forgot-password.page.scss",
+        "git": "modified tracked",
+        "category": "application",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/features/auth/forgot-password/forgot-password.page.ts",
+        "git": "modified tracked",
+        "category": "application",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/features/auth/login/login.page.html",
+        "git": "modified tracked",
+        "category": "application",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/features/auth/login/login.page.scss",
+        "git": "modified tracked",
+        "category": "application",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/features/auth/login/login.page.ts",
+        "git": "modified tracked",
+        "category": "application",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/features/auth/register/register.page.html",
+        "git": "modified tracked",
+        "category": "application",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/features/auth/register/register.page.scss",
+        "git": "modified tracked",
+        "category": "application",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/features/auth/register/register.page.ts",
+        "git": "modified tracked",
+        "category": "application",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/features/cart/cart.page.html",
+        "git": "modified tracked",
+        "category": "application",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/features/cart/cart.page.ts",
+        "git": "modified tracked",
+        "category": "application",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/features/cart/connected-cart.integration.spec.ts",
+        "git": "untracked",
+        "category": "tests",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/features/cart/connected-cart.view.ts",
+        "git": "untracked",
+        "category": "application",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/features/catalog/catalog-demo.data.ts",
+        "git": "modified tracked",
+        "category": "application",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/features/catalog/catalog.page.html",
+        "git": "modified tracked",
+        "category": "application",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/features/catalog/catalog.page.scss",
+        "git": "modified tracked",
+        "category": "application",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/features/catalog/catalog.page.ts",
+        "git": "modified tracked",
+        "category": "application",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/features/catalog/product-detail/product-detail.page.ts",
+        "git": "modified tracked",
+        "category": "application",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/features/checkout/checkout-summary/checkout-summary.page.html",
+        "git": "modified tracked",
+        "category": "application",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/features/checkout/checkout-summary/checkout-summary.page.ts",
+        "git": "modified tracked",
+        "category": "application",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/features/checkout/confirmation/confirmation.page.html",
+        "git": "modified tracked",
+        "category": "application",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/features/checkout/confirmation/confirmation.page.ts",
+        "git": "modified tracked",
+        "category": "application",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/features/checkout/connected-checkout.integration.spec.ts",
+        "git": "untracked",
+        "category": "tests",
+        "inherited": true,
+        "changedThisClose": true
+      },
+      {
+        "path": "src/app/features/checkout/connected-checkout.view.ts",
+        "git": "untracked",
+        "category": "application",
+        "inherited": true,
+        "changedThisClose": true
+      },
+      {
+        "path": "src/app/features/checkout/delivery-method/delivery-method.page.html",
+        "git": "modified tracked",
+        "category": "application",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/features/checkout/payment-method/payment-method.page.html",
+        "git": "modified tracked",
+        "category": "application",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/features/checkout/payment-method/payment-method.page.ts",
+        "git": "modified tracked",
+        "category": "application",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/features/demo-purchase.integration.spec.ts",
+        "git": "untracked",
+        "category": "tests",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/features/favorites/connected-favorites.integration.spec.ts",
+        "git": "untracked",
+        "category": "tests",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/features/favorites/connected-favorites.view.ts",
+        "git": "untracked",
+        "category": "application",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/features/favorites/favorites.page.ts",
+        "git": "modified tracked",
+        "category": "application",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/features/home/home.page.html",
+        "git": "modified tracked",
+        "category": "application",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/features/home/home.page.ts",
+        "git": "modified tracked",
+        "category": "application",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/features/orders/connected-orders.integration.spec.ts",
+        "git": "untracked",
+        "category": "tests",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/features/orders/connected-orders.view.ts",
+        "git": "untracked",
+        "category": "application",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/features/orders/order-detail/connected-order-detail.view.ts",
+        "git": "untracked",
+        "category": "application",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/features/orders/order-detail/order-detail.page.html",
+        "git": "modified tracked",
+        "category": "application",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/features/orders/order-detail/order-detail.page.ts",
+        "git": "modified tracked",
+        "category": "application",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/features/orders/orders.page.html",
+        "git": "modified tracked",
+        "category": "application",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/features/orders/orders.page.ts",
+        "git": "modified tracked",
+        "category": "application",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/features/profile/account-security.page.spec.ts",
+        "git": "untracked",
+        "category": "tests",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/features/profile/account-security.page.ts",
+        "git": "untracked",
+        "category": "application",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/features/profile/connected-profile.integration.spec.ts",
+        "git": "untracked",
+        "category": "tests",
+        "inherited": true,
+        "changedThisClose": true
+      },
+      {
+        "path": "src/app/features/profile/connected-profile.view.ts",
+        "git": "untracked",
+        "category": "application",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/features/profile/edit-profile/edit-profile.page.html",
+        "git": "modified tracked",
+        "category": "application",
+        "inherited": true,
+        "changedThisClose": true
+      },
+      {
+        "path": "src/app/features/profile/edit-profile/edit-profile.page.ts",
+        "git": "modified tracked",
+        "category": "application",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/features/profile/profile.page.html",
+        "git": "modified tracked",
+        "category": "application",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/features/profile/profile.page.ts",
+        "git": "modified tracked",
+        "category": "application",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/features/public-catalog/commerce-experience.integration.spec.ts",
+        "git": "untracked",
+        "category": "tests",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/features/public-catalog/product-reviews.component.html",
+        "git": "untracked",
+        "category": "application",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/features/public-catalog/product-reviews.component.ts",
+        "git": "untracked",
+        "category": "application",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/features/public-catalog/public-catalog.integration.spec.ts",
+        "git": "untracked",
+        "category": "tests",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/features/public-catalog/public-catalog.view.html",
+        "git": "untracked",
+        "category": "application",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/features/public-catalog/public-catalog.view.scss",
+        "git": "untracked",
+        "category": "application",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/features/public-catalog/public-catalog.view.ts",
+        "git": "untracked",
+        "category": "application",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/features/public-catalog/public-home.view.html",
+        "git": "untracked",
+        "category": "application",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/features/public-catalog/public-home.view.scss",
+        "git": "untracked",
+        "category": "application",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/features/public-catalog/public-home.view.ts",
+        "git": "untracked",
+        "category": "application",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/features/public-catalog/public-product-detail.view.html",
+        "git": "untracked",
+        "category": "application",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/features/public-catalog/public-product-detail.view.scss",
+        "git": "untracked",
+        "category": "application",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/features/public-catalog/public-product-detail.view.ts",
+        "git": "untracked",
+        "category": "application",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/features/public-catalog/public-product-grid.component.scss",
+        "git": "untracked",
+        "category": "application",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/features/public-catalog/public-product-grid.component.ts",
+        "git": "untracked",
+        "category": "application",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/features/splash/splash.page.spec.ts",
+        "git": "modified tracked",
+        "category": "tests",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/features/splash/splash.page.ts",
+        "git": "modified tracked",
+        "category": "application",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/layout/main-navigation/main-navigation.component.scss",
+        "git": "modified tracked",
+        "category": "application",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/layout/main-navigation/main-navigation.component.ts",
+        "git": "modified tracked",
+        "category": "application",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/shared/ui/commerce-controls.spec.ts",
+        "git": "untracked",
+        "category": "tests",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/shared/ui/icon/cmc-icon.component.ts",
+        "git": "untracked",
+        "category": "application",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/shared/ui/input/cmc-input.component.html",
+        "git": "modified tracked",
+        "category": "application",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/shared/ui/input/cmc-input.component.scss",
+        "git": "modified tracked",
+        "category": "application",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/shared/ui/input/cmc-input.component.ts",
+        "git": "modified tracked",
+        "category": "application",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/shared/ui/money/cmc-money.pipe.ts",
+        "git": "untracked",
+        "category": "application",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/shared/ui/quantity/cmc-quantity.component.ts",
+        "git": "untracked",
+        "category": "application",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/shared/ui/styles/_auth-shell.scss",
+        "git": "untracked",
+        "category": "application",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/app/shared/ui/styles/_commerce.scss",
+        "git": "untracked",
+        "category": "application",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/environments/environment.demo.ts",
+        "git": "untracked",
+        "category": "application",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/environments/environment.prod.ts",
+        "git": "modified tracked",
+        "category": "application",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/environments/environment.ts",
+        "git": "modified tracked",
+        "category": "application",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/global.scss",
+        "git": "modified tracked",
+        "category": "application",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/index.html",
+        "git": "modified tracked",
+        "category": "application",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/main.ts",
+        "git": "modified tracked",
+        "category": "application",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/test-setup.ts",
+        "git": "modified tracked",
+        "category": "application",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "src/theme/variables.scss",
+        "git": "modified tracked",
+        "category": "application",
+        "inherited": true,
+        "changedThisClose": false
+      },
+      {
+        "path": "test/README.md",
+        "git": "untracked",
+        "category": "tests",
+        "inherited": false,
+        "changedThisClose": true
+      },
+      {
+        "path": "test/WHITE_BOX_MATRIX.md",
+        "git": "untracked",
+        "category": "tests",
+        "inherited": false,
+        "changedThisClose": true
+      },
+      {
+        "path": "test/android-layout-smoke.mjs",
+        "git": "untracked",
+        "category": "tests",
+        "inherited": false,
+        "changedThisClose": true
+      },
+      {
+        "path": "test/android-profile-capture.mjs",
+        "git": "untracked",
+        "category": "tests",
+        "inherited": false,
+        "changedThisClose": true
+      },
+      {
+        "path": "test/android-public-smoke.mjs",
+        "git": "untracked",
+        "category": "tests",
+        "inherited": false,
+        "changedThisClose": true
+      },
+      {
+        "path": "test/check-public-api.mjs",
+        "git": "untracked",
+        "category": "tests",
+        "inherited": false,
+        "changedThisClose": true
+      },
+      {
+        "path": "test/run-white-box.mjs",
+        "git": "untracked",
+        "category": "tests",
+        "inherited": false,
+        "changedThisClose": true
+      },
+      {
+        "path": "test/verify-evidence.mjs",
+        "git": "untracked",
+        "category": "tests",
+        "inherited": false,
+        "changedThisClose": true
+      },
+      {
+        "path": "test/vitest.serial.config.mjs",
+        "git": "untracked",
+        "category": "tests",
+        "inherited": false,
+        "changedThisClose": true
+      }
+    ]
+  },
+  "publication": {
+    "decision": "blocked: overlapping changes require joint review",
+    "newCommits": [],
+    "newDraftPr": null,
+    "ciForIncrement": "not executed",
+    "review": "docs/activity4/PUBLICATION_REVIEW.json",
+    "remoteProjectMutations": false
+  },
+  "secretSignatureScan": {
+    "scannedChangedPaths": 285,
+    "findings": [],
+    "scope": "selected credential/private-key signatures in changed text files; not an exhaustive security certification"
+  },
+  "tests": {
+    "tests": {
+      "passed": 587,
+      "log": "reports/activity4-close/tests.log",
+      "sha256": "ff18f18b5f1ffdadab5b64a2025d54720f1d42e0b8bd0db995d1aa087ddc3642"
+    },
+    "coverage": {
+      "passed": 587,
+      "log": "reports/activity4-close/coverage.log",
+      "sha256": "e0144e4df4a46bfc9228f1179b0abbda77681f36c3da5d884653d656b35f19d1"
+    },
+    "integration": {
+      "passed": 168,
+      "log": "reports/activity4-close/integration.log",
+      "sha256": "f51dbb62ab36a4715905ebca0a56b39c54ef9d895470e5973b7f8c646639ba6a"
+    },
+    "regression": {
+      "passed": 154,
+      "log": "reports/activity4-close/regression.log",
+      "sha256": "3a980fa6e592801f296c7e715e827b4a20560fe921651b89734b5099b723016c"
+    },
+    "white-box": {
+      "passed": 122,
+      "log": "reports/activity4-close/white-box.log",
+      "sha256": "f1bd3bed7e54b7a3034c53b4717a157a9953e371e316fd0ba0f5488ab1f3e69a"
+    }
+  },
+  "coverage": {
+    "lines": {
+      "total": 2183,
+      "covered": 2137,
+      "skipped": 0,
+      "pct": 97.89
+    },
+    "statements": {
+      "total": 3650,
+      "covered": 3498,
+      "skipped": 0,
+      "pct": 95.83
+    },
+    "functions": {
+      "total": 894,
+      "covered": 841,
+      "skipped": 0,
+      "pct": 94.07
+    },
+    "branches": {
+      "total": 2232,
+      "covered": 2095,
+      "skipped": 0,
+      "pct": 93.86
+    },
+    "branchesTrue": {
+      "total": 0,
+      "covered": 0,
+      "skipped": 0,
+      "pct": 100
+    }
+  },
+  "coverageNotReduced": true,
+  "validation": {
+    "lint": "passed",
+    "angularDevelopment": "passed",
+    "angularProduction": "passed",
+    "productionCssWarnings": 9,
+    "capacitorSync": "passed",
+    "gradleDebug": "passed",
+    "releaseManifest": {
+      "debuggable": "false",
+      "cleartext": "not set; target SDK default denies",
+      "networkSecurityConfig": "none"
+    },
+    "releaseApkExecuted": false
+  },
+  "apk": {
+    "path": "android/app/build/outputs/apk/debug/app-debug.apk",
+    "deliveryCopy": "docs/activity4/artifacts/app-debug.apk",
+    "sha256": "85694c4fa0b1e72a16eab636b3e2ab566cd65f52bdc27bf3927949057f53db64",
+    "installedSha256": "85694c4fa0b1e72a16eab636b3e2ab566cd65f52bdc27bf3927949057f53db64",
+    "installedMatches": true,
+    "webAssetFilesChecked": 293,
+    "webAssetMismatches": [],
+    "packageMetadata": "    flags=0x0\n    versionCode=1 minSdk=24 targetSdk=36\n    versionName=1.0\n    flags=[ DEBUGGABLE HAS_CODE ALLOW_CLEAR_USER_DATA ALLOW_BACKUP ]\n    privateFlags=[ PRIVATE_FLAG_ACTIVITIES_RESIZE_MODE_RESIZEABLE_VIA_SDK_VERSION ALLOW_AUDIO_PLAYBACK_CAPTURE PRIVATE_FLAG_ALLOW_NATIVE_HEAP_POINTER_TAGGING ]\n    lastUpdateTime=2026-10-29 14:21:52\n    pkgFlags=[ DEBUGGABLE HAS_CODE ALLOW_CLEAR_USER_DATA ALLOW_BACKUP ]\n    privatePkgFlags=[ PRIVATE_FLAG_ACTIVITIES_RESIZE_MODE_RESIZEABLE_VIA_SDK_VERSION ALLOW_AUDIO_PLAYBACK_CAPTURE PRIVATE_FLAG_ALLOW_NATIVE_HEAP_POINTER_TAGGING ]\n    User 0: ceDataInode=566796 deDataInode=402071 installed=true hidden=false suspended=false distractionFlags=0 stopped=false notLaunched=false enabled=0 instant=false virtual=false quarantined=false\n",
+    "device": "emulator-5554 Pixel_8_API_36"
+  },
+  "android": {
+    "publicJourney": {
+      "status": "passed",
+      "observations": [
+        {
+          "name": "inicio",
+          "route": "/main/home",
+          "returnUrl": null,
+          "viewport": {
+            "width": 411,
+            "height": 914,
+            "dpr": 2.625
+          },
+          "documentWidth": 411,
+          "safeArea": {
+            "top": "50px",
+            "bottom": "24px"
+          },
+          "headings": [
+            "Casa de Música Castillo",
+            "Tu próxima historiaempieza con música.",
+            "Explorar por categoría",
+            "Destacados disponibles",
+            "Jarana Huasteca Premium Modelo 8",
+            "Jarana Huasteca Premium Modelo 6",
+            "Quinta Huapanguera Premium Modelo 6",
+            "Quinta Huapanguera Premium Modelo 2",
+            "Novedades",
+            "Producto prueba 2"
+          ],
+          "fields": [
+            {
+              "type": "search",
+              "fontSize": "16px",
+              "width": 264.3095397949219
+            }
+          ],
+          "scrollers": [
+            {
+              "width": 411,
+              "scrollWidth": 411,
+              "height": 800,
+              "scrollHeight": 2564,
+              "scrollTop": 0
+            }
+          ],
+          "publicRequests": [
+            {
+              "url": "http://10.0.2.2:8080/api/public/categories/active",
+              "status": 200,
+              "duration": 771.4000000059605
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/products/latest",
+              "status": 200,
+              "duration": 1286
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/products/featured?page=0&size=6",
+              "status": 200,
+              "duration": 1282.6000000089407
+            }
+          ]
+        },
+        {
+          "name": "catalogo",
+          "route": "/main/catalog",
+          "returnUrl": null,
+          "viewport": {
+            "width": 411,
+            "height": 914,
+            "dpr": 2.625
+          },
+          "documentWidth": 411,
+          "safeArea": {
+            "top": "50px",
+            "bottom": "24px"
+          },
+          "headings": [
+            "Catálogo",
+            "Jarana Huasteca Premium Modelo 8",
+            "Jarana Huasteca Premium Modelo 6",
+            "Jarana Huasteca Semi-Profesional Modelo 10",
+            "Jarana Huasteca Artesanal Modelo 9",
+            "Jarana Huasteca Semi-Profesional Modelo 7",
+            "Jarana Huasteca Semi-Profesional Modelo 5",
+            "Jarana Huasteca Artesanal Modelo 4",
+            "Jarana Huasteca Artesanal Modelo 3",
+            "Jarana Huasteca Artesanal Modelo 2",
+            "Jarana Huasteca Artesanal Modelo 1",
+            "Jarana Huasteca de Cedro Fileteada",
+            "Jarana Huasteca Económica de Pino"
+          ],
+          "fields": [
+            {
+              "type": "search",
+              "fontSize": "16px",
+              "width": 322.3095397949219
+            }
+          ],
+          "scrollers": [
+            {
+              "width": 411,
+              "scrollWidth": 411,
+              "height": 800,
+              "scrollHeight": 2880,
+              "scrollTop": 0
+            }
+          ],
+          "publicRequests": [
+            {
+              "url": "http://10.0.2.2:8080/api/public/categories/active",
+              "status": 200,
+              "duration": 771.4000000059605
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/products/latest",
+              "status": 200,
+              "duration": 1286
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/products/featured?page=0&size=6",
+              "status": 200,
+              "duration": 1282.6000000089407
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/categories/active",
+              "status": 200,
+              "duration": 22.100000008940697
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/products/catalog?page=0&size=12&categoryId=20&sortBy=featured",
+              "status": 200,
+              "duration": 60.400000005960464
+            }
+          ]
+        },
+        {
+          "name": "filtros",
+          "route": "/main/catalog",
+          "returnUrl": null,
+          "viewport": {
+            "width": 411,
+            "height": 914,
+            "dpr": 2.625
+          },
+          "documentWidth": 411,
+          "safeArea": {
+            "top": "50px",
+            "bottom": "24px"
+          },
+          "headings": [
+            "Catálogo",
+            "Jarana Huasteca Premium Modelo 8",
+            "Jarana Huasteca Premium Modelo 6",
+            "Jarana Huasteca Semi-Profesional Modelo 10",
+            "Jarana Huasteca Artesanal Modelo 9",
+            "Jarana Huasteca Semi-Profesional Modelo 7",
+            "Jarana Huasteca Semi-Profesional Modelo 5",
+            "Jarana Huasteca Artesanal Modelo 4",
+            "Jarana Huasteca Artesanal Modelo 3",
+            "Jarana Huasteca Artesanal Modelo 2",
+            "Jarana Huasteca Artesanal Modelo 1",
+            "Jarana Huasteca de Cedro Fileteada",
+            "Jarana Huasteca Económica de Pino"
+          ],
+          "fields": [
+            {
+              "type": "search",
+              "fontSize": "16px",
+              "width": 322.3095397949219
+            },
+            {
+              "type": "radio",
+              "fontSize": "16px",
+              "width": 20
+            },
+            {
+              "type": "radio",
+              "fontSize": "16px",
+              "width": 20
+            },
+            {
+              "type": "radio",
+              "fontSize": "16px",
+              "width": 20
+            },
+            {
+              "type": "radio",
+              "fontSize": "16px",
+              "width": 20
+            },
+            {
+              "type": "radio",
+              "fontSize": "16px",
+              "width": 20
+            },
+            {
+              "type": "radio",
+              "fontSize": "16px",
+              "width": 20
+            },
+            {
+              "type": "radio",
+              "fontSize": "16px",
+              "width": 20
+            },
+            {
+              "type": "radio",
+              "fontSize": "16px",
+              "width": 20
+            },
+            {
+              "type": "radio",
+              "fontSize": "16px",
+              "width": 20
+            },
+            {
+              "type": "radio",
+              "fontSize": "16px",
+              "width": 20
+            },
+            {
+              "type": "radio",
+              "fontSize": "16px",
+              "width": 20
+            },
+            {
+              "type": "radio",
+              "fontSize": "16px",
+              "width": 20
+            },
+            {
+              "type": "radio",
+              "fontSize": "16px",
+              "width": 20
+            },
+            {
+              "type": "radio",
+              "fontSize": "16px",
+              "width": 20
+            },
+            {
+              "type": "radio",
+              "fontSize": "16px",
+              "width": 20
+            }
+          ],
+          "scrollers": [
+            {
+              "width": 411,
+              "scrollWidth": 411,
+              "height": 800,
+              "scrollHeight": 2880,
+              "scrollTop": 0
+            },
+            {
+              "width": 411,
+              "scrollWidth": 411,
+              "height": 798,
+              "scrollHeight": 1060,
+              "scrollTop": 0
+            }
+          ],
+          "publicRequests": [
+            {
+              "url": "http://10.0.2.2:8080/api/public/categories/active",
+              "status": 200,
+              "duration": 771.4000000059605
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/products/latest",
+              "status": 200,
+              "duration": 1286
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/products/featured?page=0&size=6",
+              "status": 200,
+              "duration": 1282.6000000089407
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/categories/active",
+              "status": 200,
+              "duration": 22.100000008940697
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/products/catalog?page=0&size=12&categoryId=20&sortBy=featured",
+              "status": 200,
+              "duration": 60.400000005960464
+            }
+          ]
+        },
+        {
+          "name": "orden",
+          "route": "/main/catalog",
+          "returnUrl": null,
+          "viewport": {
+            "width": 411,
+            "height": 914,
+            "dpr": 2.625
+          },
+          "documentWidth": 411,
+          "safeArea": {
+            "top": "50px",
+            "bottom": "24px"
+          },
+          "headings": [
+            "Catálogo",
+            "Jarana Huasteca Económica de Pino",
+            "Jarana Huasteca de Cedro (Chica)",
+            "Jarana Huasteca de Cedro (Mediana)",
+            "Jarana Huasteca de Cedro (Grande)",
+            "Jarana Huasteca de Caoba (Mediana)",
+            "Jarana Huasteca de Palo Escrito (Chica)",
+            "Jarana Huasteca de Cedro Fileteada",
+            "Jarana Huasteca de Palo Escrito (Grande)",
+            "Jarana Huasteca Artesanal Modelo 3",
+            "Jarana Huasteca Artesanal Modelo 1",
+            "Jarana Huasteca Artesanal Modelo 4",
+            "Jarana Huasteca Artesanal Modelo 2"
+          ],
+          "fields": [
+            {
+              "type": "search",
+              "fontSize": "16px",
+              "width": 322.3095397949219
+            }
+          ],
+          "scrollers": [
+            {
+              "width": 411,
+              "scrollWidth": 411,
+              "height": 800,
+              "scrollHeight": 2857,
+              "scrollTop": 0
+            }
+          ],
+          "publicRequests": [
+            {
+              "url": "http://10.0.2.2:8080/api/public/categories/active",
+              "status": 200,
+              "duration": 771.4000000059605
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/products/latest",
+              "status": 200,
+              "duration": 1286
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/products/featured?page=0&size=6",
+              "status": 200,
+              "duration": 1282.6000000089407
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/categories/active",
+              "status": 200,
+              "duration": 22.100000008940697
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/products/catalog?page=0&size=12&categoryId=20&sortBy=featured",
+              "status": 200,
+              "duration": 60.400000005960464
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/products/catalog?page=0&size=12&categoryId=20&sortBy=price_asc",
+              "status": 200,
+              "duration": 55.80000001192093
+            }
+          ]
+        },
+        {
+          "name": "busqueda",
+          "route": "/main/catalog",
+          "returnUrl": null,
+          "viewport": {
+            "width": 411,
+            "height": 914,
+            "dpr": 2.625
+          },
+          "documentWidth": 411,
+          "safeArea": {
+            "top": "50px",
+            "bottom": "24px"
+          },
+          "headings": [
+            "Catálogo",
+            "Jarana Huasteca Premium Modelo 8",
+            "Jarana Huasteca Premium Modelo 6",
+            "Jarana Huasteca Semi-Profesional Modelo 10",
+            "Jarana Huasteca Semi-Profesional Modelo 7",
+            "Jarana Huasteca Semi-Profesional Modelo 5",
+            "Jarana Huasteca Artesanal Modelo 4",
+            "Jarana Huasteca Artesanal Modelo 2",
+            "Jarana Huasteca Artesanal Modelo 1",
+            "Jarana Huasteca de Cedro Fileteada",
+            "Jarana Huasteca Económica de Pino",
+            "Jarana Huasteca de Caoba (Mediana)",
+            "Jarana Huasteca de Palo Escrito (Grande)"
+          ],
+          "fields": [
+            {
+              "type": "search",
+              "fontSize": "16px",
+              "width": 264.3095397949219
+            }
+          ],
+          "scrollers": [
+            {
+              "width": 411,
+              "scrollWidth": 411,
+              "height": 800,
+              "scrollHeight": 2925,
+              "scrollTop": 0
+            }
+          ],
+          "publicRequests": [
+            {
+              "url": "http://10.0.2.2:8080/api/public/categories/active",
+              "status": 200,
+              "duration": 771.4000000059605
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/products/latest",
+              "status": 200,
+              "duration": 1286
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/products/featured?page=0&size=6",
+              "status": 200,
+              "duration": 1282.6000000089407
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/categories/active",
+              "status": 200,
+              "duration": 22.100000008940697
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/products/catalog?page=0&size=12&categoryId=20&sortBy=featured",
+              "status": 200,
+              "duration": 60.400000005960464
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/products/catalog?page=0&size=12&categoryId=20&sortBy=price_asc",
+              "status": 200,
+              "duration": 55.80000001192093
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/products/catalog?page=0&size=12&keyword=J&categoryId=20&sortBy=featured",
+              "status": 200,
+              "duration": 83.3999999910593
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/products/catalog?page=0&size=12&keyword=Ja&categoryId=20&sortBy=featured",
+              "status": 200,
+              "duration": 76.59999999403954
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/products/catalog?page=0&size=12&keyword=Jarana&categoryId=20&sortBy=featured",
+              "status": 200,
+              "duration": 45.69999998807907
+            }
+          ]
+        },
+        {
+          "name": "detalle",
+          "route": "/products/313",
+          "returnUrl": null,
+          "viewport": {
+            "width": 411,
+            "height": 914,
+            "dpr": 2.625
+          },
+          "documentWidth": 411,
+          "safeArea": {
+            "top": "50px",
+            "bottom": "24px"
+          },
+          "headings": [
+            "Jarana Huasteca Premium Modelo 8",
+            "Descripción",
+            "Especificaciones",
+            "Opiniones de clientes"
+          ],
+          "fields": [],
+          "scrollers": [
+            {
+              "width": 411,
+              "scrollWidth": 411,
+              "height": 808,
+              "scrollHeight": 1708,
+              "scrollTop": 0
+            }
+          ],
+          "publicRequests": [
+            {
+              "url": "http://10.0.2.2:8080/api/public/categories/active",
+              "status": 200,
+              "duration": 771.4000000059605
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/products/latest",
+              "status": 200,
+              "duration": 1286
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/products/featured?page=0&size=6",
+              "status": 200,
+              "duration": 1282.6000000089407
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/categories/active",
+              "status": 200,
+              "duration": 22.100000008940697
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/products/catalog?page=0&size=12&categoryId=20&sortBy=featured",
+              "status": 200,
+              "duration": 60.400000005960464
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/products/catalog?page=0&size=12&categoryId=20&sortBy=price_asc",
+              "status": 200,
+              "duration": 55.80000001192093
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/products/catalog?page=0&size=12&keyword=J&categoryId=20&sortBy=featured",
+              "status": 200,
+              "duration": 83.3999999910593
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/products/catalog?page=0&size=12&keyword=Ja&categoryId=20&sortBy=featured",
+              "status": 200,
+              "duration": 76.59999999403954
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/products/catalog?page=0&size=12&keyword=Jarana&categoryId=20&sortBy=featured",
+              "status": 200,
+              "duration": 45.69999998807907
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/products/313",
+              "status": 200,
+              "duration": 20.599999994039536
+            }
+          ]
+        },
+        {
+          "name": "opiniones",
+          "route": "/products/313",
+          "returnUrl": null,
+          "viewport": {
+            "width": 411,
+            "height": 914,
+            "dpr": 2.625
+          },
+          "documentWidth": 411,
+          "safeArea": {
+            "top": "50px",
+            "bottom": "24px"
+          },
+          "headings": [
+            "Jarana Huasteca Premium Modelo 8",
+            "Descripción",
+            "Especificaciones",
+            "Opiniones de clientes"
+          ],
+          "fields": [],
+          "scrollers": [
+            {
+              "width": 411,
+              "scrollWidth": 411,
+              "height": 808,
+              "scrollHeight": 1765,
+              "scrollTop": 899.047607421875
+            }
+          ],
+          "publicRequests": [
+            {
+              "url": "http://10.0.2.2:8080/api/public/categories/active",
+              "status": 200,
+              "duration": 771.4000000059605
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/products/latest",
+              "status": 200,
+              "duration": 1286
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/products/featured?page=0&size=6",
+              "status": 200,
+              "duration": 1282.6000000089407
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/categories/active",
+              "status": 200,
+              "duration": 22.100000008940697
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/products/catalog?page=0&size=12&categoryId=20&sortBy=featured",
+              "status": 200,
+              "duration": 60.400000005960464
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/products/catalog?page=0&size=12&categoryId=20&sortBy=price_asc",
+              "status": 200,
+              "duration": 55.80000001192093
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/products/catalog?page=0&size=12&keyword=J&categoryId=20&sortBy=featured",
+              "status": 200,
+              "duration": 83.3999999910593
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/products/catalog?page=0&size=12&keyword=Ja&categoryId=20&sortBy=featured",
+              "status": 200,
+              "duration": 76.59999999403954
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/products/catalog?page=0&size=12&keyword=Jarana&categoryId=20&sortBy=featured",
+              "status": 200,
+              "duration": 45.69999998807907
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/products/313",
+              "status": 200,
+              "duration": 20.599999994039536
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/reviews/product/313?page=0&size=10&sortBy=RECENT",
+              "status": 200,
+              "duration": 44.5
+            }
+          ]
+        },
+        {
+          "name": "cantidad",
+          "route": "/products/313",
+          "returnUrl": null,
+          "viewport": {
+            "width": 411,
+            "height": 914,
+            "dpr": 2.625
+          },
+          "documentWidth": 411,
+          "safeArea": {
+            "top": "50px",
+            "bottom": "24px"
+          },
+          "headings": [
+            "Jarana Huasteca Premium Modelo 8",
+            "Descripción",
+            "Especificaciones",
+            "Opiniones de clientes"
+          ],
+          "fields": [],
+          "scrollers": [
+            {
+              "width": 411,
+              "scrollWidth": 411,
+              "height": 808,
+              "scrollHeight": 1765,
+              "scrollTop": 578.2857055664062
+            }
+          ],
+          "publicRequests": [
+            {
+              "url": "http://10.0.2.2:8080/api/public/categories/active",
+              "status": 200,
+              "duration": 771.4000000059605
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/products/latest",
+              "status": 200,
+              "duration": 1286
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/products/featured?page=0&size=6",
+              "status": 200,
+              "duration": 1282.6000000089407
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/categories/active",
+              "status": 200,
+              "duration": 22.100000008940697
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/products/catalog?page=0&size=12&categoryId=20&sortBy=featured",
+              "status": 200,
+              "duration": 60.400000005960464
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/products/catalog?page=0&size=12&categoryId=20&sortBy=price_asc",
+              "status": 200,
+              "duration": 55.80000001192093
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/products/catalog?page=0&size=12&keyword=J&categoryId=20&sortBy=featured",
+              "status": 200,
+              "duration": 83.3999999910593
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/products/catalog?page=0&size=12&keyword=Ja&categoryId=20&sortBy=featured",
+              "status": 200,
+              "duration": 76.59999999403954
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/products/catalog?page=0&size=12&keyword=Jarana&categoryId=20&sortBy=featured",
+              "status": 200,
+              "duration": 45.69999998807907
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/products/313",
+              "status": 200,
+              "duration": 20.599999994039536
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/reviews/product/313?page=0&size=10&sortBy=RECENT",
+              "status": 200,
+              "duration": 44.5
+            }
+          ]
+        },
+        {
+          "name": "login",
+          "route": "/login",
+          "returnUrl": "/products/313",
+          "viewport": {
+            "width": 411,
+            "height": 914,
+            "dpr": 2.625
+          },
+          "documentWidth": 411,
+          "safeArea": {
+            "top": "50px",
+            "bottom": "24px"
+          },
+          "headings": [
+            "Casa de Música Castillo",
+            "Bienvenido de nuevo"
+          ],
+          "fields": [
+            {
+              "type": "email",
+              "fontSize": "16px",
+              "width": 296.3809509277344
+            },
+            {
+              "type": "password",
+              "fontSize": "16px",
+              "width": 248.38095092773438
+            }
+          ],
+          "scrollers": [
+            {
+              "width": 411,
+              "scrollWidth": 411,
+              "height": 914,
+              "scrollHeight": 923,
+              "scrollTop": 0
+            }
+          ],
+          "publicRequests": [
+            {
+              "url": "http://10.0.2.2:8080/api/public/categories/active",
+              "status": 200,
+              "duration": 771.4000000059605
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/products/latest",
+              "status": 200,
+              "duration": 1286
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/products/featured?page=0&size=6",
+              "status": 200,
+              "duration": 1282.6000000089407
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/categories/active",
+              "status": 200,
+              "duration": 22.100000008940697
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/products/catalog?page=0&size=12&categoryId=20&sortBy=featured",
+              "status": 200,
+              "duration": 60.400000005960464
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/products/catalog?page=0&size=12&categoryId=20&sortBy=price_asc",
+              "status": 200,
+              "duration": 55.80000001192093
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/products/catalog?page=0&size=12&keyword=J&categoryId=20&sortBy=featured",
+              "status": 200,
+              "duration": 83.3999999910593
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/products/catalog?page=0&size=12&keyword=Ja&categoryId=20&sortBy=featured",
+              "status": 200,
+              "duration": 76.59999999403954
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/products/catalog?page=0&size=12&keyword=Jarana&categoryId=20&sortBy=featured",
+              "status": 200,
+              "duration": 45.69999998807907
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/products/313",
+              "status": 200,
+              "duration": 20.599999994039536
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/reviews/product/313?page=0&size=10&sortBy=RECENT",
+              "status": 200,
+              "duration": 44.5
+            }
+          ]
+        },
+        {
+          "name": "mostrar-contrasena",
+          "route": "/login",
+          "returnUrl": "/products/313",
+          "viewport": {
+            "width": 411,
+            "height": 914,
+            "dpr": 2.625
+          },
+          "documentWidth": 411,
+          "safeArea": {
+            "top": "50px",
+            "bottom": "0px"
+          },
+          "headings": [
+            "Casa de Música Castillo",
+            "Bienvenido de nuevo"
+          ],
+          "fields": [
+            {
+              "type": "email",
+              "fontSize": "16px",
+              "width": 296.3809509277344
+            },
+            {
+              "type": "text",
+              "fontSize": "16px",
+              "width": 248.38095092773438
+            }
+          ],
+          "scrollers": [
+            {
+              "width": 411,
+              "scrollWidth": 411,
+              "height": 914,
+              "scrollHeight": 914,
+              "scrollTop": 0
+            }
+          ],
+          "publicRequests": [
+            {
+              "url": "http://10.0.2.2:8080/api/public/categories/active",
+              "status": 200,
+              "duration": 771.4000000059605
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/products/latest",
+              "status": 200,
+              "duration": 1286
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/products/featured?page=0&size=6",
+              "status": 200,
+              "duration": 1282.6000000089407
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/categories/active",
+              "status": 200,
+              "duration": 22.100000008940697
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/products/catalog?page=0&size=12&categoryId=20&sortBy=featured",
+              "status": 200,
+              "duration": 60.400000005960464
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/products/catalog?page=0&size=12&categoryId=20&sortBy=price_asc",
+              "status": 200,
+              "duration": 55.80000001192093
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/products/catalog?page=0&size=12&keyword=J&categoryId=20&sortBy=featured",
+              "status": 200,
+              "duration": 83.3999999910593
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/products/catalog?page=0&size=12&keyword=Ja&categoryId=20&sortBy=featured",
+              "status": 200,
+              "duration": 76.59999999403954
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/products/catalog?page=0&size=12&keyword=Jarana&categoryId=20&sortBy=featured",
+              "status": 200,
+              "duration": 45.69999998807907
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/products/313",
+              "status": 200,
+              "duration": 20.599999994039536
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/reviews/product/313?page=0&size=10&sortBy=RECENT",
+              "status": 200,
+              "duration": 44.5
+            }
+          ]
+        },
+        {
+          "name": "registro",
+          "route": "/register",
+          "returnUrl": null,
+          "viewport": {
+            "width": 411,
+            "height": 914,
+            "dpr": 2.625
+          },
+          "documentWidth": 411,
+          "safeArea": {
+            "top": "50px",
+            "bottom": "24px"
+          },
+          "headings": [
+            "Crea tu cuenta"
+          ],
+          "fields": [
+            {
+              "type": "text",
+              "fontSize": "16px",
+              "width": 296.3809509277344
+            },
+            {
+              "type": "text",
+              "fontSize": "16px",
+              "width": 296.3809509277344
+            },
+            {
+              "type": "text",
+              "fontSize": "16px",
+              "width": 296.3809509277344
+            },
+            {
+              "type": "email",
+              "fontSize": "16px",
+              "width": 296.3809509277344
+            },
+            {
+              "type": "tel",
+              "fontSize": "16px",
+              "width": 296.3809509277344
+            },
+            {
+              "type": "password",
+              "fontSize": "16px",
+              "width": 248.38095092773438
+            },
+            {
+              "type": "password",
+              "fontSize": "16px",
+              "width": 248.38095092773438
+            }
+          ],
+          "scrollers": [
+            {
+              "width": 411,
+              "scrollWidth": 411,
+              "height": 914,
+              "scrollHeight": 1204,
+              "scrollTop": 0
+            }
+          ],
+          "publicRequests": [
+            {
+              "url": "http://10.0.2.2:8080/api/public/categories/active",
+              "status": 200,
+              "duration": 771.4000000059605
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/products/latest",
+              "status": 200,
+              "duration": 1286
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/products/featured?page=0&size=6",
+              "status": 200,
+              "duration": 1282.6000000089407
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/categories/active",
+              "status": 200,
+              "duration": 22.100000008940697
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/products/catalog?page=0&size=12&categoryId=20&sortBy=featured",
+              "status": 200,
+              "duration": 60.400000005960464
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/products/catalog?page=0&size=12&categoryId=20&sortBy=price_asc",
+              "status": 200,
+              "duration": 55.80000001192093
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/products/catalog?page=0&size=12&keyword=J&categoryId=20&sortBy=featured",
+              "status": 200,
+              "duration": 83.3999999910593
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/products/catalog?page=0&size=12&keyword=Ja&categoryId=20&sortBy=featured",
+              "status": 200,
+              "duration": 76.59999999403954
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/products/catalog?page=0&size=12&keyword=Jarana&categoryId=20&sortBy=featured",
+              "status": 200,
+              "duration": 45.69999998807907
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/products/313",
+              "status": 200,
+              "duration": 20.599999994039536
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/reviews/product/313?page=0&size=10&sortBy=RECENT",
+              "status": 200,
+              "duration": 44.5
+            }
+          ]
+        },
+        {
+          "name": "recuperacion",
+          "route": "/forgot-password",
+          "returnUrl": null,
+          "viewport": {
+            "width": 411,
+            "height": 914,
+            "dpr": 2.625
+          },
+          "documentWidth": 411,
+          "safeArea": {
+            "top": "50px",
+            "bottom": "24px"
+          },
+          "headings": [
+            "Recuperar acceso",
+            "Te ayudamos a volver",
+            "Restablece tu contraseña"
+          ],
+          "fields": [
+            {
+              "type": "email",
+              "fontSize": "16px",
+              "width": 296.3809509277344
+            }
+          ],
+          "scrollers": [
+            {
+              "width": 411,
+              "scrollWidth": 411,
+              "height": 914,
+              "scrollHeight": 914,
+              "scrollTop": 0
+            }
+          ],
+          "publicRequests": [
+            {
+              "url": "http://10.0.2.2:8080/api/public/categories/active",
+              "status": 200,
+              "duration": 771.4000000059605
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/products/latest",
+              "status": 200,
+              "duration": 1286
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/products/featured?page=0&size=6",
+              "status": 200,
+              "duration": 1282.6000000089407
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/categories/active",
+              "status": 200,
+              "duration": 22.100000008940697
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/products/catalog?page=0&size=12&categoryId=20&sortBy=featured",
+              "status": 200,
+              "duration": 60.400000005960464
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/products/catalog?page=0&size=12&categoryId=20&sortBy=price_asc",
+              "status": 200,
+              "duration": 55.80000001192093
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/products/catalog?page=0&size=12&keyword=J&categoryId=20&sortBy=featured",
+              "status": 200,
+              "duration": 83.3999999910593
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/products/catalog?page=0&size=12&keyword=Ja&categoryId=20&sortBy=featured",
+              "status": 200,
+              "duration": 76.59999999403954
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/products/catalog?page=0&size=12&keyword=Jarana&categoryId=20&sortBy=featured",
+              "status": 200,
+              "duration": 45.69999998807907
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/products/313",
+              "status": 200,
+              "duration": 20.599999994039536
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/reviews/product/313?page=0&size=10&sortBy=RECENT",
+              "status": 200,
+              "duration": 44.5
+            }
+          ]
+        },
+        {
+          "name": "restablecimiento",
+          "route": "/forgot-password",
+          "returnUrl": null,
+          "viewport": {
+            "width": 411,
+            "height": 914,
+            "dpr": 2.625
+          },
+          "documentWidth": 411,
+          "safeArea": {
+            "top": "50px",
+            "bottom": "24px"
+          },
+          "headings": [
+            "Recuperar acceso",
+            "Te ayudamos a volver",
+            "Crea una nueva contraseña"
+          ],
+          "fields": [
+            {
+              "type": "text",
+              "fontSize": "16px",
+              "width": 296.3809509277344
+            },
+            {
+              "type": "password",
+              "fontSize": "16px",
+              "width": 248.38095092773438
+            },
+            {
+              "type": "password",
+              "fontSize": "16px",
+              "width": 248.38095092773438
+            }
+          ],
+          "scrollers": [
+            {
+              "width": 411,
+              "scrollWidth": 411,
+              "height": 914,
+              "scrollHeight": 1060,
+              "scrollTop": 0
+            }
+          ],
+          "publicRequests": [
+            {
+              "url": "http://10.0.2.2:8080/api/public/categories/active",
+              "status": 200,
+              "duration": 771.4000000059605
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/products/latest",
+              "status": 200,
+              "duration": 1286
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/products/featured?page=0&size=6",
+              "status": 200,
+              "duration": 1282.6000000089407
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/categories/active",
+              "status": 200,
+              "duration": 22.100000008940697
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/products/catalog?page=0&size=12&categoryId=20&sortBy=featured",
+              "status": 200,
+              "duration": 60.400000005960464
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/products/catalog?page=0&size=12&categoryId=20&sortBy=price_asc",
+              "status": 200,
+              "duration": 55.80000001192093
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/products/catalog?page=0&size=12&keyword=J&categoryId=20&sortBy=featured",
+              "status": 200,
+              "duration": 83.3999999910593
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/products/catalog?page=0&size=12&keyword=Ja&categoryId=20&sortBy=featured",
+              "status": 200,
+              "duration": 76.59999999403954
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/products/catalog?page=0&size=12&keyword=Jarana&categoryId=20&sortBy=featured",
+              "status": 200,
+              "duration": 45.69999998807907
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/products/313",
+              "status": 200,
+              "duration": 20.599999994039536
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/reviews/product/313?page=0&size=10&sortBy=RECENT",
+              "status": 200,
+              "duration": 44.5
+            }
+          ]
+        },
+        {
+          "name": "verificacion",
+          "route": "/verify-email",
+          "returnUrl": null,
+          "viewport": {
+            "width": 411,
+            "height": 914,
+            "dpr": 2.625
+          },
+          "documentWidth": 411,
+          "safeArea": {
+            "top": "50px",
+            "bottom": "24px"
+          },
+          "headings": [
+            "Verificar cuenta",
+            "Ingresa tu código"
+          ],
+          "fields": [
+            {
+              "type": "text",
+              "fontSize": "16px",
+              "width": 296.3809509277344
+            }
+          ],
+          "scrollers": [
+            {
+              "width": 411,
+              "scrollWidth": 411,
+              "height": 914,
+              "scrollHeight": 914,
+              "scrollTop": 0
+            }
+          ],
+          "publicRequests": [
+            {
+              "url": "http://10.0.2.2:8080/api/public/categories/active",
+              "status": 200,
+              "duration": 771.4000000059605
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/products/latest",
+              "status": 200,
+              "duration": 1286
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/products/featured?page=0&size=6",
+              "status": 200,
+              "duration": 1282.6000000089407
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/categories/active",
+              "status": 200,
+              "duration": 22.100000008940697
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/products/catalog?page=0&size=12&categoryId=20&sortBy=featured",
+              "status": 200,
+              "duration": 60.400000005960464
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/products/catalog?page=0&size=12&categoryId=20&sortBy=price_asc",
+              "status": 200,
+              "duration": 55.80000001192093
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/products/catalog?page=0&size=12&keyword=J&categoryId=20&sortBy=featured",
+              "status": 200,
+              "duration": 83.3999999910593
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/products/catalog?page=0&size=12&keyword=Ja&categoryId=20&sortBy=featured",
+              "status": 200,
+              "duration": 76.59999999403954
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/products/catalog?page=0&size=12&keyword=Jarana&categoryId=20&sortBy=featured",
+              "status": 200,
+              "duration": 45.69999998807907
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/products/313",
+              "status": 200,
+              "duration": 20.599999994039536
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/reviews/product/313?page=0&size=10&sortBy=RECENT",
+              "status": 200,
+              "duration": 44.5
+            }
+          ]
+        },
+        {
+          "name": "favoritos-protegidos",
+          "route": "/login",
+          "returnUrl": "/favorites",
+          "viewport": {
+            "width": 411,
+            "height": 914,
+            "dpr": 2.625
+          },
+          "documentWidth": 411,
+          "safeArea": {
+            "top": "50px",
+            "bottom": "24px"
+          },
+          "headings": [
+            "Casa de Música Castillo",
+            "Bienvenido de nuevo"
+          ],
+          "fields": [
+            {
+              "type": "email",
+              "fontSize": "16px",
+              "width": 296.3809509277344
+            },
+            {
+              "type": "password",
+              "fontSize": "16px",
+              "width": 248.38095092773438
+            }
+          ],
+          "scrollers": [
+            {
+              "width": 411,
+              "scrollWidth": 411,
+              "height": 914,
+              "scrollHeight": 923,
+              "scrollTop": 0
+            }
+          ],
+          "publicRequests": [
+            {
+              "url": "http://10.0.2.2:8080/api/public/categories/active",
+              "status": 200,
+              "duration": 771.4000000059605
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/products/latest",
+              "status": 200,
+              "duration": 1286
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/products/featured?page=0&size=6",
+              "status": 200,
+              "duration": 1282.6000000089407
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/categories/active",
+              "status": 200,
+              "duration": 22.100000008940697
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/products/catalog?page=0&size=12&categoryId=20&sortBy=featured",
+              "status": 200,
+              "duration": 60.400000005960464
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/products/catalog?page=0&size=12&categoryId=20&sortBy=price_asc",
+              "status": 200,
+              "duration": 55.80000001192093
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/products/catalog?page=0&size=12&keyword=J&categoryId=20&sortBy=featured",
+              "status": 200,
+              "duration": 83.3999999910593
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/products/catalog?page=0&size=12&keyword=Ja&categoryId=20&sortBy=featured",
+              "status": 200,
+              "duration": 76.59999999403954
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/products/catalog?page=0&size=12&keyword=Jarana&categoryId=20&sortBy=featured",
+              "status": 200,
+              "duration": 45.69999998807907
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/products/313",
+              "status": 200,
+              "duration": 20.599999994039536
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/reviews/product/313?page=0&size=10&sortBy=RECENT",
+              "status": 200,
+              "duration": 44.5
+            }
+          ]
+        },
+        {
+          "name": "cart-protegido",
+          "route": "/login",
+          "returnUrl": "/main/cart",
+          "viewport": {
+            "width": 411,
+            "height": 914,
+            "dpr": 2.625
+          },
+          "documentWidth": 411,
+          "safeArea": {
+            "top": "50px",
+            "bottom": "24px"
+          },
+          "headings": [
+            "Casa de Música Castillo",
+            "Bienvenido de nuevo"
+          ],
+          "fields": [
+            {
+              "type": "email",
+              "fontSize": "16px",
+              "width": 296.3809509277344
+            },
+            {
+              "type": "password",
+              "fontSize": "16px",
+              "width": 248.38095092773438
+            }
+          ],
+          "scrollers": [
+            {
+              "width": 411,
+              "scrollWidth": 411,
+              "height": 914,
+              "scrollHeight": 923,
+              "scrollTop": 0
+            }
+          ],
+          "publicRequests": [
+            {
+              "url": "http://10.0.2.2:8080/api/public/categories/active",
+              "status": 200,
+              "duration": 771.4000000059605
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/products/latest",
+              "status": 200,
+              "duration": 1286
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/products/featured?page=0&size=6",
+              "status": 200,
+              "duration": 1282.6000000089407
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/categories/active",
+              "status": 200,
+              "duration": 22.100000008940697
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/products/catalog?page=0&size=12&categoryId=20&sortBy=featured",
+              "status": 200,
+              "duration": 60.400000005960464
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/products/catalog?page=0&size=12&categoryId=20&sortBy=price_asc",
+              "status": 200,
+              "duration": 55.80000001192093
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/products/catalog?page=0&size=12&keyword=J&categoryId=20&sortBy=featured",
+              "status": 200,
+              "duration": 83.3999999910593
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/products/catalog?page=0&size=12&keyword=Ja&categoryId=20&sortBy=featured",
+              "status": 200,
+              "duration": 76.59999999403954
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/products/catalog?page=0&size=12&keyword=Jarana&categoryId=20&sortBy=featured",
+              "status": 200,
+              "duration": 45.69999998807907
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/products/313",
+              "status": 200,
+              "duration": 20.599999994039536
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/reviews/product/313?page=0&size=10&sortBy=RECENT",
+              "status": 200,
+              "duration": 44.5
+            }
+          ]
+        },
+        {
+          "name": "orders-protegido",
+          "route": "/login",
+          "returnUrl": "/main/orders",
+          "viewport": {
+            "width": 411,
+            "height": 914,
+            "dpr": 2.625
+          },
+          "documentWidth": 411,
+          "safeArea": {
+            "top": "50px",
+            "bottom": "24px"
+          },
+          "headings": [
+            "Casa de Música Castillo",
+            "Bienvenido de nuevo"
+          ],
+          "fields": [
+            {
+              "type": "email",
+              "fontSize": "16px",
+              "width": 296.3809509277344
+            },
+            {
+              "type": "password",
+              "fontSize": "16px",
+              "width": 248.38095092773438
+            }
+          ],
+          "scrollers": [
+            {
+              "width": 411,
+              "scrollWidth": 411,
+              "height": 914,
+              "scrollHeight": 923,
+              "scrollTop": 0
+            }
+          ],
+          "publicRequests": [
+            {
+              "url": "http://10.0.2.2:8080/api/public/categories/active",
+              "status": 200,
+              "duration": 771.4000000059605
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/products/latest",
+              "status": 200,
+              "duration": 1286
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/products/featured?page=0&size=6",
+              "status": 200,
+              "duration": 1282.6000000089407
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/categories/active",
+              "status": 200,
+              "duration": 22.100000008940697
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/products/catalog?page=0&size=12&categoryId=20&sortBy=featured",
+              "status": 200,
+              "duration": 60.400000005960464
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/products/catalog?page=0&size=12&categoryId=20&sortBy=price_asc",
+              "status": 200,
+              "duration": 55.80000001192093
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/products/catalog?page=0&size=12&keyword=J&categoryId=20&sortBy=featured",
+              "status": 200,
+              "duration": 83.3999999910593
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/products/catalog?page=0&size=12&keyword=Ja&categoryId=20&sortBy=featured",
+              "status": 200,
+              "duration": 76.59999999403954
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/products/catalog?page=0&size=12&keyword=Jarana&categoryId=20&sortBy=featured",
+              "status": 200,
+              "duration": 45.69999998807907
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/products/313",
+              "status": 200,
+              "duration": 20.599999994039536
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/reviews/product/313?page=0&size=10&sortBy=RECENT",
+              "status": 200,
+              "duration": 44.5
+            }
+          ]
+        },
+        {
+          "name": "profile-protegido",
+          "route": "/login",
+          "returnUrl": "/main/profile",
+          "viewport": {
+            "width": 411,
+            "height": 914,
+            "dpr": 2.625
+          },
+          "documentWidth": 411,
+          "safeArea": {
+            "top": "50px",
+            "bottom": "24px"
+          },
+          "headings": [
+            "Casa de Música Castillo",
+            "Bienvenido de nuevo"
+          ],
+          "fields": [
+            {
+              "type": "email",
+              "fontSize": "16px",
+              "width": 296.3809509277344
+            },
+            {
+              "type": "password",
+              "fontSize": "16px",
+              "width": 248.38095092773438
+            }
+          ],
+          "scrollers": [
+            {
+              "width": 411,
+              "scrollWidth": 411,
+              "height": 914,
+              "scrollHeight": 923,
+              "scrollTop": 0
+            }
+          ],
+          "publicRequests": [
+            {
+              "url": "http://10.0.2.2:8080/api/public/categories/active",
+              "status": 200,
+              "duration": 771.4000000059605
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/products/latest",
+              "status": 200,
+              "duration": 1286
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/products/featured?page=0&size=6",
+              "status": 200,
+              "duration": 1282.6000000089407
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/categories/active",
+              "status": 200,
+              "duration": 22.100000008940697
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/products/catalog?page=0&size=12&categoryId=20&sortBy=featured",
+              "status": 200,
+              "duration": 60.400000005960464
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/products/catalog?page=0&size=12&categoryId=20&sortBy=price_asc",
+              "status": 200,
+              "duration": 55.80000001192093
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/products/catalog?page=0&size=12&keyword=J&categoryId=20&sortBy=featured",
+              "status": 200,
+              "duration": 83.3999999910593
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/products/catalog?page=0&size=12&keyword=Ja&categoryId=20&sortBy=featured",
+              "status": 200,
+              "duration": 76.59999999403954
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/products/catalog?page=0&size=12&keyword=Jarana&categoryId=20&sortBy=featured",
+              "status": 200,
+              "duration": 45.69999998807907
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/products/313",
+              "status": 200,
+              "duration": 20.599999994039536
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/reviews/product/313?page=0&size=10&sortBy=RECENT",
+              "status": 200,
+              "duration": 44.5
+            }
+          ]
+        },
+        {
+          "name": "sin-conexion",
+          "route": "/main/catalog",
+          "returnUrl": null,
+          "viewport": {
+            "width": 411,
+            "height": 914,
+            "dpr": 2.625
+          },
+          "documentWidth": 411,
+          "safeArea": {
+            "top": "50px",
+            "bottom": "24px"
+          },
+          "headings": [
+            "Catálogo",
+            "No pudimos cargar el catálogo"
+          ],
+          "fields": [
+            {
+              "type": "search",
+              "fontSize": "16px",
+              "width": 322.3095397949219
+            }
+          ],
+          "scrollers": [
+            {
+              "width": 411,
+              "scrollWidth": 411,
+              "height": 800,
+              "scrollHeight": 800,
+              "scrollTop": 0
+            }
+          ],
+          "publicRequests": [
+            {
+              "url": "http://10.0.2.2:8080/api/public/categories/active",
+              "status": 200,
+              "duration": 771.4000000059605
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/products/latest",
+              "status": 200,
+              "duration": 1286
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/products/featured?page=0&size=6",
+              "status": 200,
+              "duration": 1282.6000000089407
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/categories/active",
+              "status": 200,
+              "duration": 22.100000008940697
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/products/catalog?page=0&size=12&categoryId=20&sortBy=featured",
+              "status": 200,
+              "duration": 60.400000005960464
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/products/catalog?page=0&size=12&categoryId=20&sortBy=price_asc",
+              "status": 200,
+              "duration": 55.80000001192093
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/products/catalog?page=0&size=12&keyword=J&categoryId=20&sortBy=featured",
+              "status": 200,
+              "duration": 83.3999999910593
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/products/catalog?page=0&size=12&keyword=Ja&categoryId=20&sortBy=featured",
+              "status": 200,
+              "duration": 76.59999999403954
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/products/catalog?page=0&size=12&keyword=Jarana&categoryId=20&sortBy=featured",
+              "status": 200,
+              "duration": 45.69999998807907
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/products/313",
+              "status": 200,
+              "duration": 20.599999994039536
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/reviews/product/313?page=0&size=10&sortBy=RECENT",
+              "status": 200,
+              "duration": 44.5
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/products/catalog?page=0&size=12&sortBy=featured",
+              "status": 0,
+              "duration": 19.200000002980232
+            }
+          ]
+        },
+        {
+          "name": "reintento",
+          "route": "/main/catalog",
+          "returnUrl": null,
+          "viewport": {
+            "width": 411,
+            "height": 914,
+            "dpr": 2.625
+          },
+          "documentWidth": 411,
+          "safeArea": {
+            "top": "50px",
+            "bottom": "24px"
+          },
+          "headings": [
+            "Catálogo",
+            "Jarana Huasteca Premium Modelo 8",
+            "Jarana Huasteca Premium Modelo 6",
+            "Quinta Huapanguera Premium Modelo 6",
+            "Quinta Huapanguera Premium Modelo 2",
+            "Violin Paris 4/4 Premium para Adulto con Kit Principiante",
+            "Quinta Huapanguera Fina de Granadillo",
+            "Prueba_",
+            "sdf",
+            "QA Persistencia Imagenes",
+            "Prueba 2",
+            "Prueba imagenes 4",
+            "Prueba"
+          ],
+          "fields": [
+            {
+              "type": "search",
+              "fontSize": "16px",
+              "width": 322.3095397949219
+            }
+          ],
+          "scrollers": [
+            {
+              "width": 411,
+              "scrollWidth": 411,
+              "height": 800,
+              "scrollHeight": 2820,
+              "scrollTop": 0
+            }
+          ],
+          "publicRequests": [
+            {
+              "url": "http://10.0.2.2:8080/api/public/categories/active",
+              "status": 200,
+              "duration": 771.4000000059605
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/products/latest",
+              "status": 200,
+              "duration": 1286
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/products/featured?page=0&size=6",
+              "status": 200,
+              "duration": 1282.6000000089407
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/categories/active",
+              "status": 200,
+              "duration": 22.100000008940697
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/products/catalog?page=0&size=12&categoryId=20&sortBy=featured",
+              "status": 200,
+              "duration": 60.400000005960464
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/products/catalog?page=0&size=12&categoryId=20&sortBy=price_asc",
+              "status": 200,
+              "duration": 55.80000001192093
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/products/catalog?page=0&size=12&keyword=J&categoryId=20&sortBy=featured",
+              "status": 200,
+              "duration": 83.3999999910593
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/products/catalog?page=0&size=12&keyword=Ja&categoryId=20&sortBy=featured",
+              "status": 200,
+              "duration": 76.59999999403954
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/products/catalog?page=0&size=12&keyword=Jarana&categoryId=20&sortBy=featured",
+              "status": 200,
+              "duration": 45.69999998807907
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/products/313",
+              "status": 200,
+              "duration": 20.599999994039536
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/reviews/product/313?page=0&size=10&sortBy=RECENT",
+              "status": 200,
+              "duration": 44.5
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/products/catalog?page=0&size=12&sortBy=featured",
+              "status": 0,
+              "duration": 19.200000002980232
+            },
+            {
+              "url": "http://10.0.2.2:8080/api/public/products/catalog?page=0&size=12&sortBy=featured",
+              "status": 200,
+              "duration": 41.900000005960464
+            }
+          ]
+        }
+      ]
+    },
+    "layoutAttempt": {
+      "status": "partial",
+      "error": "Native profile failed: tableta",
+      "profiles": [
+        {
+          "status": "geometry-passed-awaiting-visual-review",
+          "observations": [
+            {
+              "name": "pequeno-inicio",
+              "route": "/main/home",
+              "returnUrl": null,
+              "viewport": {
+                "width": 320,
+                "height": 568,
+                "dpr": 1
+              },
+              "documentWidth": 320,
+              "safeArea": {
+                "top": "31px",
+                "bottom": "24px"
+              },
+              "headings": [
+                "Casa de Música Castillo",
+                "Tu próxima historiaempieza con música.",
+                "Explorar por categoría",
+                "Destacados disponibles",
+                "Jarana Huasteca Premium Modelo 8",
+                "Jarana Huasteca Premium Modelo 6",
+                "Quinta Huapanguera Premium Modelo 6",
+                "Quinta Huapanguera Premium Modelo 2",
+                "Novedades",
+                "Producto prueba 2"
+              ],
+              "fields": [
+                {
+                  "type": "search",
+                  "fontSize": "16px",
+                  "width": 172.40625
+                }
+              ],
+              "scrollers": [
+                {
+                  "width": 320,
+                  "scrollWidth": 320,
+                  "height": 473,
+                  "scrollHeight": 3716,
+                  "scrollTop": 0
+                }
+              ],
+              "publicRequests": [
+                {
+                  "url": "http://10.0.2.2:8080/api/public/categories/active",
+                  "status": 200,
+                  "duration": 1521
+                },
+                {
+                  "url": "http://10.0.2.2:8080/api/public/products/latest",
+                  "status": 200,
+                  "duration": 1481
+                },
+                {
+                  "url": "http://10.0.2.2:8080/api/public/products/featured?page=0&size=6",
+                  "status": 200,
+                  "duration": 1413.2000000029802
+                }
+              ]
+            },
+            {
+              "name": "pequeno-catalogo",
+              "route": "/main/catalog",
+              "returnUrl": null,
+              "viewport": {
+                "width": 320,
+                "height": 568,
+                "dpr": 1
+              },
+              "documentWidth": 320,
+              "safeArea": {
+                "top": "31px",
+                "bottom": "24px"
+              },
+              "headings": [
+                "Catálogo",
+                "Jarana Huasteca Premium Modelo 8",
+                "Jarana Huasteca Premium Modelo 6",
+                "Jarana Huasteca Semi-Profesional Modelo 10",
+                "Jarana Huasteca Artesanal Modelo 9",
+                "Jarana Huasteca Semi-Profesional Modelo 7",
+                "Jarana Huasteca Semi-Profesional Modelo 5",
+                "Jarana Huasteca Artesanal Modelo 4",
+                "Jarana Huasteca Artesanal Modelo 3",
+                "Jarana Huasteca Artesanal Modelo 2",
+                "Jarana Huasteca Artesanal Modelo 1",
+                "Jarana Huasteca de Cedro Fileteada",
+                "Jarana Huasteca Económica de Pino"
+              ],
+              "fields": [
+                {
+                  "type": "search",
+                  "fontSize": "16px",
+                  "width": 230.40625
+                }
+              ],
+              "scrollers": [
+                {
+                  "width": 320,
+                  "scrollWidth": 320,
+                  "height": 473,
+                  "scrollHeight": 6478,
+                  "scrollTop": 0
+                }
+              ],
+              "publicRequests": [
+                {
+                  "url": "http://10.0.2.2:8080/api/public/categories/active",
+                  "status": 200,
+                  "duration": 1521
+                },
+                {
+                  "url": "http://10.0.2.2:8080/api/public/products/latest",
+                  "status": 200,
+                  "duration": 1481
+                },
+                {
+                  "url": "http://10.0.2.2:8080/api/public/products/featured?page=0&size=6",
+                  "status": 200,
+                  "duration": 1413.2000000029802
+                },
+                {
+                  "url": "http://10.0.2.2:8080/api/public/categories/active",
+                  "status": 200,
+                  "duration": 1004
+                },
+                {
+                  "url": "http://10.0.2.2:8080/api/public/products/catalog?page=0&size=12&categoryId=20&sortBy=featured",
+                  "status": 200,
+                  "duration": 765.4000000059605
+                }
+              ]
+            },
+            {
+              "name": "pequeno-detalle",
+              "route": "/products/313",
+              "returnUrl": null,
+              "viewport": {
+                "width": 320,
+                "height": 568,
+                "dpr": 1
+              },
+              "documentWidth": 320,
+              "safeArea": {
+                "top": "31px",
+                "bottom": "24px"
+              },
+              "headings": [
+                "Catálogo",
+                "Jarana Huasteca Premium Modelo 8",
+                "Jarana Huasteca Premium Modelo 6",
+                "Jarana Huasteca Semi-Profesional Modelo 10",
+                "Jarana Huasteca Artesanal Modelo 9",
+                "Jarana Huasteca Semi-Profesional Modelo 7",
+                "Jarana Huasteca Semi-Profesional Modelo 5",
+                "Jarana Huasteca Artesanal Modelo 4",
+                "Jarana Huasteca Artesanal Modelo 3",
+                "Jarana Huasteca Artesanal Modelo 2",
+                "Jarana Huasteca Artesanal Modelo 1",
+                "Jarana Huasteca de Cedro Fileteada",
+                "Jarana Huasteca Económica de Pino",
+                "Jarana Huasteca Premium Modelo 8",
+                "Descripción",
+                "Especificaciones",
+                "Opiniones de clientes"
+              ],
+              "fields": [
+                {
+                  "type": "search",
+                  "fontSize": "16px",
+                  "width": 230.40625
+                }
+              ],
+              "scrollers": [
+                {
+                  "width": 320,
+                  "scrollWidth": 320,
+                  "height": 473,
+                  "scrollHeight": 6478,
+                  "scrollTop": 385
+                },
+                {
+                  "width": 320,
+                  "scrollWidth": 320,
+                  "height": 481,
+                  "scrollHeight": 1764,
+                  "scrollTop": 0
+                }
+              ],
+              "publicRequests": [
+                {
+                  "url": "http://10.0.2.2:8080/api/public/categories/active",
+                  "status": 200,
+                  "duration": 1521
+                },
+                {
+                  "url": "http://10.0.2.2:8080/api/public/products/latest",
+                  "status": 200,
+                  "duration": 1481
+                },
+                {
+                  "url": "http://10.0.2.2:8080/api/public/products/featured?page=0&size=6",
+                  "status": 200,
+                  "duration": 1413.2000000029802
+                },
+                {
+                  "url": "http://10.0.2.2:8080/api/public/categories/active",
+                  "status": 200,
+                  "duration": 1004
+                },
+                {
+                  "url": "http://10.0.2.2:8080/api/public/products/catalog?page=0&size=12&categoryId=20&sortBy=featured",
+                  "status": 200,
+                  "duration": 765.4000000059605
+                },
+                {
+                  "url": "http://10.0.2.2:8080/api/public/products/313",
+                  "status": 200,
+                  "duration": 271.79999999701977
+                }
+              ]
+            },
+            {
+              "name": "pequeno-login",
+              "route": "/login",
+              "returnUrl": "/products/313",
+              "viewport": {
+                "width": 320,
+                "height": 568,
+                "dpr": 1
+              },
+              "documentWidth": 320,
+              "safeArea": {
+                "top": "31px",
+                "bottom": "24px"
+              },
+              "headings": [
+                "Jarana Huasteca Premium Modelo 8",
+                "Descripción",
+                "Especificaciones",
+                "Opiniones de clientes",
+                "Casa de Música Castillo",
+                "Bienvenido de nuevo"
+              ],
+              "fields": [
+                {
+                  "type": "email",
+                  "fontSize": "16px",
+                  "width": 212
+                },
+                {
+                  "type": "password",
+                  "fontSize": "16px",
+                  "width": 164
+                }
+              ],
+              "scrollers": [
+                {
+                  "width": 320,
+                  "scrollWidth": 320,
+                  "height": 481,
+                  "scrollHeight": 1764,
+                  "scrollTop": 237
+                },
+                {
+                  "width": 320,
+                  "scrollWidth": 320,
+                  "height": 568,
+                  "scrollHeight": 920,
+                  "scrollTop": 0
+                }
+              ],
+              "publicRequests": [
+                {
+                  "url": "http://10.0.2.2:8080/api/public/categories/active",
+                  "status": 200,
+                  "duration": 1521
+                },
+                {
+                  "url": "http://10.0.2.2:8080/api/public/products/latest",
+                  "status": 200,
+                  "duration": 1481
+                },
+                {
+                  "url": "http://10.0.2.2:8080/api/public/products/featured?page=0&size=6",
+                  "status": 200,
+                  "duration": 1413.2000000029802
+                },
+                {
+                  "url": "http://10.0.2.2:8080/api/public/categories/active",
+                  "status": 200,
+                  "duration": 1004
+                },
+                {
+                  "url": "http://10.0.2.2:8080/api/public/products/catalog?page=0&size=12&categoryId=20&sortBy=featured",
+                  "status": 200,
+                  "duration": 765.4000000059605
+                },
+                {
+                  "url": "http://10.0.2.2:8080/api/public/products/313",
+                  "status": 200,
+                  "duration": 271.79999999701977
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "visualReview": {
+      "normalScreens": "public journey inspected; no credentials submitted",
+      "smallCatalogDetailLogin": "reviewed without native overlay",
+      "smallHome": "not approved: System UI ANR overlay",
+      "tabletLandscapeFinalApk": "not completed; do not claim PASS"
+    },
+    "nativeIncident": "10-29 14:28:12.762   723 14057 I am_anr  : [0,1334,com.android.systemui,550026765,Input dispatching timed out ([Gesture Monitor] edge-swipe is not responding. Waited 5138ms for MotionEvent).]\n",
+    "physicalPhone": "not executed",
+    "fullKeyboardTalkBack": "not completed",
+    "authenticatedJourney": "not executed"
+  },
+  "backend": {
+    "publicReadOnly": [
+      {
+        "path": "/actuator/health",
+        "status": 200,
+        "keys": [
+          "status"
+        ],
+        "count": null
+      },
+      {
+        "path": "/api/public/categories/active",
+        "status": 200,
+        "keys": null,
+        "count": 10,
+        "sample": [
+          {
+            "id": 10,
+            "name": "Accesorios",
+            "stock": null
+          },
+          {
+            "id": 20,
+            "name": "Jaranas",
+            "stock": null
+          }
+        ]
+      },
+      {
+        "path": "/api/public/products/featured?page=0&size=6",
+        "status": 200,
+        "keys": [
+          "content",
+          "pageable",
+          "totalPages",
+          "totalElements",
+          "last",
+          "size",
+          "number",
+          "sort",
+          "numberOfElements",
+          "first",
+          "empty"
+        ],
+        "count": 6
+      },
+      {
+        "path": "/api/public/products/latest",
+        "status": 200,
+        "keys": null,
+        "count": 8,
+        "sample": [
+          {
+            "id": 325,
+            "name": "Prueba_",
+            "stock": 0
+          },
+          {
+            "id": 324,
+            "name": "sdf",
+            "stock": 0
+          }
+        ]
+      },
+      {
+        "path": "/api/public/products/313",
+        "status": 200,
+        "keys": [
+          "id",
+          "sku",
+          "name",
+          "description",
+          "detailedDescription",
+          "price",
+          "discountPrice",
+          "stock",
+          "imageUrl",
+          "images",
+          "category",
+          "brand",
+          "attributes",
+          "model",
+          "weight",
+          "dimensions",
+          "featured",
+          "averageRating",
+          "reviewCount"
+        ],
+        "count": null
+      },
+      {
+        "path": "/api/reviews/product/313?page=0&size=10&sortBy=RECENT",
+        "status": 200,
+        "keys": [
+          "reviews",
+          "totalReviews",
+          "currentPage",
+          "totalPages",
+          "statistics"
+        ],
+        "count": 0
+      }
+    ],
+    "authenticatedRequestsExecuted": false,
+    "ordersPaymentsExecuted": false,
+    "authorizedSyntheticAccount": false,
+    "isolatedDatabaseConfirmed": false,
+    "checkoutObservedErrorCause": "not determined without sanitized real authenticated response"
+  },
+  "screenshotSha256": {
+    "docs/activity4/android/busqueda.png": "dd5b2a23b921eb8a357420e8efff6978e2a4b43b0116a066701d8d47f7f7924e",
+    "docs/activity4/android/cantidad.png": "83fc889fb4f760054b8a1b83b92d64d054bed1a4b53dbef9666da84361dd649d",
+    "docs/activity4/android/cart-protegido.png": "ed7d229cbf2fcfa65a0e7720ce945615098a1c3a90ab890c6145fd632bc444c3",
+    "docs/activity4/android/catalogo.png": "07e6e27f1dbd38706340aba8052be3c26fab6ab5e3f06b25d1d736badfeda8fc",
+    "docs/activity4/android/detalle.png": "3db525b165c05c2f435237bf99133810018bf2404359c8ae30c612cbf27e7e1b",
+    "docs/activity4/android/favoritos-protegidos.png": "ed7d229cbf2fcfa65a0e7720ce945615098a1c3a90ab890c6145fd632bc444c3",
+    "docs/activity4/android/filtros.png": "9487c605f495802bad05172493b7b1b549209ae20e7d07870759952fe89796e3",
+    "docs/activity4/android/incidents/system-ui-anr.png": "a5894558f9885ba157cf892b33ccaddfa6a64e0e16e4bdedb2615f26ba918898",
+    "docs/activity4/android/inicio.png": "7259134e46b608335a4bccdc27e26a3f393a34492f3cbcc21df5c85fb31bfa63",
+    "docs/activity4/android/login.png": "b20e9bccb4eb9a671796f8b192ca18f2b96370791b2606ef9654905a84871325",
+    "docs/activity4/android/mostrar-contrasena.png": "408e280109f71ffb24ef06afa48ffbf20f066aec96ccb3f774e40f3df5ca5668",
+    "docs/activity4/android/opiniones.png": "7122f6236e817842c66cc8f9bd619060fd7999cf5ef20c8501a628f61790313e",
+    "docs/activity4/android/orden.png": "75adc7909ceb7f9c4f1252bd2907d0a470318f3fd2fab812dc362ee44eda08fb",
+    "docs/activity4/android/orders-protegido.png": "ed7d229cbf2fcfa65a0e7720ce945615098a1c3a90ab890c6145fd632bc444c3",
+    "docs/activity4/android/pequeno-catalogo.png": "2349cbfeade5db3c6b3b9d7951dc3986efc666e03bdd815fc3db63457f3014d5",
+    "docs/activity4/android/pequeno-detalle.png": "a2ceb8639887048b48e30b57796bcccc8394c6aafa4fd635c2b40148f67ff76f",
+    "docs/activity4/android/pequeno-login.png": "3eb38e985d69e3bfa66b8aa452ebeddec84e9f2b0918bb2e17c1bace445c91c4",
+    "docs/activity4/android/profile-protegido.png": "ed7d229cbf2fcfa65a0e7720ce945615098a1c3a90ab890c6145fd632bc444c3",
+    "docs/activity4/android/recuperacion.png": "2fd2af13db5eec6c0183f67c2baab71baa2cf9fc97e17080f7df4bcbf545da6d",
+    "docs/activity4/android/registro.png": "23fb260e97bc189eb41af22158c6d9980481acee5b5f688fe9d21b57214a7497",
+    "docs/activity4/android/reintento.png": "6de9fd96c0c8f8c2a34299c5625fd13742c2dee5319e6a031c7d777f9f6cb942",
+    "docs/activity4/android/restablecimiento.png": "b97fe9709a3609aadd296b483ad8e07b1a1d1a155527a860afeb1dfafe209e4e",
+    "docs/activity4/android/sin-conexion.png": "7960fcc9f6910c310533629d84123fafef27bda424398033cfbbb987745a0fa2",
+    "docs/activity4/android/verificacion.png": "c5249d46093ebe4077912441202850edabcd2c4ac23cb52868a7d38fea84f019"
+  },
+  "resultArtifactSha256": {
+    "docs/activity4/results/coverage-summary.json": "4a32a165be890810b2d588c7774c4afe8b99876f036a3f9e8ab354f5825a5635",
+    "docs/activity4/results/integration-tests.xml": "e331886e000e06aecf664e00285753203397d75a35ce5704408baa6691f8d5a4",
+    "docs/activity4/results/regression-tests.xml": "fa220226e2421f3fd62c62f08fc470219137b1925027af8a34a01bf0abe9bceb",
+    "docs/activity4/results/unit-tests.xml": "4655fc1b246bd8e848eb0984e2bec957f109a0f637eb4e8a90b6dc0bdd65a6d3"
+  },
+  "documentationSha256": {
+    "docs/activity4/ANDROID.md": "9b85ace5d9f921b2c9410d4c4c70a2c1ba7912b546fd307332e5f229ed409aff",
+    "docs/activity4/ARCHITECTURE.md": "b04ddcea210f05e038b764ed272ba127b5e73f1fd8a1381b08921bad67a09923",
+    "docs/activity4/GIT_FLOW.md": "bbd5c2ebf1b431bef32bad7fe6ba6da621e53a4d413b307310f22d460b6c1d13",
+    "docs/activity4/PUBLICATION_REVIEW.json": "67cfbebfbfcaf85a4e4fdef2b2816199d5bc29bccd4266d732ac82c9eab6cf26",
+    "docs/activity4/README.md": "0d9a61e147dfc16205e2c62dfad7193aae26801bae2f4f4bec850454ed90741e",
+    "docs/activity4/TRACEABILITY.json": "2e1fb26775729ea22ab657495def4170ffe91ec73b66d785e507262e363b7309"
+  },
+  "logSha256": {
+    "reports/activity4-close/android-layout-retry.log": "e1e3cd9d96f7d0ad15c7e804c41ac6c0cb0a0aaa1d8e1b7dcd774fd5092f33f4",
+    "reports/activity4-close/android-layout.log": "aa4806abdb562800a9f8ae81960b91e047bc27eb1276f62832d3c3aac45dd3b5",
+    "reports/activity4-close/android-smoke-retry.log": "0080bf66cf7780edae734b9c3343bd97508574558ece8aeed3c7db1304f39c98",
+    "reports/activity4-close/android-smoke.log": "b3cf59bdefbe0c6af151cb7c1773bca10c9eefcac32d8e16a5fead4f57a06152",
+    "reports/activity4-close/android.log": "96dc8f6be2cf4521132f1da0b43ffad585b251fab15a24783c84b9620f5eb39d",
+    "reports/activity4-close/build-development.log": "62b63cc51d76ae03864587fdb1de200e4848952e7645d4d3a4ab1e1eb80d70c2",
+    "reports/activity4-close/build-production.log": "c2479093aad9aebe4e6149cae3db6d616fc95c02ea4e80663485e419eab8231c",
+    "reports/activity4-close/cap-sync.log": "154c4b78ca79a95fb3e2378a14eb88a6392bb1fb8350cdf3855b4cb596461252",
+    "reports/activity4-close/coverage.log": "e0144e4df4a46bfc9228f1179b0abbda77681f36c3da5d884653d656b35f19d1",
+    "reports/activity4-close/install.log": "c4aa470acafcf8576c15b0f0b5ae7e852d1ec5413372d0e6a9272e788e1306d3",
+    "reports/activity4-close/integration.log": "f51dbb62ab36a4715905ebca0a56b39c54ef9d895470e5973b7f8c646639ba6a",
+    "reports/activity4-close/lint.log": "9fc24d2569296d6c580bc9fd6d55614343545cbed28ae9aaf093320229692e5d",
+    "reports/activity4-close/native-anr.log": "30dfb331e04cb2f773bb19d2e14cca42de7768e10927f603bdd757c0d1de9510",
+    "reports/activity4-close/public-api.log": "d4d07cb191374da5b416c80e189716bb285445ace879d4ee7bbcb08042f95336",
+    "reports/activity4-close/pull-installed.log": "27320c6cb73912cc42385ccaeeac2ec3c4748afff6e4dc6d746845423811c1c7",
+    "reports/activity4-close/regression.log": "3a980fa6e592801f296c7e715e827b4a20560fe921651b89734b5099b723016c",
+    "reports/activity4-close/tests.log": "ff18f18b5f1ffdadab5b64a2025d54720f1d42e0b8bd0db995d1aa087ddc3642",
+    "reports/activity4-close/white-box.log": "f1bd3bed7e54b7a3034c53b4717a157a9953e371e316fd0ba0f5488ab1f3e69a"
+  },
+  "historicalRecord": true,
+  "currentStageReport": "docs/etapa1b/README.md",
+  "historicalRecordNote": "Conserva los resultados, hashes y decisiones originales del 29 de octubre. No representa el estado de publicación, Projects, pruebas o APK de Etapa 1B."
+}

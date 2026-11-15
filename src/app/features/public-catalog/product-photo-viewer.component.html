@@ -1,0 +1,52 @@
+<dialog #dialog class="photo-viewer" [attr.aria-label]="'Fotografías de ' + title()" (close)="onClose()" (keydown)="onKey($event)">
+  <header class="viewer-header">
+    <h2>Fotografías</h2>
+    @if (photos().length > 1) {
+      <span role="status">Imagen {{ position() + 1 }} de {{ photos().length }}</span>
+    }
+    <button autofocus type="button" aria-label="Cerrar visor" (click)="close()"><cmc-icon name="close"/></button>
+  </header>
+
+  @if (opened()) {
+    <div #zoomArea class="viewer-image" tabindex="0" role="group" aria-label="Área desplazable de la fotografía"
+        [class.is-zoomed]="transform().scale > 1"
+        (pointerdown)="pointerDown($event)" (pointermove)="pointerMove($event)"
+        (pointerup)="pointerEnd($event)" (pointercancel)="pointerEnd($event)" (lostpointercapture)="pointerEnd($event)">
+      @if (activePhoto(); as photo) {
+        @for (url of [photo]; track url) {
+          <img class="viewer-photo" [class.is-ready]="loadState() === 'ready'" [src]="url" [alt]="title()"
+            [style.width.px]="photoSize().width" [style.height.px]="photoSize().height" [style.transform]="cssTransform()"
+            draggable="false" decoding="async" referrerpolicy="no-referrer"
+            (load)="photoLoaded(url, $event)" (error)="photoFailed(url)" />
+        }
+        @if (loadState() === 'loading') { <p role="status">Cargando fotografía…</p> }
+      }
+      @if (!activePhoto() || loadState() === 'error') {
+        <p role="status">Fotografía no disponible</p>
+      }
+    </div>
+    <footer class="viewer-footer">
+      <div class="viewer-tools" role="group" aria-label="Controles de la fotografía">
+        @if (photos().length > 1) {
+          <button type="button" [disabled]="position() === 0" aria-label="Anterior" (click)="changeImage(-1)"><cmc-icon class="previous-icon" name="arrow"/></button>
+        }
+        <button type="button" [disabled]="transform().scale <= 1" aria-label="Reducir zoom" (click)="changeZoom(-.5)"><cmc-icon name="remove"/></button>
+        <button type="button" (click)="resetZoom()" aria-label="Restablecer zoom">{{ percent() }} %</button>
+        <button type="button" [disabled]="loadState() !== 'ready' || transform().scale >= maxZoom" aria-label="Ampliar zoom" (click)="changeZoom(.5)"><cmc-icon name="add"/></button>
+        @if (photos().length > 1) {
+          <button type="button" [disabled]="position() === photos().length - 1" aria-label="Siguiente" (click)="changeImage(1)"><cmc-icon name="arrow"/></button>
+        }
+      </div>
+      @if (photos().length > 1) {
+        <div class="viewer-thumbs" role="group" aria-label="Miniaturas">
+          @for (photo of photos(); track photo; let i = $index) {
+            <button type="button" [attr.aria-label]="'Ver fotografía ' + (i + 1)" [attr.aria-current]="i === position() ? 'true' : null"
+                (click)="selectImage(photo)">
+              <cmc-public-image [src]="photo" [alt]="'Fotografía ' + (i + 1)" [compact]="true"/>
+            </button>
+          }
+        </div>
+      }
+    </footer>
+  }
+</dialog>

@@ -1,0 +1,135 @@
+name: Release - Staging APK
+
+on:
+  workflow_dispatch:
+    inputs:
+      isolated:
+        description: Confirmo el origen autorizado, PostgreSQL aislado y checkout/pagos deshabilitados.
+        type: boolean
+        required: true
+        default: false
+
+permissions:
+  contents: read
+  checks: read
+
+jobs:
+  changes:
+    name: Alcance Staging
+    if: inputs.isolated
+    runs-on: ubuntu-24.04
+    outputs:
+      docs_only: ${{ steps.scope.outputs.docs_only }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - id: scope
+        run: node scripts/detect-change-scope.mjs
+
+  quality-gate:
+    name: Verificar DEVOPS QUALITY GATE
+    needs: changes
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - name: Obtener código fuente
+        uses: actions/checkout@v7
+      - name: Exigir Quality Gate aprobado para el mismo SHA
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          # El APK y los checks corresponden al SHA exacto del dispatch.
+          QUALITY_GATE_SHA: ${{ github.sha }}
+          QUALITY_GATE_BRANCH: ${{ github.ref_name }}
+          QUALITY_GATE_DOCS_ONLY: ${{ needs.changes.outputs.docs_only }}
+          QUALITY_GATE_CHECKS: DEVOPS QUALITY GATE
+          QUALITY_GATE_MAX_ATTEMPTS: 80
+          QUALITY_GATE_INTERVAL_MS: 15000
+          QUALITY_GATE_REPORT: reports/staging-quality-gate.json
+        run: node scripts/quality-gate.mjs
+      - name: Publicar evidencia del gate de Staging
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: staging-quality-gate
+          path: reports/staging-quality-gate.json
+          if-no-files-found: error
+          retention-days: 14
+
+  staging-apk:
+    name: Generar APK de Staging
+    needs: [changes, quality-gate]
+    if: needs.changes.outputs.docs_only != 'true' && needs.quality-gate.result == 'success'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+
+    steps:
+      - name: Obtener codigo fuente
+        uses: actions/checkout@v7
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: "22"
+          cache: "npm"
+
+      - name: Configurar Java
+        uses: actions/setup-java@v6
+        with:
+          distribution: "temurin"
+          java-version: "21"
+
+      - name: Configurar Gradle
+        uses: gradle/actions/setup-gradle@v6
+
+      - uses: android-actions/setup-android@v3
+        with:
+          packages: 'platform-tools platforms;android-36 build-tools;36.0.0'
+
+      - name: Mostrar versiones
+        run: |
+          node --version
+          npm --version
+          java -version
+
+      - name: Instalar dependencias
+        run: npm ci
+
+      - name: Compilar APK de Staging
+        id: gradle-build
+        env:
+          CMC_AUTHORIZED_STAGING_ORIGIN: ${{ vars.CMC_AUTHORIZED_STAGING_ORIGIN }}
+        run: |
+          chmod +x android/gradlew
+          node scripts/build-android.mjs --environment staging --variant debug --api-url "$CMC_AUTHORIZED_STAGING_ORIGIN" --isolated
+
+      - name: Preparar APK de Staging
+        id: prepare-apk
+        run: |
+          mkdir -p staging
+          cp reports/android-packages/staging-debug/app-stagingConnected.apk staging/CasaMusicaCastillo-staging.apk
+          cp reports/android-packages/staging-debug/build-report.json staging/build-report.json
+          test -f staging/CasaMusicaCastillo-staging.apk
+          ls -lh staging/CasaMusicaCastillo-staging.apk
+
+      - name: Publicar APK de Staging
+        uses: actions/upload-artifact@v7
+        with:
+          name: casa-musica-castillo-staging-${{ github.run_number }}
+          path: staging/CasaMusicaCastillo-staging.apk
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Retroalimentación de entrega Staging
+        if: always()
+        env:
+          SUMMARY_WORKFLOW: Release - Staging APK
+          SUMMARY_CONTROLS: |
+            Quality Gate del SHA|PASS|El job anterior exigió DEVOPS QUALITY GATE aprobado para este mismo commit.
+            Angular, Capacitor y Gradle Staging|${{ steps.gradle-build.outcome == 'success' && 'PASS' || 'FAIL' }}|El script exige el origen HTTPS autorizado y una confirmación de aislamiento.
+            Verificación artifact|${{ steps.prepare-apk.outcome == 'success' && 'PASS' || 'FAIL' }}|Confirma nombre y existencia del archivo.
+          SUMMARY_STATUS: ${{ (steps.gradle-build.outcome == 'success' && steps.prepare-apk.outcome == 'success') && 'PASS' || 'FAIL' }}
+          SUMMARY_DATA: Mismo SHA aprobado; APK Debug identificado como staging, sin secretos embebidos.
+          SUMMARY_METRICS: Tamaño del APK visible en Preparar APK de Staging.
+          SUMMARY_ARTIFACTS: casa-musica-castillo-staging-${{ github.run_number }}, retención 14 días.
+        run: node scripts/write-workflow-summary.mjs

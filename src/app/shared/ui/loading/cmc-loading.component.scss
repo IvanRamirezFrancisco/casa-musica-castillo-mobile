@@ -1,0 +1,25 @@
+@use '../styles/mixins' as *;
+
+:host {
+  display: block;
+}
+
+.cmc-loading {
+  @include cmc-state-layout;
+}
+
+.cmc-loading__spinner {
+  width: 40px;
+  height: 40px;
+  color: var(--cmc-primary);
+}
+
+.cmc-loading__message {
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--cmc-text-secondary);
+}
+
+.cmc-loading__sr-only {
+  @include cmc-visually-hidden;
+}

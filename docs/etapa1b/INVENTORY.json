@@ -1,0 +1,2082 @@
+{
+  "date": "2026-11-03",
+  "branch": "feature/actividad-4-integracion-movil",
+  "initialHead": "efe9767082040971278e66595aad8c0bf82c4b81",
+  "initialCounts": {
+    "modified": 67,
+    "untracked": 218,
+    "staged": 0,
+    "deleted": 0
+  },
+  "backup": {
+    "path": "C:/Users/ivanf/CMC_BK/mobile",
+    "requiredDirectories": [
+      ".git",
+      "src",
+      "test",
+      "docs"
+    ],
+    "sha256ComparedFiles": 468,
+    "missingFiles": [],
+    "differentFiles": [],
+    "gitMetadataMatched": [
+      "HEAD",
+      "config",
+      "index",
+      "refs"
+    ],
+    "localPropertiesMatched": true,
+    "gitConnectivityFsckExitCode": 0,
+    "gitConnectivityNotes": "Objetos dangling existentes; sin objetos faltantes ni errores. Comprobación de solo lectura, sin --lost-found."
+  },
+  "counts": {
+    "devops": 3,
+    "tests": 14,
+    "config": 5,
+    "docs": 15,
+    "evidence": 74,
+    "modules": 79,
+    "core": 83,
+    "shared-ui": 12
+  },
+  "formattingOnlySourceChanges": [
+    "src/app/features/public-catalog/commerce-experience.integration.spec.ts",
+    "src/app/features/public-catalog/public-catalog.integration.spec.ts",
+    "src/app/features/public-catalog/public-product-grid.component.ts",
+    "src/app/core/models/catalog.model.ts"
+  ],
+  "editorialDocumentationChanges": [
+    "docs/activity4/ANDROID.md",
+    "docs/activity4/GIT_FLOW.md",
+    "docs/activity4/PUBLICATION_REVIEW.json",
+    "docs/activity4/README.md",
+    "docs/activity4/TRACEABILITY.json",
+    "docs/activity4/VALIDATION.json",
+    "docs/testing/ACTIVITY4_EVIDENCE.md",
+    "docs/testing/ACTIVITY4_SOURCE_MANIFEST.json",
+    "docs/testing/AUTH_PHASE1_MFA.md",
+    "docs/testing/COMMERCE_UI_REDESIGN.md",
+    "docs/testing/MOBILE_SOURCE_MANIFEST.json",
+    "docs/testing/PUBLIC_CATALOG_INTEGRATION.md",
+    "docs/testing/PUBLIC_CATALOG_SOURCE_MANIFEST.json"
+  ],
+  "files": [
+    {
+      "path": ".github/workflows/acceptance.yml",
+      "category": "devops",
+      "initialSha256": "cf670830b5b6fe86b2b4db0bf90d80d965421729fcc70a31c149105c36a09901",
+      "publicationSha256": "cf670830b5b6fe86b2b4db0bf90d80d965421729fcc70a31c149105c36a09901",
+      "initialState": "modified"
+    },
+    {
+      "path": ".github/workflows/android-build.yml",
+      "category": "devops",
+      "initialSha256": "a281a05af72ba0f70fea6b3b37051db95bf9964d0679e67c8209ec49ef40a5d9",
+      "publicationSha256": "a281a05af72ba0f70fea6b3b37051db95bf9964d0679e67c8209ec49ef40a5d9",
+      "initialState": "modified"
+    },
+    {
+      "path": ".gitignore",
+      "category": "devops",
+      "initialSha256": "5d0179b3743ed8a043813628014c1b7456090454d0fd933158470b7f425839f2",
+      "publicationSha256": "5d0179b3743ed8a043813628014c1b7456090454d0fd933158470b7f425839f2",
+      "initialState": "modified"
+    },
+    {
+      "path": ".maestro/account-demo.yaml",
+      "category": "tests",
+      "initialSha256": "ba3723db96ca7aa08b0c638feac6adf36e4878b23aef9cbb6ba6415e71a879d6",
+      "publicationSha256": "ba3723db96ca7aa08b0c638feac6adf36e4878b23aef9cbb6ba6415e71a879d6",
+      "initialState": "modified"
+    },
+    {
+      "path": ".maestro/auth-demo.yaml",
+      "category": "tests",
+      "initialSha256": "cf0c0c3408246b6e33ec6c9e85a9f9449a17a52dde2082d55e8b1320b79db8a0",
+      "publicationSha256": "cf0c0c3408246b6e33ec6c9e85a9f9449a17a52dde2082d55e8b1320b79db8a0",
+      "initialState": "modified"
+    },
+    {
+      "path": ".maestro/navigation-demo.yaml",
+      "category": "tests",
+      "initialSha256": "70d62ec3006792360468802dd9ce5743bc29db023fe7932b49c7b2c8958a8fbc",
+      "publicationSha256": "70d62ec3006792360468802dd9ce5743bc29db023fe7932b49c7b2c8958a8fbc",
+      "initialState": "modified"
+    },
+    {
+      "path": ".maestro/purchase-demo.yaml",
+      "category": "tests",
+      "initialSha256": "4baf971cd0785ef77d1ea07768452f5761c2c1ffa02bb290286112e2677264af",
+      "publicationSha256": "4baf971cd0785ef77d1ea07768452f5761c2c1ffa02bb290286112e2677264af",
+      "initialState": "modified"
+    },
+    {
+      "path": "angular.json",
+      "category": "config",
+      "initialSha256": "02cb6164a65dae63759ef88baf6b0fc3b2f662c21097addd2f7776ec642201ed",
+      "publicationSha256": "02cb6164a65dae63759ef88baf6b0fc3b2f662c21097addd2f7776ec642201ed",
+      "initialState": "modified"
+    },
+    {
+      "path": "capacitor.config.ts",
+      "category": "config",
+      "initialSha256": "a4caf410f0b34cba7a8e3c35247caa8a9ebe6cea42a1d5dc02dad391a9d4d9cb",
+      "publicationSha256": "a4caf410f0b34cba7a8e3c35247caa8a9ebe6cea42a1d5dc02dad391a9d4d9cb",
+      "initialState": "modified"
+    },
+    {
+      "path": "docs/activity4/ANDROID.md",
+      "category": "docs",
+      "initialSha256": "9b85ace5d9f921b2c9410d4c4c70a2c1ba7912b546fd307332e5f229ed409aff",
+      "publicationSha256": "688992cc9a14165297c0843d676f5f83dc37c07ad9d9bf69ade058a7541fcbee",
+      "initialState": "untracked"
+    },
+    {
+      "path": "docs/activity4/ARCHITECTURE.md",
+      "category": "docs",
+      "initialSha256": "b04ddcea210f05e038b764ed272ba127b5e73f1fd8a1381b08921bad67a09923",
+      "publicationSha256": "b04ddcea210f05e038b764ed272ba127b5e73f1fd8a1381b08921bad67a09923",
+      "initialState": "untracked"
+    },
+    {
+      "path": "docs/activity4/GIT_FLOW.md",
+      "category": "docs",
+      "initialSha256": "bbd5c2ebf1b431bef32bad7fe6ba6da621e53a4d413b307310f22d460b6c1d13",
+      "publicationSha256": "703ac9261dcdf0d553593a48d394f4d077a190a3a97676d6b95b8393cca54f77",
+      "initialState": "untracked"
+    },
+    {
+      "path": "docs/activity4/PUBLICATION_REVIEW.json",
+      "category": "docs",
+      "initialSha256": "67cfbebfbfcaf85a4e4fdef2b2816199d5bc29bccd4266d732ac82c9eab6cf26",
+      "publicationSha256": "34b655f54ade81b8f97e8a0f3bbf56e4bad96f015460e028e9a6c9fdaf93ce51",
+      "initialState": "untracked"
+    },
+    {
+      "path": "docs/activity4/README.md",
+      "category": "docs",
+      "initialSha256": "0d9a61e147dfc16205e2c62dfad7193aae26801bae2f4f4bec850454ed90741e",
+      "publicationSha256": "ec4e888026893d0f16c93129129ed146770c7248ed053ad0221848b8413a1dd8",
+      "initialState": "untracked"
+    },
+    {
+      "path": "docs/activity4/TRACEABILITY.json",
+      "category": "docs",
+      "initialSha256": "2e1fb26775729ea22ab657495def4170ffe91ec73b66d785e507262e363b7309",
+      "publicationSha256": "1fa2f2982013da296fefd983a2f10d97000122c0a870d6a7b366170eb56cfc09",
+      "initialState": "untracked"
+    },
+    {
+      "path": "docs/activity4/VALIDATION.json",
+      "category": "docs",
+      "initialSha256": "2493976f110c11a74b1ef15b22975674137d93b39771796a51fdd88e7c5782ef",
+      "publicationSha256": "8f8dc52f5416ea202ed2cfd67698830081e9d79a03f1d45302fc0ea9d2dcc2b9",
+      "initialState": "untracked"
+    },
+    {
+      "path": "docs/activity4/android/busqueda.png",
+      "category": "evidence",
+      "initialSha256": "dd5b2a23b921eb8a357420e8efff6978e2a4b43b0116a066701d8d47f7f7924e",
+      "publicationSha256": "dd5b2a23b921eb8a357420e8efff6978e2a4b43b0116a066701d8d47f7f7924e",
+      "initialState": "untracked"
+    },
+    {
+      "path": "docs/activity4/android/cantidad.png",
+      "category": "evidence",
+      "initialSha256": "83fc889fb4f760054b8a1b83b92d64d054bed1a4b53dbef9666da84361dd649d",
+      "publicationSha256": "83fc889fb4f760054b8a1b83b92d64d054bed1a4b53dbef9666da84361dd649d",
+      "initialState": "untracked"
+    },
+    {
+      "path": "docs/activity4/android/cart-protegido.png",
+      "category": "evidence",
+      "initialSha256": "ed7d229cbf2fcfa65a0e7720ce945615098a1c3a90ab890c6145fd632bc444c3",
+      "publicationSha256": "ed7d229cbf2fcfa65a0e7720ce945615098a1c3a90ab890c6145fd632bc444c3",
+      "initialState": "untracked"
+    },
+    {
+      "path": "docs/activity4/android/catalogo.png",
+      "category": "evidence",
+      "initialSha256": "07e6e27f1dbd38706340aba8052be3c26fab6ab5e3f06b25d1d736badfeda8fc",
+      "publicationSha256": "07e6e27f1dbd38706340aba8052be3c26fab6ab5e3f06b25d1d736badfeda8fc",
+      "initialState": "untracked"
+    },
+    {
+      "path": "docs/activity4/android/detalle.png",
+      "category": "evidence",
+      "initialSha256": "3db525b165c05c2f435237bf99133810018bf2404359c8ae30c612cbf27e7e1b",
+      "publicationSha256": "3db525b165c05c2f435237bf99133810018bf2404359c8ae30c612cbf27e7e1b",
+      "initialState": "untracked"
+    },
+    {
+      "path": "docs/activity4/android/favoritos-protegidos.png",
+      "category": "evidence",
+      "initialSha256": "ed7d229cbf2fcfa65a0e7720ce945615098a1c3a90ab890c6145fd632bc444c3",
+      "publicationSha256": "ed7d229cbf2fcfa65a0e7720ce945615098a1c3a90ab890c6145fd632bc444c3",
+      "initialState": "untracked"
+    },
+    {
+      "path": "docs/activity4/android/filtros.png",
+      "category": "evidence",
+      "initialSha256": "9487c605f495802bad05172493b7b1b549209ae20e7d07870759952fe89796e3",
+      "publicationSha256": "9487c605f495802bad05172493b7b1b549209ae20e7d07870759952fe89796e3",
+      "initialState": "untracked"
+    },
+    {
+      "path": "docs/activity4/android/incidents/system-ui-anr.png",
+      "category": "evidence",
+      "initialSha256": "a5894558f9885ba157cf892b33ccaddfa6a64e0e16e4bdedb2615f26ba918898",
+      "publicationSha256": "a5894558f9885ba157cf892b33ccaddfa6a64e0e16e4bdedb2615f26ba918898",
+      "initialState": "untracked"
+    },
+    {
+      "path": "docs/activity4/android/inicio.png",
+      "category": "evidence",
+      "initialSha256": "7259134e46b608335a4bccdc27e26a3f393a34492f3cbcc21df5c85fb31bfa63",
+      "publicationSha256": "7259134e46b608335a4bccdc27e26a3f393a34492f3cbcc21df5c85fb31bfa63",
+      "initialState": "untracked"
+    },
+    {
+      "path": "docs/activity4/android/login.png",
+      "category": "evidence",
+      "initialSha256": "b20e9bccb4eb9a671796f8b192ca18f2b96370791b2606ef9654905a84871325",
+      "publicationSha256": "b20e9bccb4eb9a671796f8b192ca18f2b96370791b2606ef9654905a84871325",
+      "initialState": "untracked"
+    },
+    {
+      "path": "docs/activity4/android/mostrar-contrasena.png",
+      "category": "evidence",
+      "initialSha256": "408e280109f71ffb24ef06afa48ffbf20f066aec96ccb3f774e40f3df5ca5668",
+      "publicationSha256": "408e280109f71ffb24ef06afa48ffbf20f066aec96ccb3f774e40f3df5ca5668",
+      "initialState": "untracked"
+    },
+    {
+      "path": "docs/activity4/android/opiniones.png",
+      "category": "evidence",
+      "initialSha256": "7122f6236e817842c66cc8f9bd619060fd7999cf5ef20c8501a628f61790313e",
+      "publicationSha256": "7122f6236e817842c66cc8f9bd619060fd7999cf5ef20c8501a628f61790313e",
+      "initialState": "untracked"
+    },
+    {
+      "path": "docs/activity4/android/orden.png",
+      "category": "evidence",
+      "initialSha256": "75adc7909ceb7f9c4f1252bd2907d0a470318f3fd2fab812dc362ee44eda08fb",
+      "publicationSha256": "75adc7909ceb7f9c4f1252bd2907d0a470318f3fd2fab812dc362ee44eda08fb",
+      "initialState": "untracked"
+    },
+    {
+      "path": "docs/activity4/android/orders-protegido.png",
+      "category": "evidence",
+      "initialSha256": "ed7d229cbf2fcfa65a0e7720ce945615098a1c3a90ab890c6145fd632bc444c3",
+      "publicationSha256": "ed7d229cbf2fcfa65a0e7720ce945615098a1c3a90ab890c6145fd632bc444c3",
+      "initialState": "untracked"
+    },
+    {
+      "path": "docs/activity4/android/pequeno-catalogo.png",
+      "category": "evidence",
+      "initialSha256": "2349cbfeade5db3c6b3b9d7951dc3986efc666e03bdd815fc3db63457f3014d5",
+      "publicationSha256": "2349cbfeade5db3c6b3b9d7951dc3986efc666e03bdd815fc3db63457f3014d5",
+      "initialState": "untracked"
+    },
+    {
+      "path": "docs/activity4/android/pequeno-detalle.png",
+      "category": "evidence",
+      "initialSha256": "a2ceb8639887048b48e30b57796bcccc8394c6aafa4fd635c2b40148f67ff76f",
+      "publicationSha256": "a2ceb8639887048b48e30b57796bcccc8394c6aafa4fd635c2b40148f67ff76f",
+      "initialState": "untracked"
+    },
+    {
+      "path": "docs/activity4/android/pequeno-login.png",
+      "category": "evidence",
+      "initialSha256": "3eb38e985d69e3bfa66b8aa452ebeddec84e9f2b0918bb2e17c1bace445c91c4",
+      "publicationSha256": "3eb38e985d69e3bfa66b8aa452ebeddec84e9f2b0918bb2e17c1bace445c91c4",
+      "initialState": "untracked"
+    },
+    {
+      "path": "docs/activity4/android/profile-protegido.png",
+      "category": "evidence",
+      "initialSha256": "ed7d229cbf2fcfa65a0e7720ce945615098a1c3a90ab890c6145fd632bc444c3",
+      "publicationSha256": "ed7d229cbf2fcfa65a0e7720ce945615098a1c3a90ab890c6145fd632bc444c3",
+      "initialState": "untracked"
+    },
+    {
+      "path": "docs/activity4/android/recuperacion.png",
+      "category": "evidence",
+      "initialSha256": "2fd2af13db5eec6c0183f67c2baab71baa2cf9fc97e17080f7df4bcbf545da6d",
+      "publicationSha256": "2fd2af13db5eec6c0183f67c2baab71baa2cf9fc97e17080f7df4bcbf545da6d",
+      "initialState": "untracked"
+    },
+    {
+      "path": "docs/activity4/android/registro.png",
+      "category": "evidence",
+      "initialSha256": "23fb260e97bc189eb41af22158c6d9980481acee5b5f688fe9d21b57214a7497",
+      "publicationSha256": "23fb260e97bc189eb41af22158c6d9980481acee5b5f688fe9d21b57214a7497",
+      "initialState": "untracked"
+    },
+    {
+      "path": "docs/activity4/android/reintento.png",
+      "category": "evidence",
+      "initialSha256": "6de9fd96c0c8f8c2a34299c5625fd13742c2dee5319e6a031c7d777f9f6cb942",
+      "publicationSha256": "6de9fd96c0c8f8c2a34299c5625fd13742c2dee5319e6a031c7d777f9f6cb942",
+      "initialState": "untracked"
+    },
+    {
+      "path": "docs/activity4/android/restablecimiento.png",
+      "category": "evidence",
+      "initialSha256": "b97fe9709a3609aadd296b483ad8e07b1a1d1a155527a860afeb1dfafe209e4e",
+      "publicationSha256": "b97fe9709a3609aadd296b483ad8e07b1a1d1a155527a860afeb1dfafe209e4e",
+      "initialState": "untracked"
+    },
+    {
+      "path": "docs/activity4/android/sin-conexion.png",
+      "category": "evidence",
+      "initialSha256": "7960fcc9f6910c310533629d84123fafef27bda424398033cfbbb987745a0fa2",
+      "publicationSha256": "7960fcc9f6910c310533629d84123fafef27bda424398033cfbbb987745a0fa2",
+      "initialState": "untracked"
+    },
+    {
+      "path": "docs/activity4/android/verificacion.png",
+      "category": "evidence",
+      "initialSha256": "c5249d46093ebe4077912441202850edabcd2c4ac23cb52868a7d38fea84f019",
+      "publicationSha256": "c5249d46093ebe4077912441202850edabcd2c4ac23cb52868a7d38fea84f019",
+      "initialState": "untracked"
+    },
+    {
+      "path": "docs/activity4/results/coverage-summary.json",
+      "category": "evidence",
+      "initialSha256": "4a32a165be890810b2d588c7774c4afe8b99876f036a3f9e8ab354f5825a5635",
+      "publicationSha256": "4a32a165be890810b2d588c7774c4afe8b99876f036a3f9e8ab354f5825a5635",
+      "initialState": "untracked"
+    },
+    {
+      "path": "docs/activity4/results/integration-tests.xml",
+      "category": "evidence",
+      "initialSha256": "e331886e000e06aecf664e00285753203397d75a35ce5704408baa6691f8d5a4",
+      "publicationSha256": "e331886e000e06aecf664e00285753203397d75a35ce5704408baa6691f8d5a4",
+      "initialState": "untracked"
+    },
+    {
+      "path": "docs/activity4/results/regression-tests.xml",
+      "category": "evidence",
+      "initialSha256": "fa220226e2421f3fd62c62f08fc470219137b1925027af8a34a01bf0abe9bceb",
+      "publicationSha256": "fa220226e2421f3fd62c62f08fc470219137b1925027af8a34a01bf0abe9bceb",
+      "initialState": "untracked"
+    },
+    {
+      "path": "docs/activity4/results/unit-tests.xml",
+      "category": "evidence",
+      "initialSha256": "4655fc1b246bd8e848eb0984e2bec957f109a0f637eb4e8a90b6dc0bdd65a6d3",
+      "publicationSha256": "4655fc1b246bd8e848eb0984e2bec957f109a0f637eb4e8a90b6dc0bdd65a6d3",
+      "initialState": "untracked"
+    },
+    {
+      "path": "docs/testing/ACTIVITY4_EVIDENCE.md",
+      "category": "docs",
+      "initialSha256": "d07059007ba5d49e7bae412ce1533de677b5c9ec0f0759a9b0a2d26f25030e59",
+      "publicationSha256": "8f103b9508c7afe769003c52ec9ba8276934742cd946a4c0466f0880cc684e37",
+      "initialState": "untracked"
+    },
+    {
+      "path": "docs/testing/ACTIVITY4_SOURCE_MANIFEST.json",
+      "category": "evidence",
+      "initialSha256": "5d8801a3a294888398f12f15a6639a1abdffdf70aa4b22a5b4d4a5da52684bf9",
+      "publicationSha256": "be498ad623df1876df1c75549dcda428bfd7185c2fdf1ee182f5269d08788efa",
+      "initialState": "untracked"
+    },
+    {
+      "path": "docs/testing/AUTH_PHASE1_MFA.md",
+      "category": "docs",
+      "initialSha256": "d104f571b2a8cd90a4b6fb7f3284cb88fc31d0a06598c8a66fa420d203feef5c",
+      "publicationSha256": "90407f639f71aa2be38a6b28de9d269d2b865d5042df1fb6a27598fa8b94908e",
+      "initialState": "untracked"
+    },
+    {
+      "path": "docs/testing/COMMERCE_ISSUES_SNAPSHOT.json",
+      "category": "docs",
+      "initialSha256": "68267253393a3ee4fcf5ebca195e2eec08e6be4e68ac8e687a5b309d70dfb64f",
+      "publicationSha256": "68267253393a3ee4fcf5ebca195e2eec08e6be4e68ac8e687a5b309d70dfb64f",
+      "initialState": "untracked"
+    },
+    {
+      "path": "docs/testing/COMMERCE_SOURCE_MANIFEST.json",
+      "category": "evidence",
+      "initialSha256": "9d1bbc5058498cfd0935b6fc54dff747c2d0092f857628197aa53a9f8a90a31e",
+      "publicationSha256": "9d1bbc5058498cfd0935b6fc54dff747c2d0092f857628197aa53a9f8a90a31e",
+      "initialState": "untracked"
+    },
+    {
+      "path": "docs/testing/COMMERCE_UI_REDESIGN.md",
+      "category": "docs",
+      "initialSha256": "c0e9e2b69375e6bd55e4bf67d3b4a51f8793826b83ac9d041f6afe3ab84dde73",
+      "publicationSha256": "032c36d0aa98c7d3e8e095d157c6898a903438d7f75c539e07e8447bad002bd8",
+      "initialState": "untracked"
+    },
+    {
+      "path": "docs/testing/MOBILE_INTEGRATION_EVIDENCE.md",
+      "category": "docs",
+      "initialSha256": "1eefd6fd102ae11ba219ea4dc99892d4bd90fe271ef3f7c4bf90eb5211c0b6fa",
+      "publicationSha256": "1eefd6fd102ae11ba219ea4dc99892d4bd90fe271ef3f7c4bf90eb5211c0b6fa",
+      "initialState": "untracked"
+    },
+    {
+      "path": "docs/testing/MOBILE_SOURCE_MANIFEST.json",
+      "category": "evidence",
+      "initialSha256": "9bed40bad1c2685906125fe8e7dfa404b1766a6a092b589657d0481c9d3713da",
+      "publicationSha256": "582fdaf9eb927ebc7f536847f0bb98c5593e34ae582b3dee7e97a61b4a9b1940",
+      "initialState": "untracked"
+    },
+    {
+      "path": "docs/testing/PUBLIC_CATALOG_INTEGRATION.md",
+      "category": "docs",
+      "initialSha256": "5f6f40f7fa0435708bc0934147de7c1684b093971a13a826fc2a9db3fcd97840",
+      "publicationSha256": "bc7d2133aab3f813807f1289402c084b488cc3989afaf62a08f4566bae621296",
+      "initialState": "untracked"
+    },
+    {
+      "path": "docs/testing/PUBLIC_CATALOG_ISSUES_SNAPSHOT.json",
+      "category": "docs",
+      "initialSha256": "90f364fdbe00d3346f2e5b0f7aef107c132417802e7940896601f7d0fa2b8929",
+      "publicationSha256": "90f364fdbe00d3346f2e5b0f7aef107c132417802e7940896601f7d0fa2b8929",
+      "initialState": "untracked"
+    },
+    {
+      "path": "docs/testing/PUBLIC_CATALOG_SOURCE_MANIFEST.json",
+      "category": "evidence",
+      "initialSha256": "83775e44d180a12ccb98de8a046c505dedd2b37d4c3093fbad3b0f287a4fbebd",
+      "publicationSha256": "e1aa77b6c0bcabfa8326d24d5c6f4b6d917143b90897edee7aeccb323e85ebf6",
+      "initialState": "untracked"
+    },
+    {
+      "path": "docs/testing/PUBLIC_CATALOG_TRACEABILITY.md",
+      "category": "docs",
+      "initialSha256": "b0fba18d4ced0779c7dc3dd741354bbd57b7e6ae73ed6b44277a97bcf1d96bfd",
+      "publicationSha256": "b0fba18d4ced0779c7dc3dd741354bbd57b7e6ae73ed6b44277a97bcf1d96bfd",
+      "initialState": "untracked"
+    },
+    {
+      "path": "docs/testing/android/catalogo-real.png",
+      "category": "evidence",
+      "initialSha256": "cf57ff06aa2a5063f975faf506cce38560a3148f952415a236194945e69df185",
+      "publicationSha256": "cf57ff06aa2a5063f975faf506cce38560a3148f952415a236194945e69df185",
+      "initialState": "untracked"
+    },
+    {
+      "path": "docs/testing/android/catalogo-recuperado.png",
+      "category": "evidence",
+      "initialSha256": "b8419cd55d3d73bbd6de9e8f9b202d689a296f3c6592d5fe35155a3be7fad8e1",
+      "publicationSha256": "b8419cd55d3d73bbd6de9e8f9b202d689a296f3c6592d5fe35155a3be7fad8e1",
+      "initialState": "untracked"
+    },
+    {
+      "path": "docs/testing/android/detalle-producto.png",
+      "category": "evidence",
+      "initialSha256": "f0bed4dcc12c35351b9fcf9e6f63c087eeb0671b77c9f28c5eb9308736a61ec9",
+      "publicationSha256": "f0bed4dcc12c35351b9fcf9e6f63c087eeb0671b77c9f28c5eb9308736a61ec9",
+      "initialState": "untracked"
+    },
+    {
+      "path": "docs/testing/android/inicio-publico.png",
+      "category": "evidence",
+      "initialSha256": "1ae9b299905ff45f005f932c3d33a28b3e841fffa4aa58a5fc67d7ddfb59c07d",
+      "publicationSha256": "1ae9b299905ff45f005f932c3d33a28b3e841fffa4aa58a5fc67d7ddfb59c07d",
+      "initialState": "untracked"
+    },
+    {
+      "path": "docs/testing/android/inicio-sesion.png",
+      "category": "evidence",
+      "initialSha256": "73644b9efd35779e24af8e8ba3c2cebc234a664273c0ac0494a7f3c77957d546",
+      "publicationSha256": "73644b9efd35779e24af8e8ba3c2cebc234a664273c0ac0494a7f3c77957d546",
+      "initialState": "untracked"
+    },
+    {
+      "path": "docs/testing/android/login-320x568.png",
+      "category": "evidence",
+      "initialSha256": "1abf7282e4a33d41e0bf1704be6aba9b7d4571aa50d78941b784a316f164217a",
+      "publicationSha256": "1abf7282e4a33d41e0bf1704be6aba9b7d4571aa50d78941b784a316f164217a",
+      "initialState": "untracked"
+    },
+    {
+      "path": "docs/testing/android/login-tableta.png",
+      "category": "evidence",
+      "initialSha256": "aacd90c9907c9f0835f897b1dc57791ed402d2b313f56b851c27a91ea2d0a453",
+      "publicationSha256": "aacd90c9907c9f0835f897b1dc57791ed402d2b313f56b851c27a91ea2d0a453",
+      "initialState": "untracked"
+    },
+    {
+      "path": "docs/testing/android/recuperacion.png",
+      "category": "evidence",
+      "initialSha256": "8f0be53a4a0d8b74af38f3805d42f896d404f92b6853dedbd94093cef72c64a9",
+      "publicationSha256": "8f0be53a4a0d8b74af38f3805d42f896d404f92b6853dedbd94093cef72c64a9",
+      "initialState": "untracked"
+    },
+    {
+      "path": "docs/testing/android/registro.png",
+      "category": "evidence",
+      "initialSha256": "fd88edda9104e4dd44e9970e6a2e34a1320be9c9e4b291faca95500408dbd669",
+      "publicationSha256": "fd88edda9104e4dd44e9970e6a2e34a1320be9c9e4b291faca95500408dbd669",
+      "initialState": "untracked"
+    },
+    {
+      "path": "docs/testing/android/sin-conexion.png",
+      "category": "evidence",
+      "initialSha256": "47794a465fa1415d0f9bab64fc4d4e3e4763db947e41d17c1149ffe204bb9e62",
+      "publicationSha256": "47794a465fa1415d0f9bab64fc4d4e3e4763db947e41d17c1149ffe204bb9e62",
+      "initialState": "untracked"
+    },
+    {
+      "path": "docs/testing/android/verificacion.png",
+      "category": "evidence",
+      "initialSha256": "bcf311c979af8a710b356539dedf1fdbc19c514f4c7f2238451351f1e910dfd4",
+      "publicationSha256": "bcf311c979af8a710b356539dedf1fdbc19c514f4c7f2238451351f1e910dfd4",
+      "initialState": "untracked"
+    },
+    {
+      "path": "docs/testing/commerce-ui/busqueda.png",
+      "category": "evidence",
+      "initialSha256": "145ee7490089082ec13b551ca917bbc5b7ae61afa70cf3a83b462670379ebead",
+      "publicationSha256": "145ee7490089082ec13b551ca917bbc5b7ae61afa70cf3a83b462670379ebead",
+      "initialState": "untracked"
+    },
+    {
+      "path": "docs/testing/commerce-ui/cantidad.png",
+      "category": "evidence",
+      "initialSha256": "c46651d1c06a4553d145fac6e935ca04fcb40d01a4535a66929a45401c12b7ce",
+      "publicationSha256": "c46651d1c06a4553d145fac6e935ca04fcb40d01a4535a66929a45401c12b7ce",
+      "initialState": "untracked"
+    },
+    {
+      "path": "docs/testing/commerce-ui/catalogo-horizontal.png",
+      "category": "evidence",
+      "initialSha256": "084ae898ac1c03a3c3ec0af32ef7ebf28d1b479d197aa0d47644cca490e13c41",
+      "publicationSha256": "084ae898ac1c03a3c3ec0af32ef7ebf28d1b479d197aa0d47644cca490e13c41",
+      "initialState": "untracked"
+    },
+    {
+      "path": "docs/testing/commerce-ui/catalogo-pequeno.png",
+      "category": "evidence",
+      "initialSha256": "003a965c35710fad0d7340f61aa42c03953583f594dc2d65b5b3ed07a52fe9f5",
+      "publicationSha256": "003a965c35710fad0d7340f61aa42c03953583f594dc2d65b5b3ed07a52fe9f5",
+      "initialState": "untracked"
+    },
+    {
+      "path": "docs/testing/commerce-ui/catalogo-tableta.png",
+      "category": "evidence",
+      "initialSha256": "bfbc93ec4603dddb24df325834d5e5d202404b44b1f1acd178dc2b6803dea517",
+      "publicationSha256": "bfbc93ec4603dddb24df325834d5e5d202404b44b1f1acd178dc2b6803dea517",
+      "initialState": "untracked"
+    },
+    {
+      "path": "docs/testing/commerce-ui/catalogo.png",
+      "category": "evidence",
+      "initialSha256": "955ece777e00b76dfa22a636586da1f0130f84b2e46cf350eb16b7b9155774f8",
+      "publicationSha256": "955ece777e00b76dfa22a636586da1f0130f84b2e46cf350eb16b7b9155774f8",
+      "initialState": "untracked"
+    },
+    {
+      "path": "docs/testing/commerce-ui/detalle-pequeno.png",
+      "category": "evidence",
+      "initialSha256": "d5e5cc9601b586ec501d7e5134e785ca19f39e94ded16ab6bf710a32d61308f9",
+      "publicationSha256": "d5e5cc9601b586ec501d7e5134e785ca19f39e94ded16ab6bf710a32d61308f9",
+      "initialState": "untracked"
+    },
+    {
+      "path": "docs/testing/commerce-ui/detalle-tableta.png",
+      "category": "evidence",
+      "initialSha256": "39ef67cbc39f81f0749a876adfe2e475c5d1a34c07c4cb061e5c353d2e8958ad",
+      "publicationSha256": "39ef67cbc39f81f0749a876adfe2e475c5d1a34c07c4cb061e5c353d2e8958ad",
+      "initialState": "untracked"
+    },
+    {
+      "path": "docs/testing/commerce-ui/detalle.png",
+      "category": "evidence",
+      "initialSha256": "6519ce2ef64ee87a0f22f0fafb52016a86e3de0fec25084fbc35d59dec2fff20",
+      "publicationSha256": "6519ce2ef64ee87a0f22f0fafb52016a86e3de0fec25084fbc35d59dec2fff20",
+      "initialState": "untracked"
+    },
+    {
+      "path": "docs/testing/commerce-ui/favoritos-protegidos.png",
+      "category": "evidence",
+      "initialSha256": "396a1bd091a7b2a78dec59b4a96b75a5b93545d35b1cf7e39a2c4887857c304c",
+      "publicationSha256": "396a1bd091a7b2a78dec59b4a96b75a5b93545d35b1cf7e39a2c4887857c304c",
+      "initialState": "untracked"
+    },
+    {
+      "path": "docs/testing/commerce-ui/filtros.png",
+      "category": "evidence",
+      "initialSha256": "bf5029f1ba5b48706def6ceb43344436f456eb07ff0fce6d3d64a60aac2a652c",
+      "publicationSha256": "bf5029f1ba5b48706def6ceb43344436f456eb07ff0fce6d3d64a60aac2a652c",
+      "initialState": "untracked"
+    },
+    {
+      "path": "docs/testing/commerce-ui/inicio-pequeno.png",
+      "category": "evidence",
+      "initialSha256": "f197d3bf82b0ce2a7dd9f3485ab00a8740590d1da0482ece8292b7df8cf8589a",
+      "publicationSha256": "f197d3bf82b0ce2a7dd9f3485ab00a8740590d1da0482ece8292b7df8cf8589a",
+      "initialState": "untracked"
+    },
+    {
+      "path": "docs/testing/commerce-ui/inicio-tableta.png",
+      "category": "evidence",
+      "initialSha256": "614e094c2b240ef6614e0fa31042e2eaef1187184d119dcf11986f993bc58767",
+      "publicationSha256": "614e094c2b240ef6614e0fa31042e2eaef1187184d119dcf11986f993bc58767",
+      "initialState": "untracked"
+    },
+    {
+      "path": "docs/testing/commerce-ui/inicio.png",
+      "category": "evidence",
+      "initialSha256": "9740b1d1d1c7a4c5a301d1d38feefb91c354617664d6cf95b5cd8f8f28f83fa2",
+      "publicationSha256": "9740b1d1d1c7a4c5a301d1d38feefb91c354617664d6cf95b5cd8f8f28f83fa2",
+      "initialState": "untracked"
+    },
+    {
+      "path": "docs/testing/commerce-ui/login-320x568.png",
+      "category": "evidence",
+      "initialSha256": "fb05efbf761b13c493862e9a9c66b89465bc208cffc45c3eb42547933afaae0d",
+      "publicationSha256": "fb05efbf761b13c493862e9a9c66b89465bc208cffc45c3eb42547933afaae0d",
+      "initialState": "untracked"
+    },
+    {
+      "path": "docs/testing/commerce-ui/login-360x800.png",
+      "category": "evidence",
+      "initialSha256": "b03c2f822499e381e04e6af64bfc1f42d004012401c96f58429560a47a67de0d",
+      "publicationSha256": "b03c2f822499e381e04e6af64bfc1f42d004012401c96f58429560a47a67de0d",
+      "initialState": "untracked"
+    },
+    {
+      "path": "docs/testing/commerce-ui/login-393x852.png",
+      "category": "evidence",
+      "initialSha256": "689a0cd9f678b01857ce6cc27e93aeeb30886571d13f5d5df4eb21aa5f13c6ee",
+      "publicationSha256": "689a0cd9f678b01857ce6cc27e93aeeb30886571d13f5d5df4eb21aa5f13c6ee",
+      "initialState": "untracked"
+    },
+    {
+      "path": "docs/testing/commerce-ui/login-412x915.png",
+      "category": "evidence",
+      "initialSha256": "e8179571a0e650f1f145c672968d52b5774d8e27715eafea3b8158427e8ebad3",
+      "publicationSha256": "e8179571a0e650f1f145c672968d52b5774d8e27715eafea3b8158427e8ebad3",
+      "initialState": "untracked"
+    },
+    {
+      "path": "docs/testing/commerce-ui/login-horizontal.png",
+      "category": "evidence",
+      "initialSha256": "4cb83907568d590c95e704eaf0a5752fe1e6cb693732e0c16f1ded21b9a817f9",
+      "publicationSha256": "4cb83907568d590c95e704eaf0a5752fe1e6cb693732e0c16f1ded21b9a817f9",
+      "initialState": "untracked"
+    },
+    {
+      "path": "docs/testing/commerce-ui/login-tableta.png",
+      "category": "evidence",
+      "initialSha256": "ecc9ad41270d62ce42ac7eb32d7b4b8f1f8735e5c9d699b0f61fa708f7553d2f",
+      "publicationSha256": "ecc9ad41270d62ce42ac7eb32d7b4b8f1f8735e5c9d699b0f61fa708f7553d2f",
+      "initialState": "untracked"
+    },
+    {
+      "path": "docs/testing/commerce-ui/login-texto-ampliado.png",
+      "category": "evidence",
+      "initialSha256": "aeb0b7be9381809aa64ae88f5aeada682d7ff5236fe7679ad0cd7f19177fa7e5",
+      "publicationSha256": "aeb0b7be9381809aa64ae88f5aeada682d7ff5236fe7679ad0cd7f19177fa7e5",
+      "initialState": "untracked"
+    },
+    {
+      "path": "docs/testing/commerce-ui/login.png",
+      "category": "evidence",
+      "initialSha256": "37d96b8417332d3d1db95ec1ed487e36ba278c7d3653db8fac9058d3c3fa70d8",
+      "publicationSha256": "37d96b8417332d3d1db95ec1ed487e36ba278c7d3653db8fac9058d3c3fa70d8",
+      "initialState": "untracked"
+    },
+    {
+      "path": "docs/testing/commerce-ui/mostrar-contrasena.png",
+      "category": "evidence",
+      "initialSha256": "3fe5540e3c3ab1b779a04c61d7a74a056e721d22f27205bf9dbd7042ac6c9b46",
+      "publicationSha256": "3fe5540e3c3ab1b779a04c61d7a74a056e721d22f27205bf9dbd7042ac6c9b46",
+      "initialState": "untracked"
+    },
+    {
+      "path": "docs/testing/commerce-ui/opiniones.png",
+      "category": "evidence",
+      "initialSha256": "9ae7470c816947448adfd966f9a2d77854d898f6e7502efda98aa68a2991edfa",
+      "publicationSha256": "9ae7470c816947448adfd966f9a2d77854d898f6e7502efda98aa68a2991edfa",
+      "initialState": "untracked"
+    },
+    {
+      "path": "docs/testing/commerce-ui/orden.png",
+      "category": "evidence",
+      "initialSha256": "65ab1d702e406879bc513fc21650453acbd64f7976d7f914af2c0021bb3ec608",
+      "publicationSha256": "65ab1d702e406879bc513fc21650453acbd64f7976d7f914af2c0021bb3ec608",
+      "initialState": "untracked"
+    },
+    {
+      "path": "docs/testing/commerce-ui/recuperacion.png",
+      "category": "evidence",
+      "initialSha256": "e98c85bfa3a72d85979005c9275f8ce4dc5d9b7efda1dc5c9d3fc37937770596",
+      "publicationSha256": "e98c85bfa3a72d85979005c9275f8ce4dc5d9b7efda1dc5c9d3fc37937770596",
+      "initialState": "untracked"
+    },
+    {
+      "path": "docs/testing/commerce-ui/registro.png",
+      "category": "evidence",
+      "initialSha256": "03e7518bd8f98f6c2e1f1556f7ded620292a846931ba107565b8f63941f7e971",
+      "publicationSha256": "03e7518bd8f98f6c2e1f1556f7ded620292a846931ba107565b8f63941f7e971",
+      "initialState": "untracked"
+    },
+    {
+      "path": "docs/testing/commerce-ui/reintento.png",
+      "category": "evidence",
+      "initialSha256": "9e28519f70f80564bb44dae855aa59a169ea30571df4ce8005d0eabdd586c6da",
+      "publicationSha256": "9e28519f70f80564bb44dae855aa59a169ea30571df4ce8005d0eabdd586c6da",
+      "initialState": "untracked"
+    },
+    {
+      "path": "docs/testing/commerce-ui/restablecimiento.png",
+      "category": "evidence",
+      "initialSha256": "5efbeff784436063107ea89cd930d23f0bcd4f6a1ba32a3c075ba8c133707228",
+      "publicationSha256": "5efbeff784436063107ea89cd930d23f0bcd4f6a1ba32a3c075ba8c133707228",
+      "initialState": "untracked"
+    },
+    {
+      "path": "docs/testing/commerce-ui/sin-conexion.png",
+      "category": "evidence",
+      "initialSha256": "37e06545b98e4616106fa00f99eee5ea770bf9c3b35d536632e164ae201c7b93",
+      "publicationSha256": "37e06545b98e4616106fa00f99eee5ea770bf9c3b35d536632e164ae201c7b93",
+      "initialState": "untracked"
+    },
+    {
+      "path": "docs/testing/commerce-ui/verificacion.png",
+      "category": "evidence",
+      "initialSha256": "2e06359c0b94ce02db0e2db28648f3984067bcb0484e6cde1b6b01658ffd6b56",
+      "publicationSha256": "2e06359c0b94ce02db0e2db28648f3984067bcb0484e6cde1b6b01658ffd6b56",
+      "initialState": "untracked"
+    },
+    {
+      "path": "package.json",
+      "category": "tests",
+      "initialSha256": "7308e3410a3a2092bdb9699f11f208b147aaa8cb1f4cadcff20e22c979a4cbec",
+      "publicationSha256": "7308e3410a3a2092bdb9699f11f208b147aaa8cb1f4cadcff20e22c979a4cbec",
+      "initialState": "modified"
+    },
+    {
+      "path": "src/app/app.routes.integration.spec.ts",
+      "category": "modules",
+      "initialSha256": "d3cf256a5ec8e9cd36574805445118152df74d53cf34a77c70930fd0021c8dc7",
+      "publicationSha256": "d3cf256a5ec8e9cd36574805445118152df74d53cf34a77c70930fd0021c8dc7",
+      "initialState": "modified"
+    },
+    {
+      "path": "src/app/app.routes.ts",
+      "category": "modules",
+      "initialSha256": "2bc0f5681da17d747128cc2e327457b1c3b59d22d4b51bf1f406174e3d503d89",
+      "publicationSha256": "2bc0f5681da17d747128cc2e327457b1c3b59d22d4b51bf1f406174e3d503d89",
+      "initialState": "modified"
+    },
+    {
+      "path": "src/app/core/api/api-client.service.ts",
+      "category": "core",
+      "initialSha256": "4c5334b38b698a6727f72274f0a10c516238d666d9d7ecd26d6c4cf9d02c4416",
+      "publicationSha256": "4c5334b38b698a6727f72274f0a10c516238d666d9d7ecd26d6c4cf9d02c4416",
+      "initialState": "modified"
+    },
+    {
+      "path": "src/app/core/api/api-error-message.spec.ts",
+      "category": "core",
+      "initialSha256": "72e9ed34c5091d2807768b95424b18b64030dc07b1becc95ecd542260e039b3a",
+      "publicationSha256": "72e9ed34c5091d2807768b95424b18b64030dc07b1becc95ecd542260e039b3a",
+      "initialState": "untracked"
+    },
+    {
+      "path": "src/app/core/api/api-error-message.ts",
+      "category": "core",
+      "initialSha256": "247635844b9b10356e4ca3ce409daf2c1a909fe2b23d9b9d38e5f1abb9798677",
+      "publicationSha256": "247635844b9b10356e4ca3ce409daf2c1a909fe2b23d9b9d38e5f1abb9798677",
+      "initialState": "untracked"
+    },
+    {
+      "path": "src/app/core/api/api-error.spec.ts",
+      "category": "core",
+      "initialSha256": "a9cb6d02ebf9b956c8a74b0be7749fd79de4544941c9c7be8804d28cde79c1f4",
+      "publicationSha256": "a9cb6d02ebf9b956c8a74b0be7749fd79de4544941c9c7be8804d28cde79c1f4",
+      "initialState": "untracked"
+    },
+    {
+      "path": "src/app/core/api/api-error.ts",
+      "category": "core",
+      "initialSha256": "c2480973acff806905a5976e9f0748e06bd983e64c91720e114df66c04b8b60f",
+      "publicationSha256": "c2480973acff806905a5976e9f0748e06bd983e64c91720e114df66c04b8b60f",
+      "initialState": "modified"
+    },
+    {
+      "path": "src/app/core/api/auth.testing.ts",
+      "category": "core",
+      "initialSha256": "f395b6a17729f40eefe3e712f6f2602f878defbd7e9b8c251cc19deff6138c92",
+      "publicationSha256": "f395b6a17729f40eefe3e712f6f2602f878defbd7e9b8c251cc19deff6138c92",
+      "initialState": "untracked"
+    },
+    {
+      "path": "src/app/core/api/auth.validation.spec.ts",
+      "category": "core",
+      "initialSha256": "2f3e8ea70a10600931e244da06f51badafd3141a6d5b5589cb80b52a42ed0a69",
+      "publicationSha256": "2f3e8ea70a10600931e244da06f51badafd3141a6d5b5589cb80b52a42ed0a69",
+      "initialState": "untracked"
+    },
+    {
+      "path": "src/app/core/api/auth.validation.ts",
+      "category": "core",
+      "initialSha256": "de0f9dd72175ad5fe820bbca364ee9c9e400fa7c17c8196be09a23c57e6740e5",
+      "publicationSha256": "de0f9dd72175ad5fe820bbca364ee9c9e400fa7c17c8196be09a23c57e6740e5",
+      "initialState": "untracked"
+    },
+    {
+      "path": "src/app/core/api/cart.validation.spec.ts",
+      "category": "core",
+      "initialSha256": "fc380120a3beeda8918a6931f4b177d722a3427f051befcf4c065f6a3d48c660",
+      "publicationSha256": "fc380120a3beeda8918a6931f4b177d722a3427f051befcf4c065f6a3d48c660",
+      "initialState": "untracked"
+    },
+    {
+      "path": "src/app/core/api/cart.validation.ts",
+      "category": "core",
+      "initialSha256": "f3e1c2c6808a03d8445b524771e6d8a31b7bf772ac85bc7e1e366297cf87249f",
+      "publicationSha256": "f3e1c2c6808a03d8445b524771e6d8a31b7bf772ac85bc7e1e366297cf87249f",
+      "initialState": "untracked"
+    },
+    {
+      "path": "src/app/core/api/checkout.validation.spec.ts",
+      "category": "core",
+      "initialSha256": "b164363435033fcaf0385ef6a8967b2e11142fd2d269fea4611f7d52d8ee372d",
+      "publicationSha256": "b164363435033fcaf0385ef6a8967b2e11142fd2d269fea4611f7d52d8ee372d",
+      "initialState": "untracked"
+    },
+    {
+      "path": "src/app/core/api/checkout.validation.ts",
+      "category": "core",
+      "initialSha256": "d54e0ca576a0a37025a57cea87db556f536a5cd2bd82595ec6c5516ef142190e",
+      "publicationSha256": "d54e0ca576a0a37025a57cea87db556f536a5cd2bd82595ec6c5516ef142190e",
+      "initialState": "untracked"
+    },
+    {
+      "path": "src/app/core/api/order.validation.spec.ts",
+      "category": "core",
+      "initialSha256": "d8e5570c4e92f487927bb16908b0da4cf9e291fe26bcf938cdf58fdc4a57d963",
+      "publicationSha256": "d8e5570c4e92f487927bb16908b0da4cf9e291fe26bcf938cdf58fdc4a57d963",
+      "initialState": "untracked"
+    },
+    {
+      "path": "src/app/core/api/order.validation.ts",
+      "category": "core",
+      "initialSha256": "97f97cd61938677044e1a3a5957e5ae7fceaf5a02078102119aeaccaa774b506",
+      "publicationSha256": "97f97cd61938677044e1a3a5957e5ae7fceaf5a02078102119aeaccaa774b506",
+      "initialState": "untracked"
+    },
+    {
+      "path": "src/app/core/api/profile.validation.spec.ts",
+      "category": "core",
+      "initialSha256": "842c0f56d72fbe7f96ec021dc1fdfacd8f2dacabcfa7df8ff6602d3e82b28c6d",
+      "publicationSha256": "842c0f56d72fbe7f96ec021dc1fdfacd8f2dacabcfa7df8ff6602d3e82b28c6d",
+      "initialState": "untracked"
+    },
+    {
+      "path": "src/app/core/api/profile.validation.ts",
+      "category": "core",
+      "initialSha256": "6bd0dab421c64d78944ed99dfd7044fc7f3c2e3f2a5ec923fe16d4cabeca5462",
+      "publicationSha256": "6bd0dab421c64d78944ed99dfd7044fc7f3c2e3f2a5ec923fe16d4cabeca5462",
+      "initialState": "untracked"
+    },
+    {
+      "path": "src/app/core/api/public-catalog.dto.ts",
+      "category": "core",
+      "initialSha256": "096bba7bbf6716e7d0d23106290fdc499a3dd298582d164af14bf9db57b29cd2",
+      "publicationSha256": "096bba7bbf6716e7d0d23106290fdc499a3dd298582d164af14bf9db57b29cd2",
+      "initialState": "untracked"
+    },
+    {
+      "path": "src/app/core/api/public-catalog.testing.ts",
+      "category": "core",
+      "initialSha256": "57126f6491c9f287fac4fb253be7a056ff7a927e837f6209714c5d3f6526c42a",
+      "publicationSha256": "57126f6491c9f287fac4fb253be7a056ff7a927e837f6209714c5d3f6526c42a",
+      "initialState": "untracked"
+    },
+    {
+      "path": "src/app/core/api/public-catalog.validation.spec.ts",
+      "category": "core",
+      "initialSha256": "4dee59a7f498ea42d6c8377da78160428d48744cd2ac8741611d3ca24c8fe9b0",
+      "publicationSha256": "4dee59a7f498ea42d6c8377da78160428d48744cd2ac8741611d3ca24c8fe9b0",
+      "initialState": "untracked"
+    },
+    {
+      "path": "src/app/core/api/public-catalog.validation.ts",
+      "category": "core",
+      "initialSha256": "cf17a5ffa49d4c12ae9b7687e95824b9002e73dca1edc4bc88bea7d5f282574b",
+      "publicationSha256": "cf17a5ffa49d4c12ae9b7687e95824b9002e73dca1edc4bc88bea7d5f282574b",
+      "initialState": "untracked"
+    },
+    {
+      "path": "src/app/core/api/public-category.model.ts",
+      "category": "core",
+      "initialSha256": "99b75f33dece0d7cc4e6ff0e6f04e817afc82a3e1bd3978a60d8a80f678f1fe5",
+      "publicationSha256": "99b75f33dece0d7cc4e6ff0e6f04e817afc82a3e1bd3978a60d8a80f678f1fe5",
+      "initialState": "modified"
+    },
+    {
+      "path": "src/app/core/api/public-product.mapper.ts",
+      "category": "core",
+      "initialSha256": "4f28e424e823f3002c59f998e0ddfa8dd7ef7ae534510dd5485d1ae6d41baa64",
+      "publicationSha256": "4f28e424e823f3002c59f998e0ddfa8dd7ef7ae534510dd5485d1ae6d41baa64",
+      "initialState": "untracked"
+    },
+    {
+      "path": "src/app/core/config/backend-session.token.ts",
+      "category": "core",
+      "initialSha256": "356228cdf02e8b440218c792b3c61373d6c1733bac6f9da69c69524bdda7a67f",
+      "publicationSha256": "356228cdf02e8b440218c792b3c61373d6c1733bac6f9da69c69524bdda7a67f",
+      "initialState": "untracked"
+    },
+    {
+      "path": "src/app/core/factories/demo-order.factory.spec.ts",
+      "category": "core",
+      "initialSha256": "11c92877e525c2d811ced0c6bff13fef80fc2a442a487914a5f9724b2b7b376b",
+      "publicationSha256": "11c92877e525c2d811ced0c6bff13fef80fc2a442a487914a5f9724b2b7b376b",
+      "initialState": "untracked"
+    },
+    {
+      "path": "src/app/core/factories/demo-order.factory.ts",
+      "category": "core",
+      "initialSha256": "ba86bd8fb3c6b7fdeb01b048072f9d6f16da86208807484965893569555421eb",
+      "publicationSha256": "ba86bd8fb3c6b7fdeb01b048072f9d6f16da86208807484965893569555421eb",
+      "initialState": "untracked"
+    },
+    {
+      "path": "src/app/core/infrastructure/demo-catalog.data.ts",
+      "category": "core",
+      "initialSha256": "61cf007648f287b73eae4570d02418193599a5d9df83fd482d797e79040599d4",
+      "publicationSha256": "61cf007648f287b73eae4570d02418193599a5d9df83fd482d797e79040599d4",
+      "initialState": "untracked"
+    },
+    {
+      "path": "src/app/core/infrastructure/demo-orders.data.ts",
+      "category": "core",
+      "initialSha256": "9e3dba9487b6dcdd413276e890c18f8db14528bd2f456c06979a7648b264c5fa",
+      "publicationSha256": "9e3dba9487b6dcdd413276e890c18f8db14528bd2f456c06979a7648b264c5fa",
+      "initialState": "untracked"
+    },
+    {
+      "path": "src/app/core/infrastructure/http-account-security.repository.spec.ts",
+      "category": "core",
+      "initialSha256": "aa3a2cf4480dc6a26231682ee61760d2ecf6b069a9e0115dbf3e7f3b5acba7c5",
+      "publicationSha256": "aa3a2cf4480dc6a26231682ee61760d2ecf6b069a9e0115dbf3e7f3b5acba7c5",
+      "initialState": "untracked"
+    },
+    {
+      "path": "src/app/core/infrastructure/http-account-security.repository.ts",
+      "category": "core",
+      "initialSha256": "c9e6289e9a290efb825e2a0246b5f1ff51dfd73da5f90bb6f080478cf1612624",
+      "publicationSha256": "c9e6289e9a290efb825e2a0246b5f1ff51dfd73da5f90bb6f080478cf1612624",
+      "initialState": "untracked"
+    },
+    {
+      "path": "src/app/core/infrastructure/http-auth.repository.spec.ts",
+      "category": "core",
+      "initialSha256": "f1dfeea062028846d6701f46b30b991e79be3864b44924a210055f5a452a3732",
+      "publicationSha256": "f1dfeea062028846d6701f46b30b991e79be3864b44924a210055f5a452a3732",
+      "initialState": "untracked"
+    },
+    {
+      "path": "src/app/core/infrastructure/http-auth.repository.ts",
+      "category": "core",
+      "initialSha256": "e397cc895877ea6299afb18866aa4f9f76b3561e475c1f46c3f0e2b69d28c3cd",
+      "publicationSha256": "e397cc895877ea6299afb18866aa4f9f76b3561e475c1f46c3f0e2b69d28c3cd",
+      "initialState": "untracked"
+    },
+    {
+      "path": "src/app/core/infrastructure/http-cart.repository.ts",
+      "category": "core",
+      "initialSha256": "b00d992365fe45ba6ff3179f266a41c54b73cffde48de452e6b63067af38741e",
+      "publicationSha256": "b00d992365fe45ba6ff3179f266a41c54b73cffde48de452e6b63067af38741e",
+      "initialState": "untracked"
+    },
+    {
+      "path": "src/app/core/infrastructure/http-checkout.repository.ts",
+      "category": "core",
+      "initialSha256": "330fa1438439bdbe1012ac30a02508e773694048438cbee4a3cfc39246057e9d",
+      "publicationSha256": "330fa1438439bdbe1012ac30a02508e773694048438cbee4a3cfc39246057e9d",
+      "initialState": "untracked"
+    },
+    {
+      "path": "src/app/core/infrastructure/http-profile.repository.ts",
+      "category": "core",
+      "initialSha256": "117eb22d03045f08a007cd63ac528cba7bd357407cbaf8ab53c145bde9489d8f",
+      "publicationSha256": "117eb22d03045f08a007cd63ac528cba7bd357407cbaf8ab53c145bde9489d8f",
+      "initialState": "untracked"
+    },
+    {
+      "path": "src/app/core/infrastructure/http-public-catalog.repository.spec.ts",
+      "category": "core",
+      "initialSha256": "27d597f28ecd271b92b596960aea5c540d0aa25e54e1499e2e2d05ed809c0630",
+      "publicationSha256": "27d597f28ecd271b92b596960aea5c540d0aa25e54e1499e2e2d05ed809c0630",
+      "initialState": "untracked"
+    },
+    {
+      "path": "src/app/core/infrastructure/http-public-catalog.repository.ts",
+      "category": "core",
+      "initialSha256": "19c24e7d3e66fc56622ce432bc33d891401e0e9f2c5a0b807fa06f7e915c602e",
+      "publicationSha256": "19c24e7d3e66fc56622ce432bc33d891401e0e9f2c5a0b807fa06f7e915c602e",
+      "initialState": "untracked"
+    },
+    {
+      "path": "src/app/core/infrastructure/http-real-order.repository.ts",
+      "category": "core",
+      "initialSha256": "eccaa5619cc831eb1a52c29cdaf4200e51ad3d6a889c70439769a9d96cf57910",
+      "publicationSha256": "eccaa5619cc831eb1a52c29cdaf4200e51ad3d6a889c70439769a9d96cf57910",
+      "initialState": "untracked"
+    },
+    {
+      "path": "src/app/core/infrastructure/http-review.repository.ts",
+      "category": "core",
+      "initialSha256": "55007095f251d1a8c44801cf4612646969b06b0df763bad7db69aabd869d0235",
+      "publicationSha256": "55007095f251d1a8c44801cf4612646969b06b0df763bad7db69aabd869d0235",
+      "initialState": "untracked"
+    },
+    {
+      "path": "src/app/core/infrastructure/http-wishlist.repository.ts",
+      "category": "core",
+      "initialSha256": "535ab76488658f0aa4a9d1650ace0606ad074ae2a82f5f829f93dc474625d830",
+      "publicationSha256": "535ab76488658f0aa4a9d1650ace0606ad074ae2a82f5f829f93dc474625d830",
+      "initialState": "untracked"
+    },
+    {
+      "path": "src/app/core/infrastructure/in-memory-demo-order.repository.spec.ts",
+      "category": "core",
+      "initialSha256": "e7db9663b6e6cc374bbff4748b3312139853e62ab546825a50038d96ce03d34d",
+      "publicationSha256": "e7db9663b6e6cc374bbff4748b3312139853e62ab546825a50038d96ce03d34d",
+      "initialState": "untracked"
+    },
+    {
+      "path": "src/app/core/infrastructure/in-memory-demo-order.repository.ts",
+      "category": "core",
+      "initialSha256": "24e55f2fca8b27b8d74ed22ee986df8fa278ef82b170400e2b30640be943d46d",
+      "publicationSha256": "24e55f2fca8b27b8d74ed22ee986df8fa278ef82b170400e2b30640be943d46d",
+      "initialState": "untracked"
+    },
+    {
+      "path": "src/app/core/infrastructure/memory-session.store.ts",
+      "category": "core",
+      "initialSha256": "6b62fbc289efe702c736d78a0e03a3dbd47067d4694c33183b6138407f393af6",
+      "publicationSha256": "6b62fbc289efe702c736d78a0e03a3dbd47067d4694c33183b6138407f393af6",
+      "initialState": "untracked"
+    },
+    {
+      "path": "src/app/core/models/auth.model.ts",
+      "category": "core",
+      "initialSha256": "0a1e3c12ea062fae4620bbe71c223291ff383aba83e8ae84cd3f6e47f627eedd",
+      "publicationSha256": "0a1e3c12ea062fae4620bbe71c223291ff383aba83e8ae84cd3f6e47f627eedd",
+      "initialState": "untracked"
+    },
+    {
+      "path": "src/app/core/models/cart.model.ts",
+      "category": "core",
+      "initialSha256": "9182d142980b5b164bea9c3b302ce7e95585e7e860ed10a7d129f0ac29cc9730",
+      "publicationSha256": "9182d142980b5b164bea9c3b302ce7e95585e7e860ed10a7d129f0ac29cc9730",
+      "initialState": "untracked"
+    },
+    {
+      "path": "src/app/core/models/catalog.model.ts",
+      "category": "core",
+      "initialSha256": "a313bcf6d003e65540e7960c5ea3a3f57cd3751ae618ddd1058f741f2dd55dcc",
+      "publicationSha256": "050ceabfbdaf134be3e701bfb0b0ed444dfee48f8772e15c2a1767ad265cc9f8",
+      "initialState": "untracked"
+    },
+    {
+      "path": "src/app/core/models/order.model.ts",
+      "category": "core",
+      "initialSha256": "10256254217911b2f2ae556d7a4cdaa2c6865422ee58146a85cbba947a09c435",
+      "publicationSha256": "10256254217911b2f2ae556d7a4cdaa2c6865422ee58146a85cbba947a09c435",
+      "initialState": "untracked"
+    },
+    {
+      "path": "src/app/core/models/profile.model.ts",
+      "category": "core",
+      "initialSha256": "cdd8791572c8fc6045a8fff9f606c1b028d05ebebdb2133b0cf24f04c5226047",
+      "publicationSha256": "cdd8791572c8fc6045a8fff9f606c1b028d05ebebdb2133b0cf24f04c5226047",
+      "initialState": "untracked"
+    },
+    {
+      "path": "src/app/core/models/public-product.model.ts",
+      "category": "core",
+      "initialSha256": "312aee5f2e7891c64bc8b9d7f485116b8597ec441e9ea3cb008cbf991e96b04d",
+      "publicationSha256": "312aee5f2e7891c64bc8b9d7f485116b8597ec441e9ea3cb008cbf991e96b04d",
+      "initialState": "untracked"
+    },
+    {
+      "path": "src/app/core/models/real-checkout.model.ts",
+      "category": "core",
+      "initialSha256": "01d582779af7ac13fa3586d1d1d8cdbd159221b3f72020bec5757ed6f2fbb510",
+      "publicationSha256": "01d582779af7ac13fa3586d1d1d8cdbd159221b3f72020bec5757ed6f2fbb510",
+      "initialState": "untracked"
+    },
+    {
+      "path": "src/app/core/models/wishlist.model.ts",
+      "category": "core",
+      "initialSha256": "2176d8aa0abbc275070ebd8e4aa00b6b259b60bf40bd1a7bad1b0df0de2b117c",
+      "publicationSha256": "2176d8aa0abbc275070ebd8e4aa00b6b259b60bf40bd1a7bad1b0df0de2b117c",
+      "initialState": "untracked"
+    },
+    {
+      "path": "src/app/core/repositories/auth.repository.ts",
+      "category": "core",
+      "initialSha256": "0c18bcddee639f41f3e75fafb942ec9d7ca704e15d623b1e1ec29fed3ad5e887",
+      "publicationSha256": "0c18bcddee639f41f3e75fafb942ec9d7ca704e15d623b1e1ec29fed3ad5e887",
+      "initialState": "untracked"
+    },
+    {
+      "path": "src/app/core/repositories/cart.repository.ts",
+      "category": "core",
+      "initialSha256": "83544fd3184c31c3446f7ff0a72b9a763fe773dbbb7a68e67a39734b59950cf3",
+      "publicationSha256": "83544fd3184c31c3446f7ff0a72b9a763fe773dbbb7a68e67a39734b59950cf3",
+      "initialState": "untracked"
+    },
+    {
+      "path": "src/app/core/repositories/checkout.repository.ts",
+      "category": "core",
+      "initialSha256": "aa3cdf4883dda63aff105bb87906d08e7dcf75228ec2f44fc54cb0a471d06e91",
+      "publicationSha256": "aa3cdf4883dda63aff105bb87906d08e7dcf75228ec2f44fc54cb0a471d06e91",
+      "initialState": "untracked"
+    },
+    {
+      "path": "src/app/core/repositories/demo-order.repository.ts",
+      "category": "core",
+      "initialSha256": "b94a1cb1bc43c1513a671330ae130337eaf94f409dedd73af01831dbb95cca43",
+      "publicationSha256": "b94a1cb1bc43c1513a671330ae130337eaf94f409dedd73af01831dbb95cca43",
+      "initialState": "untracked"
+    },
+    {
+      "path": "src/app/core/repositories/profile.repository.ts",
+      "category": "core",
+      "initialSha256": "a85c74f4e37ba7cbf9b8deaab98d326c40456889daa85185b863e10a01a08c62",
+      "publicationSha256": "a85c74f4e37ba7cbf9b8deaab98d326c40456889daa85185b863e10a01a08c62",
+      "initialState": "untracked"
+    },
+    {
+      "path": "src/app/core/repositories/public-catalog.repository.ts",
+      "category": "core",
+      "initialSha256": "09d0bb261d5a2762d4b201e17634e8ca1cb3ec818346ad39b2b4cb9169cc81ce",
+      "publicationSha256": "09d0bb261d5a2762d4b201e17634e8ca1cb3ec818346ad39b2b4cb9169cc81ce",
+      "initialState": "untracked"
+    },
+    {
+      "path": "src/app/core/repositories/real-order.repository.ts",
+      "category": "core",
+      "initialSha256": "a4890d3f0f8b2e78b0510ebcf018e6c8054278e84326f5fefb7f5b51a7c2a1e1",
+      "publicationSha256": "a4890d3f0f8b2e78b0510ebcf018e6c8054278e84326f5fefb7f5b51a7c2a1e1",
+      "initialState": "untracked"
+    },
+    {
+      "path": "src/app/core/repositories/review.repository.ts",
+      "category": "core",
+      "initialSha256": "e5a4b2a09f379f6c93c779e9af3b8dda10c0439185d580d3ef357ad0d3286551",
+      "publicationSha256": "e5a4b2a09f379f6c93c779e9af3b8dda10c0439185d580d3ef357ad0d3286551",
+      "initialState": "untracked"
+    },
+    {
+      "path": "src/app/core/repositories/wishlist.repository.ts",
+      "category": "core",
+      "initialSha256": "0b76f3ee5ae832cd833315ec3c2268a352a8955f4aca58be41ebd010de2ef2d5",
+      "publicationSha256": "0b76f3ee5ae832cd833315ec3c2268a352a8955f4aca58be41ebd010de2ef2d5",
+      "initialState": "untracked"
+    },
+    {
+      "path": "src/app/core/security/auth.guard.ts",
+      "category": "core",
+      "initialSha256": "438f4c1ae8708684433373a20642ec9437ebeb7966a903357d96b728fbcf1c5f",
+      "publicationSha256": "438f4c1ae8708684433373a20642ec9437ebeb7966a903357d96b728fbcf1c5f",
+      "initialState": "untracked"
+    },
+    {
+      "path": "src/app/core/security/auth.interceptor.ts",
+      "category": "core",
+      "initialSha256": "f847a685069c88dd31deac846ca93aebb9a8b7d9ccaa6dfdb5d183e50826f574",
+      "publicationSha256": "f847a685069c88dd31deac846ca93aebb9a8b7d9ccaa6dfdb5d183e50826f574",
+      "initialState": "untracked"
+    },
+    {
+      "path": "src/app/core/security/jwt.util.spec.ts",
+      "category": "core",
+      "initialSha256": "96d266f67687d94c7bae340012c7c505cd31b90f254558532c23b5a68d5fcde2",
+      "publicationSha256": "96d266f67687d94c7bae340012c7c505cd31b90f254558532c23b5a68d5fcde2",
+      "initialState": "untracked"
+    },
+    {
+      "path": "src/app/core/security/jwt.util.ts",
+      "category": "core",
+      "initialSha256": "aaf118d2d9e32c96115ca4d60f1a17b21a471542ffe2dca6626223c58bac10b8",
+      "publicationSha256": "aaf118d2d9e32c96115ca4d60f1a17b21a471542ffe2dca6626223c58bac10b8",
+      "initialState": "untracked"
+    },
+    {
+      "path": "src/app/core/security/session-security.integration.spec.ts",
+      "category": "core",
+      "initialSha256": "a5e97a3948ddef5276a58eef177fc6f19a454aced05bca05506f439a57a2726d",
+      "publicationSha256": "a5e97a3948ddef5276a58eef177fc6f19a454aced05bca05506f439a57a2726d",
+      "initialState": "untracked"
+    },
+    {
+      "path": "src/app/core/security/session-store.token.ts",
+      "category": "core",
+      "initialSha256": "7b0c1cb2f58f858a7544b596d585822bbaef833d490a2d8dfe3d3d68ed98f1aa",
+      "publicationSha256": "7b0c1cb2f58f858a7544b596d585822bbaef833d490a2d8dfe3d3d68ed98f1aa",
+      "initialState": "untracked"
+    },
+    {
+      "path": "src/app/core/services/auth.service.spec.ts",
+      "category": "core",
+      "initialSha256": "67406cc78ab679be087f670a61b62575823a15fcb2aa873c2a635e4e4edf88f7",
+      "publicationSha256": "67406cc78ab679be087f670a61b62575823a15fcb2aa873c2a635e4e4edf88f7",
+      "initialState": "untracked"
+    },
+    {
+      "path": "src/app/core/services/auth.service.ts",
+      "category": "core",
+      "initialSha256": "f8458570d18bba6406f9538c559684123ddd02cba4feb2538e48b28ee2db77ca",
+      "publicationSha256": "f8458570d18bba6406f9538c559684123ddd02cba4feb2538e48b28ee2db77ca",
+      "initialState": "untracked"
+    },
+    {
+      "path": "src/app/core/services/cart.service.spec.ts",
+      "category": "core",
+      "initialSha256": "7fe293a9db8160fadf56dc478c52eccf05888b934852c2d7cfc369dc472c0d1c",
+      "publicationSha256": "7fe293a9db8160fadf56dc478c52eccf05888b934852c2d7cfc369dc472c0d1c",
+      "initialState": "untracked"
+    },
+    {
+      "path": "src/app/core/services/cart.service.ts",
+      "category": "core",
+      "initialSha256": "90e3078cb119bd3b92964e7d88b83e4db69bc4ef431bfb35b38832b71ea259a8",
+      "publicationSha256": "90e3078cb119bd3b92964e7d88b83e4db69bc4ef431bfb35b38832b71ea259a8",
+      "initialState": "untracked"
+    },
+    {
+      "path": "src/app/core/services/checkout-quote-state.service.spec.ts",
+      "category": "core",
+      "initialSha256": "c4ae00c58a699f79ec1123a9297200ac1bd899f8ab6f221ec7e9a7c427e7df0d",
+      "publicationSha256": "c4ae00c58a699f79ec1123a9297200ac1bd899f8ab6f221ec7e9a7c427e7df0d",
+      "initialState": "untracked"
+    },
+    {
+      "path": "src/app/core/services/checkout-quote-state.service.ts",
+      "category": "core",
+      "initialSha256": "f9d418a138cdb07b4c3998d36c3a36fd5a3be7db8ede670aff589e02964a13da",
+      "publicationSha256": "f9d418a138cdb07b4c3998d36c3a36fd5a3be7db8ede670aff589e02964a13da",
+      "initialState": "untracked"
+    },
+    {
+      "path": "src/app/core/services/demo-account-state.service.ts",
+      "category": "core",
+      "initialSha256": "6139deecd9f9133ae813d853b54e110a2c9bfa146b8dba7ba55a679da6c7ef20",
+      "publicationSha256": "6139deecd9f9133ae813d853b54e110a2c9bfa146b8dba7ba55a679da6c7ef20",
+      "initialState": "modified"
+    },
+    {
+      "path": "src/app/core/services/demo-catalog.service.ts",
+      "category": "core",
+      "initialSha256": "abc8a2baa6d24ad581467e79c3b8e0dac5cfe6f21f1c41cbeac11d0be0161fa3",
+      "publicationSha256": "abc8a2baa6d24ad581467e79c3b8e0dac5cfe6f21f1c41cbeac11d0be0161fa3",
+      "initialState": "untracked"
+    },
+    {
+      "path": "src/app/core/services/demo-checkout-state.service.ts",
+      "category": "core",
+      "initialSha256": "82a4c01ae439f47a4ce484eec98f27b1f8826c397d3ed2470e5f1dd15c2cefd2",
+      "publicationSha256": "82a4c01ae439f47a4ce484eec98f27b1f8826c397d3ed2470e5f1dd15c2cefd2",
+      "initialState": "modified"
+    },
+    {
+      "path": "src/app/core/services/demo-purchase.spec.ts",
+      "category": "core",
+      "initialSha256": "5c44ecee16a0decb3180a2ac7faa83a16cc0f7f6c164e85fb4fac21b018c8084",
+      "publicationSha256": "5c44ecee16a0decb3180a2ac7faa83a16cc0f7f6c164e85fb4fac21b018c8084",
+      "initialState": "untracked"
+    },
+    {
+      "path": "src/app/core/services/order-detail.service.ts",
+      "category": "core",
+      "initialSha256": "90e5bf1efc163f77ca8d27ba03920f62eee176ffc09c83938ce6bb2db3ce63e9",
+      "publicationSha256": "90e5bf1efc163f77ca8d27ba03920f62eee176ffc09c83938ce6bb2db3ce63e9",
+      "initialState": "modified"
+    },
+    {
+      "path": "src/app/core/services/orders.service.ts",
+      "category": "core",
+      "initialSha256": "1706812d1a9e1cc707a0558f8c719b83e521f73c76a99579b43cd53acc1d88eb",
+      "publicationSha256": "1706812d1a9e1cc707a0558f8c719b83e521f73c76a99579b43cd53acc1d88eb",
+      "initialState": "modified"
+    },
+    {
+      "path": "src/app/core/services/public-catalog.service.spec.ts",
+      "category": "core",
+      "initialSha256": "f978b73bfa1d9b7c8246ec63efabeec6a12f9f475446163fec8c97c8f9d435e2",
+      "publicationSha256": "f978b73bfa1d9b7c8246ec63efabeec6a12f9f475446163fec8c97c8f9d435e2",
+      "initialState": "untracked"
+    },
+    {
+      "path": "src/app/core/services/public-catalog.service.ts",
+      "category": "core",
+      "initialSha256": "1fee15462e5fac2edeea4cd0298594de138ddddd0db209dfe899db930bdd69a2",
+      "publicationSha256": "1fee15462e5fac2edeea4cd0298594de138ddddd0db209dfe899db930bdd69a2",
+      "initialState": "untracked"
+    },
+    {
+      "path": "src/app/core/services/purchase-intent.service.ts",
+      "category": "core",
+      "initialSha256": "d99fee6c9421e813b583bce2e6265143e809d89aa2fe3e251c4a42edad7c4cae",
+      "publicationSha256": "d99fee6c9421e813b583bce2e6265143e809d89aa2fe3e251c4a42edad7c4cae",
+      "initialState": "untracked"
+    },
+    {
+      "path": "src/app/core/validation/auth-fields.validation.spec.ts",
+      "category": "core",
+      "initialSha256": "09d01f1493abe3060d337f26f9edbadccae3387098cc7abc56c56414522e1bde",
+      "publicationSha256": "09d01f1493abe3060d337f26f9edbadccae3387098cc7abc56c56414522e1bde",
+      "initialState": "untracked"
+    },
+    {
+      "path": "src/app/core/validation/auth-fields.validation.ts",
+      "category": "core",
+      "initialSha256": "1ac1d462831366e0f2517878bff05988f93885cee0dfe25ac8164e9c07398149",
+      "publicationSha256": "1ac1d462831366e0f2517878bff05988f93885cee0dfe25ac8164e9c07398149",
+      "initialState": "untracked"
+    },
+    {
+      "path": "src/app/features/auth/connected/connected-auth.integration.spec.ts",
+      "category": "modules",
+      "initialSha256": "aaf20839a222d76312910ccaec87a6dde85b71796d1f1a5e2f563e55e741b7b6",
+      "publicationSha256": "aaf20839a222d76312910ccaec87a6dde85b71796d1f1a5e2f563e55e741b7b6",
+      "initialState": "untracked"
+    },
+    {
+      "path": "src/app/features/auth/connected/connected-forgot-password.page.html",
+      "category": "modules",
+      "initialSha256": "2114f3a68af4f1471f1e1e82573aa21555d0f4f0a208749ed80ae7feee3f754f",
+      "publicationSha256": "2114f3a68af4f1471f1e1e82573aa21555d0f4f0a208749ed80ae7feee3f754f",
+      "initialState": "untracked"
+    },
+    {
+      "path": "src/app/features/auth/connected/connected-forgot-password.page.ts",
+      "category": "modules",
+      "initialSha256": "263cb9a8ac58733a478d48920a0a9a53184a2badbeb6097d00cbcf664dae09ee",
+      "publicationSha256": "263cb9a8ac58733a478d48920a0a9a53184a2badbeb6097d00cbcf664dae09ee",
+      "initialState": "untracked"
+    },
+    {
+      "path": "src/app/features/auth/connected/connected-login.page.html",
+      "category": "modules",
+      "initialSha256": "895d55149e515a241fe635d4f9e4ae9353454064a83dfa203d3d8dfa4c25dcd8",
+      "publicationSha256": "895d55149e515a241fe635d4f9e4ae9353454064a83dfa203d3d8dfa4c25dcd8",
+      "initialState": "untracked"
+    },
+    {
+      "path": "src/app/features/auth/connected/connected-login.page.ts",
+      "category": "modules",
+      "initialSha256": "22ecd03f21008a4b750d668c412dc983c45cf9037d9274c927be421a464f00cf",
+      "publicationSha256": "22ecd03f21008a4b750d668c412dc983c45cf9037d9274c927be421a464f00cf",
+      "initialState": "untracked"
+    },
+    {
+      "path": "src/app/features/auth/connected/connected-register.page.html",
+      "category": "modules",
+      "initialSha256": "2d19493ca1ec1b928c95340e56e506ecccc7cdbc5fbe84939f47a28fb528dff9",
+      "publicationSha256": "2d19493ca1ec1b928c95340e56e506ecccc7cdbc5fbe84939f47a28fb528dff9",
+      "initialState": "untracked"
+    },
+    {
+      "path": "src/app/features/auth/connected/connected-register.page.ts",
+      "category": "modules",
+      "initialSha256": "e16283a3d65b4b38d41bd57f116d49c6738519a509564538aadd033f6ec31d11",
+      "publicationSha256": "e16283a3d65b4b38d41bd57f116d49c6738519a509564538aadd033f6ec31d11",
+      "initialState": "untracked"
+    },
+    {
+      "path": "src/app/features/auth/connected/verify-email.page.html",
+      "category": "modules",
+      "initialSha256": "5b6b333afba023b05a753f3ad0beff5eef36d196dbc282a94c2512adea63595b",
+      "publicationSha256": "5b6b333afba023b05a753f3ad0beff5eef36d196dbc282a94c2512adea63595b",
+      "initialState": "untracked"
+    },
+    {
+      "path": "src/app/features/auth/connected/verify-email.page.ts",
+      "category": "modules",
+      "initialSha256": "5b275676791fb40413e312f8d5bb7ad514e7d8906e9cb7973922f776c7d33ace",
+      "publicationSha256": "5b275676791fb40413e312f8d5bb7ad514e7d8906e9cb7973922f776c7d33ace",
+      "initialState": "untracked"
+    },
+    {
+      "path": "src/app/features/auth/forgot-password/forgot-password.page.html",
+      "category": "modules",
+      "initialSha256": "44a9e736c6c5b16c329a87a62ff3fd2cce4ac6f724721a450a430c62e6dd1ebf",
+      "publicationSha256": "44a9e736c6c5b16c329a87a62ff3fd2cce4ac6f724721a450a430c62e6dd1ebf",
+      "initialState": "modified"
+    },
+    {
+      "path": "src/app/features/auth/forgot-password/forgot-password.page.scss",
+      "category": "modules",
+      "initialSha256": "99a788dfac8e20dec834788d76ab019876cc479d4e8412d22184cafda9228118",
+      "publicationSha256": "99a788dfac8e20dec834788d76ab019876cc479d4e8412d22184cafda9228118",
+      "initialState": "modified"
+    },
+    {
+      "path": "src/app/features/auth/forgot-password/forgot-password.page.ts",
+      "category": "modules",
+      "initialSha256": "bd7cfb5226b06f01e36a5bd157a872179eb7c7d67d99e87324ab7f35bd072649",
+      "publicationSha256": "bd7cfb5226b06f01e36a5bd157a872179eb7c7d67d99e87324ab7f35bd072649",
+      "initialState": "modified"
+    },
+    {
+      "path": "src/app/features/auth/login/login.page.html",
+      "category": "modules",
+      "initialSha256": "6a2d8695e3311d54d26b1848df521391ecbf9dc4813f9d8abb2d705627079aee",
+      "publicationSha256": "6a2d8695e3311d54d26b1848df521391ecbf9dc4813f9d8abb2d705627079aee",
+      "initialState": "modified"
+    },
+    {
+      "path": "src/app/features/auth/login/login.page.scss",
+      "category": "modules",
+      "initialSha256": "f217a54f5b96bdf62b71f1fe99aac21b2b0603ea88f651e7efebe9f31630f0d9",
+      "publicationSha256": "f217a54f5b96bdf62b71f1fe99aac21b2b0603ea88f651e7efebe9f31630f0d9",
+      "initialState": "modified"
+    },
+    {
+      "path": "src/app/features/auth/login/login.page.ts",
+      "category": "modules",
+      "initialSha256": "b3e8bb4eefe66dbbdf9be4f0e5f2ef52430544d2bae4e5753e6a2daecbe0400b",
+      "publicationSha256": "b3e8bb4eefe66dbbdf9be4f0e5f2ef52430544d2bae4e5753e6a2daecbe0400b",
+      "initialState": "modified"
+    },
+    {
+      "path": "src/app/features/auth/register/register.page.html",
+      "category": "modules",
+      "initialSha256": "ed37d375c4248244e6a24112c83459c684fe3f6ac9e4178beeffedb7cc2cfbcd",
+      "publicationSha256": "ed37d375c4248244e6a24112c83459c684fe3f6ac9e4178beeffedb7cc2cfbcd",
+      "initialState": "modified"
+    },
+    {
+      "path": "src/app/features/auth/register/register.page.scss",
+      "category": "modules",
+      "initialSha256": "f217a54f5b96bdf62b71f1fe99aac21b2b0603ea88f651e7efebe9f31630f0d9",
+      "publicationSha256": "f217a54f5b96bdf62b71f1fe99aac21b2b0603ea88f651e7efebe9f31630f0d9",
+      "initialState": "modified"
+    },
+    {
+      "path": "src/app/features/auth/register/register.page.ts",
+      "category": "modules",
+      "initialSha256": "49066d02ba455458f115aa58a9ecc819da757ac68f86a33238b2b7327c988431",
+      "publicationSha256": "49066d02ba455458f115aa58a9ecc819da757ac68f86a33238b2b7327c988431",
+      "initialState": "modified"
+    },
+    {
+      "path": "src/app/features/cart/cart.page.html",
+      "category": "modules",
+      "initialSha256": "ae37f6b641307400a0b02f6e5abcd51f72ef4951f367a76ca70f4e2ea2931637",
+      "publicationSha256": "ae37f6b641307400a0b02f6e5abcd51f72ef4951f367a76ca70f4e2ea2931637",
+      "initialState": "modified"
+    },
+    {
+      "path": "src/app/features/cart/cart.page.ts",
+      "category": "modules",
+      "initialSha256": "be3393a68ca16a6c33e95238da095222f5601591f645706dc0eb0cfec9bed33a",
+      "publicationSha256": "be3393a68ca16a6c33e95238da095222f5601591f645706dc0eb0cfec9bed33a",
+      "initialState": "modified"
+    },
+    {
+      "path": "src/app/features/cart/connected-cart.integration.spec.ts",
+      "category": "modules",
+      "initialSha256": "a3f8e39cd3750d460dbf93a888e093788787c827d5fc395a93aa8ddef9de0637",
+      "publicationSha256": "a3f8e39cd3750d460dbf93a888e093788787c827d5fc395a93aa8ddef9de0637",
+      "initialState": "untracked"
+    },
+    {
+      "path": "src/app/features/cart/connected-cart.view.ts",
+      "category": "modules",
+      "initialSha256": "570f85e71def0541ad1708fa7ce523078c7a09a533fa8b7bf32a1fbbcdeff2f1",
+      "publicationSha256": "570f85e71def0541ad1708fa7ce523078c7a09a533fa8b7bf32a1fbbcdeff2f1",
+      "initialState": "untracked"
+    },
+    {
+      "path": "src/app/features/catalog/catalog-demo.data.ts",
+      "category": "modules",
+      "initialSha256": "9a0f57b9b02104f51da425cbdf90071834b39e8f8dc05834b932aabefe0a8894",
+      "publicationSha256": "9a0f57b9b02104f51da425cbdf90071834b39e8f8dc05834b932aabefe0a8894",
+      "initialState": "modified"
+    },
+    {
+      "path": "src/app/features/catalog/catalog.page.html",
+      "category": "modules",
+      "initialSha256": "92d6f6cde17a5974e9a031a417bd935bc911df2ddf3f6f9abc09537a9ee3b309",
+      "publicationSha256": "92d6f6cde17a5974e9a031a417bd935bc911df2ddf3f6f9abc09537a9ee3b309",
+      "initialState": "modified"
+    },
+    {
+      "path": "src/app/features/catalog/catalog.page.scss",
+      "category": "modules",
+      "initialSha256": "a57bf772947386cdd490193e548b5751b7c557ab919db490f0b6e0030195f290",
+      "publicationSha256": "a57bf772947386cdd490193e548b5751b7c557ab919db490f0b6e0030195f290",
+      "initialState": "modified"
+    },
+    {
+      "path": "src/app/features/catalog/catalog.page.ts",
+      "category": "modules",
+      "initialSha256": "170bb9a4898d9a36296737a09e0ffbccdbc2990fa92aba9ad9ccff5f7bb06020",
+      "publicationSha256": "170bb9a4898d9a36296737a09e0ffbccdbc2990fa92aba9ad9ccff5f7bb06020",
+      "initialState": "modified"
+    },
+    {
+      "path": "src/app/features/catalog/product-detail/product-detail.page.ts",
+      "category": "modules",
+      "initialSha256": "98c3b7816890d73a3a01df4ffdef40f52c7b3b18bfd22992244e71922e0304ec",
+      "publicationSha256": "98c3b7816890d73a3a01df4ffdef40f52c7b3b18bfd22992244e71922e0304ec",
+      "initialState": "modified"
+    },
+    {
+      "path": "src/app/features/checkout/checkout-summary/checkout-summary.page.html",
+      "category": "modules",
+      "initialSha256": "486050911fd65b104ceb7a53816165844166b0db6d861f051e87f12bf6e6a8bc",
+      "publicationSha256": "486050911fd65b104ceb7a53816165844166b0db6d861f051e87f12bf6e6a8bc",
+      "initialState": "modified"
+    },
+    {
+      "path": "src/app/features/checkout/checkout-summary/checkout-summary.page.ts",
+      "category": "modules",
+      "initialSha256": "b27004662f5c3549b1d2bb076cd0537ab8c4ace54378c51969a3f913b7dc81f2",
+      "publicationSha256": "b27004662f5c3549b1d2bb076cd0537ab8c4ace54378c51969a3f913b7dc81f2",
+      "initialState": "modified"
+    },
+    {
+      "path": "src/app/features/checkout/confirmation/confirmation.page.html",
+      "category": "modules",
+      "initialSha256": "c671cc5ba01c6ecc5002d2375d8d0d0105185efa7878dcfc35df5eb67374b92c",
+      "publicationSha256": "c671cc5ba01c6ecc5002d2375d8d0d0105185efa7878dcfc35df5eb67374b92c",
+      "initialState": "modified"
+    },
+    {
+      "path": "src/app/features/checkout/confirmation/confirmation.page.ts",
+      "category": "modules",
+      "initialSha256": "b6f8dd79f99be390b58dba05154358dd1381bec4dbe3e7fa9621574a6d469c2a",
+      "publicationSha256": "b6f8dd79f99be390b58dba05154358dd1381bec4dbe3e7fa9621574a6d469c2a",
+      "initialState": "modified"
+    },
+    {
+      "path": "src/app/features/checkout/connected-checkout.integration.spec.ts",
+      "category": "modules",
+      "initialSha256": "d2120428bc7a5b1b3073b4bfcc21a1c6e9aac6693a08e690a6b015216f8e8841",
+      "publicationSha256": "d2120428bc7a5b1b3073b4bfcc21a1c6e9aac6693a08e690a6b015216f8e8841",
+      "initialState": "untracked"
+    },
+    {
+      "path": "src/app/features/checkout/connected-checkout.view.ts",
+      "category": "modules",
+      "initialSha256": "5a3fd2cef838e1a25ead15b1e22a8d87a54998aab2decdd0e8fc1fb7dc61c652",
+      "publicationSha256": "5a3fd2cef838e1a25ead15b1e22a8d87a54998aab2decdd0e8fc1fb7dc61c652",
+      "initialState": "untracked"
+    },
+    {
+      "path": "src/app/features/checkout/delivery-method/delivery-method.page.html",
+      "category": "modules",
+      "initialSha256": "42f46da314ecc711c83057f61dd08d53c3eb91f7985ce943b04bbffc97b85a68",
+      "publicationSha256": "42f46da314ecc711c83057f61dd08d53c3eb91f7985ce943b04bbffc97b85a68",
+      "initialState": "modified"
+    },
+    {
+      "path": "src/app/features/checkout/payment-method/payment-method.page.html",
+      "category": "modules",
+      "initialSha256": "92e0da113c6642e35941a7df2ecefd703b08847a7bcccea70a03479acffc4e06",
+      "publicationSha256": "92e0da113c6642e35941a7df2ecefd703b08847a7bcccea70a03479acffc4e06",
+      "initialState": "modified"
+    },
+    {
+      "path": "src/app/features/checkout/payment-method/payment-method.page.ts",
+      "category": "modules",
+      "initialSha256": "3f9ae06b79fb84a8f41a4c3d4780800ad49bf48b44c9ec699573e584f2496946",
+      "publicationSha256": "3f9ae06b79fb84a8f41a4c3d4780800ad49bf48b44c9ec699573e584f2496946",
+      "initialState": "modified"
+    },
+    {
+      "path": "src/app/features/demo-purchase.integration.spec.ts",
+      "category": "modules",
+      "initialSha256": "7682f53d36b8c0274e61bc952f035cef266e13fa4a64e0f053bfbdad1e58fb65",
+      "publicationSha256": "7682f53d36b8c0274e61bc952f035cef266e13fa4a64e0f053bfbdad1e58fb65",
+      "initialState": "untracked"
+    },
+    {
+      "path": "src/app/features/favorites/connected-favorites.integration.spec.ts",
+      "category": "modules",
+      "initialSha256": "f372793d27ae0ea553af5d7fee496c9f4a6b37ed055b8b0cab7fe7a5f0044885",
+      "publicationSha256": "f372793d27ae0ea553af5d7fee496c9f4a6b37ed055b8b0cab7fe7a5f0044885",
+      "initialState": "untracked"
+    },
+    {
+      "path": "src/app/features/favorites/connected-favorites.view.ts",
+      "category": "modules",
+      "initialSha256": "14d7580c11900e9de75206212ef9d9534f3787789300f7529a2cef8e4cdb1b3e",
+      "publicationSha256": "14d7580c11900e9de75206212ef9d9534f3787789300f7529a2cef8e4cdb1b3e",
+      "initialState": "untracked"
+    },
+    {
+      "path": "src/app/features/favorites/favorites.page.ts",
+      "category": "modules",
+      "initialSha256": "a65131352e441bc68d4f30bcabc068314ea56f3905f9ebf0bed6d15dcc780c50",
+      "publicationSha256": "a65131352e441bc68d4f30bcabc068314ea56f3905f9ebf0bed6d15dcc780c50",
+      "initialState": "modified"
+    },
+    {
+      "path": "src/app/features/home/home.page.html",
+      "category": "modules",
+      "initialSha256": "04cff0c5eb0ab13a3b768c0e93b65bc8e5b661736589eeda23cddd6e4afb88e8",
+      "publicationSha256": "04cff0c5eb0ab13a3b768c0e93b65bc8e5b661736589eeda23cddd6e4afb88e8",
+      "initialState": "modified"
+    },
+    {
+      "path": "src/app/features/home/home.page.ts",
+      "category": "modules",
+      "initialSha256": "138101064f1a03bcee750c201810c94bcb55cdf9f33a91a769b838d5733a64dc",
+      "publicationSha256": "138101064f1a03bcee750c201810c94bcb55cdf9f33a91a769b838d5733a64dc",
+      "initialState": "modified"
+    },
+    {
+      "path": "src/app/features/orders/connected-orders.integration.spec.ts",
+      "category": "modules",
+      "initialSha256": "bc2673ae5058ccf6362c8d5a4bd42e15f8b6769059f0cc32ccf7c059cf8f178e",
+      "publicationSha256": "bc2673ae5058ccf6362c8d5a4bd42e15f8b6769059f0cc32ccf7c059cf8f178e",
+      "initialState": "untracked"
+    },
+    {
+      "path": "src/app/features/orders/connected-orders.view.ts",
+      "category": "modules",
+      "initialSha256": "bc84957cbde02349375244e01195446bf7840aeabf8c7f353917ec19f55084a9",
+      "publicationSha256": "bc84957cbde02349375244e01195446bf7840aeabf8c7f353917ec19f55084a9",
+      "initialState": "untracked"
+    },
+    {
+      "path": "src/app/features/orders/order-detail/connected-order-detail.view.ts",
+      "category": "modules",
+      "initialSha256": "07e87da788e9d26cfbe1f1dd308df5dc8d1ee4052fed58412d890df778bb5db9",
+      "publicationSha256": "07e87da788e9d26cfbe1f1dd308df5dc8d1ee4052fed58412d890df778bb5db9",
+      "initialState": "untracked"
+    },
+    {
+      "path": "src/app/features/orders/order-detail/order-detail.page.html",
+      "category": "modules",
+      "initialSha256": "6bc0c619f7a6558d6dbbf60f280d23e3a265d48156967eb8af64d1fb6ff88a3a",
+      "publicationSha256": "6bc0c619f7a6558d6dbbf60f280d23e3a265d48156967eb8af64d1fb6ff88a3a",
+      "initialState": "modified"
+    },
+    {
+      "path": "src/app/features/orders/order-detail/order-detail.page.ts",
+      "category": "modules",
+      "initialSha256": "6216176949cfd478cf888bb6c48d2a61c6162527578c266146ef52ddf86a4cd1",
+      "publicationSha256": "6216176949cfd478cf888bb6c48d2a61c6162527578c266146ef52ddf86a4cd1",
+      "initialState": "modified"
+    },
+    {
+      "path": "src/app/features/orders/orders.page.html",
+      "category": "modules",
+      "initialSha256": "3d65cd858fed16b0cbe60391d1857478114c9cf28c7d9ee4f04a86a0e1131c3e",
+      "publicationSha256": "3d65cd858fed16b0cbe60391d1857478114c9cf28c7d9ee4f04a86a0e1131c3e",
+      "initialState": "modified"
+    },
+    {
+      "path": "src/app/features/orders/orders.page.ts",
+      "category": "modules",
+      "initialSha256": "95c1939915eb19022800d5ab8d84e17b09c99a3e017a740448411e66f698970c",
+      "publicationSha256": "95c1939915eb19022800d5ab8d84e17b09c99a3e017a740448411e66f698970c",
+      "initialState": "modified"
+    },
+    {
+      "path": "src/app/features/profile/account-security.page.spec.ts",
+      "category": "modules",
+      "initialSha256": "cc818adcf91200befd0ad6b39956b18a6c5c3a96d3b4402ff1f8544d77513263",
+      "publicationSha256": "cc818adcf91200befd0ad6b39956b18a6c5c3a96d3b4402ff1f8544d77513263",
+      "initialState": "untracked"
+    },
+    {
+      "path": "src/app/features/profile/account-security.page.ts",
+      "category": "modules",
+      "initialSha256": "d7f44eb7b853df2729a6dfc17e10d77ae07735c5120d5508d32be614125de2ae",
+      "publicationSha256": "d7f44eb7b853df2729a6dfc17e10d77ae07735c5120d5508d32be614125de2ae",
+      "initialState": "untracked"
+    },
+    {
+      "path": "src/app/features/profile/connected-profile.integration.spec.ts",
+      "category": "modules",
+      "initialSha256": "e1ceea4e2e962cfc8cf635fb6144795e6f6772057c3c7de665777f310bb69f5f",
+      "publicationSha256": "e1ceea4e2e962cfc8cf635fb6144795e6f6772057c3c7de665777f310bb69f5f",
+      "initialState": "untracked"
+    },
+    {
+      "path": "src/app/features/profile/connected-profile.view.ts",
+      "category": "modules",
+      "initialSha256": "75e6e153a7d0f5ecf7656d94d49e00274312b11dcb60da0b8f7fba30f50c231c",
+      "publicationSha256": "75e6e153a7d0f5ecf7656d94d49e00274312b11dcb60da0b8f7fba30f50c231c",
+      "initialState": "untracked"
+    },
+    {
+      "path": "src/app/features/profile/edit-profile/edit-profile.page.html",
+      "category": "modules",
+      "initialSha256": "5093e93adefe154019ff78360d1d4c7679c4f7d641e45d1dbce289c45d0483dd",
+      "publicationSha256": "5093e93adefe154019ff78360d1d4c7679c4f7d641e45d1dbce289c45d0483dd",
+      "initialState": "modified"
+    },
+    {
+      "path": "src/app/features/profile/edit-profile/edit-profile.page.ts",
+      "category": "modules",
+      "initialSha256": "1f5b4aff18cb9added18373fa09b36c09a94b54bced1aa5789b9ce711130d8fe",
+      "publicationSha256": "1f5b4aff18cb9added18373fa09b36c09a94b54bced1aa5789b9ce711130d8fe",
+      "initialState": "modified"
+    },
+    {
+      "path": "src/app/features/profile/profile.page.html",
+      "category": "modules",
+      "initialSha256": "1236d2602adceab395883ec98c6d9860e21461fd72f219c79b446694240b0b46",
+      "publicationSha256": "1236d2602adceab395883ec98c6d9860e21461fd72f219c79b446694240b0b46",
+      "initialState": "modified"
+    },
+    {
+      "path": "src/app/features/profile/profile.page.ts",
+      "category": "modules",
+      "initialSha256": "a6400ba325a2fd56c4cd8777d3c767846e12fdac4a9a1ef98b1c34f15461c60a",
+      "publicationSha256": "a6400ba325a2fd56c4cd8777d3c767846e12fdac4a9a1ef98b1c34f15461c60a",
+      "initialState": "modified"
+    },
+    {
+      "path": "src/app/features/public-catalog/commerce-experience.integration.spec.ts",
+      "category": "modules",
+      "initialSha256": "a3d0a57e4141b16414670f77a3be020ba79cdbbbdd7bb06727e20757def042ff",
+      "publicationSha256": "1a36d9855525532c22e6ab3e997d2777aa553cf1c954b260dc692f31e020c307",
+      "initialState": "untracked"
+    },
+    {
+      "path": "src/app/features/public-catalog/product-reviews.component.html",
+      "category": "modules",
+      "initialSha256": "4cfae72b332c3aad76475c70a8230d13bb63bd797665b22a80f8f87e5de3bc21",
+      "publicationSha256": "4cfae72b332c3aad76475c70a8230d13bb63bd797665b22a80f8f87e5de3bc21",
+      "initialState": "untracked"
+    },
+    {
+      "path": "src/app/features/public-catalog/product-reviews.component.ts",
+      "category": "modules",
+      "initialSha256": "55c0398f94930752205443c10513dabe2cd1cd6fc4601cbc15a168c3f1177a69",
+      "publicationSha256": "55c0398f94930752205443c10513dabe2cd1cd6fc4601cbc15a168c3f1177a69",
+      "initialState": "untracked"
+    },
+    {
+      "path": "src/app/features/public-catalog/public-catalog.integration.spec.ts",
+      "category": "modules",
+      "initialSha256": "e6269ceed16e3b6c9eaf4b5fa9caabd0449d17618e8a0b67745ae6d6eb699001",
+      "publicationSha256": "105f7790c8c874a5fae67505186ccaabe3895e6a6487e8c1c07ad534798eb703",
+      "initialState": "untracked"
+    },
+    {
+      "path": "src/app/features/public-catalog/public-catalog.view.html",
+      "category": "modules",
+      "initialSha256": "bbae0db8a80e10c6a92abb8f8ab6030999dc654450a6dc129a75f8bcc9e46487",
+      "publicationSha256": "bbae0db8a80e10c6a92abb8f8ab6030999dc654450a6dc129a75f8bcc9e46487",
+      "initialState": "untracked"
+    },
+    {
+      "path": "src/app/features/public-catalog/public-catalog.view.scss",
+      "category": "modules",
+      "initialSha256": "bdcc815c001de65d904b7806e4ad61287d28e341046e703e5efc75f2500e155f",
+      "publicationSha256": "bdcc815c001de65d904b7806e4ad61287d28e341046e703e5efc75f2500e155f",
+      "initialState": "untracked"
+    },
+    {
+      "path": "src/app/features/public-catalog/public-catalog.view.ts",
+      "category": "modules",
+      "initialSha256": "d9bc570feef292d5c9d13c90511fa456c8a7aa3d0af21abb4d44e99da23f3748",
+      "publicationSha256": "d9bc570feef292d5c9d13c90511fa456c8a7aa3d0af21abb4d44e99da23f3748",
+      "initialState": "untracked"
+    },
+    {
+      "path": "src/app/features/public-catalog/public-home.view.html",
+      "category": "modules",
+      "initialSha256": "bd6a4a5f9f1694a6a1afcabf1b6a7feeaac2006d8e37511267ba486e6611fb11",
+      "publicationSha256": "bd6a4a5f9f1694a6a1afcabf1b6a7feeaac2006d8e37511267ba486e6611fb11",
+      "initialState": "untracked"
+    },
+    {
+      "path": "src/app/features/public-catalog/public-home.view.scss",
+      "category": "modules",
+      "initialSha256": "ee20252a0faef2c2c7a03025cc216da1923102ab01c420600f2cc81394a7e071",
+      "publicationSha256": "ee20252a0faef2c2c7a03025cc216da1923102ab01c420600f2cc81394a7e071",
+      "initialState": "untracked"
+    },
+    {
+      "path": "src/app/features/public-catalog/public-home.view.ts",
+      "category": "modules",
+      "initialSha256": "857422da3a62b8cd8429b8eda12e2c96e7fb7e7fbcad5dcf8d512e6b56188358",
+      "publicationSha256": "857422da3a62b8cd8429b8eda12e2c96e7fb7e7fbcad5dcf8d512e6b56188358",
+      "initialState": "untracked"
+    },
+    {
+      "path": "src/app/features/public-catalog/public-product-detail.view.html",
+      "category": "modules",
+      "initialSha256": "d6e6fdb932c065744b1c47e4cea331e1bbed53e557a9cf1e97926761f578b30f",
+      "publicationSha256": "d6e6fdb932c065744b1c47e4cea331e1bbed53e557a9cf1e97926761f578b30f",
+      "initialState": "untracked"
+    },
+    {
+      "path": "src/app/features/public-catalog/public-product-detail.view.scss",
+      "category": "modules",
+      "initialSha256": "5af08f75fe245b646b49deb35ea6ca9a75923977ba725ebe6060f92dc7ca8105",
+      "publicationSha256": "5af08f75fe245b646b49deb35ea6ca9a75923977ba725ebe6060f92dc7ca8105",
+      "initialState": "untracked"
+    },
+    {
+      "path": "src/app/features/public-catalog/public-product-detail.view.ts",
+      "category": "modules",
+      "initialSha256": "33a24ee31a1df51a2975c52356663883d6374275bede01d6d41fb7184b09f8e8",
+      "publicationSha256": "33a24ee31a1df51a2975c52356663883d6374275bede01d6d41fb7184b09f8e8",
+      "initialState": "untracked"
+    },
+    {
+      "path": "src/app/features/public-catalog/public-product-grid.component.scss",
+      "category": "modules",
+      "initialSha256": "ee876372997a8fe7f2485c6879d4838a451fc43957701c37f720e57e68dad63c",
+      "publicationSha256": "ee876372997a8fe7f2485c6879d4838a451fc43957701c37f720e57e68dad63c",
+      "initialState": "untracked"
+    },
+    {
+      "path": "src/app/features/public-catalog/public-product-grid.component.ts",
+      "category": "modules",
+      "initialSha256": "a68e99c286b5f0257ef462d230de3126ec059545a14922e79bc214d8e137d829",
+      "publicationSha256": "1fce288de6ba1b9650380280db2b5158006f85f667fe06569839577845fba932",
+      "initialState": "untracked"
+    },
+    {
+      "path": "src/app/features/splash/splash.page.spec.ts",
+      "category": "modules",
+      "initialSha256": "140139dc59ec817734508c1d0410ecfd95639f99cee9d7107273a8fe94ab34bf",
+      "publicationSha256": "140139dc59ec817734508c1d0410ecfd95639f99cee9d7107273a8fe94ab34bf",
+      "initialState": "modified"
+    },
+    {
+      "path": "src/app/features/splash/splash.page.ts",
+      "category": "modules",
+      "initialSha256": "95f3ccc6197d690010772ab9a03ee52f09b2898cebe32787151b0f006faef374",
+      "publicationSha256": "95f3ccc6197d690010772ab9a03ee52f09b2898cebe32787151b0f006faef374",
+      "initialState": "modified"
+    },
+    {
+      "path": "src/app/layout/main-navigation/main-navigation.component.scss",
+      "category": "modules",
+      "initialSha256": "2134841b78873fc75fd511f893c34d1dcb1af62b10980a49b0c76144d7069f95",
+      "publicationSha256": "2134841b78873fc75fd511f893c34d1dcb1af62b10980a49b0c76144d7069f95",
+      "initialState": "modified"
+    },
+    {
+      "path": "src/app/layout/main-navigation/main-navigation.component.ts",
+      "category": "modules",
+      "initialSha256": "5943e8f8d3747b87e5da2cbca62d80815d0839db7c3402f8599da0e40ce3f1fc",
+      "publicationSha256": "5943e8f8d3747b87e5da2cbca62d80815d0839db7c3402f8599da0e40ce3f1fc",
+      "initialState": "modified"
+    },
+    {
+      "path": "src/app/shared/ui/commerce-controls.spec.ts",
+      "category": "shared-ui",
+      "initialSha256": "6331b29e81e69244eb896904ed870407d6912d798de18683e14a6bc37c27a3d4",
+      "publicationSha256": "6331b29e81e69244eb896904ed870407d6912d798de18683e14a6bc37c27a3d4",
+      "initialState": "untracked"
+    },
+    {
+      "path": "src/app/shared/ui/icon/cmc-icon.component.ts",
+      "category": "shared-ui",
+      "initialSha256": "38b20d0a61026f010cfa1971a64fcb753b389f7bf47d9035060a8e5cd33702d5",
+      "publicationSha256": "38b20d0a61026f010cfa1971a64fcb753b389f7bf47d9035060a8e5cd33702d5",
+      "initialState": "untracked"
+    },
+    {
+      "path": "src/app/shared/ui/input/cmc-input.component.html",
+      "category": "shared-ui",
+      "initialSha256": "b2d830373930083b84ff625974e390e108104d83453a4ff26b48bdc313bccf33",
+      "publicationSha256": "b2d830373930083b84ff625974e390e108104d83453a4ff26b48bdc313bccf33",
+      "initialState": "modified"
+    },
+    {
+      "path": "src/app/shared/ui/input/cmc-input.component.scss",
+      "category": "shared-ui",
+      "initialSha256": "eed273195df00b64d070dfa03168ac87d83757a678bb8124671dd51db11bb04e",
+      "publicationSha256": "eed273195df00b64d070dfa03168ac87d83757a678bb8124671dd51db11bb04e",
+      "initialState": "modified"
+    },
+    {
+      "path": "src/app/shared/ui/input/cmc-input.component.ts",
+      "category": "shared-ui",
+      "initialSha256": "3eccf04bda64c20dac36d52bb2e71ef5d60f852db4c83e649e6c672b01795378",
+      "publicationSha256": "3eccf04bda64c20dac36d52bb2e71ef5d60f852db4c83e649e6c672b01795378",
+      "initialState": "modified"
+    },
+    {
+      "path": "src/app/shared/ui/money/cmc-money.pipe.ts",
+      "category": "shared-ui",
+      "initialSha256": "5b51b33f54eb9c6efa35a13189f68b01312604a3cb1ebb82e24afe7b0dd65e26",
+      "publicationSha256": "5b51b33f54eb9c6efa35a13189f68b01312604a3cb1ebb82e24afe7b0dd65e26",
+      "initialState": "untracked"
+    },
+    {
+      "path": "src/app/shared/ui/quantity/cmc-quantity.component.ts",
+      "category": "shared-ui",
+      "initialSha256": "5e25ddc840d1c1d0b5f4bb5039b3c7f0f8cf33ee7772ff91a6f7683f6ad9ecb3",
+      "publicationSha256": "5e25ddc840d1c1d0b5f4bb5039b3c7f0f8cf33ee7772ff91a6f7683f6ad9ecb3",
+      "initialState": "untracked"
+    },
+    {
+      "path": "src/app/shared/ui/styles/_auth-shell.scss",
+      "category": "shared-ui",
+      "initialSha256": "a25e8ce01efad63d91a64ac230a6d30f96e5607a6ebf21ac939f994f755602b1",
+      "publicationSha256": "a25e8ce01efad63d91a64ac230a6d30f96e5607a6ebf21ac939f994f755602b1",
+      "initialState": "untracked"
+    },
+    {
+      "path": "src/app/shared/ui/styles/_commerce.scss",
+      "category": "shared-ui",
+      "initialSha256": "f3a1fc223dd5dfe4834edc8e3e76fbffda5c41ea467f253b03d802f5c20899d7",
+      "publicationSha256": "f3a1fc223dd5dfe4834edc8e3e76fbffda5c41ea467f253b03d802f5c20899d7",
+      "initialState": "untracked"
+    },
+    {
+      "path": "src/environments/environment.demo.ts",
+      "category": "config",
+      "initialSha256": "0a3394e50294466f3c5a1951ebfd6303ebb2af1ab2ef9e67cc5c0c29885337e7",
+      "publicationSha256": "0a3394e50294466f3c5a1951ebfd6303ebb2af1ab2ef9e67cc5c0c29885337e7",
+      "initialState": "untracked"
+    },
+    {
+      "path": "src/environments/environment.prod.ts",
+      "category": "config",
+      "initialSha256": "d446ebdba746dbadd705b7c7bcba7e14ca06c0939325084010cc6b8ed1290c95",
+      "publicationSha256": "d446ebdba746dbadd705b7c7bcba7e14ca06c0939325084010cc6b8ed1290c95",
+      "initialState": "modified"
+    },
+    {
+      "path": "src/environments/environment.ts",
+      "category": "config",
+      "initialSha256": "35a0943c31f2b9c02ac66196e6d24213866efcd31390a70e7d7094d27d78941b",
+      "publicationSha256": "35a0943c31f2b9c02ac66196e6d24213866efcd31390a70e7d7094d27d78941b",
+      "initialState": "modified"
+    },
+    {
+      "path": "src/global.scss",
+      "category": "shared-ui",
+      "initialSha256": "738f432e0ab4bc096d85aa4c5ce4652323372f066493730cae52c04d79047f2c",
+      "publicationSha256": "738f432e0ab4bc096d85aa4c5ce4652323372f066493730cae52c04d79047f2c",
+      "initialState": "modified"
+    },
+    {
+      "path": "src/index.html",
+      "category": "shared-ui",
+      "initialSha256": "54d86ded89b731f4819548f0dd7813789e22a22867f66f943daba1b3d9f7de07",
+      "publicationSha256": "54d86ded89b731f4819548f0dd7813789e22a22867f66f943daba1b3d9f7de07",
+      "initialState": "modified"
+    },
+    {
+      "path": "src/main.ts",
+      "category": "modules",
+      "initialSha256": "ca8c3c52a2da086b0b2b21edb1f22dc823bd7529b2305ece11aba88336d9c928",
+      "publicationSha256": "ca8c3c52a2da086b0b2b21edb1f22dc823bd7529b2305ece11aba88336d9c928",
+      "initialState": "modified"
+    },
+    {
+      "path": "src/test-setup.ts",
+      "category": "core",
+      "initialSha256": "8ef7aebecb688537d309a0b838a6982a0a27858fd4022caebff55bfcf07ec3db",
+      "publicationSha256": "8ef7aebecb688537d309a0b838a6982a0a27858fd4022caebff55bfcf07ec3db",
+      "initialState": "modified"
+    },
+    {
+      "path": "src/theme/variables.scss",
+      "category": "shared-ui",
+      "initialSha256": "917f4a2d8eb81803bd4e6e139b96d168029c5ba087f0b5d22df49f70e1f3005a",
+      "publicationSha256": "917f4a2d8eb81803bd4e6e139b96d168029c5ba087f0b5d22df49f70e1f3005a",
+      "initialState": "modified"
+    },
+    {
+      "path": "test/README.md",
+      "category": "tests",
+      "initialSha256": "20f8ffe9d6abb2ce672bb39ea7b61634957d32a4a061d3bb6e8293d15d133513",
+      "publicationSha256": "20f8ffe9d6abb2ce672bb39ea7b61634957d32a4a061d3bb6e8293d15d133513",
+      "initialState": "untracked"
+    },
+    {
+      "path": "test/WHITE_BOX_MATRIX.md",
+      "category": "tests",
+      "initialSha256": "5fbc172169775bd2ef1f4cc434c25580ec1cb155dc04c2e81413405816a96e2e",
+      "publicationSha256": "5fbc172169775bd2ef1f4cc434c25580ec1cb155dc04c2e81413405816a96e2e",
+      "initialState": "untracked"
+    },
+    {
+      "path": "test/android-layout-smoke.mjs",
+      "category": "tests",
+      "initialSha256": "0a646b5d8787365a7999b8a6b16e628c9d4f5c64a09159e222950e43ab00ded1",
+      "publicationSha256": "0a646b5d8787365a7999b8a6b16e628c9d4f5c64a09159e222950e43ab00ded1",
+      "initialState": "untracked"
+    },
+    {
+      "path": "test/android-profile-capture.mjs",
+      "category": "tests",
+      "initialSha256": "266d8fc3d1e61f6b3ecc044adc53b6d2ae51bdb65a07769015918bbb56ed4d5b",
+      "publicationSha256": "266d8fc3d1e61f6b3ecc044adc53b6d2ae51bdb65a07769015918bbb56ed4d5b",
+      "initialState": "untracked"
+    },
+    {
+      "path": "test/android-public-smoke.mjs",
+      "category": "tests",
+      "initialSha256": "e01b47eff0dace5851c4425c9df87f47d5fc522148c70282554e13c71625632b",
+      "publicationSha256": "e01b47eff0dace5851c4425c9df87f47d5fc522148c70282554e13c71625632b",
+      "initialState": "untracked"
+    },
+    {
+      "path": "test/check-public-api.mjs",
+      "category": "tests",
+      "initialSha256": "e479359245ff9c67f8c9d06cd939f9eb7f79c70089ecc2f5204b2a70129dbed2",
+      "publicationSha256": "e479359245ff9c67f8c9d06cd939f9eb7f79c70089ecc2f5204b2a70129dbed2",
+      "initialState": "untracked"
+    },
+    {
+      "path": "test/run-white-box.mjs",
+      "category": "tests",
+      "initialSha256": "6541b67b21abb6442fa3a759e73ee4093dc11942fa80bfda4860993249c5edcd",
+      "publicationSha256": "6541b67b21abb6442fa3a759e73ee4093dc11942fa80bfda4860993249c5edcd",
+      "initialState": "untracked"
+    },
+    {
+      "path": "test/verify-evidence.mjs",
+      "category": "tests",
+      "initialSha256": "a841863e616536ed512ad2b71c5a0a19a35848fed325f8309ac87c42a266130a",
+      "publicationSha256": "a841863e616536ed512ad2b71c5a0a19a35848fed325f8309ac87c42a266130a",
+      "initialState": "untracked"
+    },
+    {
+      "path": "test/vitest.serial.config.mjs",
+      "category": "tests",
+      "initialSha256": "d8d4aa6eaa6ffb97699cc17971da32ed679320ee600f27099219f524f6f42469",
+      "publicationSha256": "d8d4aa6eaa6ffb97699cc17971da32ed679320ee600f27099219f524f6f42469",
+      "initialState": "untracked"
+    }
+  ],
+  "excluded": [
+    "node_modules/",
+    "dist/",
+    "coverage/",
+    "reports/",
+    "www/",
+    ".angular/",
+    "android/.gradle/",
+    "android/build/",
+    "android/app/build/",
+    "android/local.properties",
+    "android/app/src/main/assets/",
+    "android/capacitor-cordova-android-plugins/",
+    "docs/activity4/artifacts/",
+    "*.apk",
+    "*.aab",
+    "*.zip",
+    "*.jks",
+    "*.keystore",
+    ".env*",
+    "manual backup outside repository"
+  ]
+}

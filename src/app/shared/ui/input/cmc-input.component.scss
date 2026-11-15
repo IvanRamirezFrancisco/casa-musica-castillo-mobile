@@ -1,0 +1,105 @@
+:host {
+  display: block;
+  min-width: 0;
+}
+
+.cmc-input {
+  display: flex;
+  flex-direction: column;
+  gap: var(--cmc-space-1);
+}
+
+.cmc-input__label {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  color: var(--cmc-text-primary);
+}
+
+.cmc-input__required {
+  margin-left: var(--cmc-space-1);
+  color: var(--cmc-error);
+}
+
+.cmc-input__field {
+  display: flex;
+  align-items: center;
+  min-height: 48px;
+  padding: 0 var(--cmc-space-4);
+  background: var(--cmc-surface);
+  border: 1px solid var(--cmc-border-strong);
+  border-radius: var(--cmc-radius-md);
+  transition:
+    border-color var(--cmc-transition-fast),
+    box-shadow var(--cmc-transition-fast),
+    background-color var(--cmc-transition-fast);
+
+  &--filled {
+    border-color: var(--cmc-text-secondary);
+  }
+
+  /* Focus indicator is drawn on the wrapper so it surrounds the whole field. */
+  &:focus-within {
+    border-color: var(--cmc-primary);
+    outline: 2px solid var(--field-feedback, var(--cmc-primary));
+    outline-offset: 2px;
+  }
+
+  &--error {
+    border-color: var(--cmc-error);
+    box-shadow: 0 0 0 1px var(--cmc-error);
+  }
+
+  &[data-feedback] { border-color: var(--field-feedback); }
+  &[data-feedback='negative'] { --field-feedback: var(--cmc-error-text); }
+  &[data-feedback='warning'] { --field-feedback: var(--cmc-warning-text); }
+  &[data-feedback='positive'] { --field-feedback: var(--cmc-success-text); }
+
+  &--disabled {
+    background: var(--cmc-surface-alt);
+    border-color: var(--cmc-border);
+    cursor: not-allowed;
+  }
+}
+
+.cmc-input__control {
+  flex: 1;
+  width: 100%;
+  min-width: 0;
+  min-height: 46px;
+  padding: 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  font-family: 'Roboto', sans-serif;
+  /* 16px prevents mobile browsers from zooming on focus. */
+  font-size: 16px;
+  line-height: 24px;
+  color: var(--cmc-text-primary);
+
+  &::placeholder {
+    color: var(--cmc-text-secondary);
+    opacity: 1;
+  }
+
+  &:disabled {
+    color: var(--cmc-text-disabled);
+    cursor: not-allowed;
+  }
+}
+.cmc-input__visibility {display:grid;place-items:center;flex:none;min-width:48px;min-height:48px;border:0;border-radius:var(--cmc-radius-sm);background:transparent;color:var(--cmc-primary);cursor:pointer;}
+
+.cmc-input__message {
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--cmc-text-secondary);
+
+  &--error {
+    font-weight: 500;
+    color: var(--cmc-error);
+  }
+}
+
+.cmc-input__field[data-feedback='warning'] ~ .cmc-input__message--error {
+  color: var(--cmc-warning-text);
+}

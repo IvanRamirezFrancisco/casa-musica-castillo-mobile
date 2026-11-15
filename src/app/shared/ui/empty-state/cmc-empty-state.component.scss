@@ -1,0 +1,22 @@
+@use '../styles/mixins' as *;
+
+:host {
+  display: block;
+}
+
+.cmc-empty-state {
+  @include cmc-state-layout;
+}
+
+.cmc-empty-state__icon {
+  font-size: 48px;
+  color: var(--cmc-accent-gold);
+}
+
+.cmc-empty-state__heading {
+  @include cmc-state-heading;
+}
+
+.cmc-empty-state__description {
+  @include cmc-state-description;
+}

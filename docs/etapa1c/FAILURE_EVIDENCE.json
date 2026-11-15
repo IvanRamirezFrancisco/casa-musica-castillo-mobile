@@ -1,0 +1,195 @@
+{
+  "stage": "1C",
+  "observedOn": "2026-11-03",
+  "initialSha": "f0d98ec1a272053417f0f4b48bcf4fd1a7de14c1",
+  "failedAndroidRun": "https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/actions/runs/41712540398",
+  "maestroArtifact": {
+    "id": 13269930686,
+    "archiveSha256": "3d9883361080ae448e1d8589c0e99ab6fef5cb7c967c8fd9f0d175b9d1148386",
+    "expiresOn": "2026-11-17"
+  },
+  "screenshot": {
+    "path": "docs/etapa1c/failed-cart-overlay.png",
+    "sha256": "d7f4f017b166c951e8676ee45a3b5550c44f280f850fd0298d6ae711bd7bf67d",
+    "width": 1080,
+    "height": 2400
+  },
+  "failedHierarchyNodes": [
+    {
+      "text": "Continuar compra",
+      "bounds": "[42,2028][1042,2159]",
+      "clickable": "true",
+      "enabled": "true",
+      "selected": "false",
+      "class": "android.widget.Button"
+    },
+    {
+      "text": "Carrito , 2 productos",
+      "bounds": "[441,2086][643,2235]",
+      "clickable": "true",
+      "enabled": "true",
+      "selected": "true",
+      "class": "android.view.View"
+    }
+  ],
+  "tapTargetCenterPx": {
+    "x": 542,
+    "y": 2093.5
+  },
+  "selectedCartTabBoundsPx": [
+    441,
+    2086,
+    643,
+    2235
+  ],
+  "tapCenterInsideCartTab": true,
+  "screenAtFailure": "Carrito; no Checkout heading or missing-method hint in hierarchy",
+  "commandsAtFailure": [
+    {
+      "command": {
+        "scrollUntilVisible": {
+          "selector": {
+            "textRegex": "Continuar compra",
+            "optional": false
+          },
+          "direction": "DOWN",
+          "scrollDuration": "40",
+          "visibilityPercentage": 100,
+          "timeout": "20000",
+          "centerElement": false,
+          "originalSpeedValue": "40",
+          "optional": false,
+          "visibilityPercentageNormalized": 1.0
+        }
+      },
+      "status": "COMPLETED",
+      "durationMs": 100,
+      "sequenceNumber": 17
+    },
+    {
+      "command": {
+        "tapOnElement": {
+          "selector": {
+            "textRegex": "Continuar compra",
+            "optional": false
+          },
+          "retryIfNoChange": false,
+          "waitUntilVisible": false,
+          "longPress": false,
+          "optional": false
+        }
+      },
+      "status": "COMPLETED",
+      "durationMs": 2850,
+      "sequenceNumber": 18
+    },
+    {
+      "command": {
+        "assertConditionCommand": {
+          "condition": {
+            "visible": {
+              "textRegex": "Selecciona entrega y pago para continuar",
+              "optional": false
+            }
+          },
+          "optional": false
+        }
+      },
+      "status": "FAILED",
+      "durationMs": 17315,
+      "sequenceNumber": 19
+    }
+  ],
+  "junit": {
+    "tests": 4,
+    "failures": 1,
+    "cases": [
+      {
+        "file": ".maestro/auth-demo.yaml",
+        "status": "SUCCESS",
+        "failure": null
+      },
+      {
+        "file": ".maestro/account-demo.yaml",
+        "status": "SUCCESS",
+        "failure": null
+      },
+      {
+        "file": ".maestro/purchase-demo.yaml",
+        "status": "ERROR",
+        "failure": "Assertion is false: \"Selecciona entrega y pago para continuar\" is visible"
+      },
+      {
+        "file": ".maestro/navigation-demo.yaml",
+        "status": "SUCCESS",
+        "failure": null
+      }
+    ]
+  },
+  "previousGate": {
+    "workflow": "DEVOPS QUALITY GATE",
+    "sha": "f0d98ec1a272053417f0f4b48bcf4fd1a7de14c1",
+    "event": "pull_request",
+    "pr": "83",
+    "branch": "feature/actividad-4-integracion-movil",
+    "docsOnly": true,
+    "repository": "IvanRamirezFrancisco/casa-musica-castillo-mobile",
+    "requiredChecks": [
+      "Lint, Tests y Build",
+      "frontend",
+      "Auditoria de dependencias",
+      "CodeQL JavaScript y TypeScript",
+      "Compilar APK Android Debug",
+      "ACEPTACIÓN móvil DEMO / maestro"
+    ],
+    "checksFound": [
+      "Lint, Tests y Build",
+      "frontend",
+      "Auditoria de dependencias",
+      "CodeQL JavaScript y TypeScript",
+      "Compilar APK Android Debug",
+      "ACEPTACIÓN móvil DEMO / maestro"
+    ],
+    "checksMissingOrPending": [],
+    "status": "FAIL",
+    "timedOut": false,
+    "attempts": 1,
+    "controls": [
+      {
+        "name": "Lint, Tests y Build",
+        "status": "NO APLICA",
+        "detail": "Check 126194752327 omitido por la regla explícita de cambio exclusivamente documental."
+      },
+      {
+        "name": "frontend",
+        "status": "NO APLICA",
+        "detail": "Check 126183648766 omitido por la regla explícita de cambio exclusivamente documental."
+      },
+      {
+        "name": "Auditoria de dependencias",
+        "status": "NO APLICA",
+        "detail": "Check 126183592494 omitido por la regla explícita de cambio exclusivamente documental."
+      },
+      {
+        "name": "CodeQL JavaScript y TypeScript",
+        "status": "NO APLICA",
+        "detail": "Check 126183589352 omitido por la regla explícita de cambio exclusivamente documental."
+      },
+      {
+        "name": "Compilar APK Android Debug",
+        "status": "PASS",
+        "detail": "Check 126184402106 completado correctamente."
+      },
+      {
+        "name": "ACEPTACIÓN móvil DEMO / maestro",
+        "status": "FAIL",
+        "detail": "Conclusión GitHub: failure."
+      }
+    ],
+    "action": "DEBE CORREGIRSE",
+    "generatedAt": "2026-11-03T20:46:34.861Z"
+  },
+  "supportedConclusion": "La aserción de Checkout falla porque el toque anterior no salió de Carrito. El centro del botón coincide con la pestaña Carrito superpuesta. scrollUntilVisible aceptó el elemento sin desplazarlo y sin centerElement. El recorrido necesita desplazar el objetivo fuera de la barra flotante; el texto esperado sigue existiendo.",
+  "notEstablished": "No hay evidencia de cambio de texto, ausencia de métodos por carrera, fallo del guard/router o bloqueo del emulador como causa de esta aserción. Los avisos ColorBuffer existen pero no explican la geometría observada.",
+  "correction": "Centrar objetivos de scroll, afirmar Finalizar compra, conservar aviso y comprobar confirmación deshabilitada antes de métodos y habilitada después. Conservar los cuatro flujos, timeout y APK separados."
+}

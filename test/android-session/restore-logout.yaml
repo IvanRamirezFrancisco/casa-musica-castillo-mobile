@@ -1,0 +1,17 @@
+appId: com.casademusicacastillo.app
+name: TT05 - Reinicio y logout nativo
+---
+- launchApp
+- extendedWaitUntil:
+    visible: "Catálogo"
+    timeout: 30000
+- tapOn: "Perfil"
+- assertVisible: "QA Sesion"
+- assertNotVisible: "Bienvenido de nuevo"
+- takeScreenshot: reports/android-session/restored-native
+- scrollUntilVisible:
+    element: "Cerrar sesión"
+    direction: DOWN
+    centerElement: true
+- tapOn: "Cerrar sesión"
+- assertVisible: "Bienvenido de nuevo"

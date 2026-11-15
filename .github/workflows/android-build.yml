@@ -1,0 +1,159 @@
+name: Android - Build Debug APK
+
+on:
+  pull_request:
+    branches:
+      - develop
+      - main
+      - feature/actividad-4-integracion-movil
+      - feature/android-release-google-play
+      - feature/privacidad-play-compliance
+      - feature/tt05-sesion-segura
+      - feature/conciliacion-validadores-equipo
+      - feature/uiux-adaptativo-multidispositivo
+      - fix/galaxy-a55-integracion-real
+      - feature/uiux-direccion-a
+      - fix/aceptacion-a55-p0
+      - feature/refinamiento-comercial-a55
+      - feature/refinamiento-cuenta-favoritos-carrito
+      - feature/galeria-experiencia-comercial
+      - codex/refinamiento-final-formularios
+
+  push:
+    branches:
+      - develop
+      - main
+
+  workflow_call:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.run_id }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  changes:
+    name: Alcance Android
+    runs-on: ubuntu-24.04
+    outputs:
+      docs_only: ${{ steps.scope.outputs.docs_only }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+      - id: scope
+        run: node scripts/detect-change-scope.mjs
+
+  android-build:
+    name: Compilar APK Android Debug
+    needs: changes
+    if: needs.changes.outputs.docs_only != 'true'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+
+    steps:
+      - name: Obtener codigo fuente
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: "22"
+          cache: "npm"
+
+      - name: Configurar Java
+        uses: actions/setup-java@v6
+        with:
+          distribution: "temurin"
+          java-version: "21"
+
+      - name: Configurar Gradle
+        uses: gradle/actions/setup-gradle@v6
+
+      - name: Mostrar versiones
+        run: |
+          node --version
+          npm --version
+          java -version
+
+      - name: Instalar dependencias
+        run: npm ci
+
+      - name: Compilar aplicacion Angular
+        id: angular-build
+        run: npm run build
+
+      - name: Sincronizar Capacitor con Android
+        id: capacitor-sync
+        run: npx cap sync android
+
+      - name: Dar permisos al Gradle Wrapper
+        run: chmod +x android/gradlew
+
+      - name: Compilar APK Debug
+        id: gradle-build
+        working-directory: android
+        run: ./gradlew assembleDebug --no-daemon
+
+      - name: Verificar APK generado
+        id: verify-apk
+        run: |
+          test -f android/app/build/outputs/apk/debug/app-debug.apk
+          ls -lh android/app/build/outputs/apk/debug/app-debug.apk
+
+      - name: Publicar APK como artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: casa-musica-castillo-debug-apk
+          path: android/app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error
+          retention-days: 14
+
+      # Separate artifact: offline DEMO acceptance must never masquerade as HTTP catalog evidence.
+      - name: Compilar APK separado para aceptación DEMO
+        id: demo-build
+        run: |
+          npm run build -- --configuration=demo
+          npx cap sync android
+          cd android
+          ./gradlew assembleDebug --no-daemon
+
+      - name: Publicar APK DEMO separado
+        uses: actions/upload-artifact@v7
+        with:
+          name: casa-musica-castillo-demo-debug-apk
+          path: android/app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Retroalimentación de Android Build
+        if: always()
+        env:
+          SUMMARY_WORKFLOW: Android - Build Debug APK
+          SUMMARY_PR: ${{ github.event.pull_request.number || 'No aplica' }}
+          SUMMARY_CONTROLS: |
+            Angular build|${{ steps.angular-build.outcome == 'success' && 'PASS' || 'FAIL' }}|Compila la aplicación web para Capacitor.
+            Capacitor sync|${{ steps.capacitor-sync.outcome == 'success' && 'PASS' || 'FAIL' }}|Sincroniza assets y plugins Android.
+            Gradle assembleDebug|${{ steps.gradle-build.outcome == 'success' && 'PASS' || 'FAIL' }}|Control BUILD; no se presenta como prueba unitaria.
+            Build APK DEMO separado|${{ steps.demo-build.outcome == 'success' && 'PASS' || 'FAIL' }}|Sólo aceptación offline; no acredita catálogo HTTP.
+            Verificación APK|${{ steps.verify-apk.outcome == 'success' && 'PASS' || 'FAIL' }}|Confirma el artefacto esperado del mismo SHA.
+          SUMMARY_STATUS: ${{ (steps.angular-build.outcome == 'success' && steps.capacitor-sync.outcome == 'success' && steps.gradle-build.outcome == 'success' && steps.verify-apk.outcome == 'success' && steps.demo-build.outcome == 'success') && 'PASS' || 'FAIL' }}
+          SUMMARY_DATA: Código y assets del SHA; build Debug sin secretos.
+          SUMMARY_METRICS: Tamaño del APK visible en el paso Verificar APK generado.
+          SUMMARY_ARTIFACTS: casa-musica-castillo-debug-apk (real) y casa-musica-castillo-demo-debug-apk (DEMO), retención 14 días.
+        run: node scripts/write-workflow-summary.mjs
+
+
+
+  acceptance:
+    name: ACEPTACIÓN móvil DEMO
+    needs: [changes, android-build]
+    # Acceptance usa el APK DEMO explícito del mismo run y SHA; el APK real queda separado.
+    if: needs.changes.outputs.docs_only != 'true' && needs.android-build.result == 'success'
+    uses: ./.github/workflows/acceptance.yml

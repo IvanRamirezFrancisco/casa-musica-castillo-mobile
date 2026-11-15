@@ -1,0 +1,111 @@
+.checkout-section {
+  margin-bottom: var(--cmc-space-6);
+
+  .section-title {
+    font-size: 1.125rem;
+    margin-bottom: var(--cmc-space-3);
+  }
+}
+
+.selection-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--cmc-surface);
+  border-radius: var(--cmc-radius-md);
+  padding: var(--cmc-space-4);
+  box-shadow: var(--cmc-shadow-card);
+  cursor: pointer;
+  transition: all var(--cmc-transition-fast);
+
+  &:active {
+    transform: scale(0.98);
+  }
+
+  .card-content {
+    display: flex;
+    align-items: center;
+    gap: var(--cmc-space-4);
+
+    .icon-wrapper {
+      width: 40px;
+      height: 40px;
+      background: var(--cmc-surface-alt);
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: var(--cmc-primary);
+
+      ion-icon {
+        font-size: 20px;
+      }
+    }
+
+    .info {
+      display: flex;
+      flex-direction: column;
+
+      span {
+        line-height: 1.4;
+      }
+    }
+  }
+
+  .chevron {
+    color: var(--cmc-text-disabled);
+    font-size: 20px;
+  }
+}
+
+.order-summary-card {
+  background: var(--cmc-surface);
+  border-radius: var(--cmc-radius-md);
+  padding: var(--cmc-space-5) var(--cmc-space-4);
+  box-shadow: var(--cmc-shadow-card);
+  display: flex;
+  flex-direction: column;
+  gap: var(--cmc-space-3);
+
+  .summary-items {
+    margin-bottom: var(--cmc-space-2);
+  }
+
+  .summary-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .summary-divider {
+    height: 1px;
+    background: var(--cmc-border);
+    margin: var(--cmc-space-2) 0;
+  }
+
+  .total-row {
+    margin-top: var(--cmc-space-1);
+    .cmc-primary {
+      color: var(--cmc-primary);
+    }
+  }
+}
+
+.checkout-actions {
+  margin-top: var(--cmc-space-8);
+  margin-bottom: var(--cmc-space-8);
+
+  .error-hint {
+    margin-top: var(--cmc-space-3);
+    font-size: 0.875rem;
+  }
+}
+
+.text-center {
+  text-align: center;
+}
+
+.selection-card { width: 100%; border: 1px solid var(--cmc-border); text-align: left; color: var(--cmc-text-primary); gap: var(--cmc-space-3); }
+.card-content, .info { min-width: 0; }
+.icon-wrapper { flex-shrink: 0; }
+.summary-row { gap: var(--cmc-space-3); flex-wrap: wrap; }

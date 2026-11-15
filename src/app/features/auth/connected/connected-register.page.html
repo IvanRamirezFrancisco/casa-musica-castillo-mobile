@@ -1,0 +1,159 @@
+<ion-content class="cmc-page cmc-standalone-page auth-page" [scrollY]="true">
+  <div class="auth-hero">
+    <button type="button" aria-label="Volver a iniciar sesión" class="auth-back-pill" (click)="goBack()">
+      <ion-icon name="arrow-back-outline" aria-hidden="true"></ion-icon>
+      Volver al inicio de sesión
+    </button>
+
+    <div class="brand-info">
+      <h1 class="auth-brand-title">Crea tu cuenta</h1>
+      <p class="auth-brand-subtitle">Compra, guarda favoritos y da seguimiento a tus pedidos.</p>
+    </div>
+  </div>
+
+  <div class="auth-card-container">
+    <div class="auth-card">
+      @if (registered()) {
+        <div class="auth-card-header">
+          <h2 class="cmc-title">Revisa tu correo</h2>
+        </div>
+        <p class="auth-alert auth-alert--success" role="status">
+          Si tu cuenta puede activarse, recibirás un mensaje de verificación. Debes verificarla antes de iniciar sesión.
+        </p>
+        <div class="step-actions">
+          <cmc-button fullWidth (click)="goBack()">Ir a iniciar sesión</cmc-button>
+          <a routerLink="/verify-email" [state]="{ activationEmail: form.controls.email.value }" class="cmc-link cmc-font-bold">Verificar mi correo</a>
+        </div>
+      } @else {
+        @if (errorMessage()) {
+          <p class="auth-alert auth-alert--error" role="alert">{{ errorMessage() }}</p>
+        }
+        <form [formGroup]="form" (ngSubmit)="submit()" class="auth-form" novalidate>
+          @if (legal()?.required) {
+            <fieldset>
+              <legend>Documentos de registro</legend>
+              <p><a href="https://casa-musica-castillo.vercel.app/terminos" target="_blank" rel="noopener">Términos y Condiciones</a></p>
+              <label><input type="checkbox" [checked]="termsAccepted()" (change)="termsAccepted.set(checked($event))"> He leído y acepto los Términos y Condiciones.</label>
+              <p><a href="https://casa-musica-castillo.vercel.app/privacidad" target="_blank" rel="noopener">Aviso de Privacidad</a></p>
+              <label><input type="checkbox" [checked]="privacyRead()" (change)="privacyRead.set(checked($event))"> Confirmo que leí el Aviso de Privacidad.</label>
+            </fieldset>
+          }
+          <cmc-input
+            formControlName="username"
+            autocomplete="username"
+            label="Nombre de usuario"
+            placeholder="Ej. usuario.123"
+            type="text"
+            hint="3 a 30 caracteres: letras, números, punto, guion o guion bajo."
+            [error]="fieldError('username')"
+           required></cmc-input>
+
+          <cmc-input
+            formControlName="firstName"
+            autocomplete="given-name"
+            label="Nombre(s)"
+            type="text"
+            placeholder="Ej. Juan"
+            [error]="fieldError('firstName')"
+           required></cmc-input>
+
+          <cmc-input
+            formControlName="lastName"
+            autocomplete="family-name"
+            label="Apellidos"
+            type="text"
+            placeholder="Ej. Pérez"
+            [error]="fieldError('lastName')"
+           required></cmc-input>
+
+          <cmc-input
+            formControlName="email"
+            autocomplete="email"
+            label="Correo electrónico"
+            type="email"
+            placeholder="ejemplo@correo.com"
+            [error]="fieldError('email')"
+           required></cmc-input>
+
+          <cmc-input
+            formControlName="phone"
+            autocomplete="tel"
+            label="Teléfono (opcional)"
+            type="tel"
+            inputMode="tel"
+            [digitLimit]="phoneDigits"
+            placeholder="Ej. 55 1234 5678"
+            hint="10 dígitos. Puedes usar espacios o guiones."
+            [error]="fieldError('phone')"
+            [feedback]="phoneConfirmed() ? 'positive' : null"
+          ></cmc-input>
+
+          <p class="field-feedback field-success" role="status">{{ phoneConfirmed() ? 'Formato de teléfono válido.' : '' }}</p>
+
+          @let checks = passwordChecklist();
+          <cmc-input
+            formControlName="password"
+            (focusin)="passwordFocused.set(true)"
+            (focusout)="passwordFocused.set(false)"
+            autocomplete="new-password"
+            label="Contraseña"
+            type="password"
+            [error]="passwordFocused() ? '' : fieldError('password')"
+            [feedback]="passwordFocused() || form.controls.password.touched ? checks.feedback : null"
+           required></cmc-input>
+
+          @if (passwordFocused()) {
+            <section class="password-guide" aria-labelledby="password-guide-title">
+              <h3 id="password-guide-title">Crea tu contraseña</h3>
+              <div class="password-strength" [attr.data-feedback]="checks.feedback">
+                <span>Fortaleza</span><strong>{{checks.strength}}</strong>
+                <progress max="3" [value]="checks.level" aria-label="Fortaleza según los requisitos del formulario"
+                  [attr.aria-valuetext]="checks.strength"></progress>
+              </div>
+              <ul class="password-requirements">
+                @for (requirement of [{met: checks.length, label: 'Al menos ' + limits.passwordMin + ' caracteres'},
+                  {met: checks.variety, label: 'Incluye minúscula, mayúscula, número y símbolo'}]; track requirement.label) {
+                  <li [class.requirement-met]="requirement.met">
+                    @if (requirement.met) { <cmc-icon name="available"/> }
+                    @else { <span class="requirement-circle" aria-hidden="true"></span> }
+                    <span><span class="requirement-status">{{requirement.met ? 'Cumplido: ' : 'Por completar: '}}</span>{{requirement.label}}</span>
+                  </li>
+                }
+              </ul>
+              @if (checks.tooLong) { <p class="password-length-error" role="status">Usa una contraseña más corta.</p> }
+            </section>
+          }
+          <p class="field-feedback field-success" role="status">
+            {{ !passwordFocused() && form.controls.password.touched && checks.feedback === 'positive'
+              ? 'Contraseña fuerte.' : '' }}
+          </p>
+
+          <cmc-input
+            formControlName="confirmPassword"
+            autocomplete="new-password"
+            label="Confirmar contraseña"
+            type="password"
+            placeholder="Repite tu contraseña"
+            [error]="confirmError()"
+            [feedback]="passwordsCoincide() ? 'positive' : null"
+           required></cmc-input>
+
+          <p class="field-feedback" [class.field-success]="passwordsCoincide()" role="status">{{ confirmationStatus() }}</p>
+
+          <cmc-button type="submit" fullWidth [loading]="submitting()" loadingLabel="Creando cuenta">
+            Crear cuenta
+          </cmc-button>
+        </form>
+
+        <p><a routerLink="/privacy" class="cmc-link">Información de privacidad y controles disponibles</a></p>
+        <div class="auth-separator"></div>
+
+        <div class="auth-footer">
+          <p class="cmc-body cmc-text-secondary">
+            ¿Ya tienes cuenta? <a routerLink="/login" class="cmc-link cmc-font-bold">Iniciar sesión</a>
+          </p>
+        </div>
+      }
+    </div>
+  </div>
+</ion-content>

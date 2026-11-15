@@ -1,0 +1,7 @@
+{
+  "name": "CMC - plantilla local sin secretos",
+  "values": [
+    { "key": "baseUrl", "value": "", "enabled": true },
+    { "key": "missingProductId", "value": "9223372036854775807", "enabled": true }
+  ]
+}

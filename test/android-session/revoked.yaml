@@ -1,0 +1,12 @@
+appId: com.casademusicacastillo.app
+name: TT05 - Revocación 401 tras reinicio
+---
+- launchApp
+- extendedWaitUntil:
+    visible: "Catálogo"
+    timeout: 30000
+- tapOn: "Perfil"
+- assertVisible: "Bienvenido de nuevo"
+- assertVisible: "Tu sesión expiró. Inicia sesión de nuevo para continuar."
+- assertNotVisible: "MFA Sesion"
+- takeScreenshot: reports/android-session/revoked-native

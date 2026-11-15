@@ -1,0 +1,12 @@
+appId: com.casademusicacastillo.app
+---
+# Caller opens/returns to login; do not clear and relaunch twice in one flow.
+- tapOn:
+    id: "cmc-input-0"
+- inputText: "qa@example.test"
+- tapOn:
+    id: "cmc-input-1"
+- inputText: "demo-only"
+- hideKeyboard
+- tapOn: "Iniciar sesión"
+- assertVisible: "Inicio"

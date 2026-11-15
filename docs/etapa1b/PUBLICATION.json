@@ -1,0 +1,163 @@
+{
+  "recordedAtUtc": "2026-11-03T20:24:43.564035+00:00",
+  "clientDate": "2026-11-03",
+  "timezone": "America/Mexico_City",
+  "repository": "IvanRamirezFrancisco/casa-musica-castillo-mobile",
+  "initialHead": "efe9767082040971278e66595aad8c0bf82c4b81",
+  "branch": "feature/actividad-4-integracion-movil",
+  "upstream": "origin/feature/actividad-4-integracion-movil",
+  "publishedHeadVerifiedBeforeThisDocumentationCommit": "af6592082eceba82b2404da8b596cc4a70f8dc25",
+  "finalHeadNote": "Este registro se publica en un commit documental posterior. Su SHA final y los checks actualizados se verifican de nuevo en el Draft PR y en el informe de cierre; las fuentes validadas no cambian.",
+  "draftPr": {
+    "number": 83,
+    "url": "https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/pull/83",
+    "draft": true,
+    "base": "develop",
+    "mergeableAtObservation": "MERGEABLE",
+    "mergeStateAtObservation": "UNSTABLE"
+  },
+  "commitsBeforeThisRecord": [
+    {
+      "sha": "1c5fdbe33eeae392be0d59495469739e4ade454a",
+      "subject": "chore(android): separar configuración conectada y artefactos de aceptación demo"
+    },
+    {
+      "sha": "69fd14f1eb8eba40b7b16b8e2c6f62bd47d11f4c",
+      "subject": "feat(core): consolidar contratos API, repositorios y estado de sesión y comercio"
+    },
+    {
+      "sha": "6ac78a04b23b87367e74b1c95ac6632d892f48f7",
+      "subject": "feat(ui): consolidar controles compartidos y estilos de la experiencia móvil"
+    },
+    {
+      "sha": "9145ddf383297b4fe3b6547faa5ab4fcdf242d9b",
+      "subject": "feat(mobile): consolidar catálogo público y módulos conectados de cuenta y comercio"
+    },
+    {
+      "sha": "d03d0a5945fcfe99df5d13abceeb9183a08c9978",
+      "subject": "test(mobile): consolidar caja blanca y herramientas reproducibles de validación"
+    },
+    {
+      "sha": "af6592082eceba82b2404da8b596cc4a70f8dc25",
+      "subject": "docs(integration): registrar evidencias de octubre y validación de consolidación 1B"
+    }
+  ],
+  "incrementBeforeThisRecord": {
+    "modified": 67,
+    "added": 223,
+    "totalChangedPaths": 290
+  },
+  "incrementIncludingThisRecord": {
+    "modified": 67,
+    "added": 224,
+    "totalChangedPaths": 291,
+    "totalTrackedFiles": 474
+  },
+  "actionsObservation": {
+    "headSha": "af6592082eceba82b2404da8b596cc4a70f8dc25",
+    "observedAtUtc": "2026-11-03T20:23:22.823042+00:00",
+    "runs": [
+      {
+        "conclusion": "",
+        "createdAt": "2026-11-03T20:22:05Z",
+        "databaseId": 41711905678,
+        "event": "pull_request",
+        "headSha": "af6592082eceba82b2404da8b596cc4a70f8dc25",
+        "name": "CI - Calidad",
+        "status": "in_progress",
+        "updatedAt": "2026-11-03T20:22:26Z",
+        "url": "https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/actions/runs/41711905678"
+      },
+      {
+        "conclusion": "",
+        "createdAt": "2026-11-03T20:22:04Z",
+        "databaseId": 41711905511,
+        "event": "pull_request",
+        "headSha": "af6592082eceba82b2404da8b596cc4a70f8dc25",
+        "name": "Android - Build Debug APK",
+        "status": "in_progress",
+        "updatedAt": "2026-11-03T20:22:41Z",
+        "url": "https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/actions/runs/41711905511"
+      },
+      {
+        "conclusion": "success",
+        "createdAt": "2026-11-03T20:22:04Z",
+        "databaseId": 41711905565,
+        "event": "pull_request",
+        "headSha": "af6592082eceba82b2404da8b596cc4a70f8dc25",
+        "name": "RENDIMIENTO Y ESFUERZO - k6 autorizado",
+        "status": "completed",
+        "updatedAt": "2026-11-03T20:22:53Z",
+        "url": "https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/actions/runs/41711905565"
+      },
+      {
+        "conclusion": "",
+        "createdAt": "2026-11-03T20:22:04Z",
+        "databaseId": 41711905512,
+        "event": "pull_request",
+        "headSha": "af6592082eceba82b2404da8b596cc4a70f8dc25",
+        "name": "Security - Analisis",
+        "status": "in_progress",
+        "updatedAt": "2026-11-03T20:22:19Z",
+        "url": "https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/actions/runs/41711905512"
+      },
+      {
+        "conclusion": "",
+        "createdAt": "2026-11-03T20:22:04Z",
+        "databaseId": 41711905570,
+        "event": "pull_request",
+        "headSha": "af6592082eceba82b2404da8b596cc4a70f8dc25",
+        "name": "INTEGRACIÓN - Frontend y API",
+        "status": "in_progress",
+        "updatedAt": "2026-11-03T20:22:39Z",
+        "url": "https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/actions/runs/41711905570"
+      }
+    ],
+    "note": "Una ejecución concluyó success y cuatro seguían en curso en esta observación. No se declara CI global aprobado. El commit documental posterior genera un nuevo conjunto de checks; consultar su HEAD exacto. Un workflow success con jobs omitidos no acredita pruebas ejecutadas."
+  },
+  "projectVerification": {
+    "observedAtUtc": "2026-11-03T20:22:49.174555+00:00",
+    "itemsBefore": 69,
+    "itemsAfter": 70,
+    "existingItemsChanged": [],
+    "allExistingItemsPreserved": true,
+    "newPrItem": {
+      "content": {
+        "number": 83,
+        "repository": "IvanRamirezFrancisco/casa-musica-castillo-mobile",
+        "title": "feat(mobile): consolidar integración móvil de octubre y evidencias de Etapa 1B",
+        "type": "PullRequest",
+        "url": "https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/pull/83"
+      },
+      "etapa DevOps": "TEST",
+      "id": "PVTI_lAHOCAIt6M4BjgQ6zhFypjg",
+      "repository": "https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile",
+      "status": "En pruebas",
+      "tipo": "Entrega verificable",
+      "title": "feat(mobile): consolidar integración móvil de octubre y evidencias de Etapa 1B"
+    },
+    "issuesCreated": 0,
+    "issuesClosed": 0,
+    "existingAssignmentsChanged": false,
+    "existingStoryPointsChanged": false,
+    "existingIterationsChanged": false,
+    "existingStatusesChanged": false
+  },
+  "branchGuards": {
+    "localDevelop": "efe9767082040971278e66595aad8c0bf82c4b81",
+    "localMain": "a062f4e31893d3f6a1d93249c60cec24641a3b15",
+    "remoteDevelopBeforePush": "efe9767082040971278e66595aad8c0bf82c4b81",
+    "remoteMainBeforePush": "28d7b2272fc08dea7f5a51496eeacb0dae4878c4",
+    "pushedOnlyAuthorizedFeatureBranch": true
+  },
+  "operations": {
+    "merges": 0,
+    "deployments": 0,
+    "releaseBuilds": 0,
+    "foreignPrMutations": 0,
+    "backendModifications": 0,
+    "backupModifications": 0,
+    "forcePushes": 0
+  },
+  "nextAction": "Revisar #83 y acordar conciliación de #71/#77/#80; después preparar cuenta, buzón y BD aislados para aceptación real de Etapa 2."
+}

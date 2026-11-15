@@ -1,0 +1,6 @@
+flows:
+  - auth-demo.yaml
+  - purchase-demo.yaml
+  - account-demo.yaml
+  - navigation-demo.yaml
+  - privacy-demo.yaml

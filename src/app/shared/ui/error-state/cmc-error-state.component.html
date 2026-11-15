@@ -1,0 +1,9 @@
+<section class="cmc-error-state" role="alert">
+  <h2 class="cmc-error-state__heading">{{ heading() }}</h2>
+  @if (description()) {
+    <p class="cmc-error-state__description">{{ description() }}</p>
+  }
+  @if (showRetry()) {
+    <cmc-button variant="secondary" (click)="onRetry()">{{ retryLabel() }}</cmc-button>
+  }
+</section>

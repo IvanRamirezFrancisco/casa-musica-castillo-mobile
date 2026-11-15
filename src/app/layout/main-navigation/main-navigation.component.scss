@@ -1,0 +1,87 @@
+@use '../../shared/ui/styles/mixins';
+
+ion-tab-bar {
+  // The bottom slot participates in ion-tabs layout and reserves its measured height.
+  flex: 0 0 auto;
+  align-self: center;
+  margin-block: var(--cmc-space-2) calc(var(--cmc-space-3) + var(--cmc-safe-area-bottom));
+  --capsule-gutter: max(var(--cmc-space-4), var(--ion-safe-area-left, 0px), var(--ion-safe-area-right, 0px));
+  width: calc(100% - 2 * var(--capsule-gutter));
+  max-width: 28rem;
+  border-radius: var(--cmc-radius-xl);
+  --background: var(--cmc-surface);
+  --border: none;
+  box-shadow: var(--cmc-shadow-medium), inset 0 0 0 1px var(--cmc-border-strong);
+  /* Ionic forces content-box in its shadow host. Keep outer geometry exact:
+   * no layout border/padding; inset shadow and button margins draw the capsule. */
+  padding: 0;
+  // The margin includes the safe area for the capsule.
+  --ion-safe-area-bottom: 0px;
+  min-height: var(--cmc-bubble-nav-height);
+  contain: none; /* allows box-shadow to show outside */
+  overflow: visible;
+  z-index: 1000;
+  border: 0;
+
+  ion-tab-button {
+    --color: var(--cmc-text-secondary);
+    --color-selected: var(--cmc-text-on-primary);
+    --background-focused: var(--cmc-surface-alt);
+    --background-hover: transparent;
+    --padding-start: 0px;
+    --padding-end: 0px;
+    background: transparent;
+    min-width: 44px;
+    min-height: 48px;
+    transition: background-color var(--cmc-transition-fast);
+    border-radius: var(--cmc-radius-lg);
+    height: auto;
+    padding-block: var(--cmc-space-1);
+    margin: var(--cmc-space-1) 0;
+
+    ion-icon {
+      font-size: 1.375rem;
+      margin-block-end: var(--cmc-space-1);
+      z-index: 2;
+    }
+
+    ion-label {
+      font-family: 'Roboto', sans-serif;
+      font-size: .75rem;
+      font-weight: 600;
+      line-height: 1.2;
+      white-space: normal;
+      overflow-wrap: anywhere;
+      z-index: 2;
+    }
+
+    /* TT-36: indicador del carrito */
+    .cart-sr-only { @include mixins.cmc-visually-hidden; }
+    .cart-badge {
+      --background: var(--cmc-promo-mamey);
+      --color: var(--cmc-text-primary);
+      border: 1px solid var(--cmc-primary-dark);
+      font-size: .6875rem;
+      font-weight: 700;
+      z-index: 3;
+    }
+
+    /* Activo: Cápsula burdeos */
+    &.tab-selected {
+      background: var(--cmc-primary);
+      box-shadow: var(--cmc-shadow-brand), inset 0 -3px var(--cmc-promo-mamey);
+
+      ion-label { font-weight: 750; }
+
+      ion-icon, ion-label {
+        color: var(--cmc-text-on-primary);
+      }
+    }
+  }
+}
+
+ion-tab-button::part(native):focus-visible { outline: 3px solid var(--cmc-primary); outline-offset: -3px; }
+ion-tab-button.tab-selected::part(native):focus-visible { outline-color: var(--cmc-text-on-primary); }
+
+ion-tab-button:first-child { margin-left: var(--cmc-space-1); }
+ion-tab-button:last-child { margin-right: var(--cmc-space-1); }

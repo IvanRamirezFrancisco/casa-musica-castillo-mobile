@@ -1,0 +1,73 @@
+<ion-header class="ion-no-border cmc-header-minimal">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <button type="button" aria-label="Volver" class="nav-back-btn" (click)="goBack()">
+        <ion-icon name="arrow-back-outline"></ion-icon>
+      </button>
+    </ion-buttons>
+    <ion-title class="cmc-title" role="heading" aria-level="1">Método de pago</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="cmc-page" [scrollY]="true">
+  <div class="cmc-page-container">
+    <p class="cmc-caption" role="note">Selección de demostración. No se realizan pagos ni entregas reales.</p>
+    <div class="options-container" role="radiogroup" aria-label="Opciones de pago">
+
+      <!-- Transfer Option -->
+      <label
+        class="delivery-option-card"
+        [class.selected]="selectedMethod === 'transfer'"
+
+      >
+        <input class="method-radio" type="radio" name="payment-method" [checked]="selectedMethod === 'transfer'" (change)="selectMethod('transfer')" />
+        <div class="radio-indicator" aria-hidden="true">
+          <div class="inner-circle"></div>
+        </div>
+        <div class="option-content">
+          <div class="option-header">
+            <span class="cmc-font-bold title">Transferencia bancaria</span>
+          </div>
+          <p class="cmc-body cmc-text-secondary description">
+            Método ilustrativo, sin transferencia de dinero.
+          </p>
+          @if (selectedMethod === 'transfer') {
+            <div class="store-info">
+              <ion-icon name="information-circle-outline"></ion-icon>
+              <span class="cmc-text-secondary">No se enviarán instrucciones bancarias en esta demostración.</span>
+            </div>
+          }
+        </div>
+      </label>
+
+      <!-- Mercado Pago Option -->
+      <label class="delivery-option-card" [class.selected]="selectedMethod === 'mercadopago'">
+        <input class="method-radio" type="radio" name="payment-method" [checked]="selectedMethod === 'mercadopago'" (change)="selectMethod('mercadopago')" />
+        <div class="radio-indicator" aria-hidden="true">
+          <div class="inner-circle"></div>
+        </div>
+        <div class="option-content">
+          <div class="option-header">
+            <span class="cmc-font-bold title">Mercado Pago</span>
+          </div>
+          <p class="cmc-body cmc-text-secondary description">
+            Tarjetas, saldo o efectivo.
+          </p>
+          @if (selectedMethod === 'mercadopago') {
+            <div class="store-info">
+              <ion-icon name="lock-closed-outline"></ion-icon>
+              <span class="cmc-text-secondary">No se abrirá ninguna pasarela de pago en esta demostración.</span>
+            </div>
+          }
+        </div>
+      </label>
+
+    </div>
+
+    <div class="action-container">
+      <cmc-button fullWidth [disabled]="!selectedMethod" (click)="confirmSelection()">
+        Confirmar método
+      </cmc-button>
+    </div>
+  </div>
+</ion-content>

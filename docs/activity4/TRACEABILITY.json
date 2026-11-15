@@ -1,0 +1,272 @@
+{
+  "checkedOn": "2026-10-29",
+  "source": "gh issue list (read only)",
+  "projectFieldsVerified": false,
+  "remoteMutations": false,
+  "newCommits": [],
+  "draftPr": null,
+  "ciForIncrement": "not executed",
+  "issues": [
+    {
+      "assignees": [
+        {
+          "id": "U_kgDOCAIt6A",
+          "login": "IvanRamirezFrancisco",
+          "name": "Ivan Francisco Ramírez",
+          "databaseId": 134360552
+        }
+      ],
+      "number": 20,
+      "state": "OPEN",
+      "title": "TT-06 | Implementar manejo global de errores de API",
+      "url": "https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/issues/20"
+    },
+    {
+      "assignees": [
+        {
+          "id": "U_kgDOCAIt6A",
+          "login": "IvanRamirezFrancisco",
+          "name": "Ivan Francisco Ramírez",
+          "databaseId": 134360552
+        }
+      ],
+      "number": 19,
+      "state": "OPEN",
+      "title": "TT-05 | Implementar almacenamiento seguro de sesión",
+      "url": "https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/issues/19"
+    },
+    {
+      "assignees": [
+        {
+          "id": "U_kgDOCAIt6A",
+          "login": "IvanRamirezFrancisco",
+          "name": "Ivan Francisco Ramírez",
+          "databaseId": 134360552
+        },
+        {
+          "id": "U_kgDODmVvEg",
+          "login": "Tackalay",
+          "name": "Brayan Lara",
+          "databaseId": 241528594
+        }
+      ],
+      "number": 18,
+      "state": "CLOSED",
+      "title": "TT-04 | Implementar navegación móvil",
+      "url": "https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/issues/18"
+    },
+    {
+      "assignees": [
+        {
+          "id": "U_kgDODmVvEg",
+          "login": "Tackalay",
+          "name": "Brayan Lara",
+          "databaseId": 241528594
+        }
+      ],
+      "number": 14,
+      "state": "OPEN",
+      "title": "HU-14 | Consultar y modificar perfil",
+      "url": "https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/issues/14"
+    },
+    {
+      "assignees": [
+        {
+          "id": "U_kgDODmVvEg",
+          "login": "Tackalay",
+          "name": "Brayan Lara",
+          "databaseId": 241528594
+        }
+      ],
+      "number": 13,
+      "state": "OPEN",
+      "title": "HU-13 | Consultar detalle de un pedido",
+      "url": "https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/issues/13"
+    },
+    {
+      "assignees": [
+        {
+          "id": "U_kgDODmVvEg",
+          "login": "Tackalay",
+          "name": "Brayan Lara",
+          "databaseId": 241528594
+        }
+      ],
+      "number": 5,
+      "state": "OPEN",
+      "title": "HU-05 | Consultar catálogo de productos",
+      "url": "https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/issues/5"
+    },
+    {
+      "assignees": [
+        {
+          "id": "U_kgDODmVvEg",
+          "login": "Tackalay",
+          "name": "Brayan Lara",
+          "databaseId": 241528594
+        }
+      ],
+      "number": 12,
+      "state": "OPEN",
+      "title": "HU-12 | Consultar mis pedidos",
+      "url": "https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/issues/12"
+    },
+    {
+      "assignees": [
+        {
+          "id": "U_kgDODmVvEg",
+          "login": "Tackalay",
+          "name": "Brayan Lara",
+          "databaseId": 241528594
+        }
+      ],
+      "number": 4,
+      "state": "OPEN",
+      "title": "HU-04 | Visualizar pantalla de inicio",
+      "url": "https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/issues/4"
+    },
+    {
+      "assignees": [
+        {
+          "id": "U_kgDOCAIt6A",
+          "login": "IvanRamirezFrancisco",
+          "name": "Ivan Francisco Ramírez",
+          "databaseId": 134360552
+        }
+      ],
+      "number": 11,
+      "state": "OPEN",
+      "title": "HU-11 | Realizar proceso de checkout",
+      "url": "https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/issues/11"
+    },
+    {
+      "assignees": [
+        {
+          "id": "U_kgDODmVvEg",
+          "login": "Tackalay",
+          "name": "Brayan Lara",
+          "databaseId": 241528594
+        }
+      ],
+      "number": 3,
+      "state": "OPEN",
+      "title": "HU-03 | Recuperar contraseña",
+      "url": "https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/issues/3"
+    },
+    {
+      "assignees": [
+        {
+          "id": "U_kgDOCAIt6A",
+          "login": "IvanRamirezFrancisco",
+          "name": "Ivan Francisco Ramírez",
+          "databaseId": 134360552
+        }
+      ],
+      "number": 10,
+      "state": "OPEN",
+      "title": "HU-10 | Administrar productos del carrito",
+      "url": "https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/issues/10"
+    },
+    {
+      "assignees": [
+        {
+          "id": "U_kgDOCAIt6A",
+          "login": "IvanRamirezFrancisco",
+          "name": "Ivan Francisco Ramírez",
+          "databaseId": 134360552
+        }
+      ],
+      "number": 9,
+      "state": "OPEN",
+      "title": "HU-09 | Agregar productos al carrito",
+      "url": "https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/issues/9"
+    },
+    {
+      "assignees": [
+        {
+          "id": "U_kgDOCAIt6A",
+          "login": "IvanRamirezFrancisco",
+          "name": "Ivan Francisco Ramírez",
+          "databaseId": 134360552
+        }
+      ],
+      "number": 8,
+      "state": "OPEN",
+      "title": "HU-08 | Agregar o eliminar productos de favoritos",
+      "url": "https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/issues/8"
+    },
+    {
+      "assignees": [
+        {
+          "id": "U_kgDODmVvEg",
+          "login": "Tackalay",
+          "name": "Brayan Lara",
+          "databaseId": 241528594
+        }
+      ],
+      "number": 7,
+      "state": "OPEN",
+      "title": "HU-07 | Consultar detalle de un producto",
+      "url": "https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/issues/7"
+    },
+    {
+      "assignees": [
+        {
+          "id": "U_kgDODmVvEg",
+          "login": "Tackalay",
+          "name": "Brayan Lara",
+          "databaseId": 241528594
+        }
+      ],
+      "number": 2,
+      "state": "OPEN",
+      "title": "HU-02 | Registrarse como cliente",
+      "url": "https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/issues/2"
+    },
+    {
+      "assignees": [
+        {
+          "id": "U_kgDOCAIt6A",
+          "login": "IvanRamirezFrancisco",
+          "name": "Ivan Francisco Ramírez",
+          "databaseId": 134360552
+        }
+      ],
+      "number": 6,
+      "state": "OPEN",
+      "title": "HU-06 | Buscar productos",
+      "url": "https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/issues/6"
+    },
+    {
+      "assignees": [
+        {
+          "id": "U_kgDOCAIt6A",
+          "login": "IvanRamirezFrancisco",
+          "name": "Ivan Francisco Ramírez",
+          "databaseId": 134360552
+        }
+      ],
+      "number": 1,
+      "state": "OPEN",
+      "title": "HU-01 | Iniciar sesión desde la aplicación móvil",
+      "url": "https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/issues/1"
+    },
+    {
+      "assignees": [
+        {
+          "id": "U_kgDOCAIt6A",
+          "login": "IvanRamirezFrancisco",
+          "name": "Ivan Francisco Ramírez",
+          "databaseId": 134360552
+        }
+      ],
+      "number": 17,
+      "state": "CLOSED",
+      "title": "TT-03 | Configurar conexión con API Spring Boot",
+      "url": "https://github.com/IvanRamirezFrancisco/casa-musica-castillo-mobile/issues/17"
+    }
+  ],
+  "historicalRecord": true,
+  "currentStageReport": "docs/etapa1b/README.md",
+  "historicalRecordNote": "Conserva los resultados, hashes y decisiones originales del 29 de octubre. No representa el estado de publicación, Projects, pruebas o APK de Etapa 1B."
+}

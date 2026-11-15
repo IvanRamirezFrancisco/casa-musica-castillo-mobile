@@ -1,0 +1,92 @@
+@if (publicCatalogEnabled) { <app-public-home /> } @else {
+<ion-header class="ion-no-border cmc-header-transparent cmc-discovery-header">
+  <ion-toolbar class="home-toolbar">
+    <div class="header-content">
+      <div class="brand-title">
+        <ion-icon name="musical-notes-outline" class="brand-icon-small"></ion-icon>
+        <h1 class="cmc-title">Casa de Música</h1>
+      </div>
+      <div class="header-actions">
+        <a routerLink="/favorites" class="cmc-link cmc-caption" aria-label="Abrir Favoritos"><span aria-live="polite">{{ favorites().length }} favoritos</span></a>
+
+      </div>
+    </div>
+  </ion-toolbar>
+  <ion-toolbar class="search-toolbar">
+    <div class="search-container">
+      <ion-icon name="search-outline" class="search-icon"></ion-icon>
+      <input type="search" class="cmc-search-input" aria-label="Buscar en el catálogo" placeholder="Buscar guitarras, pianos..." [value]="searchTerm()" (input)="updateSearch($event)" (keydown.enter)="searchCatalog()" />
+      <a class="search-submit" [routerLink]="['/main/catalog']" [queryParams]="{ q: searchTerm() }" aria-label="Buscar instrumentos">Buscar</a>
+    </div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="cmc-page cmc-root-page cmc-discovery-content home-content">
+  <div class="cmc-page-container">
+    <p><a routerLink="/login" class="cmc-link">Iniciar sesión</a></p>
+
+    <!-- Promotion Banner -->
+    <section class="promo-banner">
+      <div class="promo-content">
+        <h2 class="promo-title">Sonido Premium</h2>
+        <p class="promo-desc">Descubre nuestra nueva colección de cuerdas artesanales</p>
+      </div>
+    </section>
+
+    <!-- Categories -->
+    <section class="categories-section">
+      <div class="section-header">
+        <h2 class="section-title cmc-section-title">Explorar</h2>
+      </div>
+      <div class="categories-scroll">
+        @for (category of categories(); track category.id) {
+          <a
+            class="category-chip"
+            [routerLink]="['/main/catalog']"
+            [queryParams]="{ categoria: category.name }"
+            [attr.aria-label]="'Ver ' + category.name + ' en el catálogo'"
+          >
+            <ion-icon [name]="category.icon" class="category-icon" aria-hidden="true"></ion-icon>
+            <span class="category-name cmc-body">{{ category.name }}</span>
+          </a>
+        }
+      </div>
+    </section>
+
+    <!-- Featured Products -->
+    <section class="featured-section">
+      <div class="section-header">
+        <h2 class="section-title cmc-section-title">Novedades</h2>
+        <a class="cmc-link see-all" routerLink="/main/catalog">Ver más</a>
+      </div>
+      <div class="products-grid">
+        @for (product of featuredProducts(); track product.id) {
+          <article class="product-card">
+            <a class="home-product-link" [routerLink]="['/products', product.id]" [attr.aria-label]="product.name">
+            <div class="product-image">
+              @if (product.imageUrl) {
+                <img [src]="product.imageUrl" [alt]="product.name" />
+              } @else {
+                <div class="product-placeholder">
+                  <ion-icon name="image-outline"></ion-icon>
+                </div>
+              }
+            </div>
+            <div class="product-info">
+              <span class="product-category cmc-caption">{{ product.category }}</span>
+              <h3 class="product-name cmc-body">{{ product.name }}</h3>
+              <p class="product-price cmc-font-bold">{{ product.price | currency:'MXN' }}</p>
+            </div>
+            </a>
+              <button type="button" class="favorite-icon" [attr.aria-label]="'Favorito: ' + product.name" [attr.aria-pressed]="favorites().includes(product.id)" (click)="toggleFavorite(product.id)">
+                <ion-icon name="heart-outline" aria-hidden="true"></ion-icon>
+              </button>
+          </article>
+        }
+      </div>
+    </section>
+
+  </div>
+</ion-content>
+
+}

@@ -1,0 +1,48 @@
+appId: com.casademusicacastillo.app
+name: PRIVACIDAD - Preferencia local persistente DEMO
+tags: [critical, demo, privacy]
+---
+- launchApp:
+    clearState: true
+- extendedWaitUntil:
+    visible: "Novedades"
+    timeout: 30000
+- tapOn: "Iniciar sesión"
+- assertVisible: "Bienvenido de nuevo"
+- runFlow: shared/login-demo.yaml
+- tapOn: "Perfil"
+- assertVisible: "demo@ejemplo.com"
+- tapOn: "Privacidad y mis datos"
+- assertVisible: "Preferencia de este dispositivo"
+- scrollUntilVisible:
+    element: "Ocultar correo y teléfono en el perfil"
+    direction: DOWN
+    centerElement: true
+- tapOn: "Ocultar correo y teléfono en el perfil"
+- assertVisible: "Preferencia guardada en este dispositivo."
+- takeScreenshot: reports/maestro/privacy-preference-enabled
+- back
+- assertVisible: "Correo oculto"
+- assertVisible: "Teléfono oculto"
+- assertNotVisible: "demo@ejemplo.com"
+# Restart without clearing app data: proves persistence beyond the Angular service lifetime.
+- launchApp
+- extendedWaitUntil:
+    visible: "Novedades"
+    timeout: 30000
+- tapOn: "Iniciar sesión"
+- assertVisible: "Bienvenido de nuevo"
+- runFlow: shared/login-demo.yaml
+- tapOn: "Perfil"
+- assertVisible: "Correo oculto"
+- assertNotVisible: "demo@ejemplo.com"
+- tapOn: "Privacidad y mis datos"
+- scrollUntilVisible:
+    element: "Ocultar correo y teléfono en el perfil"
+    direction: DOWN
+    centerElement: true
+- tapOn: "Ocultar correo y teléfono en el perfil"
+- assertVisible: "Preferencia guardada en este dispositivo."
+- back
+- assertVisible: "demo@ejemplo.com"
+- takeScreenshot: reports/maestro/privacy-preference-restored

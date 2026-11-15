@@ -1,0 +1,10 @@
+{
+  "check_runs": [
+    { "id": 11, "name": "Lint, Tests y Build", "status": "completed", "conclusion": "skipped" },
+    { "id": 12, "name": "frontend", "status": "completed", "conclusion": "skipped" },
+    { "id": 13, "name": "Auditoria de dependencias", "status": "completed", "conclusion": "skipped" },
+    { "id": 14, "name": "CodeQL JavaScript y TypeScript", "status": "completed", "conclusion": "skipped" },
+    { "id": 15, "name": "Compilar APK Android Debug", "status": "completed", "conclusion": "skipped" },
+    { "id": 16, "name": "ACEPTACIÓN móvil DEMO / maestro", "status": "completed", "conclusion": "skipped" }
+  ]
+}

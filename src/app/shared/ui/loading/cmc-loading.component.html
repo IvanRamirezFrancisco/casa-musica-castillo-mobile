@@ -1,0 +1,8 @@
+<div class="cmc-loading" role="status" aria-live="polite">
+  <ion-spinner class="cmc-loading__spinner" name="crescent" [paused]="reducedMotion" aria-hidden="true" />
+  @if (message()) {
+    <p class="cmc-loading__message">{{ message() }}</p>
+  } @else {
+    <span class="cmc-loading__sr-only">Cargando</span>
+  }
+</div>

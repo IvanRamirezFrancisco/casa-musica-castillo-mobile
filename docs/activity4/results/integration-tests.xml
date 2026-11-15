@@ -1,0 +1,363 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuites name="vitest tests" tests="168" failures="0" errors="0" time="11.2952592">
+    <testsuite name="src/app/app.routes.integration.spec.ts" timestamp="2026-10-29T14:20:13.196Z" hostname="IvanFR" tests="51" failures="0" errors="0" skipped="0" time="7.2526022">
+        <testcase classname="src/app/app.routes.integration.spec.ts" name="TT-04 routing real &gt; arranque completo Splash → Inicio conserva navegación pública" time="2.8198331">
+        </testcase>
+        <testcase classname="src/app/app.routes.integration.spec.ts" name="TT-04 routing real &gt; activa / con su página real" time="0.0180611">
+        </testcase>
+        <testcase classname="src/app/app.routes.integration.spec.ts" name="TT-04 routing real &gt; activa /splash con su página real" time="0.0150722">
+        </testcase>
+        <testcase classname="src/app/app.routes.integration.spec.ts" name="TT-04 routing real &gt; activa /main con su página real" time="0.1101821">
+        </testcase>
+        <testcase classname="src/app/app.routes.integration.spec.ts" name="TT-04 routing real &gt; activa /main/home con su página real" time="0.0874817">
+        </testcase>
+        <testcase classname="src/app/app.routes.integration.spec.ts" name="TT-04 routing real &gt; activa /main/catalog con su página real" time="0.1381652">
+        </testcase>
+        <testcase classname="src/app/app.routes.integration.spec.ts" name="TT-04 routing real &gt; activa /main/cart con su página real" time="0.1234328">
+        </testcase>
+        <testcase classname="src/app/app.routes.integration.spec.ts" name="TT-04 routing real &gt; activa /main/orders con su página real" time="0.1036048">
+        </testcase>
+        <testcase classname="src/app/app.routes.integration.spec.ts" name="TT-04 routing real &gt; activa /main/profile con su página real" time="0.1025996">
+        </testcase>
+        <testcase classname="src/app/app.routes.integration.spec.ts" name="TT-04 routing real &gt; activa /profile/edit con su página real" time="0.0480746">
+        </testcase>
+        <testcase classname="src/app/app.routes.integration.spec.ts" name="TT-04 routing real &gt; activa /checkout con su página real" time="0.0730729">
+        </testcase>
+        <testcase classname="src/app/app.routes.integration.spec.ts" name="TT-04 routing real &gt; activa /checkout/delivery con su página real" time="0.0376986">
+        </testcase>
+        <testcase classname="src/app/app.routes.integration.spec.ts" name="TT-04 routing real &gt; activa /checkout/payment con su página real" time="0.0375568">
+        </testcase>
+        <testcase classname="src/app/app.routes.integration.spec.ts" name="TT-04 routing real &gt; activa /login con su página real" time="0.0571502">
+        </testcase>
+        <testcase classname="src/app/app.routes.integration.spec.ts" name="TT-04 routing real &gt; activa /register con su página real" time="0.0498647">
+        </testcase>
+        <testcase classname="src/app/app.routes.integration.spec.ts" name="TT-04 routing real &gt; activa /forgot-password con su página real" time="0.0456692">
+        </testcase>
+        <testcase classname="src/app/app.routes.integration.spec.ts" name="TT-04 routing real &gt; mantiene cinco tabs y activa sus destinos reales" time="0.2007674">
+        </testcase>
+        <testcase classname="src/app/app.routes.integration.spec.ts" name="TT-04 routing real &gt; serializa q como texto público: " time="0.0985993">
+        </testcase>
+        <testcase classname="src/app/app.routes.integration.spec.ts" name="TT-04 routing real &gt; serializa q como texto público:    " time="0.108557">
+        </testcase>
+        <testcase classname="src/app/app.routes.integration.spec.ts" name="TT-04 routing real &gt; serializa q como texto público: eléctrica" time="0.0972854">
+        </testcase>
+        <testcase classname="src/app/app.routes.integration.spec.ts" name="TT-04 routing real &gt; serializa q como texto público: A&amp;B + # / ? = %" time="0.1039747">
+        </testcase>
+        <testcase classname="src/app/app.routes.integration.spec.ts" name="TT-04 routing real &gt; serializa q como texto público: &lt;script&gt;alert(1)&lt;/script&gt;" time="0.0864534">
+        </testcase>
+        <testcase classname="src/app/app.routes.integration.spec.ts" name="TT-04 routing real &gt; combina filtros, ignora categorías manipuladas y limpia la URL" time="0.1065078">
+        </testcase>
+        <testcase classname="src/app/app.routes.integration.spec.ts" name="TT-04 routing real &gt; restaura filtros por atrás/adelante y no agrega una entrada por pulsación" time="0.1826915">
+        </testcase>
+        <testcase classname="src/app/app.routes.integration.spec.ts" name="TT-04 routing real &gt; abre el producto desde el enlace del catálogo y conserva la URL de origen" time="0.1718525">
+        </testcase>
+        <testcase classname="src/app/app.routes.integration.spec.ts" name="TT-04 routing real &gt; controla producto inválido o inexistente 0" time="0.020755">
+        </testcase>
+        <testcase classname="src/app/app.routes.integration.spec.ts" name="TT-04 routing real &gt; controla producto inválido o inexistente -1" time="0.017236">
+        </testcase>
+        <testcase classname="src/app/app.routes.integration.spec.ts" name="TT-04 routing real &gt; controla producto inválido o inexistente 1.5" time="0.0215274">
+        </testcase>
+        <testcase classname="src/app/app.routes.integration.spec.ts" name="TT-04 routing real &gt; controla producto inválido o inexistente abc" time="0.0246126">
+        </testcase>
+        <testcase classname="src/app/app.routes.integration.spec.ts" name="TT-04 routing real &gt; controla producto inválido o inexistente p1" time="0.0285076">
+        </testcase>
+        <testcase classname="src/app/app.routes.integration.spec.ts" name="TT-04 routing real &gt; controla producto inválido o inexistente 01" time="0.026352">
+        </testcase>
+        <testcase classname="src/app/app.routes.integration.spec.ts" name="TT-04 routing real &gt; controla producto inválido o inexistente 9007199254740992" time="0.0211093">
+        </testcase>
+        <testcase classname="src/app/app.routes.integration.spec.ts" name="TT-04 routing real &gt; controla producto inválido o inexistente 999" time="0.0195066">
+        </testcase>
+        <testcase classname="src/app/app.routes.integration.spec.ts" name="TT-04 routing real &gt; controla producto inválido o inexistente %3Cscript%3E" time="0.0203696">
+        </testcase>
+        <testcase classname="src/app/app.routes.integration.spec.ts" name="TT-04 routing real &gt; resuelve un ID válido y cambios consecutivos de ID" time="0.0352124">
+        </testcase>
+        <testcase classname="src/app/app.routes.integration.spec.ts" name="TT-04 routing real &gt; Favoritos declara su alcance y un destino seguro de regreso directo" time="0.0970993">
+        </testcase>
+        <testcase classname="src/app/app.routes.integration.spec.ts" name="TT-04 routing real &gt; detalle de producto ofrece regreso seguro sin historial" time="0.0956334">
+        </testcase>
+        <testcase classname="src/app/app.routes.integration.spec.ts" name="TT-04 routing real &gt; abre pedido desde el listado y regresa con dirección Ionic back" time="1.0562816">
+        </testcase>
+        <testcase classname="src/app/app.routes.integration.spec.ts" name="TT-04 routing real &gt; controla un pedido inválido al entrar directamente" time="0.0540908">
+        </testcase>
+        <testcase classname="src/app/app.routes.integration.spec.ts" name="TT-04 routing real &gt; retorno secundario directo /profile/edit → /main/profile" time="0.0578239">
+        </testcase>
+        <testcase classname="src/app/app.routes.integration.spec.ts" name="TT-04 routing real &gt; retorno secundario directo /checkout → /main/cart" time="0.0730796">
+        </testcase>
+        <testcase classname="src/app/app.routes.integration.spec.ts" name="TT-04 routing real &gt; retorno secundario directo /checkout/delivery → /checkout" time="0.0378126">
+        </testcase>
+        <testcase classname="src/app/app.routes.integration.spec.ts" name="TT-04 routing real &gt; retorno secundario directo /checkout/payment → /checkout" time="0.0315285">
+        </testcase>
+        <testcase classname="src/app/app.routes.integration.spec.ts" name="TT-04 routing real &gt; Favoritos vuelve a Inicio cuando se abre sin historial Ionic" time="0.0639297">
+        </testcase>
+        <testcase classname="src/app/app.routes.integration.spec.ts" name="TT-04 routing real &gt; entrada directa a confirmación incompleta vuelve al resumen" time="0.0431029">
+        </testcase>
+        <testcase classname="src/app/app.routes.integration.spec.ts" name="TT-04 routing real &gt; muestra NotFound sin ocultar la URL /not-found" time="0.0718351">
+        </testcase>
+        <testcase classname="src/app/app.routes.integration.spec.ts" name="TT-04 routing real &gt; muestra NotFound sin ocultar la URL /ruta-inexistente" time="0.0655761">
+        </testcase>
+        <testcase classname="src/app/app.routes.integration.spec.ts" name="TT-04 routing real &gt; muestra NotFound sin ocultar la URL /main/inexistente" time="0.0663283">
+        </testcase>
+        <testcase classname="src/app/app.routes.integration.spec.ts" name="TT-04 routing real &gt; muestra NotFound sin ocultar la URL /products" time="0.0593844">
+        </testcase>
+        <testcase classname="src/app/app.routes.integration.spec.ts" name="TT-04 routing real &gt; muestra NotFound sin ocultar la URL /orders" time="0.0627978">
+        </testcase>
+        <testcase classname="src/app/app.routes.integration.spec.ts" name="TT-04 routing real &gt; muestra NotFound sin ocultar la URL /checkout/inexistente" time="0.0538171">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/app/features/demo-purchase.integration.spec.ts" timestamp="2026-10-29T14:20:13.218Z" hostname="IvanFR" tests="5" failures="0" errors="0" skipped="0" time="1.117183">
+        <testcase classname="src/app/features/demo-purchase.integration.spec.ts" name="Actividad 4: recorrido DEMO por rutas reales &gt; selección → carrito → entrega/pago → confirmación → historial → detalle" time="1.0590688">
+        </testcase>
+        <testcase classname="src/app/features/demo-purchase.integration.spec.ts" name="Actividad 4: recorrido DEMO por rutas reales &gt; refresca la pestaña cacheada y descarta respuestas antiguas" time="0.0214106">
+        </testcase>
+        <testcase classname="src/app/features/demo-purchase.integration.spec.ts" name="Actividad 4: recorrido DEMO por rutas reales &gt; no permite confirmar un carrito vacío aunque haya métodos seleccionados" time="0.0180465">
+        </testcase>
+        <testcase classname="src/app/features/demo-purchase.integration.spec.ts" name="Actividad 4: recorrido DEMO por rutas reales &gt; muestra error controlado si falla la creación y no incorpora un pedido" time="0.0081859">
+        </testcase>
+        <testcase classname="src/app/features/demo-purchase.integration.spec.ts" name="Actividad 4: recorrido DEMO por rutas reales &gt; revalida la confirmación cacheada sin duplicar y refleja cambios de cantidades" time="0.0102276">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/app/core/security/session-security.integration.spec.ts" timestamp="2026-10-29T14:20:13.221Z" hostname="IvanFR" tests="13" failures="0" errors="0" skipped="0" time="0.0345926">
+        <testcase classname="src/app/core/security/session-security.integration.spec.ts" name="sesión, interceptor y guard (integración) &gt; adjunta Authorization solo a peticiones autenticadas y nunca a las públicas" time="0.0024282">
+        </testcase>
+        <testcase classname="src/app/core/security/session-security.integration.spec.ts" name="sesión, interceptor y guard (integración) &gt; no envía el JWT a un host distinto del backend configurado" time="0.0076046">
+        </testcase>
+        <testcase classname="src/app/core/security/session-security.integration.spec.ts" name="sesión, interceptor y guard (integración) &gt; con token vencido no realiza la petición y termina la sesión como 401" time="0.0024688">
+        </testcase>
+        <testcase classname="src/app/core/security/session-security.integration.spec.ts" name="sesión, interceptor y guard (integración) &gt; sin sesión una petición autenticada falla localmente con 401" time="0.0030857">
+        </testcase>
+        <testcase classname="src/app/core/security/session-security.integration.spec.ts" name="sesión, interceptor y guard (integración) &gt; un 401 del servidor limpia la sesión; un 403 la conserva" time="0.0031937">
+        </testcase>
+        <testcase classname="src/app/core/security/session-security.integration.spec.ts" name="sesión, interceptor y guard (integración) &gt; POST, PUT y DELETE autenticados incluyen el cuerpo y el token" time="0.0034024">
+        </testcase>
+        <testcase classname="src/app/core/security/session-security.integration.spec.ts" name="sesión, interceptor y guard (integración) &gt; authGuard &gt; en configuración demo no exige sesión" time="0.0019654">
+        </testcase>
+        <testcase classname="src/app/core/security/session-security.integration.spec.ts" name="sesión, interceptor y guard (integración) &gt; authGuard &gt; sin sesión redirige a login conservando una ruta interna segura" time="0.0018678">
+        </testcase>
+        <testcase classname="src/app/core/security/session-security.integration.spec.ts" name="sesión, interceptor y guard (integración) &gt; authGuard &gt; protege favoritos y conserva el destino solicitado para el invitado" time="0.0017762">
+        </testcase>
+        <testcase classname="src/app/core/security/session-security.integration.spec.ts" name="sesión, interceptor y guard (integración) &gt; authGuard &gt; con sesión vigente permite el acceso" time="0.0018924">
+        </testcase>
+        <testcase classname="src/app/core/security/session-security.integration.spec.ts" name="sesión, interceptor y guard (integración) &gt; authGuard &gt; una sesión restaurada pero vencida se descarta y redirige a login" time="0.0022668">
+        </testcase>
+        <testcase classname="src/app/core/security/session-security.integration.spec.ts" name="sesión, interceptor y guard (integración) &gt; safeReturnUrl rechaza redirecciones abiertas y valores no internos" time="0.0004578">
+        </testcase>
+        <testcase classname="src/app/core/security/session-security.integration.spec.ts" name="sesión, interceptor y guard (integración) &gt; el JWT viaja solo en el encabezado: nunca en la URL ni en el cuerpo del logout" time="0.0019189">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/app/core/services/critical.integration.spec.ts" timestamp="2026-10-29T14:20:13.225Z" hostname="IvanFR" tests="4" failures="0" errors="0" skipped="0" time="0.0969988">
+        <testcase classname="src/app/core/services/critical.integration.spec.ts" name="INTEGRACIÓN FRONTEND crítica DEMO (no API) &gt; HU10-HU11: carrito y resumen comparten cantidades, importe y selección" time="0.0265855">
+        </testcase>
+        <testcase classname="src/app/core/services/critical.integration.spec.ts" name="INTEGRACIÓN FRONTEND crítica DEMO (no API) &gt; HU10: los botones de la plantilla eliminan productos y muestran estado vacío" time="0.029341">
+        </testcase>
+        <testcase classname="src/app/core/services/critical.integration.spec.ts" name="INTEGRACIÓN FRONTEND crítica DEMO (no API) &gt; HU14: editar perfil propaga datos válidos a la pantalla de perfil" time="0.0297715">
+        </testcase>
+        <testcase classname="src/app/core/services/critical.integration.spec.ts" name="INTEGRACIÓN FRONTEND crítica DEMO (no API) &gt; HU14: un formulario inválido no altera estado ni navega" time="0.0111847">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/app/features/cart/connected-cart.integration.spec.ts" timestamp="2026-10-29T14:20:13.227Z" hostname="IvanFR" tests="3" failures="0" errors="0" skipped="0" time="0.1227685">
+        <testcase classname="src/app/features/cart/connected-cart.integration.spec.ts" name="carrito real conectado (integración) &gt; detalle público: sin sesión redirige a login; con sesión agrega por productId y actualiza el badge" time="0.0606252">
+        </testcase>
+        <testcase classname="src/app/features/cart/connected-cart.integration.spec.ts" name="carrito real conectado (integración) &gt; favorito desde detalle exige sesión, no duplica el POST y presenta errores recuperables" time="0.025994">
+        </testcase>
+        <testcase classname="src/app/features/cart/connected-cart.integration.spec.ts" name="carrito real conectado (integración) &gt; pantalla de carrito: muestra importes del servidor, actualiza por itemId, valida antes de checkout y vacía" time="0.0359587">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/app/features/checkout/connected-checkout.integration.spec.ts" timestamp="2026-10-29T14:20:13.228Z" hostname="IvanFR" tests="6" failures="0" errors="0" skipped="0" time="0.190482">
+        <testcase classname="src/app/features/checkout/connected-checkout.integration.spec.ts" name="checkout real seguro conectado (integración) &gt; por defecto (writeEnabled=false) cotiza /price-preview pero bloquea POST /api/checkout" time="0.0330588">
+        </testcase>
+        <testcase classname="src/app/features/checkout/connected-checkout.integration.spec.ts" name="checkout real seguro conectado (integración) &gt; en entorno aislado autorizado (writeEnabled=true) valida domicilios, cotiza, valida carrito y envía POST /api/checkout" time="0.0526443">
+        </testcase>
+        <testcase classname="src/app/features/checkout/connected-checkout.integration.spec.ts" name="checkout real seguro conectado (integración) &gt; maneja error en vista previa y cotización nacional con requiresQuote=true" time="0.0315302">
+        </testcase>
+        <testcase classname="src/app/features/checkout/connected-checkout.integration.spec.ts" name="checkout real seguro conectado (integración) &gt; cancela HTTP obsoleto al cambiar entrega y descarta importes al editar destino" time="0.0152474">
+        </testcase>
+        <testcase classname="src/app/features/checkout/connected-checkout.integration.spec.ts" name="checkout real seguro conectado (integración) &gt; muestra respuesta malformada, permite reintentar y no expone endpoints ni crea pedidos" time="0.040059">
+        </testcase>
+        <testcase classname="src/app/features/checkout/connected-checkout.integration.spec.ts" name="checkout real seguro conectado (integración) &gt; rechaza campos demasiado largos antes de validar o confirmar una compra" time="0.0176688">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/app/features/orders/connected-orders.integration.spec.ts" timestamp="2026-10-29T14:20:13.230Z" hostname="IvanFR" tests="3" failures="0" errors="0" skipped="0" time="0.0746161">
+        <testcase classname="src/app/features/orders/connected-orders.integration.spec.ts" name="pedidos reales conectados y aislamiento por usuario (integración) &gt; historial paginado: muestra orderNumber, enlaza por id numérico y navega entre páginas" time="0.0257529">
+        </testcase>
+        <testcase classname="src/app/features/orders/connected-orders.integration.spec.ts" name="pedidos reales conectados y aislamiento por usuario (integración) &gt; detalle y timeline: consulta /orders/my/{id} y /timeline, y rechaza IDs DEMO-* sin petición HTTP" time="0.0258476">
+        </testcase>
+        <testcase classname="src/app/features/orders/connected-orders.integration.spec.ts" name="pedidos reales conectados y aislamiento por usuario (integración) &gt; aislamiento: 403/404 y un pedido con userId de otra cuenta nunca se muestran" time="0.022912">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/app/features/favorites/connected-favorites.integration.spec.ts" timestamp="2026-10-29T14:20:13.232Z" hostname="IvanFR" tests="13" failures="0" errors="0" skipped="0" time="0.0746293">
+        <testcase classname="src/app/features/favorites/connected-favorites.integration.spec.ts" name="Favoritos conectados (HTTP simulado) &gt; consulta, presenta precio/stock y elimina por wishlistId, después recarga" time="0.0175294">
+        </testcase>
+        <testcase classname="src/app/features/favorites/connected-favorites.integration.spec.ts" name="Favoritos conectados (HTTP simulado) &gt; no anuncia disponibilidad por stock cuando el servidor deshabilitó el producto" time="0.0134807">
+        </testcase>
+        <testcase classname="src/app/features/favorites/connected-favorites.integration.spec.ts" name="Favoritos conectados (HTTP simulado) &gt; error recuperable y cancelación de datos al cerrar sesión" time="0.0136558">
+        </testcase>
+        <testcase classname="src/app/features/favorites/connected-favorites.integration.spec.ts" name="Favoritos conectados (HTTP simulado) &gt; agrega exclusivamente productId real y valida respuesta" time="0.0018969">
+        </testcase>
+        <testcase classname="src/app/features/favorites/connected-favorites.integration.spec.ts" name="Favoritos conectados (HTTP simulado) &gt; rechaza JSON inválido 0" time="0.0015448">
+        </testcase>
+        <testcase classname="src/app/features/favorites/connected-favorites.integration.spec.ts" name="Favoritos conectados (HTTP simulado) &gt; rechaza JSON inválido 1" time="0.0014056">
+        </testcase>
+        <testcase classname="src/app/features/favorites/connected-favorites.integration.spec.ts" name="Favoritos conectados (HTTP simulado) &gt; rechaza JSON inválido 2" time="0.0013462">
+        </testcase>
+        <testcase classname="src/app/features/favorites/connected-favorites.integration.spec.ts" name="Favoritos conectados (HTTP simulado) &gt; rechaza JSON inválido 3" time="0.005332">
+        </testcase>
+        <testcase classname="src/app/features/favorites/connected-favorites.integration.spec.ts" name="Favoritos conectados (HTTP simulado) &gt; rechaza JSON inválido 4" time="0.0014565">
+        </testcase>
+        <testcase classname="src/app/features/favorites/connected-favorites.integration.spec.ts" name="Favoritos conectados (HTTP simulado) &gt; rechaza JSON inválido 5" time="0.0015074">
+        </testcase>
+        <testcase classname="src/app/features/favorites/connected-favorites.integration.spec.ts" name="Favoritos conectados (HTTP simulado) &gt; rechaza JSON inválido 6" time="0.001126">
+        </testcase>
+        <testcase classname="src/app/features/favorites/connected-favorites.integration.spec.ts" name="Favoritos conectados (HTTP simulado) &gt; no interpreta HTML remoto y filtra imágenes externas inseguras" time="0.0015054">
+        </testcase>
+        <testcase classname="src/app/features/favorites/connected-favorites.integration.spec.ts" name="Favoritos conectados (HTTP simulado) &gt; rechaza totales incoherentes y no oculta un error de eliminación" time="0.0125871">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/app/features/profile/connected-profile.integration.spec.ts" timestamp="2026-10-29T14:20:13.235Z" hostname="IvanFR" tests="3" failures="0" errors="0" skipped="0" time="0.0877644">
+        <testcase classname="src/app/features/profile/connected-profile.integration.spec.ts" name="perfil real conectado y cierre de sesión (integración) &gt; consulta GET /api/users/profile, muestra identidad, estado 2FA, aviso TT-05 y cierra sesión" time="0.0230051">
+        </testcase>
+        <testcase classname="src/app/features/profile/connected-profile.integration.spec.ts" name="perfil real conectado y cierre de sesión (integración) &gt; mantiene Seguridad accesible también con un proveedor de sesión persistente" time="0.0178764">
+        </testcase>
+        <testcase classname="src/app/features/profile/connected-profile.integration.spec.ts" name="perfil real conectado y cierre de sesión (integración) &gt; aislamiento y errores: rechaza perfil de otro usuario, permite reintentar y documenta edición bloqueada" time="0.0467817">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/app/features/public-catalog/commerce-experience.integration.spec.ts" timestamp="2026-10-29T14:20:13.237Z" hostname="IvanFR" tests="48" failures="0" errors="0" skipped="0" time="0.7881114">
+        <testcase classname="src/app/features/public-catalog/commerce-experience.integration.spec.ts" name="Experiencia comercial móvil: HTTP controlado, nunca backend real &gt; conserva intención de invitado por diez minutos, exige confirmación y no escribe al restaurar sesión" time="0.0529821">
+        </testcase>
+        <testcase classname="src/app/features/public-catalog/commerce-experience.integration.spec.ts" name="Experiencia comercial móvil: HTTP controlado, nunca backend real &gt; revalida una sola vez por doble toque y envía la cantidad sin precios de cliente" time="0.0311981">
+        </testcase>
+        <testcase classname="src/app/features/public-catalog/commerce-experience.integration.spec.ts" name="Experiencia comercial móvil: HTTP controlado, nunca backend real &gt; cambio de stock o precio exige revisión antes de escribir 0" time="0.0287688">
+        </testcase>
+        <testcase classname="src/app/features/public-catalog/commerce-experience.integration.spec.ts" name="Experiencia comercial móvil: HTTP controlado, nunca backend real &gt; cambio de stock o precio exige revisión antes de escribir 1" time="0.0279665">
+        </testcase>
+        <testcase classname="src/app/features/public-catalog/commerce-experience.integration.spec.ts" name="Experiencia comercial móvil: HTTP controlado, nunca backend real &gt; cambio de stock o precio exige revisión antes de escribir 2" time="0.0253068">
+        </testcase>
+        <testcase classname="src/app/features/public-catalog/commerce-experience.integration.spec.ts" name="Experiencia comercial móvil: HTTP controlado, nunca backend real &gt; no envía una cantidad inválida 0" time="0.0271884">
+        </testcase>
+        <testcase classname="src/app/features/public-catalog/commerce-experience.integration.spec.ts" name="Experiencia comercial móvil: HTTP controlado, nunca backend real &gt; no envía una cantidad inválida 101" time="0.0261639">
+        </testcase>
+        <testcase classname="src/app/features/public-catalog/commerce-experience.integration.spec.ts" name="Experiencia comercial móvil: HTTP controlado, nunca backend real &gt; no envía una cantidad inválida 1.5" time="0.0252023">
+        </testcase>
+        <testcase classname="src/app/features/public-catalog/commerce-experience.integration.spec.ts" name="Experiencia comercial móvil: HTTP controlado, nunca backend real &gt; no envía una cantidad inválida NaN" time="0.0298285">
+        </testcase>
+        <testcase classname="src/app/features/public-catalog/commerce-experience.integration.spec.ts" name="Experiencia comercial móvil: HTTP controlado, nunca backend real &gt; error de revalidación es recuperable y logout cancela la operación en curso" time="0.0262469">
+        </testcase>
+        <testcase classname="src/app/features/public-catalog/commerce-experience.integration.spec.ts" name="Experiencia comercial móvil: HTTP controlado, nunca backend real &gt; cambia la ruta durante la revalidación sin escribir el producto anterior" time="0.0230896">
+        </testcase>
+        <testcase classname="src/app/features/public-catalog/commerce-experience.integration.spec.ts" name="Experiencia comercial móvil: HTTP controlado, nunca backend real &gt; consulta favoritos existentes, elimina por wishlistId y vuelve a agregar por productId" time="0.0286186">
+        </testcase>
+        <testcase classname="src/app/features/public-catalog/commerce-experience.integration.spec.ts" name="Experiencia comercial móvil: HTTP controlado, nunca backend real &gt; si falla la consulta de favoritos no simula éxito y permite reintentar" time="0.0139819">
+        </testcase>
+        <testcase classname="src/app/features/public-catalog/commerce-experience.integration.spec.ts" name="Experiencia comercial móvil: HTTP controlado, nunca backend real &gt; una consulta recuperada no elimina un favorito que el usuario intentaba guardar" time="0.0138928">
+        </testcase>
+        <testcase classname="src/app/features/public-catalog/commerce-experience.integration.spec.ts" name="Experiencia comercial móvil: HTTP controlado, nunca backend real &gt; galería usa imágenes reales, descripción y atributos sin HTML ejecutable" time="0.0314907">
+        </testcase>
+        <testcase classname="src/app/features/public-catalog/commerce-experience.integration.spec.ts" name="Experiencia comercial móvil: HTTP controlado, nunca backend real &gt; home prioriza disponibles en la selección recibida sin reordenar una página de catálogo" time="0.0274733">
+        </testcase>
+        <testcase classname="src/app/features/public-catalog/commerce-experience.integration.spec.ts" name="Experiencia comercial móvil: HTTP controlado, nunca backend real &gt; panel de filtros descarta borradores al reabrir, aplica una navegación y conserva relevancia" time="0.2755738">
+        </testcase>
+        <testcase classname="src/app/features/public-catalog/commerce-experience.integration.spec.ts" name="Experiencia comercial móvil: HTTP controlado, nunca backend real &gt; opiniones se consultan bajo demanda, tienen paginado HTTP y no envían JWT en GET público" time="0.0106896">
+        </testcase>
+        <testcase classname="src/app/features/public-catalog/commerce-experience.integration.spec.ts" name="Experiencia comercial móvil: HTTP controlado, nunca backend real &gt; errores de red y JSON inválido de opiniones permiten reintento sin inventar comentarios" time="0.007196">
+        </testcase>
+        <testcase classname="src/app/features/public-catalog/commerce-experience.integration.spec.ts" name="Experiencia comercial móvil: HTTP controlado, nunca backend real &gt; autoriza publicación únicamente tras elegibilidad del servidor y no duplica POST" time="0.0060499">
+        </testcase>
+        <testcase classname="src/app/features/public-catalog/commerce-experience.integration.spec.ts" name="Experiencia comercial móvil: HTTP controlado, nunca backend real &gt; sin sesión no consulta elegibilidad; compra faltante y duplicados no habilitan envío" time="0.0065615">
+        </testcase>
+        <testcase classname="src/app/features/public-catalog/commerce-experience.integration.spec.ts" name="Experiencia comercial móvil: HTTP controlado, nunca backend real &gt; errores de autorización y logout descartan borradores sensibles de reseña" time="0.0056922">
+        </testcase>
+        <testcase classname="src/app/features/public-catalog/commerce-experience.integration.spec.ts" name="Experiencia comercial móvil: HTTP controlado, nunca backend real &gt; cambio rápido de producto cancela reseñas fuera de orden y renderiza texto como datos" time="0.0084714">
+        </testcase>
+        <testcase classname="src/app/features/public-catalog/commerce-experience.integration.spec.ts" name="Experiencia comercial móvil: HTTP controlado, nunca backend real &gt; mapper conserva calificación, modelo y descripción completa reales" time="0.0018187">
+        </testcase>
+        <testcase classname="src/app/features/public-catalog/commerce-experience.integration.spec.ts" name="Experiencia comercial móvil: HTTP controlado, nunca backend real &gt; repositorio rechaza IDs, borradores y elegibilidad malformada antes de confiar en ellos" time="0.0028545">
+        </testcase>
+        <testcase classname="src/app/features/public-catalog/commerce-experience.integration.spec.ts" name="Experiencia comercial móvil: HTTP controlado, nunca backend real &gt; no confía en una elegibilidad incoherente 0" time="0.0053178">
+        </testcase>
+        <testcase classname="src/app/features/public-catalog/commerce-experience.integration.spec.ts" name="Experiencia comercial móvil: HTTP controlado, nunca backend real &gt; no confía en una elegibilidad incoherente 1" time="0.0052845">
+        </testcase>
+        <testcase classname="src/app/features/public-catalog/commerce-experience.integration.spec.ts" name="Experiencia comercial móvil: HTTP controlado, nunca backend real &gt; no confía en una elegibilidad incoherente 2" time="0.0051697">
+        </testcase>
+        <testcase classname="src/app/features/public-catalog/commerce-experience.integration.spec.ts" name="Validación defensiva de reseñas &gt; rechaza reseña inválida 0" time="0.0004902">
+        </testcase>
+        <testcase classname="src/app/features/public-catalog/commerce-experience.integration.spec.ts" name="Validación defensiva de reseñas &gt; rechaza reseña inválida 1" time="0.0002073">
+        </testcase>
+        <testcase classname="src/app/features/public-catalog/commerce-experience.integration.spec.ts" name="Validación defensiva de reseñas &gt; rechaza reseña inválida 2" time="0.0001475">
+        </testcase>
+        <testcase classname="src/app/features/public-catalog/commerce-experience.integration.spec.ts" name="Validación defensiva de reseñas &gt; rechaza reseña inválida 3" time="0.0001385">
+        </testcase>
+        <testcase classname="src/app/features/public-catalog/commerce-experience.integration.spec.ts" name="Validación defensiva de reseñas &gt; rechaza reseña inválida 4" time="0.000138">
+        </testcase>
+        <testcase classname="src/app/features/public-catalog/commerce-experience.integration.spec.ts" name="Validación defensiva de reseñas &gt; rechaza reseña inválida 5" time="0.0001316">
+        </testcase>
+        <testcase classname="src/app/features/public-catalog/commerce-experience.integration.spec.ts" name="Validación defensiva de reseñas &gt; rechaza reseña inválida 6" time="0.003527">
+        </testcase>
+        <testcase classname="src/app/features/public-catalog/commerce-experience.integration.spec.ts" name="Validación defensiva de reseñas &gt; rechaza reseña inválida 7" time="0.0003773">
+        </testcase>
+        <testcase classname="src/app/features/public-catalog/commerce-experience.integration.spec.ts" name="Validación defensiva de reseñas &gt; rechaza reseña inválida 8" time="0.0001852">
+        </testcase>
+        <testcase classname="src/app/features/public-catalog/commerce-experience.integration.spec.ts" name="Validación defensiva de reseñas &gt; rechaza reseña inválida 9" time="0.0001815">
+        </testcase>
+        <testcase classname="src/app/features/public-catalog/commerce-experience.integration.spec.ts" name="Validación defensiva de reseñas &gt; rechaza reseña inválida 10" time="0.0001445">
+        </testcase>
+        <testcase classname="src/app/features/public-catalog/commerce-experience.integration.spec.ts" name="Validación defensiva de reseñas &gt; rechaza reseña inválida 11" time="0.0001392">
+        </testcase>
+        <testcase classname="src/app/features/public-catalog/commerce-experience.integration.spec.ts" name="Validación defensiva de reseñas &gt; rechaza página inválida 0" time="0.0002436">
+        </testcase>
+        <testcase classname="src/app/features/public-catalog/commerce-experience.integration.spec.ts" name="Validación defensiva de reseñas &gt; rechaza página inválida 1" time="0.0001373">
+        </testcase>
+        <testcase classname="src/app/features/public-catalog/commerce-experience.integration.spec.ts" name="Validación defensiva de reseñas &gt; rechaza página inválida 2" time="0.00013">
+        </testcase>
+        <testcase classname="src/app/features/public-catalog/commerce-experience.integration.spec.ts" name="Validación defensiva de reseñas &gt; rechaza página inválida 3" time="0.0001311">
+        </testcase>
+        <testcase classname="src/app/features/public-catalog/commerce-experience.integration.spec.ts" name="Validación defensiva de reseñas &gt; rechaza página inválida 4" time="0.0001706">
+        </testcase>
+        <testcase classname="src/app/features/public-catalog/commerce-experience.integration.spec.ts" name="Validación defensiva de reseñas &gt; rechaza página inválida 5" time="0.0001524">
+        </testcase>
+        <testcase classname="src/app/features/public-catalog/commerce-experience.integration.spec.ts" name="Validación defensiva de reseñas &gt; rechaza página inválida 6" time="0.0002891">
+        </testcase>
+        <testcase classname="src/app/features/public-catalog/commerce-experience.integration.spec.ts" name="Validación defensiva de reseñas &gt; acepta título nulo sin inventar un título comercial" time="0.0002596">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/app/features/public-catalog/public-catalog.integration.spec.ts" timestamp="2026-10-29T14:20:13.248Z" hostname="IvanFR" tests="11" failures="0" errors="0" skipped="0" time="1.2832471">
+        <testcase classname="src/app/features/public-catalog/public-catalog.integration.spec.ts" name="Public HTTP catalog integration (explicit real mode) &gt; renders the real home wrapper with category IDs, latest and featured" time="0.0470607">
+        </testcase>
+        <testcase classname="src/app/features/public-catalog/public-catalog.integration.spec.ts" name="Public HTTP catalog integration (explicit real mode) &gt; debounces fast filter changes, sends final query and renders empty pagination" time="0.2777674">
+        </testcase>
+        <testcase classname="src/app/features/public-catalog/public-catalog.integration.spec.ts" name="Public HTTP catalog integration (explicit real mode) &gt; renders catalogue errors and retry without switching to DEMO" time="0.2866159">
+        </testcase>
+        <testcase classname="src/app/features/public-catalog/public-catalog.integration.spec.ts" name="Public HTTP catalog integration (explicit real mode) &gt; shows real stock/price and plain text without adding to the DEMO cart" time="0.0314285">
+        </testcase>
+        <testcase classname="src/app/features/public-catalog/public-catalog.integration.spec.ts" name="Public HTTP catalog integration (explicit real mode) &gt; renders 404 as not found" time="0.0164206">
+        </testcase>
+        <testcase classname="src/app/features/public-catalog/public-catalog.integration.spec.ts" name="Public HTTP catalog integration (explicit real mode) &gt; rejects tampered route IDs before HTTP" time="0.0156772">
+        </testcase>
+        <testcase classname="src/app/features/public-catalog/public-catalog.integration.spec.ts" name="Public HTTP catalog integration (explicit real mode) &gt; replaces broken images with an accessible placeholder" time="0.0073431">
+        </testcase>
+        <testcase classname="src/app/features/public-catalog/public-catalog.integration.spec.ts" name="Public HTTP catalog integration (explicit real mode) &gt; resets pagination on filter edits, preserves URL filters on paging and clears explicitly" time="0.0155593">
+        </testcase>
+        <testcase classname="src/app/features/public-catalog/public-catalog.integration.spec.ts" name="Public HTTP catalog integration (explicit real mode) &gt; cancels an in-flight HTTP response when a later URL filter becomes active" time="0.5278274">
+        </testcase>
+        <testcase classname="src/app/features/public-catalog/public-catalog.integration.spec.ts" name="Public HTTP catalog integration (explicit real mode) &gt; retries home failure and supports keyboard search without a commercial action" time="0.028197">
+        </testcase>
+        <testcase classname="src/app/features/public-catalog/public-catalog.integration.spec.ts" name="Public HTTP catalog integration (explicit real mode) &gt; shows a recoverable detail error and unknown stock after retry" time="0.028985">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/app/features/auth/connected/connected-auth.integration.spec.ts" timestamp="2026-10-29T14:20:13.251Z" hostname="IvanFR" tests="8" failures="0" errors="0" skipped="0" time="0.1722638">
+        <testcase classname="src/app/features/auth/connected/connected-auth.integration.spec.ts" name="autenticación conectada (integración) &gt; permite Inicio público sin sesión y sin invocar login" time="0.0052521">
+        </testcase>
+        <testcase classname="src/app/features/auth/connected/connected-auth.integration.spec.ts" name="autenticación conectada (integración) &gt; una ruta protegida redirige a login y tras autenticar vuelve al destino original" time="0.0259978">
+        </testcase>
+        <testcase classname="src/app/features/auth/connected/connected-auth.integration.spec.ts" name="autenticación conectada (integración) &gt; 2FA: HTTP 200 con desafío NO autentica hasta completar /api/2fa/verify" time="0.0257456">
+        </testcase>
+        <testcase classname="src/app/features/auth/connected/connected-auth.integration.spec.ts" name="autenticación conectada (integración) &gt; 2FA: maneja fallo al enviar código y permite cancelar el desafío" time="0.0269034">
+        </testcase>
+        <testcase classname="src/app/features/auth/connected/connected-auth.integration.spec.ts" name="autenticación conectada (integración) &gt; muestra aviso de sesión expirada y errores 401/429/red sin filtrar secretos en consola" time="0.0165057">
+        </testcase>
+        <testcase classname="src/app/features/auth/connected/connected-auth.integration.spec.ts" name="autenticación conectada (integración) &gt; registro: valida campos separados de RegisterRequest, envía JSON y no inicia sesión" time="0.0251863">
+        </testcase>
+        <testcase classname="src/app/features/auth/connected/connected-auth.integration.spec.ts" name="autenticación conectada (integración) &gt; recuperación y restablecimiento: usa /password-reset/* y limpia contraseñas al terminar o fallar" time="0.0256008">
+        </testcase>
+        <testcase classname="src/app/features/auth/connected/connected-auth.integration.spec.ts" name="autenticación conectada (integración) &gt; verificación de correo y reenvío de código" time="0.0171953">
+        </testcase>
+    </testsuite>
+</testsuites>
