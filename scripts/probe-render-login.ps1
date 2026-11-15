@@ -1,7 +1,7 @@
-# Ejecutar solo con una cuenta de prueba autorizada. Un login exitoso sin MFA crea una sesión.
+﻿# Ejecutar solo con una cuenta de prueba autorizada. Un login exitoso sin MFA crea una sesión.
 # En modo automatizado (sin credenciales en argumentos), lee CMC_PROBE_EMAIL y CMC_PROBE_PASSWORD de variables de entorno efímeras.
 param(
-    [string]$Origin = 'https://casa-musica-castillo-backend.onrender.com',
+    [string]$Origin = 'https://casa-musica-castillo-backend-production.up.railway.app',
     [ValidateRange(1, 120)]
     [int]$TimeoutSeconds = 45,
     [switch]$WarmupHealth,
