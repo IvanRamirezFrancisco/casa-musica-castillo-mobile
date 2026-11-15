@@ -2,7 +2,7 @@
 
 > Fecha de compilación: `2026-11-15`  
 > Rama móvil: `feature/mobile-account-security` (PR #100)  
-> Commit fuente limpio compilado (`sourceSha`): `a9f82f62811f6d6432867c17044d0eca90decfdd`  
+> Commit fuente limpio compilado (`sourceSha`): `8e0778fc19d428ed8397cd2fa7eed24630e2ae2d`  
 > Origen API embebido: `https://casa-musica-castillo-backend-production.up.railway.app`
 
 ---
@@ -42,8 +42,8 @@ Compilados mediante `npm run android:release` y validados con `npm run android:v
 
 | Artefacto | Ruta relativa | Tamaño (bytes) | Entradas ZIP | SHA-256 |
 |---|---|---|---|---|
-| **Release APK (sin firmar)** | `reports/android-packages/production-release/app-release-unsigned.apk` | `2,894,565` | `565` | `296c725ff2c442cae7f0e2a72e9f790308444f448c1078561686b6bbbf938495` |
-| **Release AAB (sin firmar)** | `reports/android-packages/production-release/app-release.aab` | `3,367,279` | `571` | `35cecf985ef118a72aebcb0a9f326419531af9bd88fa9d975c8b22829b85e76f` |
+| **Release APK (sin firmar)** | `reports/android-packages/production-release/app-release-unsigned.apk` | `2,895,197` | `565` | `983de0bcd792b63922df3edae11fb6b72bc89a36ae35eb8fc91419915cfd783e` |
+| **Release AAB (sin firmar)** | `reports/android-packages/production-release/app-release.aab` | `3,367,911` | `571` | `798f429e91e68d314275d10b74db8b41bf76d14fdae29aff2c63a37ff36b4358` |
 
 ---
 
