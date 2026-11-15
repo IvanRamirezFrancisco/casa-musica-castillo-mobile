@@ -110,4 +110,25 @@ describe('pedidos reales conectados y aislamiento por usuario (integración)', (
     view.goBack();
     expect(back).toHaveBeenCalledWith(['/main/orders']);
   });
+
+  it('cancela el pedido anterior al cambiar el ID y limpia el detalle al cachear o cerrar sesión', () => {
+    const page = TestBed.createComponent(OrderDetailPage);
+    page.detectChanges();
+    const previous = http.match(r => r.url.startsWith(`${base}/api/orders/my/42`));
+    routeParams.next(convertToParamMap({ id: '43' }));
+    expect(previous).toHaveLength(2);
+    expect(previous.every(request => request.cancelled)).toBe(true);
+    http.expectOne(`${base}/api/orders/my/43`).flush(orderDto({ id: 43, orderNumber: 'CMC-2026-0043' }));
+    http.expectOne(`${base}/api/orders/my/43/timeline`).flush([]);
+    page.detectChanges();
+    expect(page.nativeElement.textContent).toContain('CMC-2026-0043');
+    page.componentInstance.ionViewWillLeave();
+    page.detectChanges();
+    expect(page.nativeElement.textContent).not.toContain('CMC-2026-0043');
+    page.componentInstance.ionViewWillEnter();
+    const cached = http.match(r => r.url.startsWith(`${base}/api/orders/my/43`));
+    TestBed.inject(AuthService).handleUnauthorized(false);
+    expect(cached).toHaveLength(2);
+    expect(cached.every(request => request.cancelled)).toBe(true);
+  });
 });

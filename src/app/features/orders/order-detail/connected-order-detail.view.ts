@@ -1,15 +1,16 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
 import { CurrencyPipe, DatePipe } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { IonButtons, IonContent, IonHeader, IonIcon, IonTitle, IonToolbar, NavController } from '@ionic/angular';
 import { addIcons } from 'ionicons';
 import { arrowBackOutline } from 'ionicons/icons';
-import { catchError, forkJoin, of } from 'rxjs';
+import { Subject, catchError, forkJoin, of, takeUntil } from 'rxjs';
 import { ApiError } from '../../../core/api/api-error';
 import { describeApiError } from '../../../core/api/api-error-message';
 import type { OrderTimelineEvent, RealOrder } from '../../../core/models/order.model';
 import { REAL_ORDER_REPOSITORY } from '../../../core/repositories/real-order.repository';
+import { AuthService } from '../../../core/services/auth.service';
 import { CmcBadgeComponent } from '../../../shared/ui/badge/cmc-badge.component';
 import { CmcEmptyStateComponent } from '../../../shared/ui/empty-state/cmc-empty-state.component';
 import { CmcErrorStateComponent } from '../../../shared/ui/error-state/cmc-error-state.component';
@@ -130,7 +131,10 @@ import { orderVariant, paymentVariant } from '../connected-orders.view';
 export class ConnectedOrderDetailComponent {
   private readonly repository = inject(REAL_ORDER_REPOSITORY);
   private readonly nav = inject(NavController);
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly cancelled = new Subject<void>();
   private currentId = 0;
+  private cached = false;
 
   readonly status = signal<'loading' | 'ready' | 'not-found' | 'error'>('loading');
   readonly order = signal<RealOrder | null>(null);
@@ -141,12 +145,13 @@ export class ConnectedOrderDetailComponent {
 
   constructor() {
     addIcons({ arrowBackOutline });
+    inject(AuthService).sessionEnded$.pipe(takeUntilDestroyed()).subscribe(() => this.clear());
     inject(ActivatedRoute).paramMap.pipe(takeUntilDestroyed()).subscribe((params) => {
       const raw = params.get('id') ?? '';
       const id = Number(raw);
       if (!/^[1-9][0-9]*$/.test(raw) || !Number.isSafeInteger(id)) {
         this.currentId = 0;
-        this.order.set(null);
+        this.clear();
         this.status.set('not-found');
         return;
       }
@@ -157,11 +162,12 @@ export class ConnectedOrderDetailComponent {
 
   reload(): void {
     if (!this.currentId) { this.status.set('not-found'); return; }
+    this.clear();
     this.status.set('loading');
     forkJoin({
       order: this.repository.findById(this.currentId),
       timeline: this.repository.timeline(this.currentId).pipe(catchError(() => of([] as const))),
-    }).subscribe({
+    }).pipe(takeUntil(this.cancelled), takeUntilDestroyed(this.destroyRef)).subscribe({
       next: ({ order, timeline }) => {
         this.order.set(order);
         this.timeline.set(timeline);
@@ -176,6 +182,25 @@ export class ConnectedOrderDetailComponent {
         this.status.set('error');
       },
     });
+  }
+
+  ionViewWillLeave(): void {
+    this.cached = true;
+    this.clear();
+  }
+
+  ionViewWillEnter(): void {
+    if (!this.cached) return;
+    this.cached = false;
+    this.reload();
+  }
+
+  private clear(): void {
+    this.cancelled.next();
+    this.order.set(null);
+    this.timeline.set([]);
+    this.errorMessage.set('');
+    this.status.set('loading');
   }
 
   goBack(): void {

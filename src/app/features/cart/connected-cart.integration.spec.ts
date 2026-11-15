@@ -176,17 +176,18 @@ describe('carrito real conectado (integración)', () => {
 
     const page = TestBed.createComponent(CartPage);
     page.detectChanges();
-    http.expectOne(`${base}/api/cart`).flush(cartDto([cartItemDto({ availableStock: 3 })], { discount: 200, warningMessage: 'Stock limitado' }));
+    http.expectOne(`${base}/api/cart`).flush(cartDto([cartItemDto({ availableStock: 3 })], { discount: 200, total: 14880, warningMessage: 'Stock limitado' }));
     page.detectChanges();
     expect(page.nativeElement.textContent).toContain('Jarana Huasteca');
-    expect(page.nativeElement.textContent).toContain('15,080.00');
+    expect(page.nativeElement.textContent).toContain('14,880.00');
     expect(page.nativeElement.textContent).toContain('Stock limitado');
 
     const view = page.debugElement.children[0].componentInstance;
     view.changeQty(view.cart.cart()!.items[0], 1);
     const put = http.expectOne(`${base}/api/cart/items/50`);
     expect(put.request.body).toEqual({ itemId: 50, quantity: 3 });
-    put.flush(cartDto([cartItemDto({ quantity: 3, availableStock: 3 })], { totalItems: 3 }));
+    put.flush(cartDto([cartItemDto({ quantity: 3, availableStock: 3, subtotal: 19500 })],
+      { totalItems: 3, subtotal: 19500, tax: 3120, total: 22620 }));
     page.detectChanges();
     expect(view.canIncrement(view.cart.cart()!.items[0])).toBe(false);
 

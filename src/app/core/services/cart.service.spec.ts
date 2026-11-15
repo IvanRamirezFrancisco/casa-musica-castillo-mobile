@@ -109,4 +109,21 @@ describe('CartService y HttpCartRepository', () => {
     expect(service.cart()).toBeNull();
     expect(service.itemCount()).toBe(0);
   });
+
+  it('conserva la mutación confirmada frente a una lectura anterior y descarta errores de una sesión cerrada', () => {
+    service.load();
+    const oldRead = http.expectOne(`${base}/api/cart`);
+    service.addProduct(313, 2).subscribe();
+    http.expectOne(`${base}/api/cart/items`).flush(cartDto());
+    oldRead.flush(cartDto([], { totalItems: 0 }));
+    expect(service.itemCount()).toBe(2);
+    expect(service.loading()).toBe(false);
+
+    service.removeItem(50);
+    const pending = http.expectOne(`${base}/api/cart/items/50`);
+    auth.handleUnauthorized(false);
+    pending.flush({ message: 'Respuesta de la sesión anterior' }, { status: 403, statusText: 'Forbidden' });
+    expect(service.notice()).toBeNull();
+    expect(service.cart()).toBeNull();
+  });
 });

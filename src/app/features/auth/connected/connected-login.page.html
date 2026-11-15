@@ -1,4 +1,4 @@
-<ion-content class="cmc-page cmc-standalone-page auth-page">
+<ion-content class="cmc-page cmc-standalone-page auth-page" [class.mfa-page]="step() === 'second-factor'">
   <div class="auth-hero">
     <div class="auth-top-bar">
       <a class="auth-back-pill" routerLink="/main/home">
@@ -18,14 +18,24 @@
       @if (auth.storageFailure()) {
         <p class="auth-alert auth-alert--error" role="alert">No se pudo acceder al almacenamiento seguro de la sesión. No se pudo confirmar su conservación o borrado. Reintenta; si el problema continúa, borra los datos de la aplicación desde Ajustes de Android.</p>
       }
-      @if (step() === 'credentials') {
+      @if (continueTo(); as destination) {
+        <p class="auth-alert auth-alert--success" role="status">Tu sesión está activa.</p>
+        <a class="cmc-link" [routerLink]="destination" [replaceUrl]="true">Continuar</a>
+      } @else if (step() === 'credentials') {
         <div class="auth-card-header">
           <h2 class="cmc-title">Bienvenido de nuevo</h2>
-          <p class="cmc-body cmc-text-secondary">Inicia sesión para continuar.</p>
+          @if (connectedQa) {
+            <p class="cmc-body cmc-text-secondary" role="status">El acceso a cuentas no está disponible en esta instalación.</p>
+          } @else {
+            <p class="cmc-body cmc-text-secondary">Inicia sesión para continuar.</p>
+          }
         </div>
 
         @if (auth.sessionExpired()) {
           <p class="auth-alert auth-alert--info" role="status">Tu sesión expiró. Inicia sesión de nuevo para continuar.</p>
+        }
+        @if (passwordChanged()) {
+          <p class="auth-alert auth-alert--success" role="status">Contraseña actualizada. Inicia sesión con la nueva contraseña.</p>
         }
         @if (errorMessage()) {
           <p class="auth-alert auth-alert--error" role="alert">{{ errorMessage() }}</p>
@@ -55,7 +65,7 @@
             <a routerLink="/forgot-password" class="cmc-link">¿Olvidaste tu contraseña?</a>
           </div>
 
-          <cmc-button type="submit" fullWidth [loading]="submitting()" loadingLabel="Iniciando sesión">
+          <cmc-button type="submit" fullWidth [disabled]="connectedQa" [loading]="submitting()" loadingLabel="Iniciando sesión">
             Iniciar sesión
           </cmc-button>
         </form>
@@ -89,7 +99,7 @@
               <legend class="cmc-body cmc-font-bold">Método de verificación</legend>
               @for (option of pending.methods; track option) {
                 <label class="method-option">
-                  <input type="radio" name="method" [value]="option" [checked]="method() === option" (change)="selectMethod(option)" />
+                  <input type="radio" name="method" [value]="option" [checked]="method() === option" [disabled]="submitting()" (change)="selectMethod(option)" />
                   <span>{{ methodLabels[option] }}</span>
                 </label>
               }
@@ -101,29 +111,28 @@
 
         <form [formGroup]="codeForm" (ngSubmit)="verify()" class="auth-form" novalidate>
           @if (method() === 'EMAIL' && !emailCodeSent()) {
-            <p class="factor-help">Solicita un código y revisa el correo asociado a tu cuenta.</p>
-            <cmc-button fullWidth [loading]="submitting()" loadingLabel="Enviando código" (click)="sendEmailCode()">
+            <p class="factor-help">Envía un código a {{ maskedEmail() }}.</p>
+            <cmc-button fullWidth [disabled]="resendSeconds() > 0" [loading]="submitting()" loadingLabel="Enviando código" (click)="sendEmailCode()">
               Enviar código por correo
             </cmc-button>
           } @else {
-            <cmc-input
-              formControlName="code"
-              [inputMode]="method() === 'BACKUP_CODE' ? 'text' : 'numeric'"
-              autocomplete="one-time-code"
-              [label]="method() === 'BACKUP_CODE' ? 'Código de respaldo' : 'Código de 6 dígitos'"
-              type="text"
-              [error]="codeError()"
-             required></cmc-input>
+            @if (method() === 'BACKUP_CODE') {
+              <cmc-input formControlName="code" autocomplete="one-time-code" label="Código de respaldo"
+                type="text" [error]="codeError()" required></cmc-input>
+              <cmc-button type="submit" fullWidth [loading]="submitting()" loadingLabel="Verificando">Verificar y entrar</cmc-button>
+            } @else {
+              <cmc-otp-input fieldId="login-mfa-code" [value]="codeForm.controls.code.value" [busy]="submitting()" [invalid]="!!errorMessage()"
+                (digitsChange)="updateDigits($event)" />
+              @if (submitting()) { <p role="status">Verificando código…</p> }
+              @if (retryCode()) {
+                <cmc-button fullWidth (click)="verify()">Reintentar verificación</cmc-button>
+              }
+            }
 
             @if (method() === 'EMAIL') {
-              <p class="factor-help">Si el código venció, solicita uno nuevo.</p>
-            }
-            <cmc-button type="submit" fullWidth [loading]="submitting()" loadingLabel="Verificando">
-              Verificar y entrar
-            </cmc-button>
-            @if (method() === 'EMAIL') {
-              <cmc-button variant="ghost" fullWidth [disabled]="submitting()" (click)="sendEmailCode()">
-                Reenviar código
+              <p class="factor-help">Código para {{ maskedEmail() }}. Si venció, solicita uno nuevo.</p>
+              <cmc-button variant="ghost" fullWidth [disabled]="submitting() || resendSeconds() > 0" (click)="sendEmailCode()">
+                Reenviar código @if (resendSeconds() > 0) { ({{ resendSeconds() }} s) }
               </cmc-button>
             }
           }

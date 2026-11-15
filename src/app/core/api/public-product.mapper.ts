@@ -17,6 +17,7 @@ export function mapPublicProduct(dto: PublicProductDto, base: string): PublicPro
   const images = [...dto.images].sort((a, b) => (a.displayOrder ?? 0) - (b.displayOrder ?? 0))
     .map(image => safeImageUrl(image.url, base)).filter((url): url is string => url !== null);
   const imageUrl = safeImageUrl(dto.imageUrl, base) ?? images[0] ?? null;
+  const gallery = imageUrl && !images.includes(imageUrl) ? [imageUrl, ...images] : images;
   return {
     source: 'http', id: dto.id, name: dto.name, sku: dto.sku, description: dto.detailedDescription ?? dto.description ?? '',
     averageRating: dto.averageRating, reviewCount: dto.reviewCount, model: dto.model, weight: dto.weight, dimensions: dto.dimensions,
@@ -24,7 +25,7 @@ export function mapPublicProduct(dto: PublicProductDto, base: string): PublicPro
     price: dto.discountPrice ?? dto.price,
     originalPrice: dto.discountPrice !== null && dto.discountPrice < dto.price ? dto.price : null,
     stock: dto.stock, availability: dto.stock === null ? 'unknown' : dto.stock > 0 ? 'available' : 'unavailable',
-    imageUrl, images: [...new Set([...(imageUrl ? [imageUrl] : []), ...images])],
+    imageUrl, images: [...new Set(gallery)],
     attributes: [...dto.attributes].sort((a, b) => (a.displayOrder ?? 0) - (b.displayOrder ?? 0))
       .map(a => ({ name: a.name, value: a.value })),
   };

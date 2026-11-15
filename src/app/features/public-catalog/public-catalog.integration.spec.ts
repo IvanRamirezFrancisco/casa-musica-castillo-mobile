@@ -85,7 +85,9 @@ describe('Public HTTP catalog integration (explicit real mode)', () => {
     fixture.detectChanges();
     expect(text()).toContain('Agotado'); expect(text()).toContain('6,500.00'); expect(text()).toContain('<script>unsafe()</script>');
     expect((fixture.nativeElement as HTMLElement).querySelector('script')).toBeNull();
-    expect(text()).toContain('no se enviará al carrito DEMO'); expect(cart.cartItems()).toEqual(before);
+    expect(text()).not.toMatch(/carrito DEMO|próxima etapa de integración/i);
+    expect((fixture.nativeElement as HTMLElement).querySelector('.purchase-panel')).toBeNull();
+    expect(cart.cartItems()).toEqual(before);
     expect(Array.from((fixture.nativeElement as HTMLElement).querySelectorAll('button')).some(b => b.textContent?.includes('Agregar'))).toBe(false);
   });
   it('renders 404 as not found', () => {

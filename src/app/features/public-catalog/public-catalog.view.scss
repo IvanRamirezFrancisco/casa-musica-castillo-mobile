@@ -25,6 +25,3 @@
   .catalog-filters-inline .filter-controls label { overflow-wrap:anywhere; }
   .catalog-filters-inline .filter-controls input { flex:none; }
 }
-
-.store-search.search-active { border-color: var(--cmc-primary); }
-.store-search input::-webkit-search-cancel-button { appearance: none; }

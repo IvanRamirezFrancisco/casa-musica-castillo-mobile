@@ -1,5 +1,5 @@
 import { emailValidator } from '../../../core/validation/auth-fields.validation';
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, viewChild } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { addIcons } from 'ionicons';
 import { arrowBackOutline, musicalNotesOutline } from 'ionicons/icons';
@@ -26,6 +26,8 @@ import { ConnectedLoginPage } from '../connected/connected-login.page';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LoginPage {
+  private readonly connectedLogin = viewChild(ConnectedLoginPage);
+  ionViewWillLeave(): void { this.connectedLogin()?.ionViewWillLeave(); }
   readonly connected = inject(BACKEND_SESSION_ENABLED);
   constructor() { addIcons({ arrowBackOutline, musicalNotesOutline }); }
 

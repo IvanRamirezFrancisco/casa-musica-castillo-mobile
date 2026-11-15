@@ -49,16 +49,27 @@ export function parseCart(body: unknown, base: string): Cart {
   if (canCheckout !== null && canCheckout !== undefined && typeof canCheckout !== 'boolean') throw invalid();
   const coupon = body['couponCode'];
   if (coupon !== null && coupon !== undefined && typeof coupon !== 'string') throw invalid();
+  const subtotal = optMoney(body['subtotal']);
+  const tax = optMoney(body['tax']);
+  const discount = optMoney(body['discount']);
+  const total = optMoney(body['total']);
+  const cents = (amount: number): bigint => BigInt(Math.round(amount * 100));
+  const lines = items.filter(item => item.available).reduce((sum, item) => sum + cents(item.subtotal), 0n);
+  const expected = cents(subtotal) + cents(tax) - cents(discount);
+  const amountsVerified = items.length === 0 ||
+    (money(body['subtotal']) && money(body['tax']) && money(body['total']) &&
+      lines === cents(subtotal) && cents(total) === (expected > 0n ? expected : 0n));
   return {
     cartId: body['cartId'],
     items,
     totalItems: typeof totalItems === 'number' ? totalItems : items.reduce((sum, item) => sum + item.quantity, 0),
-    subtotal: optMoney(body['subtotal']),
-    tax: optMoney(body['tax']),
-    discount: optMoney(body['discount']),
-    total: optMoney(body['total']),
+    subtotal,
+    tax,
+    discount,
+    total,
+    amountsVerified,
     couponCode: typeof coupon === 'string' && coupon.trim() ? coupon.trim() : null,
-    canCheckout: canCheckout === true && items.length > 0,
+    canCheckout: canCheckout === true && items.length > 0 && amountsVerified,
     warningMessage: sanitizeServerMessage(body['warningMessage']) ?? null,
   };
 }

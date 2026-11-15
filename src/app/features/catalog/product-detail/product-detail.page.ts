@@ -1,6 +1,6 @@
 import { PUBLIC_CATALOG_ENABLED } from '../../../core/repositories/public-catalog.repository';
 import { PublicProductDetailComponent } from '../../public-catalog/public-product-detail.view';
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal, viewChild } from '@angular/core';
 import { CurrencyPipe } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
@@ -44,6 +44,8 @@ import { CmcEmptyStateComponent } from '../../../shared/ui/empty-state/cmc-empty
   }`,
 })
 export class ProductDetailPage {
+  private readonly connectedDetail = viewChild(PublicProductDetailComponent);
+  ionViewWillLeave(): void { this.connectedDetail()?.ionViewWillLeave(); }
   readonly publicCatalogEnabled = inject(PUBLIC_CATALOG_ENABLED);
   private readonly params = toSignal(inject(ActivatedRoute).paramMap);
   private readonly catalog = inject(DemoCatalogService);

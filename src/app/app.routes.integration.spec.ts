@@ -53,8 +53,8 @@ describe('TT-04 routing real', () => {
   });
 
   it.each([
-    ['/', '/splash', 'Casa de Música'],
-    ['/splash', '/splash', 'Casa de Música'],
+    ['/', '/main/home', 'Casa de Música'],
+    ['/splash', '/main/home', 'Casa de Música'],
     ['/main', '/main/home', 'Casa de Música'],
     ['/main/home', '/main/home', 'Casa de Música'],
     ['/main/catalog', '/main/catalog', 'Catálogo'],

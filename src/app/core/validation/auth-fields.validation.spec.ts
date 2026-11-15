@@ -30,15 +30,23 @@ describe('auth-fields.validation (restricciones reales de RegisterRequest)', () 
     expect(emailError(' ana@gmail.com ')).toBeNull();
   });
 
-  it('contraseña: 8-255, 72 bytes, 3 tipos de caracteres', () => {
+  it('contraseña: 8-255, 72 bytes y 4 tipos de caracteres', () => {
     expect(passwordError('')).toBe('required');
     expect(passwordError('Ab1!')).toBe('minlength');
     expect(passwordError('A1!'.repeat(90))).toBe('maxlength');
     expect(passwordError('Aa1!'.repeat(19))).toBe('maxbytes');
     expect(passwordError('ñ'.repeat(40) + 'A1!')).toBe('maxbytes');
     expect(passwordError('soloMinusculas')).toBe('complexity');
+    expect(passwordError('Cl4veSegura')).toBe('complexity');
     expect(passwordError('Cl4ve-Segura')).toBeNull();
     expect(passwordByteLength('ñ')).toBe(2);
+  });
+
+  it('rechaza espacios y patrones simples que Spring rechaza aun con cuatro clases', () => {
+    expect(passwordError('Cl4ve Segura!')).toBe('whitespace');
+    expect(passwordError('Mx!777Qz')).toBe('simplePassword');
+    expect(passwordError('Mx!3456Qz')).toBe('simplePassword');
+    expect(passwordError('Mx!Qwert7')).toBe('simplePassword');
   });
 
   it('teléfono opcional de 10 dígitos', () => {

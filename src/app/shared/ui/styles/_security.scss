@@ -23,3 +23,27 @@
   .auth-alert--error { background: var(--cmc-error-surface); color: var(--cmc-error-text); border-color: var(--cmc-error); }
   .auth-alert--success { background: var(--cmc-success-surface); color: var(--cmc-success-text); border-color: var(--cmc-success-text); }
 }
+
+@mixin security-ring-and-guide {
+  .security-hero-row { display: flex; flex-wrap: wrap; align-items: center; gap: var(--cmc-space-3); }
+  .security-ring-card { position: relative; inline-size: 5.5rem; block-size: 5.5rem; display: grid; place-items: center; flex: none; }
+  .security-ring { inline-size: 100%; block-size: 100%; transform: rotate(-90deg); }
+  .security-ring circle { fill: none; stroke-width: 9; stroke-linecap: round; }
+  .security-ring__track { stroke: var(--cmc-border); }
+  .security-ring__progress { stroke: var(--cmc-primary); }
+  .security-ring-center { position: absolute; inset: 0; display: grid; place-content: center; text-align: center; line-height: 1.1; }
+  .security-ring-score { font-size: 1.125rem; font-weight: 800; color: var(--cmc-text-primary); }
+  .security-ring-caption { font-size: .6875rem; color: var(--cmc-text-secondary); font-weight: 600; }
+  .security-mark--inline { display: none; }
+  .security-card__header, .password-requirements li { display: flex; align-items: center; gap: .5rem; justify-content: space-between; }
+  .password-requirements li { justify-content: flex-start; }
+  .requirement-circle { flex: none; width: .75rem; height: .75rem; border: 1px solid var(--cmc-text-secondary); border-radius: 50%; }
+  .password-guide { padding: .75rem; border: 1px solid var(--cmc-border); border-radius: var(--cmc-radius-md); background: var(--cmc-surface); font-size: .8125rem; }
+  .password-strength { display: grid; grid-template-columns: 1fr auto; gap: .25rem .75rem; }
+  .password-strength strong { color: var(--c, var(--cmc-error-text)); }
+  .password-strength progress { grid-column: 1 / -1; width: 100%; accent-color: var(--c, var(--cmc-error-text)); }
+  .password-requirements { list-style: none; margin: .5rem 0 0; padding: 0; display: grid; gap: .25rem; }
+  [data-feedback="warning"] { --c: var(--cmc-warning-text); }
+  [data-feedback="positive"] { --c: var(--cmc-success-text); }
+  .requirement-met, .field-feedback { color: var(--cmc-success-text); margin: 0; font-size: .875rem; }
+}

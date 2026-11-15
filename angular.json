@@ -58,10 +58,30 @@
                 {
                   "replace": "src/environments/environment.ts",
                   "with": "src/environments/environment.prod.ts"
+                },
+                {
+                  "replace": "src/app/app-page-loaders.ts",
+                  "with": "src/app/app-page-loaders.connected.ts"
+                },
+                {
+                  "replace": "src/app/layout/main-navigation/cart-count.ts",
+                  "with": "src/app/layout/main-navigation/cart-count.connected.ts"
                 }
               ],
               "outputHashing": "all",
               "sourceMap": false
+            },
+            "public-demo": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.public-demo.ts"
+                },
+                {
+                  "replace": "src/app/app.routes.ts",
+                  "with": "src/app/app.routes.public-demo.ts"
+                }
+              ]
             },
             "development": {
               "optimization": false,
@@ -86,6 +106,14 @@
                 {
                   "replace": "src/environments/environment.ts",
                   "with": "src/environments/environment.staging.ts"
+                },
+                {
+                  "replace": "src/app/app-page-loaders.ts",
+                  "with": "src/app/app-page-loaders.connected.ts"
+                },
+                {
+                  "replace": "src/app/layout/main-navigation/cart-count.ts",
+                  "with": "src/app/layout/main-navigation/cart-count.connected.ts"
                 }
               ],
               "outputHashing": "all",

@@ -11,6 +11,9 @@ export function describeApiError(error: unknown, context: ApiErrorContext = 'gen
   if (error.kind === 'connection') {
     return 'No se pudo conectar con el servidor. Revisa tu conexión e inténtalo de nuevo.';
   }
+  if (error.kind === 'incompatible-mfa') {
+    return 'La verificación en dos pasos no está disponible desde la aplicación en este momento. Inténtalo más tarde o contacta con soporte.';
+  }
   if (error.kind === 'invalid-response') {
     return 'El servidor respondió de forma inesperada. Inténtalo más tarde.';
   }

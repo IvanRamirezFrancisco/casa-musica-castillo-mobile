@@ -30,20 +30,18 @@ describe('SplashPage', () => {
     expect(component).toBeTruthy();
   });
 
-  it('cancels delayed navigation after leaving Splash', () => {
-    vi.useFakeTimers(); fixture.detectChanges(); fixture.destroy(); vi.advanceTimersByTime(2500);
+  it('cancels queued navigation when Splash is destroyed', async () => {
+    fixture.detectChanges(); fixture.destroy(); await Promise.resolve();
     expect(routerSpy.navigate).not.toHaveBeenCalled();
   });
 
-  it('does not override another destination when Ionic caches Splash', () => {
-    vi.useFakeTimers(); fixture.detectChanges(); component.ionViewWillLeave(); vi.advanceTimersByTime(2500);
+  it('does not override another destination when Ionic caches Splash', async () => {
+    fixture.detectChanges(); component.ionViewWillLeave(); await Promise.resolve();
     expect(routerSpy.navigate).not.toHaveBeenCalled();
   });
 
-  it('should navigate to public home after timeout', () => {
-    vi.useFakeTimers();
-    fixture.detectChanges(); // triggers ngOnInit
-    vi.advanceTimersByTime(2500);
+  it('navigates to public home without an artificial delay', async () => {
+    fixture.detectChanges(); await Promise.resolve();
     expect(routerSpy.navigate).toHaveBeenCalledWith(['/main/home'], { replaceUrl: true });
   });
 });

@@ -2,6 +2,7 @@ import { mkdtempSync, writeFileSync, rmSync, mkdirSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { spawnSync } from 'node:child_process';
+import { productionApiUrl } from './android-build-config.mjs';
 
 // No login to Postman, cloud collection, persisted credentials or response-body artifacts.
 const base = process.env.API_BASE_URL;
@@ -10,7 +11,9 @@ if (!base || !allowed || process.env.API_TEST_AUTHORIZED !== 'true') {
   throw new Error('BLOCKED: configure API_BASE_URL, API_AUTHORIZED_ORIGIN and API_TEST_AUTHORIZED=true for an authorized non-production environment.');
 }
 const url = new URL(base);
-if (url.origin !== allowed || url.username || url.password || url.search || url.hash ||
+const productionHost = new URL(productionApiUrl).hostname;
+if (url.hostname === productionHost || url.hostname.endsWith(`.${productionHost}`) ||
+  url.origin !== allowed || url.username || url.password || url.search || url.hash || url.pathname !== '/' ||
   !(url.protocol === 'https:' || (url.protocol === 'http:' && ['localhost', '127.0.0.1'].includes(url.hostname)))) {
   throw new Error('Invalid or unauthorized API origin; HTTPS required outside loopback.');
 }

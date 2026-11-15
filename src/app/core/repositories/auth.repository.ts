@@ -22,6 +22,7 @@ export interface AuthRepository {
   register(input: RegisterInput): Observable<void>;
   resendVerification(email: string): Observable<void>;
   verifyEmail(token: string): Observable<void>;
+  verifyEmailCode(email: string, code: string): Observable<void>;
   requestPasswordReset(email: string): Observable<void>;
   confirmPasswordReset(token: string, newPassword: string): Observable<void>;
   logout(token: string): Observable<void>;

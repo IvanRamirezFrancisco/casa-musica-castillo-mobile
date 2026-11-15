@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal, viewChild } from '@angular/core';
 import { CurrencyPipe, DatePipe } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { NavController, IonButtons, IonContent, IonHeader, IonIcon, IonTitle, IonToolbar } from '@ionic/angular';
@@ -47,6 +47,9 @@ const TIMELINE: DemoOrderStatus[] = ['pending', 'paid', 'shipped', 'delivered'];
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OrderDetailPage {
+  private readonly connectedDetail = viewChild(ConnectedOrderDetailComponent);
+  ionViewWillEnter(): void { this.connectedDetail()?.ionViewWillEnter(); }
+  ionViewWillLeave(): void { this.connectedDetail()?.ionViewWillLeave(); }
   readonly connected = inject(BACKEND_SESSION_ENABLED);
   private readonly nav = inject(NavController);
   private readonly orderDetail = inject(OrderDetailService);

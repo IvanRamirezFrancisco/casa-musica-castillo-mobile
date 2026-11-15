@@ -13,9 +13,10 @@ import { CmcLoadingComponent } from '../../shared/ui/loading/cmc-loading.compone
 import { CmcErrorStateComponent } from '../../shared/ui/error-state/cmc-error-state.component';
 import { CmcEmptyStateComponent } from '../../shared/ui/empty-state/cmc-empty-state.component';
 
+import { CatalogSearchComponent } from './catalog-search.component';
 @Component({
   selector: 'app-public-catalog', standalone: true, providers: [PublicCatalogService],
-  imports: [NgTemplateOutlet, CmcIconComponent, FormsModule, IonContent, IonHeader, IonTitle, IonToolbar, IonModal, IonButtons, PublicProductGridComponent, CmcLoadingComponent, CmcErrorStateComponent, CmcEmptyStateComponent],
+  imports: [CatalogSearchComponent, NgTemplateOutlet, CmcIconComponent, FormsModule, IonContent, IonHeader, IonTitle, IonToolbar, IonModal, IonButtons, PublicProductGridComponent, CmcLoadingComponent, CmcErrorStateComponent, CmcEmptyStateComponent],
   host: { class: 'ion-page' }, changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl:'./public-catalog.view.html',styleUrl:'./public-catalog.view.scss',
 })
@@ -48,7 +49,8 @@ export class PublicCatalogComponent {
     }), debounceTime(200), distinctUntilChanged((a,b) => JSON.stringify(a) === JSON.stringify(b)), takeUntilDestroyed())
       .subscribe(query => this.service.load(query));
   }
-  search(value: string): void { this.keyword.set(value); this.navigate({ q: value || null, page: null }); }
+  searchCategory(): number | undefined { return Number(this.categoryId()) || undefined; }
+  search(value: string): void { if (value === this.keyword()) return; this.keyword.set(value); this.navigate({ q: value || null, page: null }); }
   category(value: string): void { this.navigate({ categoryId: value || null, categoria: null, page: null }); }
   order(value: PublicSort): void { this.navigate({ sortBy: value, page: null }); }
   goPage(page: number): void { this.navigate({ page }); }

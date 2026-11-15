@@ -13,8 +13,10 @@ import { AuthService } from '../services/auth.service';
 export const authInterceptor: HttpInterceptorFn = (request, next) => {
   if (!request.context.get(REQUIRES_AUTH)) return next(request);
   const auth = inject(AuthService);
-  const base = inject(API_BASE_URL).replace(/\/+$/, '');
-  if (!request.url.startsWith(`${base}/`)) {
+  const base = new URL(inject(API_BASE_URL)).origin;
+  let url: URL | undefined;
+  try { url = new URL(request.url); } catch { /* absolute API URL required */ }
+  if (!url || url.origin !== base || url.username || url.password || !url.pathname.startsWith('/api/')) {
     return throwError(() => new HttpErrorResponse({ status: 0, url: request.url }));
   }
   const token = auth.validToken();
@@ -23,7 +25,7 @@ export const authInterceptor: HttpInterceptorFn = (request, next) => {
     return throwError(() => new HttpErrorResponse({ status: 401, url: request.url }));
   }
   const version = auth.sessionVersion;
-  return next(request.clone({ setHeaders: { Authorization: `Bearer ${token}` } })).pipe(
+  return next(request.clone({ setHeaders: { Authorization: `Bearer ${token}` }, redirect: 'error' })).pipe(
     map((event) => {
       if (auth.sessionVersion !== version) throw new HttpErrorResponse({ status: 401, url: request.url });
       return event;

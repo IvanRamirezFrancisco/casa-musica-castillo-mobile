@@ -3,8 +3,7 @@ import type { TwoFactorMethod } from '../models/auth.model';
 
 /**
  * Restricciones del backend (RegisterRequest, ResetPasswordRequest, LoginFactorRequest) replicadas para
- * dar retroalimentación inmediata. El servidor sigue siendo la autoridad y puede rechazar más casos
- * (p. ej. secuencias como 123/abc/qwerty, dominio de correo no permitido).
+ * dar retroalimentación inmediata. El servidor sigue aplicando la política dinámica y sus validaciones adicionales.
  */
 export const FIELD_LIMITS = {
   usernameMin: 3, usernameMax: 30, nameMin: 2, nameMax: 50, emailMax: 100,
@@ -24,6 +23,13 @@ export const normalizePersonName = (value: string): string => value.trim().repla
 export const normalizePhone = (value: string): string => value.trim().replace(/[ -]/g, '');
 const OTP = /^[0-9]{6}$/;
 const SPECIAL = /[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/;
+const SIMPLE_PASSWORD = [
+  /password|admin123|abc123|123123|321321|654321|fedcba/i,
+  /(.)\1{2,}/i,
+  /0123|1234|2345|3456|4567|5678|6789|7890|9876|8765|7654|6543|5432|4321|3210/,
+  /abcd|bcde|cdef|defg|efgh|fghi|ghij|hijk|ijkl|jklm|klmn|lmno|mnop|nopq|opqr|pqrs|qrst|rstu|stuv|tuvw|uvwx|vwxy|wxyz/i,
+  /qwer|wert|erty|rtyu|tyui|yuio|uiop|asdf|sdfg|dfgh|fghj|ghjk|hjkl|zxcv|xcvb|cvbn|vbnm/i,
+];
 
 export const passwordByteLength = (value: string): number => new TextEncoder().encode(value).length;
 
@@ -66,8 +72,9 @@ export const passwordError = (value: string): string | null => {
   if (value.length < FIELD_LIMITS.passwordMin) return 'minlength';
   if (value.length > FIELD_LIMITS.passwordMax) return 'maxlength';
   if (passwordByteLength(value) > FIELD_LIMITS.passwordMaxBytes) return 'maxbytes';
-  const classes = passwordCharacterTypes(value);
-  return classes >= 3 ? null : 'complexity';
+  if (/\s/u.test(value)) return 'whitespace';
+  if (passwordCharacterTypes(value) < 4) return 'complexity';
+  return SIMPLE_PASSWORD.some(pattern => pattern.test(value)) ? 'simplePassword' : null;
 };
 
 export const optionalPhoneError = (value: string): string | null => {
@@ -118,6 +125,8 @@ export const FIELD_MESSAGES: Record<string, string> = {
   minlength: 'El valor es demasiado corto.',
   maxlength: 'El valor es demasiado largo.',
   maxbytes: 'La contraseña es demasiado larga (máximo 72 bytes).',
-  complexity: 'Usa al menos 3 tipos: minúsculas, mayúsculas, números o símbolos.',
+  complexity: 'Incluye una minúscula, una mayúscula, un número y un símbolo.',
+  whitespace: 'La contraseña no debe contener espacios.',
+  simplePassword: 'Evita secuencias simples y caracteres repetidos consecutivos.',
   pattern: 'El formato no es válido.',
 };

@@ -86,6 +86,13 @@ export const paymentVariant = (status: PaymentStatusCode): CmcBadgeVariant =>
   `,
 })
 export class ConnectedOrdersComponent {
+  private entered = false;
+
+  ionViewWillEnter(): void {
+    if (this.entered) this.load(this.pageNumber());
+    this.entered = true;
+  }
+
   private readonly repository = inject(REAL_ORDER_REPOSITORY);
   private seq = 0;
 
