@@ -1,30 +1,104 @@
-<ion-header class="cmc-store-header ion-no-border"><ion-toolbar><div class="store-header-row">
-  <div class="store-brand"><cmc-icon name="music"/><div><h1>Casa de Música Castillo</h1><small>Instrumentos musicales</small></div></div>
-  @if(!publicDemo){<a class="icon-action" routerLink="/favorites" aria-label="Abrir Favoritos"><cmc-icon name="heart"/></a>}
-</div></ion-toolbar></ion-header>
-<ion-content class="cmc-page cmc-root-page"><main class="cmc-store">
-  <cmc-catalog-search fieldId="home-search" [term]="term()" (termChange)="term.set($event)" (searched)="search($event)" />
-  <section class="store-hero" aria-labelledby="store-welcome">
-    <img class="hero-photo" alt="" aria-hidden="true" fetchpriority="high" decoding="async"
-      src="https://res.cloudinary.com/dy3ibnjl7/image/upload/f_auto,q_auto,w_960/v1790057931/negocio1_dfuoko.png"
-      srcset="https://res.cloudinary.com/dy3ibnjl7/image/upload/f_auto,q_auto,w_480/v1790057931/negocio1_dfuoko.png 480w,
-              https://res.cloudinary.com/dy3ibnjl7/image/upload/f_auto,q_auto,w_960/v1790057931/negocio1_dfuoko.png 960w"
-      sizes="(max-width: 600px) 100vw, 960px" (error)="heroImageFailed($event)" />
-    <div class="hero-copy"><p class="eyebrow">Casa de Música Castillo</p><h2 id="store-welcome">Tu próxima historia empieza con música.</h2><p>Encuentra el instrumento que acompaña tu manera de tocar.</p><a class="store-button primary" routerLink="/main/catalog">Explorar instrumentos <cmc-icon name="arrow"/></a></div>
-  </section>
-  @if(!publicDemo && !auth.hasValidSession()) {<aside class="guest-access"><div><strong>Tu música, en un solo lugar</strong><p>Inicia sesión para guardar favoritos y gestionar tu carrito.</p></div><a routerLink="/login">Iniciar sesión</a><a routerLink="/register">Crear cuenta</a></aside>}
-  @switch(service.home().status) {
-    @case('loading') {<cmc-loading message="Cargando instrumentos"/>}
-    @case('error') {<cmc-error-state heading="No pudimos cargar Inicio" description="Revisa la conexión y vuelve a intentarlo." (retry)="service.loadHome()"/>}
-    @case('ready') {@if(service.home().data;as data) {
-      <section><div class="section-header"><h2>Explorar por categoría</h2></div><div class="category-grid">@for(cat of data.categories;track cat.id){<a class="category-tile" routerLink="/main/catalog" [queryParams]="{categoryId:cat.id}" [attr.aria-label]="'Ver ' + cat.name + ' en el catálogo'">@if(categoryImage(cat.imageUrl);as image){<span class="category-visual"><cmc-public-image [src]="image" [alt]="cat.name"/></span>}@else{<cmc-icon name="music"/>}<strong>{{cat.name}}</strong><span>{{cat.activeProductCount}} {{cat.activeProductCount===1?'instrumento':'instrumentos'}} <cmc-icon name="arrow"/></span></a>}</div>@if(!data.categories.length){<p class="muted">No hay categorías disponibles.</p>}</section>
-      <section><div class="section-header"><div><p class="eyebrow">Para seguir tocando</p><h2>Destacados disponibles</h2></div><a routerLink="/main/catalog">Ver catálogo <cmc-icon name="arrow"/></a></div>
-        @if(available(data.featured).length){<cmc-public-product-grid [products]="available(data.featured)"/>}<p class="muted">Selección con stock dentro de los destacados recibidos. Consulta el catálogo para ver todos los productos.</p>
-        @if(!available(data.featured).length){<cmc-empty-state heading="Sin destacados disponibles" description="Puedes explorar el catálogo completo y consultar su disponibilidad."/>}
-      </section>
-      <section><div class="section-header"><div><p class="eyebrow">Descubre lo nuevo</p><h2>Novedades</h2></div><a routerLink="/main/catalog">Ver más <cmc-icon name="arrow"/></a></div>
-        @if(available(data.latest).length){<cmc-public-product-grid [products]="available(data.latest)"/>}@else{<cmc-empty-state heading="Sin novedades disponibles" description="Las novedades recibidas no tienen disponibilidad confirmada. Explora el catálogo completo."/>}
-      </section>
-    }}
-  }
-</main></ion-content>
+<ion-header class="cmc-store-header cmc-store-header--inverted ion-no-border">
+  <ion-toolbar>
+    <div class="store-header-row">
+      <div class="store-brand">
+        <span class="brand-badge" aria-hidden="true"><cmc-icon name="music"/></span>
+        <div>
+          <h1>Casa de Música Castillo</h1>
+          <small class="brand-eyebrow">Instrumentos musicales</small>
+        </div>
+      </div>
+      @if(!publicDemo){<a class="icon-action" routerLink="/favorites" aria-label="Abrir Favoritos"><cmc-icon name="heart"/></a>}
+    </div>
+  </ion-toolbar>
+  <div class="header-search-row">
+    <cmc-catalog-search fieldId="home-search" [term]="term()" (termChange)="term.set($event)" (searched)="search($event)" />
+  </div>
+</ion-header>
+
+<ion-content class="cmc-page cmc-root-page">
+  <main class="cmc-store">
+    <section class="store-hero" aria-labelledby="store-welcome">
+      <img class="hero-photo" alt="" aria-hidden="true" fetchpriority="high" decoding="async"
+        src="https://res.cloudinary.com/dy3ibnjl7/image/upload/f_auto,q_auto,w_960/v1790057931/negocio1_dfuoko.png"
+        srcset="https://res.cloudinary.com/dy3ibnjl7/image/upload/f_auto,q_auto,w_480/v1790057931/negocio1_dfuoko.png 480w,
+                https://res.cloudinary.com/dy3ibnjl7/image/upload/f_auto,q_auto,w_960/v1790057931/negocio1_dfuoko.png 960w,
+                https://res.cloudinary.com/dy3ibnjl7/image/upload/v1790057931/negocio1_dfuoko.png 1200w"
+        sizes="(max-width: 600px) 100vw, 960px" (error)="heroImageFailed($event)" />
+      <div class="hero-content">
+        <p class="eyebrow">Casa de Música Castillo</p>
+        <h2 id="store-welcome">Tu próxima historia<br/>empieza con música.</h2>
+        <p class="hero-copy">Encuentra el instrumento que acompaña tu manera de tocar.</p>
+        <a class="store-button cta-gold" routerLink="/main/catalog">Explorar instrumentos <cmc-icon name="arrow"/></a>
+      </div>
+    </section>
+
+    @if(!publicDemo && !auth.hasValidSession()) {
+      <aside class="guest-access" aria-label="Acceso a tu cuenta">
+        <div class="guest-copy">
+          <strong>Tu música, en un solo lugar</strong>
+          <p>Inicia sesión para guardar favoritos y gestionar tu carrito.</p>
+        </div>
+        <div class="guest-actions">
+          <a class="guest-btn guest-btn--primary" routerLink="/login">Iniciar sesión</a>
+          <a class="guest-btn guest-btn--secondary" routerLink="/register">Crear cuenta</a>
+        </div>
+      </aside>
+    }
+
+    @switch(service.home().status) {
+      @case('loading') {<cmc-loading message="Cargando instrumentos"/>}
+      @case('error') {<cmc-error-state heading="No pudimos cargar Inicio" description="Revisa la conexión y vuelve a intentarlo." (retry)="service.loadHome()"/>}
+      @case('ready') {
+        @if(service.home().data; as data) {
+          <section>
+            <div class="section-header">
+              <h2>Explorar por categoría</h2>
+              <a routerLink="/main/catalog">Ver todas <cmc-icon name="arrow"/></a>
+            </div>
+            <div class="category-grid">
+              @for(cat of data.categories; track cat.id) {
+                <a class="category-tile" routerLink="/main/catalog" [queryParams]="{categoryId:cat.id}" [attr.aria-label]="'Ver ' + cat.name + ' en el catálogo'">
+                  @if(categoryImage(cat.imageUrl); as image) {
+                    <span class="category-visual"><cmc-public-image [src]="image" [alt]="cat.name"/></span>
+                  } @else {
+                    <span class="category-icon-box" aria-hidden="true"><cmc-icon name="music"/></span>
+                  }
+                  <strong>{{cat.name}}</strong>
+                  <span>Ver categoría · {{cat.activeProductCount}} {{cat.activeProductCount===1?'instrumento':'instrumentos'}} <cmc-icon name="arrow"/></span>
+                </a>
+              }
+            </div>
+            @if(!data.categories.length){<p class="muted">No hay categorías disponibles.</p>}
+          </section>
+
+          <section>
+            <div class="section-header">
+              <div><p class="eyebrow">Para seguir tocando</p><h2>Destacados disponibles</h2></div>
+              <a routerLink="/main/catalog">Ver catálogo <cmc-icon name="arrow"/></a>
+            </div>
+            @if(available(data.featured).length){
+              <cmc-public-product-grid [products]="available(data.featured)"/>
+            }
+            <p class="muted home-disclaimer">Selección con stock dentro de los destacados recibidos. Consulta el catálogo para ver todos los productos.</p>
+            @if(!available(data.featured).length){
+              <cmc-empty-state heading="Sin destacados disponibles" description="Puedes explorar el catálogo completo y consultar su disponibilidad."/>
+            }
+          </section>
+
+          <section>
+            <div class="section-header">
+              <div><p class="eyebrow">Descubre lo nuevo</p><h2>Novedades</h2></div>
+              <a routerLink="/main/catalog">Ver más <cmc-icon name="arrow"/></a>
+            </div>
+            @if(available(data.latest).length){
+              <cmc-public-product-grid [products]="available(data.latest)" [featuredLayout]="true"/>
+            } @else {
+              <cmc-empty-state heading="Sin novedades disponibles" description="Las novedades recibidas no tienen disponibilidad confirmada. Explora el catálogo completo."/>
+            }
+          </section>
+        }
+      }
+    }
+  </main>
+</ion-content>

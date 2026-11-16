@@ -1,10 +1,17 @@
 @if (publicCatalogEnabled) { <app-public-catalog /> } @else {
-<ion-header class="ion-no-border cmc-header-transparent cmc-discovery-header">
+<ion-header class="ion-no-border cmc-header-transparent cmc-discovery-header cmc-discovery-header--inverted">
   <ion-toolbar class="catalog-toolbar">
     <div class="header-content">
       <div class="brand-title">
-        <ion-icon name="musical-notes-outline" class="brand-icon-small" aria-hidden="true"></ion-icon>
-        <h1 class="cmc-title">Catálogo</h1>
+        <span class="brand-badge" aria-hidden="true">
+          <ion-icon name="musical-notes-outline" class="brand-icon-small"></ion-icon>
+        </span>
+        <div>
+          <h1 class="cmc-title">Casa de Música Castillo</h1>
+          <small class="brand-subtitle">
+            Catálogo · {{ productosFiltrados().length }} {{ productosFiltrados().length === 1 ? 'instrumento disponible' : 'instrumentos disponibles' }}
+          </small>
+        </div>
       </div>
       <span class="catalog-badge">Demostración</span>
     </div>
@@ -26,7 +33,6 @@
         <button
           type="button"
           class="clear-search-btn"
-
           (click)="onBusquedaChange('')"
           aria-label="Borrar búsqueda"
         >
@@ -40,16 +46,8 @@
 <ion-content class="cmc-page cmc-root-page cmc-discovery-content catalog-content">
   <main class="cmc-page-container">
 
-    <!-- Hero / Colección informativa -->
-    <section class="catalog-hero" aria-labelledby="hero-title">
-      <span class="hero-eyebrow">COLECCIÓN CASTILLO</span>
-      <h2 id="hero-title" class="cmc-section-title">Encuentra tu sonido</h2>
-      <p class="cmc-body">Instrumentos seleccionados para cada etapa de tu aprendizaje musical.</p>
-    </section>
-
     <!-- Filtro de Categorías -->
     <section class="categories-section" aria-label="Filtro de categorías">
-      <h2 class="section-title cmc-section-title">Categorías</h2>
       <div class="categories-scroll" role="group" aria-label="Categorías de instrumentos">
         @for (cat of categorias; track cat) {
           <button
@@ -94,20 +92,19 @@
         <div class="products-grid">
           @for (producto of productosFiltrados(); track producto.id) {
             <article class="product-card">
-              <a class="detail-btn" [routerLink]="['/products', producto.id]" [attr.aria-label]="'Ver información de ' + producto.nombre">
-              <div class="product-image">
-                <ion-icon [name]="producto.icono" class="placeholder-icon" aria-hidden="true"></ion-icon>
-                <span class="demo-tag">Demo</span>
-              </div>
+              <a class="detail-btn catalog-product-link" [routerLink]="['/products', producto.id]" [attr.aria-label]="'Ver información de ' + producto.nombre">
+                <div class="product-image">
+                  <ion-icon [name]="producto.icono" class="placeholder-icon" aria-hidden="true"></ion-icon>
+                  <span class="demo-tag">Demo</span>
+                </div>
 
-              <div class="product-info">
-                <span class="cmc-caption">{{ producto.marca }}</span>
-                <h3 class="product-name cmc-body">{{ producto.nombre }}</h3>
-                <p class="cmc-font-bold product-price">
-                  {{ producto.precio | currency:'MXN':'symbol':'1.0-0' }} MXN
-                </p>
-
-              </div>
+                <div class="product-info">
+                  <span class="cmc-caption product-brand">{{ producto.marca }}</span>
+                  <h3 class="product-name cmc-body">{{ producto.nombre }}</h3>
+                  <p class="cmc-font-bold product-price">
+                    {{ producto.precio | currency:'MXN':'symbol':'1.0-0' }} MXN
+                  </p>
+                </div>
               </a>
             </article>
           }
@@ -141,5 +138,4 @@
   </main>
 
 </ion-content>
-
 }

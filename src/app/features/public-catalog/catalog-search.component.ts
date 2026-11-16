@@ -15,15 +15,17 @@ import { PublicImageComponent } from './public-product-grid.component';
   template: `
     <div class="search-area" (focusout)="leave($event)" (keydown.escape)="suggesting.set(false)">
       <form class="search-bar" role="search" (submit)="$event.preventDefault(); submit(field)">
-        <cmc-icon name="search" />
+        <cmc-icon name="search" class="search-leading-icon" />
         <input #field [id]="fieldId()" type="search" maxlength="100" enterkeyhint="search"
           autocomplete="off" aria-label="Buscar instrumentos en el catálogo" placeholder="Buscar instrumentos"
           [value]="term()" (input)="update(field.value)" (focus)="suggest(field.value)"
           (keydown.enter)="$event.preventDefault(); submit(field)" />
         @if (term()) {
-          <button type="button" aria-label="Limpiar búsqueda" (click)="clear(field)"><cmc-icon name="close" /></button>
+          <button type="button" class="clear-btn" aria-label="Limpiar búsqueda" (click)="clear(field)"><cmc-icon name="close" /></button>
         }
-        <button type="submit" aria-label="Buscar instrumentos"><cmc-icon name="arrow" /></button>
+        <button type="submit" class="search-go-btn" aria-label="Buscar instrumentos">
+          <span class="go-pill" aria-hidden="true"><cmc-icon name="arrow" /></span>
+        </button>
       </form>
       @if (suggesting()) {
         <div class="suggestions" aria-label="Sugerencias del catálogo">
@@ -46,31 +48,7 @@ import { PublicImageComponent } from './public-product-grid.component';
       }
     </div>
   `,
-  styles: `
-    :host { display: block; margin-block-end: var(--cmc-space-4); }
-    .search-area { position: relative; }
-    .search-bar { display: flex; align-items: center; gap: .35rem; padding: .25rem .5rem;
-      background: var(--cmc-surface); border: 1px solid var(--cmc-border-strong); border-radius: var(--cmc-radius-lg); }
-    .search-bar:focus-within { border-color: var(--cmc-primary); }
-    .search-bar > cmc-icon { color: var(--cmc-primary); flex: none; margin-inline-start: .35rem; }
-    .search-bar input { flex: 1; min-width: 0; border: 0; background: transparent; min-height: 48px; color: var(--cmc-text-primary); }
-    .search-bar input::-webkit-search-cancel-button { appearance: none; }
-    button { display: grid; place-items: center; min-width: 48px; min-height: 48px;
-      background: transparent; color: var(--cmc-primary); }
-    .suggestions { margin-block-start: .35rem; max-block-size: min(18rem, 42dvh); overflow-y: auto;
-      overscroll-behavior: contain; background: var(--cmc-surface); border: 1px solid var(--cmc-border);
-      border-radius: var(--cmc-radius-lg); box-shadow: var(--cmc-shadow-subtle); }
-    .suggestions p { margin: 0; padding: .75rem; }
-    ul { list-style: none; padding: .25rem; margin: 0; }
-    li + li { border-block-start: 1px solid var(--cmc-border); }
-    a { display: grid; grid-template-columns: 42px minmax(0,1fr) auto; align-items: center; gap: .5rem;
-      color: var(--cmc-text-primary); padding: .375rem; min-height: 54px; text-decoration: none; }
-    a:hover, a:focus-visible { background: var(--cmc-surface-alt); }
-    .thumbnail { width: 42px; height: 42px; border-radius: .5rem; overflow: hidden; }
-    .description { overflow-wrap: anywhere; }
-    .description small { display: block; color: var(--cmc-text-secondary); }
-    .price { color: var(--cmc-primary); font-weight: 700; font-size: .8rem; }
-  `,
+  styles: `:host { display: block; margin-block-end: var(--cmc-space-4); }`,
 })
 export class CatalogSearchComponent {
   readonly fieldId = input('catalog-search');

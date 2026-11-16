@@ -1,14 +1,18 @@
 @if (publicCatalogEnabled) { <app-public-home /> } @else {
-<ion-header class="ion-no-border cmc-header-transparent cmc-discovery-header">
+<ion-header class="ion-no-border cmc-header-transparent cmc-discovery-header cmc-discovery-header--inverted">
   <ion-toolbar class="home-toolbar">
     <div class="header-content">
       <div class="brand-title">
-        <ion-icon name="musical-notes-outline" class="brand-icon-small"></ion-icon>
-        <h1 class="cmc-title">Casa de Música</h1>
+        <span class="brand-badge" aria-hidden="true">
+          <ion-icon name="musical-notes-outline" class="brand-icon-small"></ion-icon>
+        </span>
+        <div>
+          <h1 class="cmc-title">Casa de Música Castillo</h1>
+          <small class="brand-subtitle">INSTRUMENTOS MUSICALES</small>
+        </div>
       </div>
       <div class="header-actions">
-        <a routerLink="/favorites" class="cmc-link cmc-caption" aria-label="Abrir Favoritos"><span aria-live="polite">{{ favorites().length }} favoritos</span></a>
-
+        <a routerLink="/favorites" class="cmc-link cmc-caption fav-header-link" aria-label="Abrir Favoritos"><span aria-live="polite">{{ favorites().length }} favoritos</span></a>
       </div>
     </div>
   </ion-toolbar>
@@ -23,20 +27,35 @@
 
 <ion-content class="cmc-page cmc-root-page cmc-discovery-content home-content">
   <div class="cmc-page-container">
-    <p><a routerLink="/login" class="cmc-link">Iniciar sesión</a></p>
-
     <!-- Promotion Banner -->
-    <section class="promo-banner">
+    <section class="promo-banner" aria-labelledby="demo-home-hero">
+      <img class="hero-photo" alt="" aria-hidden="true" fetchpriority="high" decoding="async"
+        src="https://res.cloudinary.com/dy3ibnjl7/image/upload/f_auto,q_auto,w_960/v1790057931/negocio1_dfuoko.png"
+        srcset="https://res.cloudinary.com/dy3ibnjl7/image/upload/f_auto,q_auto,w_480/v1790057931/negocio1_dfuoko.png 480w,
+                https://res.cloudinary.com/dy3ibnjl7/image/upload/f_auto,q_auto,w_960/v1790057931/negocio1_dfuoko.png 960w,
+                https://res.cloudinary.com/dy3ibnjl7/image/upload/v1790057931/negocio1_dfuoko.png 1200w"
+        sizes="(max-width: 600px) 100vw, 960px" (error)="heroImageFailed($event)" />
       <div class="promo-content">
-        <h2 class="promo-title">Sonido Premium</h2>
+        <p class="promo-eyebrow">CASA DE MÚSICA CASTILLO</p>
+        <h2 id="demo-home-hero" class="promo-title">Sonido Premium</h2>
         <p class="promo-desc">Descubre nuestra nueva colección de cuerdas artesanales</p>
+        <a class="promo-cta" routerLink="/main/catalog">Explorar instrumentos</a>
       </div>
     </section>
+
+    <aside class="guest-card">
+      <div>
+        <strong>Tu música, en un solo lugar</strong>
+        <p class="cmc-caption">Inicia sesión para guardar favoritos y gestionar tus compras.</p>
+      </div>
+      <a routerLink="/login" class="cmc-link guest-login-btn">Iniciar sesión</a>
+    </aside>
 
     <!-- Categories -->
     <section class="categories-section">
       <div class="section-header">
         <h2 class="section-title cmc-section-title">Explorar</h2>
+        <a class="cmc-link see-all" routerLink="/main/catalog">Ver todas</a>
       </div>
       <div class="categories-scroll">
         @for (category of categories(); track category.id) {
@@ -63,24 +82,24 @@
         @for (product of featuredProducts(); track product.id) {
           <article class="product-card">
             <a class="home-product-link" [routerLink]="['/products', product.id]" [attr.aria-label]="product.name">
-            <div class="product-image">
-              @if (product.imageUrl) {
-                <img [src]="product.imageUrl" [alt]="product.name" />
-              } @else {
-                <div class="product-placeholder">
-                  <ion-icon name="image-outline"></ion-icon>
-                </div>
-              }
-            </div>
-            <div class="product-info">
-              <span class="product-category cmc-caption">{{ product.category }}</span>
-              <h3 class="product-name cmc-body">{{ product.name }}</h3>
-              <p class="product-price cmc-font-bold">{{ product.price | currency:'MXN' }}</p>
-            </div>
+              <div class="product-image">
+                @if (product.imageUrl) {
+                  <img [src]="product.imageUrl" [alt]="product.name" />
+                } @else {
+                  <div class="product-placeholder">
+                    <ion-icon name="image-outline"></ion-icon>
+                  </div>
+                }
+              </div>
+              <div class="product-info">
+                <span class="product-category cmc-caption">{{ product.category }}</span>
+                <h3 class="product-name cmc-body">{{ product.name }}</h3>
+                <p class="product-price cmc-font-bold">{{ product.price | currency:'MXN' }}</p>
+              </div>
             </a>
-              <button type="button" class="favorite-icon" [attr.aria-label]="'Favorito: ' + product.name" [attr.aria-pressed]="favorites().includes(product.id)" (click)="toggleFavorite(product.id)">
-                <ion-icon name="heart-outline" aria-hidden="true"></ion-icon>
-              </button>
+            <button type="button" class="favorite-icon" [attr.aria-label]="'Favorito: ' + product.name" [attr.aria-pressed]="favorites().includes(product.id)" (click)="toggleFavorite(product.id)">
+              <ion-icon name="heart-outline" aria-hidden="true"></ion-icon>
+            </button>
           </article>
         }
       </div>
@@ -88,5 +107,4 @@
 
   </div>
 </ion-content>
-
 }

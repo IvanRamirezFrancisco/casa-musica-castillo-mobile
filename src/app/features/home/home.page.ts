@@ -61,6 +61,9 @@ export class HomePage {
   toggleFavorite(id: string): void {
     this.favorites.update(ids => ids.includes(id) ? ids.filter(value => value !== id) : [...ids, id]);
   }
+  heroImageFailed(event: Event): void {
+    if (event.target instanceof HTMLImageElement) event.target.hidden = true;
+  }
   categories = signal<Category[]>([
     { id: '1', name: 'Guitarras', icon: 'musical-note-outline' },
     { id: '2', name: 'Teclados', icon: 'keypad-outline' },

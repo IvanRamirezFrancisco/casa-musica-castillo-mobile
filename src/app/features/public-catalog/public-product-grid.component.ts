@@ -32,25 +32,35 @@ export class PublicImageComponent {
   selector: 'cmc-public-product-grid', standalone: true, imports: [RouterLink, CmcMoneyPipe, CmcIconComponent, PublicImageComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './public-product-grid.component.scss',
-  template: `<div class="products-grid">@for (product of products(); track product.id) {
+  template: `<div class="products-grid" [class.grid--catalog]="variant() === 'catalog'" [class.grid--featured]="featuredLayout()">@for (product of products(); track product.id) {
     <article class="product-card">
       <a class="detail-btn" [routerLink]="['/products', product.id]" [attr.aria-label]="product.name">
         <div class="product-image">
           <cmc-public-image [src]="product.imageUrl" [alt]="product.name" />
+          @if (variant() === 'catalog') {
+            <p class="cmc-caption stock-badge stock-badge--overlay" [attr.data-status]="product.availability"><span class="stock-dot" aria-hidden="true"></span>{{ product.availability === 'available' ? 'Disponible' : product.availability === 'unavailable' ? 'Agotado' : 'Por confirmar' }}</p>
+          }
           @if (product.originalPrice !== null && product.originalPrice > product.price) {
             <span class="product-offer">Oferta</span>
           }
         </div>
         <div class="product-info">
-          <span class="cmc-caption">{{ product.category }} · {{ product.brand }}</span>
+          <span class="cmc-caption product-eyebrow">{{ product.category }} · {{ product.brand }}</span>
           <h3 class="product-name cmc-body">{{ product.name }}</h3>
           @if (product.reviewCount && product.averageRating !== null) {
             <p class="rating"><cmc-icon name="star"/>{{product.averageRating}} · {{product.reviewCount}} opiniones</p>
           }
-          <p class="product-price">@if (product.originalPrice !== null) { <del>{{ product.originalPrice | cmcMoney }}</del> }
-            {{ product.price | cmcMoney }}</p>
-          <p class="cmc-caption stock-badge" [attr.data-status]="product.availability"><cmc-icon [name]="product.availability === 'available' ? 'available' : product.availability === 'unavailable' ? 'close' : 'music'"/>{{ product.availability === 'available' ? 'Disponible' : product.availability === 'unavailable' ? 'Agotado' : 'Disponibilidad por confirmar' }}</p>
+          <div class="product-price-row">
+            <p class="product-price">@if (product.originalPrice !== null) { <del>{{ product.originalPrice | cmcMoney }}</del> }
+              {{ product.price | cmcMoney }}</p>
+            @if (variant() !== 'catalog') {
+              <p class="cmc-caption stock-badge" [attr.data-status]="product.availability"><span class="stock-dot" aria-hidden="true"></span>{{ product.availability === 'available' ? 'Disponible' : product.availability === 'unavailable' ? 'Agotado' : 'Disponibilidad por confirmar' }}</p>
+            }
+          </div>
         </div>
+        @if (featuredLayout()) {
+          <span class="featured-chevron" aria-hidden="true"><cmc-icon name="next"/></span>
+        }
       </a>
       @if (connected) {
         <button type="button" class="card-favorite-btn" [disabled]="favorites.busy()"
@@ -58,15 +68,17 @@ export class PublicImageComponent {
           [attr.aria-busy]="favorites.busy()"
           [attr.aria-label]="(favorites.id(product.id) !== null ? 'Quitar de favoritos: ' : 'Guardar en favoritos: ') + product.name"
           (click)="toggleFavorite(product.id)">
-          <cmc-icon [name]="favorites.id(product.id) !== null ? 'saved' : 'heart'"/>
+          <span class="fav-circle" aria-hidden="true"><cmc-icon [name]="favorites.id(product.id) !== null ? 'saved' : 'heart'"/></span>
         </button>
       }
     </article>
   }</div>
-  @if (connected && favorites.notice(); as notice) { <p role="status">{{ notice }}</p> }`,
+  @if (connected && favorites.notice(); as notice) { <p class="favorite-notice" role="status">{{ notice }}</p> }`,
 })
 export class PublicProductGridComponent {
   readonly products = input.required<readonly PublicProduct[]>();
+  readonly variant = input<'home' | 'catalog'>('home');
+  readonly featuredLayout = input(false);
   readonly connected = inject(BACKEND_SESSION_ENABLED);
   readonly favorites = inject(ProductFavoritesService);
   private readonly auth = inject(AuthService);

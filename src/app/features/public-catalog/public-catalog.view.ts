@@ -1,12 +1,13 @@
 import { NgTemplateOutlet } from '@angular/common';
 import { CmcIconComponent } from '../../shared/ui/icon/cmc-icon.component';
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { debounceTime, distinctUntilChanged, map } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { IonContent, IonHeader, IonTitle, IonToolbar, IonModal, IonButtons } from '@ionic/angular';
 import { CatalogQuery, PublicSort } from '../../core/api/public-catalog.dto';
+import { PUBLIC_DEMO } from '../../core/config/public-demo.token';
 import { PublicCatalogService } from '../../core/services/public-catalog.service';
 import { PublicProductGridComponent } from './public-product-grid.component';
 import { CmcLoadingComponent } from '../../shared/ui/loading/cmc-loading.component';
@@ -16,11 +17,12 @@ import { CmcEmptyStateComponent } from '../../shared/ui/empty-state/cmc-empty-st
 import { CatalogSearchComponent } from './catalog-search.component';
 @Component({
   selector: 'app-public-catalog', standalone: true, providers: [PublicCatalogService],
-  imports: [CatalogSearchComponent, NgTemplateOutlet, CmcIconComponent, FormsModule, IonContent, IonHeader, IonTitle, IonToolbar, IonModal, IonButtons, PublicProductGridComponent, CmcLoadingComponent, CmcErrorStateComponent, CmcEmptyStateComponent],
+  imports: [CatalogSearchComponent, NgTemplateOutlet, CmcIconComponent, RouterLink, FormsModule, IonContent, IonHeader, IonTitle, IonToolbar, IonModal, IonButtons, PublicProductGridComponent, CmcLoadingComponent, CmcErrorStateComponent, CmcEmptyStateComponent],
   host: { class: 'ion-page' }, changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl:'./public-catalog.view.html',styleUrl:'./public-catalog.view.scss',
 })
 export class PublicCatalogComponent {
+  readonly publicDemo = inject(PUBLIC_DEMO);
   readonly service = inject(PublicCatalogService);
   private readonly router = inject(Router);
   readonly keyword = signal(''); readonly categoryId = signal(''); readonly sort = signal<PublicSort>('featured');
@@ -29,6 +31,13 @@ export class PublicCatalogComponent {
   categoryName():string{return this.service.categories().data?.find(c=>c.id.toString()===this.categoryId())?.name??'Categoría seleccionada';}
   sortLabel():string{return this.sortOptions.find(o=>o.id===this.sort())?.label??'Destacados';}
   openFilters():void{this.draftCategory.set(this.categoryId());this.draftSort.set(this.sort());this.filtersOpen.set(true);}
+  closeFilters():void{
+    this.filtersOpen.set(false);
+    const trigger=document.querySelector<HTMLButtonElement>('.catalog-controls button');
+    if(trigger && (!document.activeElement || document.activeElement===document.body || document.activeElement.closest('ion-modal'))){
+      trigger.focus();
+    }
+  }
   resetDraft():void{this.draftCategory.set('');this.draftSort.set('featured');}
   applyFilters():void{this.navigate({categoryId:this.draftCategory()||null,categoria:null,sortBy:this.keyword().trim()?'featured':this.draftSort(),page:null});this.filtersOpen.set(false);}
   constructor() {
