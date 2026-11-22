@@ -12,6 +12,8 @@ import {
   signal,
   viewChild,
 } from '@angular/core';
+import { ApiError } from '../../../core/api/api-error';
+import { describeApiError } from '../../../core/api/api-error-message';
 import { GOOGLE_AUTH_AUTO_CONFIG } from '../../../core/config/google-auth-config.token';
 import { GoogleCredentialWindow, GoogleIdentityService } from '../../../core/services/google-identity.service';
 
@@ -41,6 +43,7 @@ export class GoogleSigninButtonComponent implements AfterViewInit {
   readonly failed = output<string>();
 
   protected readonly status = signal<'idle' | 'loading' | 'ready' | 'unconfigured' | 'unavailable'>('idle');
+  protected readonly errorMessage = signal('');
   protected readonly busy = signal(false);
   protected readonly isAndroidNative = this.googleIdentity.isAndroidNative;
 
@@ -149,6 +152,7 @@ export class GoogleSigninButtonComponent implements AfterViewInit {
 
   protected retrySetup(): void {
     if (this.busy()) return;
+    this.errorMessage.set('');
     void this.initializeWidget();
   }
 
@@ -165,13 +169,14 @@ export class GoogleSigninButtonComponent implements AfterViewInit {
       this.credential.emit({ idToken: result.idToken, nonce: result.nonce });
     } catch (error) {
       if (this.destroyed) return;
-      this.failed.emit(mapNativeGoogleError(error));
+      this.failed.emit(describeGoogleError(error, 'native'));
     } finally {
       if (!this.destroyed) this.busy.set(false);
     }
   }
 
   private async initializeWidget(): Promise<void> {
+    this.errorMessage.set('');
     this.status.set('loading');
     try {
       const config = await this.googleIdentity.loadConfig();
@@ -191,12 +196,16 @@ export class GoogleSigninButtonComponent implements AfterViewInit {
       const loaded = await this.googleIdentity.loadWebGisScript();
       if (this.destroyed) return;
       if (!loaded) {
+        this.errorMessage.set(describeGoogleError(null, 'gis'));
         this.status.set('unavailable');
         return;
       }
       await this.renderWebGisButton();
-    } catch {
-      if (!this.destroyed) this.status.set('unavailable');
+    } catch (error) {
+      if (!this.destroyed) {
+        this.errorMessage.set(describeGoogleError(error, 'config'));
+        this.status.set('unavailable');
+      }
     }
   }
 
@@ -205,7 +214,10 @@ export class GoogleSigninButtonComponent implements AfterViewInit {
     const hostEl = this.gisHost()?.nativeElement;
     const gisId = (window as unknown as GoogleCredentialWindow).google?.accounts?.id;
     if (!clientId || !hostEl || !gisId) {
-      if (!this.destroyed) this.status.set('unavailable');
+      if (!this.destroyed) {
+        this.errorMessage.set(describeGoogleError(null, 'gis'));
+        this.status.set('unavailable');
+      }
       return;
     }
 
@@ -213,6 +225,7 @@ export class GoogleSigninButtonComponent implements AfterViewInit {
       const challenge = await this.googleIdentity.createChallenge(this.purpose());
       if (this.destroyed) return;
       this.activeNonce = challenge.nonce;
+      this.errorMessage.set('');
       this.status.set('ready');
       this.paintGisButton(clientId, hostEl, gisId, challenge.nonce);
       queueMicrotask(() => {
@@ -222,9 +235,12 @@ export class GoogleSigninButtonComponent implements AfterViewInit {
           this.paintGisButton(this.configuredWebClientId, hostEl, gisId, this.activeNonce);
         }
       });
-    } catch {
+    } catch (error) {
       this.activeNonce = null;
-      if (!this.destroyed) this.status.set('unavailable');
+      if (!this.destroyed) {
+        this.errorMessage.set(describeGoogleError(error, 'challenge'));
+        this.status.set('unavailable');
+      }
     }
   }
 
@@ -292,17 +308,56 @@ function mapContextToGisText(context: 'signin' | 'signup' | 'use'): 'signin_with
   }
 }
 
-function mapNativeGoogleError(error: unknown): string {
-  if (error instanceof Error) {
-    if (error.message === 'GOOGLE_NOT_CONFIGURED') {
-      return 'Google Sign-In no está configurado en este entorno.';
+const SENSITIVE_ERROR_PATTERN = /\b(?:HTTP|Bearer|token|exception|stack)\b|eyJ/i;
+
+export function describeGoogleError(error: unknown, phase: 'config' | 'challenge' | 'gis' | 'native'): string {
+  if (error instanceof ApiError) {
+    if (error.kind === 'connection' || error.status === 0) {
+      return 'No se pudo conectar con el servidor. Verifica tu conexión y que el backend esté activo, e inténtalo de nuevo.';
     }
-    if (error.message === 'GOOGLE_EMPTY_CREDENTIAL') {
-      return 'Google no devolvió una credencial válida. Intenta de nuevo.';
+    if (error.status === 404) {
+      return 'El servidor activo no tiene disponible este servicio de Google (HTTP 404). Actualiza o reinicia el backend e inténtalo de nuevo.';
     }
-    if (error.message.trim().length > 0 && !error.message.startsWith('HTTP')) {
-      return error.message;
+    if (error.status === 401) {
+      return 'Tu sesión expiró o no es válida. Inicia sesión de nuevo para continuar con Google.';
     }
+    if (error.status === 403) {
+      return 'No tienes permiso para realizar esta verificación con Google en esta sesión.';
+    }
+    if (error.status === 409) {
+      return error.serverMessage ?? 'Existe un conflicto con la cuenta de Google seleccionada.';
+    }
+    if (error.status === 429) {
+      return describeApiError(error, 'form');
+    }
+    if (error.status >= 500) {
+      return 'El servidor no pudo preparar la verificación con Google en este momento. Inténtalo más tarde.';
+    }
+    if (error.kind === 'invalid-response') {
+      return 'El servidor devolvió una respuesta inesperada al preparar Google Sign-In. Inténtalo de nuevo.';
+    }
+    return describeApiError(error, 'form');
   }
-  return 'No se pudo completar la autenticación con Google. Inténtalo nuevamente.';
+
+  if (phase === 'native') {
+    if (error instanceof Error) {
+      if (error.message === 'GOOGLE_NOT_CONFIGURED') {
+        return 'Google Sign-In no está configurado en este entorno.';
+      }
+      if (error.message === 'GOOGLE_EMPTY_CREDENTIAL') {
+        return 'Google no devolvió una credencial válida. Inténtalo de nuevo.';
+      }
+      const trimmed = error.message.trim();
+      if (trimmed.length > 0 && trimmed.length <= 180 && !SENSITIVE_ERROR_PATTERN.test(trimmed)) {
+        return trimmed;
+      }
+    }
+    return 'No se pudo abrir el selector oficial de cuentas de Google (Credential Manager). Verifica los servicios de Google e inténtalo de nuevo.';
+  }
+
+  if (phase === 'gis') {
+    return 'No fue posible cargar el selector oficial de Google en este momento.';
+  }
+
+  return 'No fue posible preparar la verificación con Google en este momento. Inténtalo de nuevo.';
 }

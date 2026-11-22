@@ -7,10 +7,10 @@
     </p>
   } @else if (status() === 'unavailable') {
     <div class="google-signin-unavailable">
-      <p class="google-signin-note" role="status">
-        No fue posible cargar el selector oficial de Google en este momento.
+      <p class="google-signin-note" role="alert">
+        {{ errorMessage() || 'No fue posible cargar el selector oficial de Google en este momento.' }}
       </p>
-      <button type="button" class="google-retry-link" (click)="retrySetup()" [disabled]="disabled() || busy()">
+      <button type="button" class="google-retry-link" (click)="retrySetup()" [disabled]="busy()">
         Reintentar conexión con Google
       </button>
     </div>

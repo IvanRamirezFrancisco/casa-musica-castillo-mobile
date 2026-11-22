@@ -93,4 +93,75 @@ describe('Account security HTTP contracts (synthetic responses only)',()=>{
    receivedAt: 'invalid-date',
   });
  });
+
+ it('prepares, confirms and cancels two-step Google linking contracts', () => {
+  repo.prepareLinkGoogle({
+   idToken: 'header.payload.sig',
+   nonce: 'nonce-prepare-123456',
+   currentPassword: 'Synthetic@8kM',
+   mfaMethod: 'EMAIL',
+   mfaCode: ' 654321 ',
+    }).subscribe(pending => {
+     expect(pending).toEqual({
+      confirmationToken: 'conf-tok-12345678901234567890',
+      currentAccountEmail: 'local@example.com',
+      googleEmail: 'other@gmail.com',
+      googleEmailVerified: true,
+      googleName: 'Usuario Google',
+      googlePictureUrl: null,
+      sameEmail: false,
+      expiresInSeconds: 300,
+     });
+    });
+    const prepReq = http.expectOne({ method: 'POST', url: 'http://localhost:8080/api/auth/google/link/prepare' });
+    expect(prepReq.request.body).toEqual({
+     idToken: 'header.payload.sig',
+     nonce: 'nonce-prepare-123456',
+     currentPassword: 'Synthetic@8kM',
+     mfaMethod: 'EMAIL',
+     mfaCode: '654321',
+    });
+    prepReq.flush({
+     success: true,
+     data: {
+      confirmationToken: 'conf-tok-12345678901234567890',
+      currentAccountEmail: 'local@example.com',
+      googleEmail: 'other@gmail.com',
+      googleEmailVerified: true,
+      googleName: 'Usuario Google',
+      googlePictureUrl: null,
+      sameEmail: false,
+      expiresInSeconds: 300,
+     },
+    });
+
+  repo.confirmLinkGoogle(' conf-tok-1234567890 ').subscribe(caps => {
+   expect(caps.googleLinked).toBe(true);
+   expect(caps.canUnlinkGoogle).toBe(true);
+  });
+  const confReq = http.expectOne({ method: 'POST', url: 'http://localhost:8080/api/auth/google/link/confirm' });
+  expect(confReq.request.body).toEqual({
+   confirmationToken: 'conf-tok-1234567890',
+   confirmed: true,
+  });
+  confReq.flush({
+   success: true,
+   data: {
+    hasLocalPassword: true,
+    googleLinked: true,
+    mfaActive: false,
+    canLinkGoogle: false,
+    canUnlinkGoogle: true,
+    canSetInitialPassword: false,
+    canChangePassword: true,
+    requiresGoogleReauthForSensitiveActions: false,
+    passwordChangeRevokesSessions: true,
+   },
+  });
+
+  repo.cancelLinkGoogle(' conf-tok-1234567890 ').subscribe();
+  const cancelReq = http.expectOne({ method: 'POST', url: 'http://localhost:8080/api/auth/google/link/cancel' });
+  expect(cancelReq.request.body).toEqual({ confirmationToken: 'conf-tok-1234567890' });
+  cancelReq.flush({ success: true, message: 'Vinculación cancelada.' });
+ });
 });

@@ -7,6 +7,7 @@ import type {
   GoogleChallenge,
   GoogleLegalDocuments,
   LoginOutcome,
+  PendingGoogleLinkConfirmation,
   TwoFactorMethod,
   UsernameAvailability,
 } from '../models/auth.model';
@@ -136,6 +137,45 @@ export function parseGoogleChallenge(body: unknown): GoogleChallenge {
   return {
     nonce: data['nonce'].trim(),
     expiresInSeconds: typeof ttl === 'number' && Number.isFinite(ttl) && ttl > 0 ? ttl : 300,
+  };
+}
+
+export function parsePendingGoogleLinkConfirmation(body: unknown): PendingGoogleLinkConfirmation {
+  const data = unwrapApiResponse(body)['data'];
+  if (!object(data)) throw invalid();
+  const confirmationToken = data['confirmationToken'];
+  const currentAccountEmail = data['currentAccountEmail'];
+  const googleEmail = data['googleEmail'];
+  const googleEmailVerified = data['googleEmailVerified'];
+  if (
+    typeof confirmationToken !== 'string'
+    || confirmationToken.trim().length < 24
+    || typeof currentAccountEmail !== 'string'
+    || !currentAccountEmail.includes('@')
+    || typeof googleEmail !== 'string'
+    || !googleEmail.includes('@')
+    || typeof googleEmailVerified !== 'boolean'
+  ) {
+    throw invalid();
+  }
+  const ttl = data['expiresInSeconds'];
+  const googleNameRaw = data['googleName'];
+  if (googleNameRaw !== undefined && googleNameRaw !== null && typeof googleNameRaw !== 'string') throw invalid();
+  const pictureRaw = data['googlePictureUrl'];
+  if (pictureRaw !== undefined && pictureRaw !== null && typeof pictureRaw !== 'string') throw invalid();
+  const sameEmailRaw = data['sameEmail'];
+  if (sameEmailRaw !== undefined && sameEmailRaw !== null && typeof sameEmailRaw !== 'boolean') throw invalid();
+  return {
+    confirmationToken: confirmationToken.trim(),
+    expiresInSeconds: typeof ttl === 'number' && Number.isFinite(ttl) && ttl > 0 ? ttl : 300,
+    currentAccountEmail: currentAccountEmail.trim(),
+    googleEmail: googleEmail.trim(),
+    googleEmailVerified,
+    googleName: typeof googleNameRaw === 'string' ? googleNameRaw.trim() : '',
+    googlePictureUrl: typeof pictureRaw === 'string' && pictureRaw.startsWith('https://') ? pictureRaw : null,
+    sameEmail: typeof sameEmailRaw === 'boolean'
+      ? sameEmailRaw
+      : currentAccountEmail.trim().toLowerCase() === googleEmail.trim().toLowerCase(),
   };
 }
 

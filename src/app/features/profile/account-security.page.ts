@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, computed, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, computed, inject, signal, viewChild } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AbstractControl, FormGroup, FormsModule, NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
@@ -11,7 +11,7 @@ import {
   SecurityMethods,
   TotpEnrollment,
 } from '../../core/infrastructure/http-account-security.repository';
-import type { AccountSecurityCapabilities, TwoFactorMethod } from '../../core/models/auth.model';
+import type { AccountSecurityCapabilities, PendingGoogleLinkConfirmation, TwoFactorMethod } from '../../core/models/auth.model';
 import { CmcButtonComponent } from '../../shared/ui/button/cmc-button.component';
 import { CmcIconComponent } from '../../shared/ui/icon/cmc-icon.component';
 import { AuthService } from '../../core/services/auth.service';
@@ -29,6 +29,7 @@ import {
 } from '../../core/validation/auth-fields.validation';
 import { CmcInputComponent } from '../../shared/ui/input/cmc-input.component';
 import { ActionDialogComponent } from '../../shared/ui/action-dialog/action-dialog.component';
+import { GoogleLinkConfirmSheetComponent } from '../../shared/ui/google-link-confirm-sheet/google-link-confirm-sheet.component';
 import { GoogleSigninButtonComponent } from '../../shared/ui/google-signin-button/google-signin-button.component';
 import { DeletionRequestPage } from '../privacy/deletion-request.page';
 
@@ -49,6 +50,7 @@ import { DeletionRequestPage } from '../privacy/deletion-request.page';
     CmcIconComponent,
     CmcInputComponent,
     ActionDialogComponent,
+    GoogleLinkConfirmSheetComponent,
     GoogleSigninButtonComponent,
     DeletionRequestPage,
   ],
@@ -100,6 +102,10 @@ export class AccountSecurityPage {
   readonly sessions = signal<readonly AccountSession[] | null>(null);
 
   readonly linkingGoogle = signal(false);
+  readonly pendingGoogleLink = signal<PendingGoogleLinkConfirmation | null>(null);
+  readonly confirmingGoogleLink = signal(false);
+  readonly confirmLinkError = signal('');
+  readonly linkGoogleBtn = viewChild<GoogleSigninButtonComponent>('linkGoogleBtn');
   readonly unlinkingGoogle = signal(false);
   readonly initialPasswordOpen = signal(false);
   readonly initialPasswordStep = signal<'reauth' | 'form'>('reauth');
@@ -118,9 +124,9 @@ export class AccountSecurityPage {
     return list;
   });
 
+  private confirmLinkSub: { unsubscribe(): void } | null = null;
   private initialPasswordReauthToken = signal<string | null>(null);
   linkPassword = '';
-  linkConfirmed = false;
   unlinkPassword = '';
   unlinkConfirmed = false;
   modalMfaCode = '';
@@ -203,13 +209,15 @@ export class AccountSecurityPage {
     this.sessionsOpen.set(false);
     this.passwordFocused.set(false);
     this.linkingGoogle.set(false);
+    this.confirmLinkSub?.unsubscribe();
+    this.confirmLinkSub = null;
+    this.cancelPendingGoogleLinkSilently();
     this.unlinkingGoogle.set(false);
     this.initialPasswordOpen.set(false);
     this.initialPasswordStep.set('reauth');
     this.initialPasswordReauthToken.set(null);
     this.initialPasswordForm.reset();
     this.linkPassword = '';
-    this.linkConfirmed = false;
     this.unlinkPassword = '';
     this.unlinkConfirmed = false;
     this.modalMfaCode = '';
@@ -266,7 +274,7 @@ export class AccountSecurityPage {
   }
 
   validLinkPrecheck(): boolean {
-    return this.linkPassword.trim().length > 0 && this.linkPassword.length <= 255 && this.linkConfirmed && this.modalMfaCodeValid();
+    return this.linkPassword.trim().length > 0 && this.linkPassword.length <= 255 && this.modalMfaCodeValid();
   }
 
   validUnlinkForm(): boolean {
@@ -434,28 +442,88 @@ export class AccountSecurityPage {
   }
 
   openLinkGoogle(): void {
-    if (this.busy() || !this.accountCapabilities()?.canLinkGoogle) return;
+    if (this.busy() || this.confirmingGoogleLink() || !this.accountCapabilities()?.canLinkGoogle) return;
     this.clearSecrets();
     this.initModalMfa();
     this.linkingGoogle.set(true);
   }
 
-  confirmLinkGoogle(event: { idToken: string; nonce: string }): void {
-    if (this.busy() || !this.validLinkPrecheck()) return;
+  prepareLinkGoogle(event: { idToken: string; nonce: string }): void {
+    if (this.busy() || this.confirmingGoogleLink() || !this.validLinkPrecheck()) return;
     const caps = this.accountCapabilities();
     const password = this.linkPassword;
     const mfaCode = this.modalMfaCode.trim();
-    this.run(this.repo.linkGoogle({
-      idToken: event.idToken,
-      nonce: event.nonce,
-      currentPassword: password,
-      confirmed: true,
-      ...(caps?.mfaActive ? { mfaMethod: this.modalMfaMethod(), mfaCode } : {}),
-    }), (updatedCaps) => {
-      this.clearSecrets();
-      this.applyCapabilities(updatedCaps);
-      this.showTemporaryNotice('Cuenta de Google vinculada correctamente.', 'success', 'Google vinculado');
-    }, 'form');
+    this.run(
+      this.repo.prepareLinkGoogle({
+        idToken: event.idToken,
+        nonce: event.nonce,
+        currentPassword: password,
+        ...(caps?.mfaActive ? { mfaMethod: this.modalMfaMethod(), mfaCode } : {}),
+      }).pipe(tap({ error: () => { void this.linkGoogleBtn()?.refreshChallenge(); } })),
+      (confirmation) => {
+        this.clearSecrets();
+        this.pendingGoogleLink.set(confirmation);
+        this.confirmLinkError.set('');
+      },
+      'form',
+    );
+  }
+
+  confirmPendingGoogleLink(): void {
+    const pending = this.pendingGoogleLink();
+    if (!pending || this.busy() || this.confirmingGoogleLink()) return;
+    this.confirmingGoogleLink.set(true);
+    this.confirmLinkError.set('');
+    this.confirmLinkSub?.unsubscribe();
+    this.confirmLinkSub = this.repo.confirmLinkGoogle(pending.confirmationToken).subscribe({
+      next: (updatedCaps) => {
+        this.confirmLinkSub = null;
+        this.confirmingGoogleLink.set(false);
+        this.pendingGoogleLink.set(null);
+        this.confirmLinkError.set('');
+        this.applyCapabilities(updatedCaps);
+        this.showTemporaryNotice('Cuenta de Google vinculada correctamente.', 'success', 'Google vinculado');
+      },
+      error: (err: unknown) => {
+        this.confirmLinkSub = null;
+        this.confirmingGoogleLink.set(false);
+        const message = describeApiError(err, 'form');
+        const retryable = err instanceof ApiError
+          && (err.kind === 'connection' || err.status === 0 || err.status >= 500);
+        if (retryable) {
+          this.confirmLinkError.set(message);
+          return;
+        }
+        this.pendingGoogleLink.set(null);
+        this.confirmLinkError.set('');
+        this.error.set(message);
+        this.notifications.error('No pudimos completar la vinculación', message);
+      },
+    });
+  }
+
+  cancelPendingGoogleLink(notify = true): void {
+    if (this.confirmingGoogleLink()) return;
+    const pending = this.pendingGoogleLink();
+    this.confirmLinkSub?.unsubscribe();
+    this.confirmLinkSub = null;
+    this.pendingGoogleLink.set(null);
+    this.confirmLinkError.set('');
+    if (!pending) return;
+    this.repo.cancelLinkGoogle(pending.confirmationToken).subscribe({ error: () => undefined });
+    if (notify) {
+      this.showTemporaryNotice('No se vinculó ninguna cuenta de Google.', 'info', 'Vinculación cancelada');
+    }
+  }
+
+  private cancelPendingGoogleLinkSilently(): void {
+    const pending = this.pendingGoogleLink();
+    this.pendingGoogleLink.set(null);
+    this.confirmLinkError.set('');
+    this.confirmingGoogleLink.set(false);
+    if (pending) {
+      this.repo.cancelLinkGoogle(pending.confirmationToken).subscribe({ error: () => undefined });
+    }
   }
 
   openUnlinkGoogle(): void {

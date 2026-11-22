@@ -1,5 +1,11 @@
 import { ApiError } from './api-error';
-import { parseAuthUser, parseLoginResponse, parseTwoFactorVerifyResponse, unwrapApiResponse } from './auth.validation';
+import {
+  parseAuthUser,
+  parseLoginResponse,
+  parsePendingGoogleLinkConfirmation,
+  parseTwoFactorVerifyResponse,
+  unwrapApiResponse,
+} from './auth.validation';
 import { CHALLENGE, fakeJwt, loginSuccessBody, twoFactorBody, userDto } from './auth.testing';
 
 describe('auth.validation', () => {
@@ -71,5 +77,54 @@ describe('auth.validation', () => {
   it('unwrapApiResponse exige success verdadero', () => {
     expect(unwrapApiResponse({ success: true })).toEqual({ success: true });
     expect(() => unwrapApiResponse({ success: 'true' })).toThrow(ApiError);
+  });
+
+  it('parsePendingGoogleLinkConfirmation valida correos, token, verificación y campos opcionales', () => {
+    const parsed = parsePendingGoogleLinkConfirmation({
+      success: true,
+      data: {
+        confirmationToken: 'tok-confirm-12345678901234567890',
+        currentAccountEmail: 'local@ejemplo.com',
+        googleEmail: 'google@ejemplo.com',
+        googleEmailVerified: true,
+        googleName: ' Ana Pérez ',
+        googlePictureUrl: 'https://lh3.googleusercontent.com/avatar.png',
+        sameEmail: false,
+        expiresInSeconds: 300,
+      },
+    });
+    expect(parsed).toEqual({
+      confirmationToken: 'tok-confirm-12345678901234567890',
+      currentAccountEmail: 'local@ejemplo.com',
+      googleEmail: 'google@ejemplo.com',
+      googleEmailVerified: true,
+      googleName: 'Ana Pérez',
+      googlePictureUrl: 'https://lh3.googleusercontent.com/avatar.png',
+      sameEmail: false,
+      expiresInSeconds: 300,
+    });
+
+    const fallback = parsePendingGoogleLinkConfirmation({
+      success: true,
+      data: {
+        confirmationToken: 'tok-confirm-12345678901234567890',
+        currentAccountEmail: 'Mismo@ejemplo.com',
+        googleEmail: 'mismo@ejemplo.com',
+        googleEmailVerified: true,
+        googlePictureUrl: 'http://insecure.example/a.png',
+      },
+    });
+    expect(fallback.sameEmail).toBe(true);
+    expect(fallback.googlePictureUrl).toBeNull();
+    expect(fallback.expiresInSeconds).toBe(300);
+
+    for (const bad of [
+      { success: true, data: { confirmationToken: 'short', currentAccountEmail: 'a@b.com', googleEmail: 'c@d.com', googleEmailVerified: true } },
+      { success: true, data: { confirmationToken: 'tok-confirm-12345678901234567890', currentAccountEmail: 'bad-email', googleEmail: 'c@d.com', googleEmailVerified: true } },
+      { success: true, data: { confirmationToken: 'tok-confirm-12345678901234567890', currentAccountEmail: 'a@b.com', googleEmail: 'bad', googleEmailVerified: true } },
+      { success: true, data: { confirmationToken: 'tok-confirm-12345678901234567890', currentAccountEmail: 'a@b.com', googleEmail: 'c@d.com' } },
+    ]) {
+      expect(() => parsePendingGoogleLinkConfirmation(bad)).toThrow(ApiError);
+    }
   });
 });

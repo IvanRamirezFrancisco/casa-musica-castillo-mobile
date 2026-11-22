@@ -143,6 +143,11 @@ export class HttpAuthRepository implements AuthRepository {
   }
 
   createGoogleChallenge(purpose: 'AUTH' | 'LINK' | 'REAUTH' = 'AUTH') {
+    if (purpose === 'LINK' || purpose === 'REAUTH') {
+      return this.api
+        .post<unknown>('/api/auth/google/authenticated-challenge', { purpose }, { auth: true })
+        .pipe(map(parseGoogleChallenge));
+    }
     return this.api.post<unknown>('/api/auth/google/challenge', { purpose }).pipe(map(parseGoogleChallenge));
   }
 
