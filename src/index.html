@@ -3,6 +3,7 @@
 
 <head>
   <meta charset="utf-8" />
+  <meta name="referrer" content="no-referrer-when-downgrade" />
   <title>Casa de Música Castillo</title>
 
   <base href="/" />
@@ -11,9 +12,13 @@
   <meta name="viewport" content="viewport-fit=cover, width=device-width, initial-scale=1.0" />
   <meta name="format-detection" content="telephone=no" />
   <meta name="msapplication-tap-highlight" content="no" />
-  <style>html, body { background: #722f37; }</style>
+  <meta name="theme-color" content="#5B1B23" />
+  <style>html, body { margin: 0; height: 100%; background: #5b1b23; }</style>
 
-  <link rel="icon" type="image/png" href="assets/icon/favicon.png" />
+  <link rel="icon" type="image/png" sizes="64x64" href="assets/icon/favicon.png" />
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/icon/favicon-32x32.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/icon/apple-touch-icon.png" />
+  <link rel="manifest" href="manifest.webmanifest" />
 
   <!-- add to homescreen for ios -->
   <meta name="mobile-web-app-capable" content="yes" />
@@ -21,7 +26,15 @@
 </head>
 
 <body>
-  <app-root></app-root>
+  <app-root>
+    <div style="position:fixed;inset:0;display:grid;place-items:center;background:#5b1b23;">
+      <div style="text-align:center;">
+        <img src="assets/brand/logo-mark-256.png" width="124" height="124" alt="" style="display:block;margin:0 auto 20px;border-radius:28px;" />
+        <p style="margin:0;color:#ffffff;font:700 1.75rem/1.2 Montserrat,system-ui,sans-serif;letter-spacing:1px;">Casa de Música</p>
+        <p style="margin:4px 0 0;color:#e1b04d;font:500 1.25rem/1.2 Montserrat,system-ui,sans-serif;letter-spacing:2px;text-transform:uppercase;">CASTILLO</p>
+      </div>
+    </div>
+  </app-root>
 </body>
 
 </html>

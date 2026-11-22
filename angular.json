@@ -31,7 +31,8 @@
                 "glob": "**/*",
                 "input": "src/assets",
                 "output": "assets"
-              }
+              },
+              "src/manifest.webmanifest"
             ],
             "styles": [
               "src/global.scss",
@@ -87,7 +88,20 @@
               "optimization": false,
               "extractLicenses": false,
               "sourceMap": true,
-              "namedChunks": true
+              "namedChunks": true,
+              "fileReplacements": [
+                {
+                  "replace": "src/app/app-page-loaders.ts",
+                  "with": "src/app/app-page-loaders.connected.ts"
+                },
+                {
+                  "replace": "src/app/layout/main-navigation/cart-count.ts",
+                  "with": "src/app/layout/main-navigation/cart-count.connected.ts"
+                }
+              ]
+            },
+            "test-default-routes": {
+              "fileReplacements": []
             },
             "ci": {
               "progress": false
@@ -137,6 +151,11 @@
         },
         "serve": {
           "builder": "@angular/build:dev-server",
+          "options": {
+            "headers": {
+              "Cross-Origin-Opener-Policy": "same-origin-allow-popups"
+            }
+          },
           "configurations": {
             "production": {
               "buildTarget": "app:build:production"
@@ -160,7 +179,7 @@
           "builder": "@angular/build:unit-test",
           "options": {
             "tsConfig": "tsconfig.spec.json",
-            "buildTarget": "::development",
+            "buildTarget": "::development,test-default-routes",
             "setupFiles": [
               "src/test-setup.ts"
             ]

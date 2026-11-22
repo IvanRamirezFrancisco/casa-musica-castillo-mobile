@@ -5,6 +5,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { ActionDialogComponent } from '../../shared/ui/action-dialog/action-dialog.component';
 import { AccountSecurityPage } from './account-security.page';
 import { HttpAccountSecurityRepository } from '../../core/infrastructure/http-account-security.repository';
+import { ApiError } from '../../core/api/api-error';
 import { AuthService } from '../../core/services/auth.service';
 describe('Security enrollment lifecycle with synthetic data',()=>{
  const ended=new Subject<void>();
@@ -15,6 +16,38 @@ describe('Security enrollment lifecycle with synthetic data',()=>{
    disableBackupCodes:vi.fn(),availableBackupCodes:vi.fn(() => of(0)),passwordChangeRevokesSessions:vi.fn(() => of(false)),changePassword:vi.fn()};
  beforeEach(()=>{TestBed.overrideComponent(ActionDialogComponent,{set:{template:`<button (click)="canDismiss().then(result => result && closed.emit())">Cerrar</button><ng-container [ngTemplateOutlet]="content()" />`}});vi.resetAllMocks();repo.methods.mockReturnValue(of(methods));repo.setup.mockReturnValue(of(enrollment));repo.confirm.mockReturnValue(of(undefined));repo.email.mockReturnValue(of(undefined));repo.disableTotp.mockReturnValue(of(undefined));repo.generate.mockReturnValue(of(['0000-0000']));repo.disableBackupCodes.mockReturnValue(of(undefined));TestBed.configureTestingModule({providers:[provideRouter([]),{provide:HttpAccountSecurityRepository,useValue:repo},{provide:AuthService,useValue:{sessionEnded$:ended,clearAfterPasswordChange}}]});});
  it('loads the protected security route',async()=>{const {routes}=await import('../../app.routes');const route=routes.find(r=>r.path==='profile/security');expect(route?.canActivate?.length).toBe(1);expect(await route?.loadComponent?.()).toBe(AccountSecurityPage);});
+ it('mantiene la cabecera en el único contenido desplazable, antes del resumen y los controles',()=>{
+  const f=TestBed.createComponent(AccountSecurityPage);f.detectChanges();
+  const root:HTMLElement=f.nativeElement;
+  expect(root.querySelectorAll('ion-content')).toHaveLength(1);
+  expect(root.querySelector('ion-header')).toBeNull();
+  expect(root.querySelector('ion-content')?.firstElementChild?.classList.contains('security-scroll-header')).toBe(true);
+  expect(root.querySelector('.security-scroll-header ion-back-button')?.getAttribute('defaultHref')).toBe('/main/profile');
+  expect(root.querySelectorAll('h1')).toHaveLength(1);f.destroy();
+ });
+ it('counts controls without treating recovery as a second factor and explains unavailable password changes',()=>{
+  const f=TestBed.createComponent(AccountSecurityPage), p=f.componentInstance;
+  for(const count of [1,2,3]) {
+   p.methods.set({EMAIL:true,GOOGLE_AUTHENTICATOR:count>1,BACKUP_CODES:count>2});f.detectChanges();
+   expect(f.nativeElement.querySelector('.security-ring-score').textContent).toContain(`${count}/3`);
+  }
+  p.methods.set({EMAIL:false,GOOGLE_AUTHENTICATOR:false,BACKUP_CODES:true});f.detectChanges();
+  expect(f.nativeElement.querySelector('.security-level').textContent).not.toContain('Segundo factor activo');
+  expect(f.nativeElement.textContent).toContain('no representa un porcentaje de protección');
+  const section=f.nativeElement.querySelector('[aria-labelledby="security-password"]');
+  expect(section.textContent).toContain('Esta función no está disponible en esta versión del servidor.');
+  expect(section.querySelector('button').disabled).toBe(true);
+  expect(repo.changePassword).not.toHaveBeenCalled();f.destroy();
+ });
+ it('renders a failed query as an error without fabricating inactive methods or exposing secrets',()=>{
+  repo.methods.mockReturnValue(throwError(()=>new Error('offline')));
+  const f=TestBed.createComponent(AccountSecurityPage);f.detectChanges();
+  expect(f.nativeElement.querySelector('[role="alert"]')).toBeTruthy();
+  expect(f.nativeElement.querySelector('.security-checks')).toBeNull();
+  expect(f.nativeElement.querySelector('#security-totp')).toBeNull();
+  expect(f.nativeElement.textContent).not.toContain(enrollment.manualEntryKey);
+  expect(repo.setup).not.toHaveBeenCalled();expect(repo.generate).not.toHaveBeenCalled();f.destroy();
+ });
  it('operates security controls through the rendered UI with step-up confirmation',async()=>{const f=TestBed.createComponent(AccountSecurityPage);const p=f.componentInstance;
  const click=(label:string)=>{f.detectChanges();const b=Array.from(f.nativeElement.querySelectorAll('button')) as HTMLButtonElement[];const found=b.find(x=>x.textContent?.trim()===label);expect(found).toBeTruthy();found?.click();f.detectChanges();};
  f.detectChanges();click('Activar correo');click('Confirmar activación');p.methods.set({...methods,EMAIL:true});click('Desactivar correo');p.stepUpPassword='Synthetic@8kM';click('Confirmar desactivación');click('Desactivar autenticador');click('Cerrar');await Promise.resolve();click('Desactivar autenticador');p.stepUpPassword='Synthetic@8kM';click('Confirmar desactivación');click('Generar o regenerar');click('Cerrar');await Promise.resolve();click('Generar o regenerar');p.stepUpPassword='Synthetic@8kM';click('Confirmar generación');click('Cerrar');await Promise.resolve();p.methods.set({...methods,GOOGLE_AUTHENTICATOR:false});click('Configurar autenticador');click('Copiar clave');const input=f.nativeElement.querySelector('input#totp-confirm') as HTMLInputElement;input.value='123456';input.dispatchEvent(new Event('input'));p.code='123456';click('Confirmar activación');p.methods.set({...methods,GOOGLE_AUTHENTICATOR:false});click('Configurar autenticador');p.clearSecrets();p.error.set('Error');click('Reintentar consulta');f.destroy();});
@@ -27,7 +60,7 @@ describe('Security enrollment lifecycle with synthetic data',()=>{
    fixture.detectChanges();
    expect(summary().textContent).toContain('Configuración básica');
    expect(summary().querySelectorAll('.security-checks li')).toHaveLength(3);
-   expect(summary().textContent).toContain('Configura Google Authenticator');
+   expect(summary().textContent).toContain('Configura una aplicación autenticadora');
    expect(summary().querySelectorAll('.security-checks .is-active')).toHaveLength(0);
 
    page.methods.set(methods);
@@ -69,7 +102,38 @@ describe('Security enrollment lifecycle with synthetic data',()=>{
  it('cancels pending secret responses on logout and view leave',()=>{const pending=new Subject<typeof enrollment>();repo.setup.mockReturnValue(pending);const f=TestBed.createComponent(AccountSecurityPage);const p=f.componentInstance;p.setup();expect(p.busy()).toBe(true);p.setup();ended.next();pending.next(enrollment);expect(p.enrollment()).toBeNull();expect(p.methods()).toBeNull();p.ionViewDidLeave();f.destroy();});
  it('generates, replaces and hides backup codes with step-up password; clears on destruction',()=>{const f=TestBed.createComponent(AccountSecurityPage);const p=f.componentInstance;p.generate();expect(repo.generate).not.toHaveBeenCalled();p.stepUpPassword='Synthetic@8kM';p.generate();expect(repo.generate).toHaveBeenCalledWith('Synthetic@8kM');expect(p.stepUpPassword).toBe('');expect(p.codes()).toHaveLength(1);repo.generate.mockReturnValue(of(['0000-0001']));p.stepUpPassword='Synthetic@8kM';p.generate();expect(p.codes()).toEqual(['0000-0001']);p.ionViewDidLeave();expect(p.codes()).toEqual([]);p.stepUpPassword='Synthetic@8kM';p.generate();f.destroy();expect(p.codes()).toEqual([]);});
  it('requires step-up password for disabling email, TOTP, and backup codes',()=>{const f=TestBed.createComponent(AccountSecurityPage);const p=f.componentInstance;p.changeEmail(true);expect(repo.email).toHaveBeenCalledWith(true);p.changeEmail(false);expect(p.disablingEmail()).toBe(true);p.confirmDisableEmail();expect(repo.email).toHaveBeenCalledTimes(1);p.stepUpPassword='   ';p.confirmDisableEmail();expect(repo.email).toHaveBeenCalledTimes(1);p.stepUpPassword='Synthetic@8kM';p.confirmDisableEmail();expect(repo.email).toHaveBeenCalledWith(false,'Synthetic@8kM');expect(p.disablingEmail()).toBe(false);expect(p.stepUpPassword).toBe('');p.requestDisable();expect(p.disabling()).toBe(true);p.disable();expect(repo.disableTotp).not.toHaveBeenCalled();p.stepUpPassword='Synthetic@8kM';p.disable();expect(repo.disableTotp).toHaveBeenCalledWith('Synthetic@8kM');expect(p.disabling()).toBe(false);p.disablingBackup.set(true);p.disableBackup();expect(repo.disableBackupCodes).not.toHaveBeenCalled();p.stepUpPassword='Synthetic@8kM';p.disableBackup();expect(repo.disableBackupCodes).toHaveBeenCalledWith('Synthetic@8kM');expect(p.disablingBackup()).toBe(false);f.destroy();});
- it('never duplicates an active request',()=>{repo.methods.mockReturnValue(new Subject());const f=TestBed.createComponent(AccountSecurityPage);f.componentInstance.reload();expect(repo.methods).toHaveBeenCalledTimes(2);expect(f.componentInstance.busy()).toBe(true);f.destroy();});
+ it('distingue consulta pendiente, error, contrato no soportado y capacidad confirmada',()=>{
+  const pending=new Subject<boolean>();repo.passwordChangeRevokesSessions.mockReturnValue(pending);
+  const f=TestBed.createComponent(AccountSecurityPage);const p=f.componentInstance;f.detectChanges();
+  expect(p.passwordCapability()).toBe('loading');expect(p.passwordChangeAvailable()).toBe(false);
+  pending.error(new Error('synthetic unavailable'));f.detectChanges();
+  expect(p.passwordCapability()).toBe('error');expect(p.passwordChangeAvailable()).toBe(false);
+  expect(f.nativeElement.textContent).toContain('Reintentar');
+  repo.passwordChangeRevokesSessions.mockReturnValue(of(false));p.reload();
+  expect(p.passwordCapability()).toBe('unsupported');expect(p.passwordChangeAvailable()).toBe(false);
+  repo.passwordChangeRevokesSessions.mockReturnValue(of(true));p.reload();
+  expect(p.passwordCapability()).toBe('available');expect(p.passwordChangeAvailable()).toBe(true);f.destroy();
+ });
+ it('una sesión vencida no se presenta como falta de soporte y cancela respuestas antiguas',()=>{
+  repo.passwordChangeRevokesSessions.mockReturnValue(throwError(()=>new ApiError('http',401)));
+  const f=TestBed.createComponent(AccountSecurityPage);const p=f.componentInstance;
+  expect(p.passwordCapability()).toBe('session-expired');expect(p.passwordChangeAvailable()).toBe(false);
+  ended.next();expect(p.passwordCapability()).toBe('session-expired');f.destroy();
+ });
+ it('distingue un contrato incompatible de un fallo temporal y nunca habilita la operación sin garantía',()=>{
+  repo.passwordChangeRevokesSessions.mockReturnValue(throwError(()=>new ApiError('invalid-response',200)));
+  const f=TestBed.createComponent(AccountSecurityPage);const p=f.componentInstance;f.detectChanges();
+  expect(p.passwordCapability()).toBe('incompatible');expect(p.passwordChangeAvailable()).toBe(false);
+  const card=f.nativeElement.querySelector('[aria-labelledby="security-password"]');
+  expect(card.textContent).toContain('Contrato incompatible');
+  expect(card.textContent).not.toContain('No pudimos consultar esta función.');
+  const buttons=Array.from(card.querySelectorAll('button')) as HTMLButtonElement[];
+  expect(buttons.find(button=>button.textContent?.trim()==='Cambiar contraseña')?.disabled).toBe(true);
+  repo.passwordChangeRevokesSessions.mockReturnValue(of(true));
+  buttons.find(button=>button.textContent?.trim()==='Reintentar')?.click();f.detectChanges();
+  expect(p.passwordCapability()).toBe('available');expect(p.passwordChangeAvailable()).toBe(true);f.destroy();
+ });
+ it('never duplicates an active request'  ,()=>{repo.methods.mockReturnValue(new Subject());const f=TestBed.createComponent(AccountSecurityPage);f.componentInstance.reload();expect(repo.methods).toHaveBeenCalledTimes(1);expect(f.componentInstance.busy()).toBe(true);f.destroy();});
  it('only submits a valid password change against the revoking contract and clears all fields', () => {
    const fixture = TestBed.createComponent(AccountSecurityPage);
    const page = fixture.componentInstance;

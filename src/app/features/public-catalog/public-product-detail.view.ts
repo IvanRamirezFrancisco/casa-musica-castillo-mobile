@@ -2,7 +2,8 @@ import { ChangeDetectionStrategy, Component, DestroyRef, ElementRef, computed, i
 import { Router, RouterLink, ActivatedRoute } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { EMPTY, Subject, finalize, switchMap, takeUntil } from 'rxjs';
-import { IonBackButton,IonButtons,IonContent,IonHeader,IonTitle,IonToolbar } from '@ionic/angular';
+import { IonBackButton,IonButtons,IonContent,IonFooter,IonHeader,IonTitle,IonToolbar } from '@ionic/angular';
+import { describeApiError } from '../../core/api/api-error-message';
 import { ProductFavoritesService } from '../../core/services/product-favorites.service';
 import { BACKEND_SESSION_ENABLED } from '../../core/config/backend-session.token';
 import { PUBLIC_DEMO } from '../../core/config/public-demo.token';
@@ -23,7 +24,7 @@ import { animateCartTransfer } from './cart-transfer';
 import { ProductDescriptionComponent } from './product-description.component';
 import { ProductReviewsComponent } from './product-reviews.component';
 @Component({selector:'app-public-product-detail',standalone:true,providers:[PublicCatalogService],host:{class:'ion-page'},changeDetection:ChangeDetectionStrategy.OnPush,
- imports:[RouterLink,CmcMoneyPipe,CmcIconComponent,CmcQuantityComponent,IonBackButton,IonButtons,IonContent,IonHeader,IonTitle,IonToolbar,PublicImageComponent,CmcButtonComponent,CmcLoadingComponent,CmcErrorStateComponent,CmcEmptyStateComponent,ProductReviewsComponent,ProductDescriptionComponent,ProductPhotoViewerComponent],
+ imports:[RouterLink,CmcMoneyPipe,CmcIconComponent,CmcQuantityComponent,IonBackButton,IonButtons,IonContent,IonFooter,IonHeader,IonTitle,IonToolbar,PublicImageComponent,CmcButtonComponent,CmcLoadingComponent,CmcErrorStateComponent,CmcEmptyStateComponent,ProductReviewsComponent,ProductDescriptionComponent,ProductPhotoViewerComponent],
  templateUrl:'./public-product-detail.view.html',styleUrl:'./public-product-detail.view.scss'})
 export class PublicProductDetailComponent {
  readonly publicDemo = inject(PUBLIC_DEMO);
@@ -103,6 +104,6 @@ export class PublicProductDetailComponent {
    const origin=this.purchaseTarget()?.nativeElement;
    const destination=this.cartTarget()?.nativeElement;
    if(origin && destination) this.stopTransfer=animateCartTransfer(origin,destination,()=>this.cartPulse.set(true));
-   this.cartFeedbackTimer=setTimeout(()=>this.clearCartFeedback(),3000);},error:()=>this.actionNotice.set('No pudimos agregar el producto. Revisa tu conexión y vuelve a intentarlo.')});
+   this.cartFeedbackTimer=setTimeout(()=>this.clearCartFeedback(),3000);},error:(error:unknown)=>this.actionNotice.set(describeApiError(error, 'form'))});
  }
 }

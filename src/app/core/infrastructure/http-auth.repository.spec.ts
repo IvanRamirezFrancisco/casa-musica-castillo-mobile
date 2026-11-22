@@ -124,4 +124,30 @@ describe('HttpAuthRepository', () => {
     req.flush(userDto()); expect(next.mock.calls[0][0].id).toBe(7);
   });
 
+  it('createGoogleChallenge usa /challenge para AUTH y /authenticated-challenge para LINK/REAUTH', () => {
+    const authRes = vi.fn();
+    repo.createGoogleChallenge('AUTH').subscribe(authRes);
+    const reqAuth = http.expectOne(`${base}/api/auth/google/challenge`);
+    expect(reqAuth.request.method).toBe('POST');
+    expect(reqAuth.request.body).toEqual({ purpose: 'AUTH' });
+    reqAuth.flush({ success: true, data: { nonce: 'nonce-auth-1234567890', purpose: 'AUTH', expiresInSeconds: 300 } });
+    expect(authRes).toHaveBeenCalledWith({ nonce: 'nonce-auth-1234567890', expiresInSeconds: 300 });
+
+    const linkRes = vi.fn();
+    repo.createGoogleChallenge('LINK').subscribe(linkRes);
+    const reqLink = http.expectOne(`${base}/api/auth/google/authenticated-challenge`);
+    expect(reqLink.request.method).toBe('POST');
+    expect(reqLink.request.body).toEqual({ purpose: 'LINK' });
+    reqLink.flush({ success: true, data: { nonce: 'nonce-link-1234567890', purpose: 'LINK', expiresInSeconds: 300 } });
+    expect(linkRes).toHaveBeenCalledWith({ nonce: 'nonce-link-1234567890', expiresInSeconds: 300 });
+
+    const reauthRes = vi.fn();
+    repo.createGoogleChallenge('REAUTH').subscribe(reauthRes);
+    const reqReauth = http.expectOne(`${base}/api/auth/google/authenticated-challenge`);
+    expect(reqReauth.request.method).toBe('POST');
+    expect(reqReauth.request.body).toEqual({ purpose: 'REAUTH' });
+    reqReauth.flush({ success: true, data: { nonce: 'nonce-reauth-12345678', purpose: 'REAUTH', expiresInSeconds: 300 } });
+    expect(reauthRes).toHaveBeenCalledWith({ nonce: 'nonce-reauth-12345678', expiresInSeconds: 300 });
+  });
+
 });

@@ -1,15 +1,20 @@
-<ion-content class="cmc-page cmc-standalone-page auth-page" [class.mfa-page]="step() === 'second-factor'">
+<ion-content class="cmc-page cmc-standalone-page auth-page cmc-connected-auth" [class.mfa-page]="step() === 'second-factor'">
   <div class="auth-hero">
     <div class="auth-top-bar">
-      <a class="auth-back-pill" routerLink="/main/home">
-        <ion-icon name="arrow-back-outline" aria-hidden="true"></ion-icon>
-        Volver a Inicio
-      </a>
+      @if (step() === 'second-factor') {
+        <button type="button" class="auth-back-pill" aria-label="Cancelar verificación y volver" (click)="cancelSecondFactor()">
+          <ion-icon name="arrow-back-outline" aria-hidden="true"></ion-icon>
+        </button>
+      } @else {
+        <a class="auth-back-pill" routerLink="/main/home" aria-label="Volver a Inicio">
+          <ion-icon name="arrow-back-outline" aria-hidden="true"></ion-icon>
+        </a>
+      }
     </div>
     <div class="brand-info">
-      <ion-icon name="musical-notes-outline" class="auth-brand-icon" aria-hidden="true"></ion-icon>
+      <img appBrandLogo="md" class="auth-brand-logo" alt="" width="56" height="56">
       <h1 class="auth-brand-title">Casa de Música Castillo</h1>
-      <p class="auth-brand-subtitle">Tu música comienza aquí.</p>
+      <p class="auth-brand-subtitle">{{ step() === 'second-factor' ? factorSubtitle() : 'Tu música comienza aquí.' }}</p>
     </div>
   </div>
 
@@ -22,12 +27,16 @@
         <p class="auth-alert auth-alert--success" role="status">Tu sesión está activa.</p>
         <a class="cmc-link" [routerLink]="destination" [replaceUrl]="true">Continuar</a>
       } @else if (step() === 'credentials') {
+        <nav class="auth-tabs" aria-label="Acceso a la cuenta">
+          <a routerLink="/login" [queryParams]="authReturnParams()" aria-current="page">Iniciar sesión</a>
+          <a routerLink="/register" [queryParams]="authReturnParams()">Crear cuenta</a>
+        </nav>
         <div class="auth-card-header">
           <h2 class="cmc-title">Bienvenido de nuevo</h2>
           @if (connectedQa) {
             <p class="cmc-body cmc-text-secondary" role="status">El acceso a cuentas no está disponible en esta instalación.</p>
           } @else {
-            <p class="cmc-body cmc-text-secondary">Inicia sesión para continuar.</p>
+            <p class="cmc-body cmc-text-secondary">Inicia sesión para guardar favoritos y continuar tu compra.</p>
           }
         </div>
 
@@ -37,14 +46,52 @@
         @if (passwordChanged()) {
           <p class="auth-alert auth-alert--success" role="status">Contraseña actualizada. Inicia sesión con la nueva contraseña.</p>
         }
+        @if (passwordConfigured()) {
+          <p class="auth-alert auth-alert--success" role="status">Contraseña configurada. Ya puedes iniciar sesión con tu correo y contraseña o con Google.</p>
+        }
+        @if (infoMessage()) {
+          <p class="auth-alert auth-alert--info" role="status">{{ infoMessage() }}</p>
+        }
         @if (errorMessage()) {
           <p class="auth-alert auth-alert--error" role="alert">{{ errorMessage() }}</p>
           @if(verificationSuggested()){<p class="auth-alert auth-alert--info">Si tu cuenta está pendiente de activación, puedes <a routerLink="/verify-email">verificar tu correo</a>.</p>}
         }
 
+        <app-google-signin-button
+          context="use"
+          label="Continuar con Google"
+          [disabled]="connectedQa || submitting()"
+          (credential)="onGoogleCredential($event)"
+          (cancelled)="onGoogleCancelled()"
+          (failed)="onGoogleError($event)"
+        />
+
+        <div class="auth-divider-or" aria-hidden="true"><span>o con tu correo</span></div>
+
+        @if (googleLinkRequired()) {
+          <section class="google-link-guidance" role="status" aria-live="polite">
+            <div class="google-link-guidance__header">
+              <div class="google-link-guidance__heading">
+                <span class="google-link-guidance__icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" focusable="false">
+                    <path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
+                    <line x1="12" y1="9" x2="12" y2="13" />
+                    <line x1="12" y1="17" x2="12.01" y2="17" />
+                  </svg>
+                </span>
+                <p class="google-link-guidance__title">No pudimos continuar con Google</p>
+              </div>
+              <button type="button" class="google-link-guidance__dismiss" aria-label="Omitir vinculación guiada de Google" (click)="dismissGoogleLinkGuidance()">×</button>
+            </div>
+            <p class="google-link-guidance__body">
+              Este correo ya tiene una cuenta con contraseña. Inicia sesión con tu correo y luego vincula Google desde Seguridad de la cuenta.
+            </p>
+          </section>
+        }
+
         <form [formGroup]="form" (ngSubmit)="submit()" class="auth-form" novalidate>
           <cmc-input
-            formControlName="email"
+            formControlName="email" leadingIcon="mail"
             autocomplete="email"
             label="Correo electrónico"
             type="email"
@@ -53,7 +100,7 @@
            required></cmc-input>
 
           <cmc-input
-            formControlName="password"
+            formControlName="password" leadingIcon="lock"
             autocomplete="current-password"
             label="Contraseña"
             type="password"
@@ -65,7 +112,7 @@
             <a routerLink="/forgot-password" class="cmc-link">¿Olvidaste tu contraseña?</a>
           </div>
 
-          <cmc-button type="submit" fullWidth [disabled]="connectedQa" [loading]="submitting()" loadingLabel="Iniciando sesión">
+          <cmc-button type="submit" variant="primary" fullWidth [disabled]="connectedQa" [loading]="submitting()" loadingLabel="Iniciando sesión">
             Iniciar sesión
           </cmc-button>
         </form>
@@ -74,69 +121,92 @@
 
         <div class="auth-footer">
           <p class="cmc-body cmc-text-secondary">
-            ¿No tienes cuenta? <a routerLink="/register" class="cmc-link cmc-font-bold">Crear cuenta</a>
+            ¿No tienes cuenta? <a routerLink="/register" [queryParams]="authReturnParams()" class="cmc-link cmc-font-bold">Crear cuenta</a>
           </p>
           <details class="auth-help"><summary>Activar una cuenta registrada</summary><p>Si ya te registraste, puedes retomar la activación de tu cuenta. <a routerLink="/verify-email" class="cmc-link">Verificar correo</a></p></details>
         </div>
       } @else {
         <div class="auth-card-header factor-header">
-          <span class="security-mark"><cmc-icon name="security"/></span>
+          <span class="security-mark" aria-hidden="true"><cmc-icon name="security"/></span>
           <p class="factor-eyebrow">Protección de la cuenta</p>
           <h2 #factorTitle tabindex="-1" class="cmc-title" id="second-factor-title">Verificación en dos pasos</h2>
-          <p class="cmc-body cmc-text-secondary">Tu cuenta tiene un segundo factor activo. Todavía no has iniciado sesión.</p>
+          <p class="cmc-body cmc-text-secondary">{{ (challenge()?.methods?.length ?? 0) > 1 ? 'Elige cómo quieres confirmar tu identidad.' : 'Confirma tu identidad para continuar.' }} Todavía no has iniciado sesión.</p>
         </div>
-
-        @if (infoMessage()) {
-          <p class="auth-alert auth-alert--info" role="status">{{ infoMessage() }}</p>
-        }
-        @if (errorMessage()) {
-          <p class="auth-alert auth-alert--error" role="alert">{{ errorMessage() }}</p>
-        }
 
         @if (challenge(); as pending) {
           @if (pending.methods.length > 1) {
-            <fieldset class="method-group">
-              <legend class="cmc-body cmc-font-bold">Método de verificación</legend>
+            <fieldset class="method-group" [disabled]="submitting()">
+              <legend class="visually-hidden">Método de verificación</legend>
               @for (option of pending.methods; track option) {
                 <label class="method-option">
-                  <input type="radio" name="method" [value]="option" [checked]="method() === option" [disabled]="submitting()" (change)="selectMethod(option)" />
-                  <span>{{ methodLabels[option] }}</span>
+                  <input type="radio" name="method" [value]="option" [checked]="method() === option" [attr.aria-label]="methodLabels[option]" (change)="selectMethod(option)" />
+                  <span>
+                    @switch (option) {
+                      @case ('EMAIL') { <cmc-icon name="mail"/> }
+                      @case ('GOOGLE_AUTHENTICATOR') { <ion-icon name="phone-portrait-outline" aria-hidden="true"/> }
+                      @case ('BACKUP_CODE') { <ion-icon name="key-outline" aria-hidden="true"/> }
+                    }
+                    {{ methodNames[option] }}
+                  </span>
                 </label>
               }
             </fieldset>
+          } @else if (pending.methods.length === 1) {
+            <p class="factor-method">
+              @switch (method()) {
+                @case ('EMAIL') { <cmc-icon name="mail"/> }
+                @case ('GOOGLE_AUTHENTICATOR') { <ion-icon name="phone-portrait-outline" aria-hidden="true"/> }
+                @case ('BACKUP_CODE') { <ion-icon name="key-outline" aria-hidden="true"/> }
+              }
+              {{ methodLabels[method()] }}
+            </p>
+          }
+
+          @if (pending.methods.includes(method())) {
+            <form [formGroup]="codeForm" (ngSubmit)="verify()" class="auth-form factor-form" novalidate>
+              @if (infoMessage()) {
+                <p class="auth-alert auth-alert--info" role="status">{{ infoMessage() }}</p>
+              }
+              @if (errorMessage()) {
+                <p id="mfa-error" class="auth-alert auth-alert--error" role="alert">{{ errorMessage() }}</p>
+              }
+              @if (method() === 'EMAIL' && !emailCodeSent()) {
+                <p class="factor-callout"><cmc-icon name="mail"/><span>Enviaremos un código de 6 dígitos a {{ maskedEmail() }}.</span></p>
+                <cmc-button fullWidth [disabled]="resendSeconds() > 0" [loading]="submitting()" loadingLabel="Enviando código" (click)="sendEmailCode()">
+                  <cmc-icon name="mail"/> Enviar código por correo
+                </cmc-button>
+                @if (emailDeliveryUncertain()) {
+                  <cmc-button variant="secondary" fullWidth [disabled]="submitting()" (click)="useReceivedEmailCode()">Ya recibí un código</cmc-button>
+                }
+              } @else {
+                @if (method() === 'BACKUP_CODE') {
+                  <cmc-otp-input fieldId="login-backup-code" appearance="mfa" format="backup" label="Código de respaldo" [value]="codeForm.controls.code.value"
+                    [busy]="submitting()" [invalid]="!!errorMessage() || !!codeError()" [describedBy]="errorMessage() ? 'mfa-error mfa-backup-help' : codeError() ? 'mfa-validation mfa-backup-help' : 'mfa-backup-help'"
+                    (digitsChange)="codeForm.controls.code.setValue($event)" />
+                  @if (codeError()) { <p id="mfa-validation" class="factor-validation" role="alert">{{ codeError() }}</p> }
+                  <p class="factor-callout" id="mfa-backup-help"><ion-icon name="key-outline" aria-hidden="true"/><span>Escribe o pega tu código completo. Los códigos de respaldo se usan una sola vez.</span></p>
+                  <details class="factor-backup-help"><summary>¿Dónde encuentro mis códigos?</summary><p>Los generaste y guardaste al configurar la seguridad de tu cuenta. Utiliza uno que aún no hayas usado.</p></details>
+                  <cmc-button type="submit" variant="primary" fullWidth [disabled]="codeForm.invalid" [loading]="submitting()" loadingLabel="Verificando código">Verificar y entrar</cmc-button>
+                } @else {
+                  <cmc-otp-input fieldId="login-mfa-code" appearance="mfa" [value]="codeForm.controls.code.value" [busy]="submitting()" [invalid]="!!errorMessage()"
+                    [describedBy]="errorMessage() ? 'mfa-error mfa-code-help' : 'mfa-code-help'" (digitsChange)="updateDigits($event)" />
+                  @if (submitting()) { <p class="factor-help" role="status">Verificando código…</p> }
+                  @if (retryCode()) { <cmc-button fullWidth (click)="verify()">Reintentar verificación</cmc-button> }
+                  @if (method() === 'GOOGLE_AUTHENTICATOR') {
+                    <p class="factor-help" id="mfa-code-help">Abre tu aplicación autenticadora y escribe el código de 6 dígitos de Casa de Música Castillo. El código cambia periódicamente.</p>
+                  } @else {
+                    <p class="factor-help" id="mfa-code-help">Código para {{ maskedEmail() }}. Si venció, solicita uno nuevo.</p>
+                    <cmc-button variant="ghost" fullWidth [disabled]="submitting() || resendSeconds() > 0" (click)="sendEmailCode()">
+                      Reenviar código @if (resendSeconds() > 0) { ({{ resendSeconds() }} s) }
+                    </cmc-button>
+                  }
+                }
+              }
+            </form>
           } @else {
-            <p class="factor-method">{{ methodLabels[method()] }}</p>
+            <p class="auth-alert auth-alert--error" role="alert">No hay un método de verificación disponible. Vuelve a iniciar sesión.</p>
           }
         }
-
-        <form [formGroup]="codeForm" (ngSubmit)="verify()" class="auth-form" novalidate>
-          @if (method() === 'EMAIL' && !emailCodeSent()) {
-            <p class="factor-help">Envía un código a {{ maskedEmail() }}.</p>
-            <cmc-button fullWidth [disabled]="resendSeconds() > 0" [loading]="submitting()" loadingLabel="Enviando código" (click)="sendEmailCode()">
-              Enviar código por correo
-            </cmc-button>
-          } @else {
-            @if (method() === 'BACKUP_CODE') {
-              <cmc-input formControlName="code" autocomplete="one-time-code" label="Código de respaldo"
-                type="text" [error]="codeError()" required></cmc-input>
-              <cmc-button type="submit" fullWidth [loading]="submitting()" loadingLabel="Verificando">Verificar y entrar</cmc-button>
-            } @else {
-              <cmc-otp-input fieldId="login-mfa-code" [value]="codeForm.controls.code.value" [busy]="submitting()" [invalid]="!!errorMessage()"
-                (digitsChange)="updateDigits($event)" />
-              @if (submitting()) { <p role="status">Verificando código…</p> }
-              @if (retryCode()) {
-                <cmc-button fullWidth (click)="verify()">Reintentar verificación</cmc-button>
-              }
-            }
-
-            @if (method() === 'EMAIL') {
-              <p class="factor-help">Código para {{ maskedEmail() }}. Si venció, solicita uno nuevo.</p>
-              <cmc-button variant="ghost" fullWidth [disabled]="submitting() || resendSeconds() > 0" (click)="sendEmailCode()">
-                Reenviar código @if (resendSeconds() > 0) { ({{ resendSeconds() }} s) }
-              </cmc-button>
-            }
-          }
-        </form>
 
         <div class="step-actions">
           <cmc-button variant="secondary" fullWidth (click)="cancelSecondFactor()">

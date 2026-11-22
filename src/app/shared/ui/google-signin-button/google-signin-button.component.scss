@@ -1,0 +1,159 @@
+.google-signin-box {
+  display: grid;
+  justify-items: center;
+  gap: 0.5rem;
+  inline-size: 100%;
+  max-inline-size: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.google-gis-shell,
+.google-native-btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.625rem;
+  inline-size: 100%;
+  max-inline-size: 100%;
+  min-block-size: 54px;
+  padding: 0 0.875rem;
+  border: 1px solid var(--cmc-border-strong, #dfd3c8);
+  border-radius: var(--cmc-radius-md, 14px);
+  background: #ffffff;
+  color: var(--cmc-text-primary);
+  box-shadow: 0 2px 6px rgb(28 19 21 / 7%), 0 1px 2px rgb(28 19 21 / 4%);
+  font-family: 'Montserrat', 'Roboto', system-ui, -apple-system, sans-serif;
+  font-size: clamp(0.9375rem, 3.9vw, 1.03125rem);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  line-height: 1.25;
+  box-sizing: border-box;
+  overflow: hidden;
+  cursor: pointer;
+  transition: background-color 150ms ease, border-color 150ms ease, box-shadow 150ms ease, transform 120ms ease;
+
+  &[hidden] {
+    display: none;
+  }
+
+  &:hover:not(:disabled) {
+    background: #fcf9f7;
+    border-color: var(--cmc-primary);
+    box-shadow: 0 4px 12px rgb(28 19 21 / 10%);
+  }
+
+  &:active:not(:disabled) {
+    background: #f4ede8;
+    transform: translateY(0.5px);
+  }
+}
+
+.google-gis-shell:focus-within,
+.google-native-btn:focus-visible {
+  outline: 3px solid var(--cmc-primary);
+  outline-offset: 2px;
+  border-color: var(--cmc-primary);
+}
+
+.google-native-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.google-gis-visual {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6875rem;
+  inline-size: 100%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.google-gis-host {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: 100%;
+  block-size: 100%;
+  max-inline-size: 100%;
+  opacity: 0.001;
+  box-sizing: border-box;
+  overflow: hidden;
+  cursor: pointer;
+
+  > * {
+    transform: scaleY(1.42);
+    transform-origin: center;
+  }
+
+  &[hidden] {
+    display: none;
+  }
+}
+
+.google-native-btn__text {
+  white-space: nowrap;
+  overflow-wrap: normal;
+  text-align: center;
+}
+
+@media (max-width: 339px) {
+  .google-gis-shell,
+  .google-native-btn {
+    font-size: 0.875rem;
+    padding: 0 0.625rem;
+  }
+
+  .google-native-btn__text {
+    white-space: normal;
+  }
+}
+
+.google-native-btn__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+}
+
+.google-signin-note {
+  margin: 0;
+  font-size: 0.875rem;
+  line-height: 1.45;
+  color: var(--cmc-text-secondary);
+  text-align: center;
+  overflow-wrap: break-word;
+}
+
+.google-signin-note--hint {
+  padding: 0.625rem 0.75rem;
+  border-radius: var(--cmc-radius-md);
+  border: 1px dashed var(--cmc-border);
+  background: var(--cmc-surface);
+  inline-size: 100%;
+  box-sizing: border-box;
+}
+
+.google-signin-unavailable {
+  display: grid;
+  justify-items: center;
+  gap: 0.35rem;
+}
+
+.google-retry-link {
+  padding: 0.25rem 0.5rem;
+  border: 0;
+  background: transparent;
+  color: var(--cmc-primary);
+  font: inherit;
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-decoration: underline;
+  cursor: pointer;
+}

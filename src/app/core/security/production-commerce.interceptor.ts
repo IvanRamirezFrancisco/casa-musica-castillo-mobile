@@ -1,7 +1,8 @@
-import { HttpErrorResponse, HttpInterceptorFn } from '@angular/common/http';
+import { HttpInterceptorFn } from '@angular/common/http';
 import { InjectionToken, inject } from '@angular/core';
 import { throwError } from 'rxjs';
 import { PRODUCTION_API_BASE_URL } from '../../../environments/environment-settings';
+import { ApiError } from '../api/api-error';
 import { REQUIRES_AUTH } from '../api/api-client.service';
 
 declare const CMC_REVIEWED_COMMERCE: boolean;
@@ -31,8 +32,5 @@ export const productionCommerceInterceptor: HttpInterceptorFn = (request, next) 
       reviewedWrites[request.method]?.test(route) && request.context.get(REQUIRES_AUTH) && inject(REVIEWED_COMMERCE)) {
     return next(request);
   }
-  return throwError(() => new HttpErrorResponse({
-    status: 403, url: request.url,
-    error: { message: 'La operación comercial todavía no está habilitada.' },
-  }));
+  return throwError(() => new ApiError('operation-disabled', 403));
 };

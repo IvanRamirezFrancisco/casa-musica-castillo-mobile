@@ -13,6 +13,7 @@ import { AuthService } from '../../core/services/auth.service';
 import { DemoAccountStateService } from '../../core/services/demo-account-state.service';
 import { EditProfilePage } from './edit-profile/edit-profile.page';
 import { ProfilePage } from './profile.page';
+import { PrivacyPreferencesService } from '../../core/services/privacy-preferences.service';
 
 const base = 'https://api.example.test';
 
@@ -41,6 +42,47 @@ describe('perfil real conectado y cierre de sesión (integración)', () => {
 
   afterEach(() => http.verify());
 
+  it('presenta una sola identidad, respeta contactos ocultos y no equipara cuenta habilitada con correo verificado', () => {
+    const page = TestBed.createComponent(ProfilePage);
+    const privacy = TestBed.inject(PrivacyPreferencesService);
+    vi.spyOn(privacy, 'hideContact').mockReturnValue(true);
+    page.detectChanges();
+    http.expectOne(`${base}/api/users/profile`).flush({success: true, data: profileDto({googleAuthEnabled: true})});
+    page.detectChanges();
+    const root: HTMLElement = page.nativeElement;
+    expect(root.textContent).not.toContain('ana@gmail.com');
+    expect(root.textContent).not.toContain('5512345678');
+    expect(root.textContent).toContain('Correo oculto');
+    expect(root.textContent).toContain('Teléfono oculto');
+    expect(root.textContent).toContain('App autenticadora');
+    expect(root.textContent).not.toContain('verificada');
+    expect(root.querySelectorAll('.profile-identity h2')).toHaveLength(1);
+    expect(root.querySelector('button[appProfileBack]')?.getAttribute('aria-label')).toBe('Volver');
+    expect(root.querySelector('.account-links a')?.getAttribute('href')).toBe('/privacy');
+    expect(root.querySelectorAll('.account-links button')).toHaveLength(3);
+    http.expectNone(request => request.method !== 'GET');
+    page.destroy();
+  });
+
+  it('limpia datos privados al terminar sesión y cancela una respuesta anterior al recargar', () => {
+    const page = TestBed.createComponent(ProfilePage);
+    page.detectChanges();
+    const previous = http.expectOne(`${base}/api/users/profile`);
+    const view = page.debugElement.children[0].componentInstance;
+    vi.spyOn(TestBed.inject(Router), 'navigate').mockResolvedValue(true);
+    view.reload();
+    expect(previous.cancelled).toBe(true);
+    http.expectOne(`${base}/api/users/profile`).flush({success: true, data: profileDto()});
+    view.logout(); view.logout();
+    http.expectOne(`${base}/api/auth/logout`).flush({}, {status: 500, statusText: 'Error'});
+    page.detectChanges();
+    expect(auth.user()).toBeNull();
+    expect(view.profile()).toBeNull();
+    expect(page.nativeElement.textContent).not.toContain('ana@gmail.com');
+    expect(view.logoutNotice()).toContain('no confirmó');
+    page.destroy();
+  });
+
   it('consulta GET /api/users/profile, muestra identidad, estado 2FA, aviso TT-05 y cierra sesión', () => {
     const page = TestBed.createComponent(ProfilePage);
     page.detectChanges();
@@ -54,7 +96,7 @@ describe('perfil real conectado y cierre de sesión (integración)', () => {
     expect(text).toContain('Ana Pérez');
     expect(text).toContain('ana@gmail.com');
     expect(text).toContain('5512345678');
-    expect(text).toContain('Cuenta verificada y activa');
+    expect(text).toContain('Cuenta activa');
     expect(text).toContain('Activo (Correo, Códigos de respaldo)');
     expect(text).toContain('Si la aplicación se reinicia');
     expect(text).not.toContain('TT-05');

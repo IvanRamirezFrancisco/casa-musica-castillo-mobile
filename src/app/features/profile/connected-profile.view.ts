@@ -1,20 +1,22 @@
 import { ChangeDetectionStrategy, Component, DestroyRef, OnInit, computed, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router, RouterLink } from '@angular/router';
-import { IonContent, IonHeader, IonIcon, IonTitle, IonToolbar } from '@ionic/angular';
+import { IonButtons, IonContent, IonHeader, IonIcon, IonToolbar } from '@ionic/angular';
 import { addIcons } from 'ionicons';
-import { logOutOutline, shieldCheckmarkOutline } from 'ionicons/icons';
+import { arrowBackOutline, logOutOutline, shieldCheckmarkOutline } from 'ionicons/icons';
 import { Subscription } from 'rxjs';
 import { describeApiError } from '../../core/api/api-error-message';
 import type { UserProfile } from '../../core/models/profile.model';
 import { PROFILE_REPOSITORY } from '../../core/repositories/profile.repository';
 import { AuthService } from '../../core/services/auth.service';
+import { NotificationService } from '../../core/services/notification.service';
 import { PrivacyPreferencesService } from '../../core/services/privacy-preferences.service';
-import { CmcBadgeComponent } from '../../shared/ui/badge/cmc-badge.component';
 import { CmcButtonComponent } from '../../shared/ui/button/cmc-button.component';
 import { CmcErrorStateComponent } from '../../shared/ui/error-state/cmc-error-state.component';
 import { CmcLoadingComponent } from '../../shared/ui/loading/cmc-loading.component';
 import { CmcIconComponent } from '../../shared/ui/icon/cmc-icon.component';
+import { CmcBrandLogoDirective } from '../../shared/ui/branding/cmc-brand-logo.directive';
+import { ProfileBackDirective } from './profile-back.directive';
 
 /**
  * Perfil conectado real (`GET /api/users/profile`). Muestra identidad real, estado de cuenta,
@@ -27,136 +29,21 @@ import { CmcIconComponent } from '../../shared/ui/icon/cmc-icon.component';
   standalone: true,
   imports: [
     IonHeader,
+    IonButtons,
+    ProfileBackDirective,
     IonToolbar,
-    IonTitle,
     IonContent,
     IonIcon,
     RouterLink,
-    CmcBadgeComponent,
+    CmcBrandLogoDirective,
     CmcButtonComponent,
     CmcLoadingComponent,
     CmcIconComponent,
     CmcErrorStateComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  styles: [
-    '.profile-shell { display: grid; gap: var(--cmc-space-4); }',
-    '@media(min-width:52rem){.profile-shell{grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);align-items:start}.profile-card:first-of-type{grid-row:span 2}}',
-    '.profile-shell > .profile-card { margin-block: 0; }',
-    '.profile-identity { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: var(--cmc-space-3); align-items: center; overflow-wrap: anywhere; }',
-    '.profile-identity h2, .profile-identity p { margin-block: 0; }',
-    '.profile-card { background: var(--cmc-surface, #fff); border: 1px solid var(--cmc-border); border-radius: var(--cmc-radius-lg); padding: 18px; display: grid; gap: 12px; }',
-    '.avatar { width: 56px; height: 56px; border-radius: 50%; background: var(--cmc-primary, #722f37); color: #fff; display: grid; place-items: center; font-weight: 700; font-size: 1.35rem; }',
-    '.field-grid { display: grid; gap: 8px; margin: 0; }',
-    '.field-row { display: flex; justify-content: space-between; gap: 12px; border-bottom: 1px solid var(--cmc-border); padding-bottom: 8px; }',
-    '.field-row dt { color: var(--cmc-text-secondary, #5c5346); font-size: 0.9rem; }',
-    '.field-row dd { margin: 0; font-weight: 600; text-align: right; word-break: break-word; }',
-    '.session-note { background: var(--cmc-promo-surface); color: var(--cmc-text-primary); border-inline-start: 4px solid var(--cmc-promo-border); padding: 12px 14px; border-radius: 8px; font-size: 0.88rem; display: flex; gap: 10px; align-items: flex-start; }',
-  ],
-  template: `
-    <ion-header class="ion-no-border cmc-header-transparent">
-      <ion-toolbar>
-        <ion-title class="cmc-title" role="heading" aria-level="1">Perfil</ion-title>
-      </ion-toolbar>
-    </ion-header>
-
-    <ion-content class="cmc-page cmc-root-page">
-      <div class="cmc-page-container cmc-account profile-shell">
-        @if (loading() && !profile()) {
-          <cmc-loading message="Consultando perfil de tu cuenta..."></cmc-loading>
-        } @else if (error() && !profile()) {
-          <cmc-error-state
-            heading="No pudimos cargar tu perfil"
-            [description]="error()!"
-            retryLabel="Reintentar"
-            (retry)="reload()"
-          ></cmc-error-state>
-        } @else if (profile(); as user) {
-          <section class="profile-card" aria-label="Datos de la cuenta">
-            <div class="profile-identity">
-              <div class="avatar" aria-hidden="true">{{ initial() }}</div>
-              <div>
-                <h2 class="cmc-title">{{ user.fullName }}</h2>
-                <p class="cmc-text-secondary">{{ privacy.hideContact() ? 'Correo oculto' : user.email }}</p>
-              </div>
-            </div>
-
-            <div style="display: flex; flex-wrap: wrap; gap: 8px">
-              <cmc-badge [variant]="user.enabled ? 'success' : 'warning'">
-                {{ user.enabled ? 'Cuenta verificada y activa' : 'Verificación pendiente' }}
-              </cmc-badge>
-              <cmc-badge [variant]="user.twoFactorEnabled ? 'success' : 'neutral'">
-                {{ user.twoFactorEnabled ? '2FA activo' : '2FA desactivado' }}
-              </cmc-badge>
-            </div>
-
-            <dl class="field-grid">
-              <div class="field-row">
-                <dt>Nombre</dt>
-                <dd>{{ user.firstName }}</dd>
-              </div>
-              <div class="field-row">
-                <dt>Apellido</dt>
-                <dd>{{ user.lastName }}</dd>
-              </div>
-              <div class="field-row">
-                <dt>Correo electrónico</dt>
-                <dd>{{ privacy.hideContact() ? 'Correo oculto' : user.email }}</dd>
-              </div>
-              <div class="field-row">
-                <dt>Teléfono</dt>
-                <dd>{{ privacy.hideContact() ? 'Teléfono oculto' : (user.phone ?? 'Sin teléfono registrado') }}</dd>
-              </div>
-              <div class="field-row">
-                <dt>Segundo factor (2FA)</dt>
-                <dd>{{ twoFactorSummary(user) }}</dd>
-              </div>
-            </dl>
-
-            <cmc-button variant="secondary" fullWidth (click)="goToEditProfile()">
-              Información sobre edición de perfil
-            </cmc-button>
-          </section>
-
-          <section class="profile-card" aria-label="Accesos de tu cuenta">
-            <h2 class="cmc-title">Accesos de tu cuenta</h2>
-            <a routerLink="/privacy" class="cmc-link">Privacidad y mis datos</a>
-            <cmc-button variant="secondary" fullWidth (click)="goToOrders()"><cmc-icon name="cart"/> Mis pedidos</cmc-button>
-            <cmc-button variant="secondary" fullWidth (click)="goToFavorites()"><cmc-icon name="heart"/> Mis favoritos</cmc-button>
-            <cmc-button variant="secondary" fullWidth (click)="goToSecurity()"><cmc-icon name="security"/> Seguridad de la cuenta</cmc-button>
-          </section>
-
-          @if (auth.storageFailure()) {
-            <p class="session-note" role="alert">No se pudo acceder al almacenamiento seguro de la sesión. No se pudo confirmar su conservación o borrado. Reintenta; si el problema continúa, borra los datos de la aplicación desde Ajustes de Android.</p>
-          }
-          @if (!auth.persistent) {
-            <div class="session-note" role="note">
-              <ion-icon name="shield-checkmark-outline" aria-hidden="true"></ion-icon>
-              <span>
-                Tu sesión se mantiene mientras la aplicación está en ejecución. Si la aplicación se reinicia, deberás iniciar sesión de nuevo.
-              </span>
-            </div>
-          }
-
-          @if (logoutNotice()) {
-            <p class="session-note" role="status">{{ logoutNotice() }}</p>
-          }
-
-          <section class="profile-card" aria-label="Sesión">
-            <cmc-button
-              variant="secondary"
-              fullWidth
-              [loading]="loggingOut()"
-              loadingLabel="Cerrando sesión"
-              (click)="logout()"
-            >
-              Cerrar sesión
-            </cmc-button>
-          </section>
-        }
-      </div>
-    </ion-content>
-  `,
+  templateUrl: './connected-profile.view.html',
+  styleUrl: './connected-profile.view.scss',
 })
 export class ConnectedProfileComponent implements OnInit {
   private entered = false;
@@ -170,6 +57,7 @@ export class ConnectedProfileComponent implements OnInit {
   protected readonly auth = inject(AuthService);
   private readonly repository = inject(PROFILE_REPOSITORY);
   private readonly router = inject(Router);
+  private readonly notifications = inject(NotificationService);
   private readonly destroyRef = inject(DestroyRef);
 
   readonly profile = signal<UserProfile | null>(null);
@@ -186,7 +74,7 @@ export class ConnectedProfileComponent implements OnInit {
   private activeRequest: Subscription | null = null;
 
   constructor() {
-    addIcons({ logOutOutline, shieldCheckmarkOutline });
+    addIcons({ arrowBackOutline, logOutOutline, shieldCheckmarkOutline });
     this.auth.sessionEnded$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
       this.activeRequest?.unsubscribe();
       this.profile.set(null);
@@ -246,7 +134,11 @@ export class ConnectedProfileComponent implements OnInit {
     this.auth.logout().subscribe(({ remoteRevoked }) => {
       this.loggingOut.set(false);
       if (!remoteRevoked) {
-        this.logoutNotice.set('Sesión local cerrada; el servidor no confirmó la revocación remota.');
+        const message = 'Sesión local cerrada; el servidor no confirmó la revocación remota.';
+        this.logoutNotice.set(message);
+        this.notifications.warning('Sesión cerrada localmente', message);
+      } else {
+        this.notifications.success('Sesión cerrada', 'Tu sesión se cerró correctamente.');
       }
       void this.router.navigate(['/login'], { replaceUrl: true });
     });

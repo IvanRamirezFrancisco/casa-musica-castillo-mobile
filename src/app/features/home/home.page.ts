@@ -24,6 +24,7 @@ interface Category {
 
 import { Router, RouterLink } from '@angular/router';
 import { CurrencyPipe } from '@angular/common';
+import { CmcBrandLogoDirective } from '../../shared/ui/branding/cmc-brand-logo.directive';
 
 @Component({
   selector: 'app-home',
@@ -32,6 +33,7 @@ import { CurrencyPipe } from '@angular/common';
   standalone: true,
   imports: [
     PublicHomeComponent,
+    CmcBrandLogoDirective,
     IonContent,
     IonHeader,
     IonToolbar,
@@ -60,6 +62,9 @@ export class HomePage {
 
   toggleFavorite(id: string): void {
     this.favorites.update(ids => ids.includes(id) ? ids.filter(value => value !== id) : [...ids, id]);
+  }
+  heroImageFailed(event: Event): void {
+    if (event.target instanceof HTMLImageElement) event.target.hidden = true;
   }
   categories = signal<Category[]>([
     { id: '1', name: 'Guitarras', icon: 'musical-note-outline' },

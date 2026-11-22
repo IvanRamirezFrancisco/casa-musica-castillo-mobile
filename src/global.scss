@@ -1,6 +1,11 @@
+@use './app/shared/ui/styles/account-header' as accountHeader;
 @use './app/shared/ui/styles/discovery';
 @use './app/shared/ui/styles/commerce';
+@use './app/shared/ui/styles/connected-auth';
+@use './app/shared/ui/styles/product-detail';
+@use './app/shared/ui/styles/cart-summary';
 @use './app/shared/ui/styles/security' as sec;
+@include accountHeader.header;
 @include sec.security-ring-and-guide;
 /* =====================================================
  * Casa de Música Castillo
@@ -179,9 +184,10 @@ a {
 /* Bubble Navigation spacing */
 ion-modal.cmc-action-dialog {
   --width: 100%;
+  --max-width: 100%;
   --height: auto;
-  --max-height: calc(100dvh - var(--cmc-safe-area-top) - var(--cmc-safe-area-bottom) - 12px);
-  --border-radius: 20px 20px 0 0;
+  --max-height: calc(100dvh - var(--cmc-safe-area-top) - var(--cmc-safe-area-bottom) - 16px);
+  --border-radius: 24px 24px 0 0;
   --backdrop-opacity: .48;
   align-items: end;
   padding-block-end: var(--cmc-safe-area-bottom);
@@ -190,53 +196,99 @@ ion-modal.cmc-action-dialog {
 .cmc-action-dialog__frame {
   display: flex;
   flex-direction: column;
+  inline-size: 100%;
+  max-inline-size: 100%;
   min-height: 0;
-  max-height: calc(100dvh - var(--cmc-safe-area-top) - var(--cmc-safe-area-bottom) - 12px);
+  overflow: hidden;
+  box-sizing: border-box;
+  max-height: calc(100dvh - var(--cmc-safe-area-top) - var(--cmc-safe-area-bottom) - 16px);
   background: var(--cmc-surface);
+  box-shadow: 0 -10px 32px rgba(42, 31, 27, .16);
 }
 
 .cmc-action-dialog__handle {
   align-self: center;
-  width: 32px;
+  width: 40px;
   height: 4px;
   flex: none;
-  border-radius: 4px;
-  margin-block-start: 10px;
+  border-radius: 999px;
+  margin-block-start: 12px;
   background: var(--cmc-border-strong);
 }
 
 .cmc-action-dialog__header {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
   gap: 12px;
-  padding: 8px 20px 4px;
+  padding: 12px 20px 8px;
 }
 
-.cmc-action-dialog__header h2 { margin: 0; font-size: 1.15rem; }
+.cmc-action-dialog__title-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+.cmc-action-dialog__eyebrow {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  line-height: 1.25;
+  color: var(--cmc-primary);
+}
+
+.cmc-action-dialog__header h2 {
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: 700;
+  line-height: 1.3;
+  letter-spacing: -.01em;
+  color: var(--cmc-text-primary);
+  min-width: 0;
+  overflow-wrap: break-word;
+}
+
 .cmc-action-dialog__close {
-  min-width: 48px;
-  min-height: 48px;
+  flex: none;
+  display: inline-grid;
+  place-items: center;
+  min-width: 44px;
+  min-height: 44px;
+  width: 44px;
+  height: 44px;
+  border: 1px solid rgba(114, 47, 55, .1);
   border-radius: 50%;
   background: var(--cmc-surface-alt);
   color: var(--cmc-text-primary);
-  font-size: 1.5rem;
+  font-size: 1.35rem;
+  line-height: 1;
+  transition: background-color 140ms ease, transform 140ms ease;
 }
+
+.cmc-action-dialog__close:active { transform: scale(.96); }
 
 .cmc-action-dialog__body {
   min-height: 0;
-  overflow: auto;
+  overflow-x: hidden;
+  overflow-y: auto;
   overscroll-behavior: contain;
-  padding: 0 20px 20px;
+  box-sizing: border-box;
+  padding: 6px 20px calc(24px + var(--cmc-safe-area-bottom));
   scroll-padding-block: 12px;
 }
 
 @media (min-width: 600px), (horizontal-viewport-segments: 2), (vertical-viewport-segments: 2) {
   ion-modal.cmc-action-dialog {
     --width: min(480px, calc(100% - 32px));
-    --border-radius: 20px;
+    --border-radius: 24px;
     align-items: center;
   }
+  .cmc-action-dialog__header { padding: 18px 24px 10px; }
+  .cmc-action-dialog__body { padding: 6px 24px 24px; }
   .cmc-action-dialog__handle { display: none; }
 }
 
@@ -258,7 +310,7 @@ ion-modal.cmc-action-dialog {
 }
 
 :root {
-  --cmc-bubble-nav-height: 64px;
+  --cmc-bubble-nav-height: 72px;
 }
 
 /* Ionic owns the top inset with ion-header. Tab roots end above the bottom slot. */
@@ -267,7 +319,7 @@ ion-content.cmc-page {
   --padding-bottom: calc(var(--cmc-space-6) + var(--cmc-safe-area-bottom));
 }
 ion-content.cmc-root-page {
-  --padding-bottom: var(--cmc-space-4);
+  --padding-bottom: var(--cmc-space-5, 20px);
 }
 ion-content.cmc-standalone-page {
   --padding-top: var(--cmc-safe-area-top);

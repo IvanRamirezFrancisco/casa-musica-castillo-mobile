@@ -14,8 +14,13 @@ name: TT05 - Login conectado y escritura nativa
     id: "cmc-input-1"
 - inputText: "Only-Local-123"
 - hideKeyboard
-- tapOn: "Iniciar sesión"
+- scrollUntilVisible:
+    element: "¿Olvidaste tu contraseña?"
+    direction: DOWN
+- tapOn:
+    text: "Iniciar sesión"
+    below: "¿Olvidaste tu contraseña?"
 - tapOn: "Perfil"
 - assertVisible: "QA Sesion"
-- assertVisible: "Cuenta verificada y activa"
+- assertVisible: "Cuenta activa"
 - takeScreenshot: reports/android-session/login-native

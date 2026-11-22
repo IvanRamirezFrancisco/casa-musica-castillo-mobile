@@ -1,0 +1,62 @@
+@if (notifications().length > 0) {
+  <div class="cmc-toast-stack" aria-label="Notificaciones">
+    @for (item of notifications(); track item.id) {
+      <section
+        class="cmc-toast"
+        [class]="'cmc-toast cmc-toast--' + item.variant"
+        [attr.role]="item.variant === 'error' ? 'alert' : 'status'"
+        [attr.aria-live]="item.variant === 'error' ? 'assertive' : 'polite'"
+        aria-atomic="true"
+      >
+        <span class="cmc-toast__icon" aria-hidden="true">
+          @switch (item.variant) {
+            @case ('success') {
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" focusable="false">
+                <path d="M20 6 9 17l-5-5" />
+              </svg>
+            }
+            @case ('error') {
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" focusable="false">
+                <circle cx="12" cy="12" r="9" />
+                <line x1="12" y1="8" x2="12" y2="12.5" />
+                <circle cx="12" cy="16" r="0.8" fill="currentColor" />
+              </svg>
+            }
+            @case ('warning') {
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" focusable="false">
+                <path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
+                <line x1="12" y1="9" x2="12" y2="13" />
+                <circle cx="12" cy="17" r="0.8" fill="currentColor" />
+              </svg>
+            }
+            @default {
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" focusable="false">
+                <circle cx="12" cy="12" r="9" />
+                <line x1="12" y1="11" x2="12" y2="16" />
+                <circle cx="12" cy="8" r="0.8" fill="currentColor" />
+              </svg>
+            }
+          }
+        </span>
+
+        <div class="cmc-toast__content">
+          <p class="cmc-toast__title">{{ item.title }}</p>
+          @if (item.message) {
+            <p class="cmc-toast__message">{{ item.message }}</p>
+          }
+        </div>
+
+        @if (item.dismissible) {
+          <button
+            type="button"
+            class="cmc-toast__close"
+            aria-label="Cerrar notificación"
+            (click)="dismiss(item.id)"
+          >
+            ×
+          </button>
+        }
+      </section>
+    }
+  </div>
+}

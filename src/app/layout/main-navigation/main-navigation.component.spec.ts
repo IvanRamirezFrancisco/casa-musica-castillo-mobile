@@ -30,6 +30,9 @@ describe('MainNavigationComponent', () => {
   });
 
   it('conserva exactamente los cinco destinos de navegación principal', () => {
+    const tabBar = (fixture.nativeElement as HTMLElement).querySelector('ion-tab-bar.cmc-bubble-nav');
+    expect(tabBar).toBeTruthy();
+    expect(tabBar?.getAttribute('aria-label')).toBe('Navegación principal');
     const tabs = Array.from((fixture.nativeElement as HTMLElement).querySelectorAll('ion-tab-button'));
     expect(tabs.map(tab => tab.getAttribute('tab'))).toEqual(['home', 'catalog', 'cart', 'orders', 'profile']);
     expect(tabs.map(tab => tab.querySelector('ion-label')?.textContent)).toEqual(['Inicio', 'Catálogo', 'Carrito', 'Pedidos', 'Perfil']);

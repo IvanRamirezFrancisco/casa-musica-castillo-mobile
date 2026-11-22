@@ -1,6 +1,7 @@
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { Component } from '@angular/core';
+import { Location } from '@angular/common';
 import { TestBed } from '@angular/core/testing';
 import { Router, RouteReuseStrategy, provideRouter } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
@@ -59,6 +60,17 @@ describe('autenticación conectada (integración)', () => {
     expect(router.url).toBe('/main/home');expect(auth.hasValidSession()).toBe(false);http.expectNone(`${base}/api/auth/login`);
   });
 
+  it('conserva la confirmación de contraseña cuando Ionic entra después de finalizar la navegación', async () => {
+    const harness = await RouterTestingHarness.create();
+    const page = await harness.navigateByUrl('/login', ConnectedLoginPage);
+    TestBed.inject(Location).replaceState('/login', '', { passwordChanged: true });
+    expect(router.currentNavigation()).toBeNull();
+    page.ionViewWillEnter(); harness.detectChanges();
+    expect(harness.routeNativeElement?.textContent).toContain('Contraseña actualizada');
+    TestBed.inject(Location).replaceState('/login', '', {});
+    page.ionViewWillEnter(); expect(page['passwordChanged']()).toBe(false);
+  });
+
   it('una ruta protegida redirige a login y tras autenticar vuelve al destino original', async () => {
     const harness = await RouterTestingHarness.create();
     const loginComp = await harness.navigateByUrl('/main/orders', ConnectedLoginPage);
@@ -79,6 +91,62 @@ describe('autenticación conectada (integración)', () => {
     expect(router.url).toBe('/main/orders');
   });
 
+  it('un Login normal ignora el snapshot obsoleto de una vista de Ionic y vuelve a Inicio', async () => {
+    const harness = await RouterTestingHarness.create();
+    const page = await harness.navigateByUrl('/login', ConnectedLoginPage);
+    // Ionic can retain the ActivatedRoute associated with an earlier private return.
+    vi.spyOn(router.routerState.root.firstChild!.snapshot.queryParamMap, 'get').mockReturnValue('/profile/security');
+    page.ionViewWillEnter();
+    expect(page['authReturnParams']()).toEqual({});
+    page['form'].setValue({ email: 'ana@gmail.com', password: 'Cl4ve-Segura' });
+    page['submit']();
+    http.expectOne(`${base}/api/auth/login`).flush(loginSuccessBody());
+    await harness.fixture.whenStable();
+    expect(router.url).toBe('/main/home');
+  });
+
+  it('después de cambiar contraseña descarta retornos privados anteriores', async () => {
+    const harness = await RouterTestingHarness.create();
+    const page = await harness.navigateByUrl('/login?returnUrl=%2Fmain%2Forders', ConnectedLoginPage);
+    TestBed.inject(Location).replaceState('/login', '', { passwordChanged: true });
+    page.ionViewWillEnter();
+    page['form'].setValue({ email: 'ana@gmail.com', password: 'Cl4ve-Segura' });
+    page['submit']();
+    http.expectOne(`${base}/api/auth/login`).flush(loginSuccessBody());
+    await harness.fixture.whenStable();
+    expect(router.url).toBe('/main/home');
+  });
+
+  it('MFA conserva un retorno intencional y solo navega después del segundo factor', async () => {
+    const harness = await RouterTestingHarness.create();
+    const page = await harness.navigateByUrl('/login?returnUrl=%2Fmain%2Forders', ConnectedLoginPage);
+    page['form'].setValue({ email: 'ana@gmail.com', password: 'Cl4ve-Segura' });
+    page['submit']();
+    http.expectOne(`${base}/api/auth/login`).flush(twoFactorBody({ GOOGLE_AUTHENTICATOR: true }));
+    expect(router.url).toBe('/login?returnUrl=%2Fmain%2Forders');
+    expect(auth.hasValidSession()).toBe(false);
+    page['codeForm'].setValue({ code: '012345' });
+    page['verify']();
+    http.expectOne(`${base}/api/2fa/verify`).flush({ success: true, data: { accessToken: fakeJwt(), user: userDto() } });
+    await harness.fixture.whenStable();
+    expect(router.url).toBe('/main/orders');
+  });
+
+  it('las pestañas conectadas conservan el retorno interno y marcan la ruta activa', async () => {
+    const harness = await RouterTestingHarness.create();
+    await harness.navigateByUrl('/login?returnUrl=%2Fmain%2Forders', ConnectedLoginPage);
+    const loginTabs = harness.routeNativeElement!.querySelector('.auth-tabs')!;
+    expect(loginTabs.querySelector('[aria-current="page"]')?.textContent).toContain('Iniciar sesión');
+    expect(loginTabs.querySelector('a[href^="/register"]')?.getAttribute('href')).toBe('/register?returnUrl=%2Fmain%2Forders');
+
+    await harness.navigateByUrl('/register?returnUrl=%2Fmain%2Forders', ConnectedRegisterPage);
+    const registrationTabs = harness.routeNativeElement!.querySelector('.auth-tabs')!;
+    expect(registrationTabs.querySelector('[aria-current="page"]')?.textContent).toContain('Crear cuenta');
+    expect(registrationTabs.querySelector('a[href^="/login"]')?.getAttribute('href')).toBe('/login?returnUrl=%2Fmain%2Forders');
+    expect(harness.routeNativeElement?.querySelectorAll('form cmc-input')).toHaveLength(7);
+    http.expectNone(`${base}/api/auth/login`);
+  });
+
   it('2FA: HTTP 200 con desafío NO autentica hasta completar /api/2fa/verify', () => {
     const page = TestBed.createComponent(ConnectedLoginPage);
     page.detectChanges();
@@ -90,6 +158,10 @@ describe('autenticación conectada (integración)', () => {
     expect(page.nativeElement.textContent).toContain('Todavía no has iniciado sesión');
     const heading = page.nativeElement.querySelector('#second-factor-title');
     expect(page.nativeElement.ownerDocument.activeElement).toBe(heading);
+    const brand = page.nativeElement.querySelector('.mfa-page .brand-info');
+    expect(brand.querySelector('.auth-brand-subtitle')?.textContent).toContain('Confirma tu identidad');
+    expect(brand.querySelector('.auth-brand-title')?.textContent).toContain('Casa de Música Castillo');
+    expect(page.nativeElement.querySelectorAll('.method-option input')).toHaveLength(3);
     expect(page.nativeElement.querySelector('fieldset legend')?.textContent).toContain('Método de verificación');
 
     page.componentInstance['sendEmailCode']();
@@ -125,6 +197,182 @@ describe('autenticación conectada (integración)', () => {
     expect(verify.request.body).toEqual({ preAuthChallenge: CHALLENGE, method: 'BACKUP_CODE', code: 'RESPALDO-1' });
     verify.flush({ success: true, data: { accessToken: fakeJwt(), user: userDto() } });
     expect(auth.hasValidSession()).toBe(true);
+  });
+
+  it.each([
+    ['Correo', { EMAIL: true }, 0, 'EMAIL'],
+    ['App', { GOOGLE_AUTHENTICATOR: true }, 0, 'GOOGLE_AUTHENTICATOR'],
+    ['Respaldo (fixture de presentación)', { BACKUP_CODE: true }, 0, 'BACKUP_CODE'],
+    ['Correo + App', { EMAIL: true, GOOGLE_AUTHENTICATOR: true }, 2, 'EMAIL'],
+    ['Correo + Respaldo', { EMAIL: true, BACKUP_CODE: true }, 2, 'EMAIL'],
+    ['App + Respaldo', { GOOGLE_AUTHENTICATOR: true, BACKUP_CODE: true }, 2, 'GOOGLE_AUTHENTICATOR'],
+    ['Tres métodos', { EMAIL: true, GOOGLE_AUTHENTICATOR: true, BACKUP_CODE: true }, 3, 'EMAIL'],
+  ] as const)('MFA adapta los métodos autorizados — %s', (_label, methods, tabs, first) => {
+    const page = TestBed.createComponent(ConnectedLoginPage);
+    page.detectChanges();
+    const view = page.componentInstance;
+    view['form'].setValue({ email: 'ana@gmail.com', password: 'Cl4ve-Segura' });
+    view['submit']();
+    http.expectOne(`${base}/api/auth/login`).flush(twoFactorBody(methods));
+    page.detectChanges();
+    const root = page.nativeElement as HTMLElement;
+    expect(root.querySelectorAll('.method-option input')).toHaveLength(tabs);
+    expect(view['method']()).toBe(first);
+    expect(auth.hasValidSession()).toBe(false);
+    expect(view['form'].controls.password.value).toBe('');
+    for (const method of ['EMAIL', 'GOOGLE_AUTHENTICATOR', 'BACKUP_CODE'] as const) {
+      view['selectMethod'](method);
+      page.detectChanges();
+      if (!view['challenge']()?.methods.includes(method)) {
+        expect(view['method']()).not.toBe(method);
+        continue;
+      }
+      expect(view['method']()).toBe(method);
+      expect(view['challenge']()?.preAuthChallenge).toBe(CHALLENGE);
+      expect(root.querySelectorAll('.factor-form')).toHaveLength(1);
+      expect(root.querySelectorAll('input[autocomplete="one-time-code"]')).toHaveLength(method === 'EMAIL' ? 0 : 1);
+      expect(root.querySelector('.factor-method') !== null).toBe(tabs === 0);
+    }
+    http.expectNone(request => request.url.includes('/api/2fa/'));
+    view['cancelSecondFactor']();
+    expect(view['challenge']()).toBeNull();
+    page.destroy();
+  });
+
+  it('MFA sin métodos se rechaza antes de mostrar un formulario o crear una sesión', () => {
+    const page = TestBed.createComponent(ConnectedLoginPage);
+    page.detectChanges();
+    page.componentInstance['form'].setValue({ email: 'ana@gmail.com', password: 'Cl4ve-Segura' });
+    page.componentInstance['submit']();
+    http.expectOne(`${base}/api/auth/login`).flush(twoFactorBody({}));
+    page.detectChanges();
+    expect(page.nativeElement.querySelector('.factor-form')).toBeNull();
+    expect(page.nativeElement.querySelector('[role="alert"]')?.textContent).toContain('inesperada');
+    expect(auth.hasValidSession()).toBe(false);
+  });
+
+  it('MFA conserva envío y cooldown al cambiar de método, cancela respuestas pendientes y no duplica solicitudes', () => {
+    const page = TestBed.createComponent(ConnectedLoginPage);
+    page.detectChanges();
+    const view = page.componentInstance;
+    view['form'].setValue({ email: 'ana@gmail.com', password: 'Cl4ve-Segura' });
+    view['submit']();
+    http.expectOne(`${base}/api/auth/login`).flush(twoFactorBody({ EMAIL: true, GOOGLE_AUTHENTICATOR: true }));
+    view['sendEmailCode'](); view['sendEmailCode']();
+    view['selectMethod']('GOOGLE_AUTHENTICATOR');
+    expect(view['method']()).toBe('EMAIL');
+    http.expectOne(`${base}/api/2fa/send-login-code`).flush({ success: true });
+    const seconds = view['resendSeconds']();
+    view['codeForm'].controls.code.setValue('012');
+    view['selectMethod']('GOOGLE_AUTHENTICATOR');
+    expect(view['codeForm'].controls.code.value).toBe('');
+    view['selectMethod']('EMAIL');
+    expect(view['emailCodeSent']()).toBe(true);
+    expect(view['resendSeconds']()).toBe(seconds);
+    view['sendEmailCode']();
+    http.expectNone(`${base}/api/2fa/send-login-code`);
+    view['codeForm'].controls.code.setValue('012345');
+    view['verify'](); view['verify']();
+    const verify = http.expectOne(`${base}/api/2fa/verify`);
+    view['cancelSecondFactor']();
+    expect(verify.cancelled).toBe(true);
+    expect(auth.hasValidSession()).toBe(false);
+    expect(view['resendSeconds']()).toBe(0);
+    page.destroy();
+  });
+
+  it('MFA permite introducir un código posiblemente recibido sin declarar envío confirmado ni reenviar', () => {
+    const page = TestBed.createComponent(ConnectedLoginPage);
+    page.detectChanges();
+    const view = page.componentInstance;
+    view['form'].setValue({ email: 'ana@gmail.com', password: 'Cl4ve-Segura' });
+    view['submit']();
+    http.expectOne(`${base}/api/auth/login`).flush(twoFactorBody());
+    view['sendEmailCode']();
+    http.expectOne(`${base}/api/2fa/send-login-code`).flush({}, { status: 503, statusText: 'Unavailable' });
+    page.detectChanges();
+    expect(view['emailCodeSent']()).toBe(false);
+    view['useReceivedEmailCode']();
+    page.detectChanges();
+    expect(page.nativeElement.textContent).toContain('No pudimos confirmar el envío');
+    expect(page.nativeElement.querySelector('cmc-otp-input')).not.toBeNull();
+    http.expectNone(`${base}/api/2fa/send-login-code`);
+    view['updateDigits']('012345');
+    const verify = http.expectOne(`${base}/api/2fa/verify`);
+    expect(verify.request.body.preAuthChallenge).toBe(CHALLENGE);
+    verify.flush({}, { status: 401, statusText: 'Unauthorized' });
+    expect(auth.hasValidSession()).toBe(false);
+    page.destroy();
+  });
+
+  it('TOTP mantiene autoenvío, permite reintento de red y solo autentica tras respuesta válida', () => {
+    const page = TestBed.createComponent(ConnectedLoginPage);
+    page.detectChanges();
+    const view = page.componentInstance;
+    view['form'].setValue({ email: 'ana@gmail.com', password: 'Cl4ve-Segura' });
+    view['submit']();
+    http.expectOne(`${base}/api/auth/login`).flush(twoFactorBody({ GOOGLE_AUTHENTICATOR: true }));
+    view['updateDigits']('123');
+    http.expectNone(`${base}/api/2fa/verify`);
+    view['updateDigits']('012345');
+    const invalid = http.expectOne(`${base}/api/2fa/verify`);
+    expect(invalid.request.body.method).toBe('GOOGLE_AUTHENTICATOR');
+    invalid.flush({}, { status: 401, statusText: 'Unauthorized' });
+    expect(auth.hasValidSession()).toBe(false);
+    expect(view['codeForm'].controls.code.value).toBe('');
+    view['updateDigits']('654321');
+    http.expectOne(`${base}/api/2fa/verify`).error(new ProgressEvent('error'));
+    expect(view['retryCode']()).toBe(true);
+    expect(view['codeForm'].controls.code.value).toBe('654321');
+    view['verify']();
+    http.expectOne(`${base}/api/2fa/verify`).flush({ success: true, data: { accessToken: fakeJwt(), user: userDto() } });
+    expect(auth.hasValidSession()).toBe(true);
+    expect(view['challenge']()).toBeNull();
+    page.destroy();
+  });
+
+  it('Respaldo conserva formato y errores del servidor, y no muestra intentos inventados', () => {
+    const page = TestBed.createComponent(ConnectedLoginPage);
+    page.detectChanges();
+    const view = page.componentInstance;
+    view['form'].setValue({ email: 'ana@gmail.com', password: 'Cl4ve-Segura' });
+    view['submit']();
+    http.expectOne(`${base}/api/auth/login`).flush(twoFactorBody({ GOOGLE_AUTHENTICATOR: true, BACKUP_CODE: true }));
+    view['selectMethod']('BACKUP_CODE'); page.detectChanges();
+    const root = page.nativeElement as HTMLElement;
+    const input = root.querySelector('cmc-otp-input input') as HTMLInputElement;
+    input.value = 'aB12-cD34'; input.dispatchEvent(new Event('input', { bubbles: true }));
+    http.expectNone(`${base}/api/2fa/verify`);
+    view['verify']();
+    const request = http.expectOne(`${base}/api/2fa/verify`);
+    expect(request.request.body).toEqual({ preAuthChallenge: CHALLENGE, method: 'BACKUP_CODE', code: 'aB12-cD34' });
+    request.flush({}, { status: 401, statusText: 'Unauthorized' }); page.detectChanges();
+    expect(root.querySelector('#mfa-error')?.textContent).toContain('Código inválido o vencido');
+    expect(root.textContent).not.toContain('Te quedan');
+    expect(root.querySelector('#login-backup-code')?.getAttribute('aria-describedby')).toContain('mfa-error');
+    expect(auth.hasValidSession()).toBe(false);
+    page.destroy();
+  });
+
+  it('el 429 conserva el cooldown indicado por el servidor y el botón Volver cancela el desafío', () => {
+    const page = TestBed.createComponent(ConnectedLoginPage);
+    page.detectChanges();
+    const view = page.componentInstance;
+    view['form'].setValue({ email: 'ana@gmail.com', password: 'Cl4ve-Segura' });
+    view['submit']();
+    http.expectOne(`${base}/api/auth/login`).flush(twoFactorBody());
+    view['sendEmailCode']();
+    http.expectOne(`${base}/api/2fa/send-login-code`).flush({ remainingTimeSeconds: 73 }, { status: 429, statusText: 'Too Many' });
+    expect(view['resendSeconds']()).toBe(73);
+    expect(view['emailCodeSent']()).toBe(false);
+    view['sendEmailCode'](); http.expectNone(`${base}/api/2fa/send-login-code`);
+    page.detectChanges();
+    (page.nativeElement.querySelector('.auth-back-pill') as HTMLButtonElement).click();
+    page.detectChanges();
+    expect(view['challenge']()).toBeNull();
+    expect(page.nativeElement.querySelector('.factor-card')).toBeNull();
+    expect(auth.hasValidSession()).toBe(false);
+    page.destroy();
   });
 
   it('2FA: maneja fallo al enviar código y permite cancelar el desafío', () => {
@@ -331,12 +579,13 @@ describe('autenticación conectada (integración)', () => {
     page.detectChanges();
     expect(page.nativeElement.textContent).toContain('Demasiados intentos');
 
+    page.componentInstance['resendSeconds'].set(0);
     page.componentInstance['request']();
     http.expectOne(`${base}/api/auth/password-reset/request`).flush({ success: true, message: 'ok' });
     page.detectChanges();
 
     page.componentInstance['confirm']();
-    expect(page.componentInstance['tokenError']()).toContain('código completo');
+    expect(page.componentInstance['tokenError']()).toContain('El enlace');
     expect(page.componentInstance['passwordError']()).toContain('obligatorio');
     page.componentInstance['confirmForm'].setValue({ token: 'tok-reset', password: 'Nu3va-Clave', confirmPassword: 'x' });
     expect(page.componentInstance['confirmError']()).toContain('no coinciden');
@@ -443,7 +692,7 @@ describe('autenticación conectada (integración)', () => {
     expect(page.componentInstance['step']()).toBe('request');
     page.componentInstance['request']();
     http.expectOne(`${base}/api/auth/password-reset/request`).flush({ success: true }); page.detectChanges();
-    expect(page.nativeElement.textContent).toContain('Si tu correo está registrado');
+    expect(page.nativeElement.textContent).toContain('Si existe una cuenta asociada a este correo y puede recuperarse');
     expect(page.nativeElement.textContent).not.toContain('Hemos enviado');
   });
 

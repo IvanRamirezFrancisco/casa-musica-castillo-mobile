@@ -27,7 +27,7 @@ export class NativeSessionStore implements SessionStore {
 
   save(session: AuthSession): Promise<void> {
     return this.serial(async () => {
-      const safe = this.validate(session);
+      const safe = this.validate(session, false);
       await this.storage.setItem(SESSION_KEY, JSON.stringify({ version: 1, api: this.api, session: safe }));
     });
   }
@@ -39,7 +39,7 @@ export class NativeSessionStore implements SessionStore {
         if (raw === null) return null;
         const value = JSON.parse(raw) as { version?: unknown; api?: unknown; session?: AuthSession };
         if (!value || value.version !== 1 || value.api !== this.api || !value.session) throw new SessionStorageError();
-        return this.validate(value.session);
+        return this.validate(value.session, true);
       } catch (error) {
         await this.storage.removeItem(SESSION_KEY);
         throw error instanceof SessionStorageError ? error : new SessionStorageError();
@@ -49,10 +49,21 @@ export class NativeSessionStore implements SessionStore {
 
   clear(): Promise<void> { return this.serial(() => this.storage.removeItem(SESSION_KEY)); }
 
-  private validate(value: AuthSession): AuthSession {
+  private validate(value: AuthSession, allowExpiredWithRefresh: boolean): AuthSession {
+    const hasRefresh = typeof value.refreshToken === 'string' && value.refreshToken.trim().length >= 32;
     const expiry = readJwtExpiry(value.token);
-    if (expiry !== null && expiry <= Date.now()) throw new SessionStorageError('expired');
-    const parsed = parseJwtAuthResponse({ accessToken: value.token, user: value.user, tokenType: 'Bearer' });
+    if (expiry !== null && expiry <= Date.now() && !(allowExpiredWithRefresh && hasRefresh)) {
+      throw new SessionStorageError('expired');
+    }
+    const parsed = parseJwtAuthResponse(
+      {
+        accessToken: value.token,
+        ...(hasRefresh ? { refreshToken: value.refreshToken } : {}),
+        user: value.user,
+        tokenType: 'Bearer',
+      },
+      allowExpiredWithRefresh && hasRefresh,
+    );
     if (value.expiresAt !== parsed.expiresAt) throw new SessionStorageError();
     return parsed;
   }

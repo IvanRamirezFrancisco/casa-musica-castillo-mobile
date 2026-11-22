@@ -35,7 +35,7 @@ export const paymentVariant = (status: PaymentStatusCode): CmcBadgeVariant =>
     '.card { display:grid; gap:8px; background:var(--cmc-surface); border-radius:12px; padding:16px; text-decoration:none; color:inherit; box-shadow:var(--cmc-shadow-card); }',
     '.row { display:flex; justify-content:space-between; align-items:center; gap:8px; flex-wrap:wrap; }',
     '.badges { display:flex; gap:6px; flex-wrap:wrap; }',
-    '.pager { display:flex; justify-content:space-between; align-items:center; gap:12px; margin-block:16px 96px; }',
+    '.pager { display:flex; justify-content:space-between; align-items:center; gap:12px; margin-block:16px 12px; }',
   ],
   template: `
     <ion-header class="ion-no-border cmc-header-transparent">

@@ -143,7 +143,8 @@ describe('sesión, interceptor y guard (integración)', () => {
     it('una sesión restaurada pero vencida se descarta y redirige a login', async () => {
       const { auth, store } = configure();
       await store.save(testSession({ token: fakeJwt(1), expiresAt: Date.now() - 1000 }));
-      await expect(run('/main/profile')).resolves.toBeInstanceOf(UrlTree);
+      const result = await run('/main/profile') as UrlTree;
+      expect(TestBed.inject(Router).serializeUrl(result)).toBe('/login');
       expect(auth.user()).toBeNull();
       expect(auth.sessionExpired()).toBe(true);
     });
@@ -151,7 +152,7 @@ describe('sesión, interceptor y guard (integración)', () => {
 
   it('safeReturnUrl rechaza redirecciones abiertas y valores no internos', () => {
     expect(safeReturnUrl('/main/cart')).toBe('/main/cart');
-    for (const bad of ['//evil.test', 'https://evil.test', '/\\evil', 'javascript:alert(1)', '/ok://x', '/a\nb', 'main/home', 7, undefined, `/${'a'.repeat(300)}`]) {
+    for (const bad of ['//evil.test', 'https://evil.test', '/\\evil', 'javascript:alert(1)', '/ok://x', '/a\nb', 'main/home', '/login', '/register', '/reset-password?token=synthetic', '/unknown', '/main/orders?returnUrl=/login', '/main/orders%2f..%2flogin', 7, undefined, `/${'a'.repeat(300)}`]) {
       expect(safeReturnUrl(bad)).toBe('/main/home');
     }
     expect(safeReturnUrl('x', '/login')).toBe('/login');

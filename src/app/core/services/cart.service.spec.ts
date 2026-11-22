@@ -89,7 +89,7 @@ describe('CartService y HttpCartRepository', () => {
     expect(service.itemCount()).toBe(0);
   });
 
-  it('maneja errores del servidor y limpia el estado al cerrar sesión', () => {
+  it('maneja errores del servidor y limpia el estado al cerrar sesión', async () => {
     service.load();
     http.expectOne(`${base}/api/cart`).flush({}, { status: 503, statusText: 'Unavailable' });
     expect(service.error()).toContain('no pudo procesar');
@@ -100,8 +100,11 @@ describe('CartService y HttpCartRepository', () => {
 
     service.removeItem(50);
     http.expectOne(`${base}/api/cart/items/50`).flush({}, { status: 500, statusText: 'Err' });
-    service.clear();
+    const clearing = service.clear();
     http.expectOne((r) => r.method === 'DELETE' && r.url === `${base}/api/cart`).flush({}, { status: 500, statusText: 'Err' });
+    await Promise.resolve();
+    http.expectOne(`${base}/api/cart`).flush(cartDto());
+    await clearing;
     service.validate().subscribe({ error: () => undefined });
     http.expectOne(`${base}/api/cart/validate`).flush({}, { status: 500, statusText: 'Err' });
 
@@ -122,8 +125,80 @@ describe('CartService y HttpCartRepository', () => {
     service.removeItem(50);
     const pending = http.expectOne(`${base}/api/cart/items/50`);
     auth.handleUnauthorized(false);
-    pending.flush({ message: 'Respuesta de la sesión anterior' }, { status: 403, statusText: 'Forbidden' });
+    expect(pending.cancelled).toBe(true);
     expect(service.notice()).toBeNull();
     expect(service.cart()).toBeNull();
   });
+  it('resuelve un vaciado ambiguo leyendo el servidor, sin repetir DELETE ni conservar importes antiguos', async () => {
+    service.load();
+    http.expectOne(`${base}/api/cart`).flush(cartDto());
+    const clearing = service.clear();
+    const duplicate = service.clear();
+    const deletion = http.expectOne(r => r.url === `${base}/api/cart` && r.method === 'DELETE');
+    expect(deletion.request.headers.get('Authorization')).toContain('Bearer ');
+    expect(deletion.request.body).toBeNull();
+    service.setItemQuantity(50, 3);
+    http.expectNone(`${base}/api/cart/items/50`);
+    deletion.error(new ProgressEvent('error'));
+    await Promise.resolve();
+    expect(service.clearUncertain()).toBe(true);
+    expect(service.mutating()).toBe(true);
+    http.expectOne(r => r.url === `${base}/api/cart` && r.method === 'GET').flush(cartDto([], { totalItems: 0, subtotal: 0, tax: 0, total: 0 }));
+    expect(await clearing).toBe(true);
+    expect(await duplicate).toBe(false);
+    expect(service.itemCount()).toBe(0);
+    expect(service.clearUncertain()).toBe(false);
+    http.expectNone(r => r.method === 'DELETE');
+  });
+
+  it('bloquea otro vaciado si tampoco se pudo consultar el estado y permite una comprobación explícita', async () => {
+    service.load();
+    http.expectOne(`${base}/api/cart`).flush(cartDto());
+    const clearing = service.clear();
+    http.expectOne(r => r.method === 'DELETE').flush({}, { status: 503, statusText: 'Unavailable' });
+    await Promise.resolve();
+    http.expectOne(`${base}/api/cart`).error(new ProgressEvent('error'));
+    expect(await clearing).toBe(false);
+    expect(service.clearUncertain()).toBe(true);
+    expect(service.cart()?.items).toHaveLength(1);
+    expect(await service.clear()).toBe(false);
+    http.expectNone(r => r.method === 'DELETE');
+    const checking = service.reconcileClear();
+    http.expectOne(`${base}/api/cart`).flush(cartDto());
+    expect(await checking).toBe(false);
+    expect(service.clearUncertain()).toBe(false);
+    expect(service.notice()).toContain('conserva productos');
+  });
+
+  it.each([401, 403, 409, 429])('no anuncia éxito ni reintenta DELETE ante HTTP %s', async status => {
+    service.load();
+    http.expectOne(`${base}/api/cart`).flush(cartDto());
+    const clearing = service.clear();
+    http.expectOne(r => r.method === 'DELETE').flush({}, { status, statusText: 'Rejected' });
+    expect(await clearing).toBe(false);
+    expect(service.clearUncertain()).toBe(false);
+    if (status === 401) expect(service.cart()).toBeNull();
+    else expect(service.cart()?.items).toHaveLength(1);
+    http.expectNone(r => r.method === 'GET' || r.method === 'DELETE');
+  });
+
+  it('cancela un vaciado al terminar la sesión y descarta una lectura anterior al éxito', async () => {
+    service.load();
+    http.expectOne(`${base}/api/cart`).flush(cartDto());
+    const clearing = service.clear();
+    const deletion = http.expectOne(r => r.method === 'DELETE');
+    service.load();
+    const oldRead = http.expectOne(`${base}/api/cart`);
+    deletion.flush({ message: 'ok' });
+    expect(await clearing).toBe(true);
+    oldRead.flush(cartDto());
+    expect(service.itemCount()).toBe(0);
+    const next = service.clear();
+    const pending = http.expectOne(r => r.method === 'DELETE');
+    auth.handleUnauthorized(false);
+    expect(pending.cancelled).toBe(true);
+    expect(await next).toBe(false);
+    expect(service.cart()).toBeNull();
+  });
+
 });

@@ -1,0 +1,23 @@
+{
+  "name": "Casa de Música Castillo",
+  "short_name": "Casa Castillo",
+  "theme_color": "#5B1B23",
+  "background_color": "#5B1B23",
+  "display": "standalone",
+  "scope": "./",
+  "start_url": "./",
+  "icons": [
+    {
+      "src": "assets/brand/logo-mark-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/brand/logo-mark-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
