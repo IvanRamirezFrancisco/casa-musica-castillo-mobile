@@ -14,7 +14,12 @@ name: TT05 - Logout conservado y MFA antes de persistir
     id: "cmc-input-1"
 - inputText: "Only-Local-123"
 - hideKeyboard
-- tapOn: "Iniciar sesión"
+- scrollUntilVisible:
+    element: "¿Olvidaste tu contraseña?"
+    direction: DOWN
+- tapOn:
+    text: "Iniciar sesión"
+    below: "¿Olvidaste tu contraseña?"
 - assertVisible: "Verificación en dos pasos"
 - tapOn: "Enviar código por correo"
 - tapOn:
