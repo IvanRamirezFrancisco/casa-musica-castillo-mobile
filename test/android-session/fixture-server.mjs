@@ -15,7 +15,7 @@ export async function startFixture(port = 18181) {
     const origin = req.headers.origin;
     if (origin && !['https://localhost', 'http://localhost'].includes(origin)) { res.writeHead(403); res.end(); return; }
     res.setHeader('Access-Control-Allow-Origin', origin ?? 'https://localhost');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Client-Platform, X-Requested-With');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
     res.setHeader('Cache-Control', 'no-store'); res.setHeader('Content-Type', 'application/json');
     const send = (code, data) => { res.writeHead(code); res.end(JSON.stringify(data)); };
@@ -46,6 +46,7 @@ export async function startFixture(port = 18181) {
       if (path.endsWith('/catalog') || path.endsWith('/featured')) { send(200, { content: [], number: 0, size: 6, totalElements: 0, totalPages: 0, first: true, last: true }); return; }
       send(200, []); return;
     }
+    if (req.method === 'GET' && path === '/api/auth/google/config') { send(200, { enabled: false, webClientId: null }); return; }
     send(404, { success: false });
   });
   await new Promise((resolve, reject) => { server.once('error', reject); server.listen(port, '127.0.0.1', resolve); });
