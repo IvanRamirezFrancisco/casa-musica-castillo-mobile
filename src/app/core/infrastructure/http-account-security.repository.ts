@@ -1,12 +1,13 @@
 import { Injectable, inject } from '@angular/core';
 import { map } from 'rxjs';
 import { ApiClientService } from '../api/api-client.service';
-import { parseAccountSecurityCapabilities, unwrapApiResponse } from '../api/auth.validation';
+import { parseAccountSecurityCapabilities, parsePendingGoogleLinkConfirmation, unwrapApiResponse } from '../api/auth.validation';
 import { ApiError } from '../api/api-error';
 import type {
   AccountSecurityCapabilities,
   GoogleReauthInput,
   LinkGoogleInput,
+  PrepareLinkGoogleInput,
   StepUpProof,
   UnlinkGoogleInput,
 } from '../models/auth.model';
@@ -148,6 +149,30 @@ export class HttpAccountSecurityRepository {
       if (typeof d['reauthToken'] !== 'string' || d['reauthToken'].length < 24) throw invalid();
       return d['reauthToken'];
     }));
+  }
+
+  prepareLinkGoogle(input: PrepareLinkGoogleInput) {
+    const payload = {
+      idToken: input.idToken,
+      nonce: input.nonce,
+      currentPassword: input.currentPassword,
+      ...(input.mfaMethod !== undefined ? { mfaMethod: input.mfaMethod } : {}),
+      ...(input.mfaCode !== undefined ? { mfaCode: input.mfaCode.trim() } : {}),
+    };
+    return this.api.post<unknown>('/api/auth/google/link/prepare', payload, { auth: true })
+      .pipe(map(parsePendingGoogleLinkConfirmation));
+  }
+
+  confirmLinkGoogle(confirmationToken: string) {
+    return this.api.post<unknown>(
+      '/api/auth/google/link/confirm',
+      { confirmationToken: confirmationToken.trim(), confirmed: true },
+      { auth: true },
+    ).pipe(map(parseAccountSecurityCapabilities));
+  }
+
+  cancelLinkGoogle(confirmationToken: string) {
+    return this.action('/api/auth/google/link/cancel', { confirmationToken: confirmationToken.trim() });
   }
 
   linkGoogle(input: LinkGoogleInput): ReturnType<typeof this.api.post<AccountSecurityCapabilities>> {

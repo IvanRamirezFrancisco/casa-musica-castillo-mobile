@@ -14,7 +14,12 @@ import { AlertController, AnimationController, IonModal } from '@ionic/angular';
         <div class="cmc-action-dialog__frame">
           <span class="cmc-action-dialog__handle" aria-hidden="true"></span>
           <header class="cmc-action-dialog__header">
-            <h2 id="cmc-action-title">{{ title() }}</h2>
+            <div class="cmc-action-dialog__title-group">
+              @if (eyebrow()) {
+                <span class="cmc-action-dialog__eyebrow">{{ eyebrow() }}</span>
+              }
+              <h2 id="cmc-action-title">{{ title() }}</h2>
+            </div>
             <button type="button" class="cmc-action-dialog__close" aria-label="Cerrar"
               [disabled]="busy()" (click)="close()">×</button>
           </header>
@@ -27,6 +32,7 @@ import { AlertController, AnimationController, IonModal } from '@ionic/angular';
 export class ActionDialogComponent implements OnDestroy {
   readonly open = input.required<boolean>();
   readonly title = input.required<string>();
+  readonly eyebrow = input('');
   readonly content = input.required<TemplateRef<unknown>>();
   readonly busy = input(false);
   readonly dirty = input(false);

@@ -1,0 +1,90 @@
+@if (confirmation(); as data) {
+  <ng-template #sheetBody>
+    <div class="link-confirm-sheet">
+      @if (errorMessage()) {
+        <p class="link-confirm-sheet__error" role="alert">{{ errorMessage() }}</p>
+      }
+
+      <section class="link-confirm-card" aria-label="Resumen de cuentas a vincular">
+        <div class="link-confirm-card__row">
+          <span class="link-confirm-card__avatar" aria-hidden="true">
+            <cmc-icon name="person" />
+          </span>
+          <div class="link-confirm-card__meta">
+            <span class="link-confirm-card__label">Cuenta actual · principal</span>
+            <strong class="link-confirm-card__email" data-testid="link-confirm-current-email">{{ data.currentAccountEmail }}</strong>
+          </div>
+        </div>
+
+        <div class="link-confirm-card__connector" aria-hidden="true">
+          <span class="link-confirm-card__line"></span>
+          <span class="link-confirm-card__link-badge">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
+              <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
+            </svg>
+          </span>
+          <span class="link-confirm-card__line"></span>
+        </div>
+
+        <div class="link-confirm-card__row">
+          <span class="link-confirm-card__avatar link-confirm-card__avatar--google" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="18" height="18">
+              <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.665-5.17 3.665-9.17Z" />
+              <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.11-6.72-4.96H1.29v3.14C3.26 21.3 7.31 24 12 24Z" />
+              <path fill="#FBBC05" d="M5.28 14.24a7.12 7.12 0 0 1 0-4.48V6.62H1.29a11.99 11.99 0 0 0 0 10.76l3.99-3.14Z" />
+              <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.31 0 3.26 2.7 1.29 6.62l3.99 3.14c.95-2.85 3.6-4.96 6.72-4.96Z" />
+            </svg>
+          </span>
+          <div class="link-confirm-card__meta">
+            <span class="link-confirm-card__label">Cuenta Google seleccionada</span>
+            <strong class="link-confirm-card__email" data-testid="link-confirm-google-email">{{ data.googleEmail }}</strong>
+          </div>
+          <span class="link-confirm-card__verified" aria-hidden="true">
+            <cmc-icon name="check" />
+          </span>
+        </div>
+      </section>
+
+      <p class="link-confirm-sheet__copy">
+        Vincularás esta cuenta de Google a tu perfil actual de Casa de Música Castillo. Podrás iniciar sesión con ambos métodos y acceder a los mismos pedidos, favoritos y carrito.
+      </p>
+
+      <p class="link-confirm-sheet__notice">
+        <cmc-icon name="security" />
+        <span>Tu correo principal no cambiará.</span>
+      </p>
+
+      <div class="link-confirm-sheet__actions">
+        <cmc-button
+          variant="secondary"
+          fullWidth
+          [disabled]="busy()"
+          (click)="cancelled.emit()"
+        >
+          Cancelar
+        </cmc-button>
+        <cmc-button
+          variant="primary"
+          fullWidth
+          [loading]="busy()"
+          [disabled]="busy()"
+          loadingLabel="Vinculando cuenta..."
+          (click)="confirmed.emit()"
+        >
+          Confirmar vinculación
+        </cmc-button>
+      </div>
+    </div>
+  </ng-template>
+
+  <cmc-action-dialog
+    [open]="true"
+    eyebrow="VERIFICACIÓN COMPLETADA · PASO FINAL"
+    title="Confirmar vinculación de Google"
+    [content]="sheetBody"
+    [busy]="busy()"
+    [dirty]="false"
+    (closed)="cancelled.emit()"
+  />
+}

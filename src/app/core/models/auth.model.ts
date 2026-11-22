@@ -157,6 +157,25 @@ export interface LinkGoogleInput {
   readonly mfaCode?: string;
 }
 
+export interface PrepareLinkGoogleInput {
+  readonly idToken: string;
+  readonly nonce: string;
+  readonly currentPassword: string;
+  readonly mfaMethod?: TwoFactorMethod;
+  readonly mfaCode?: string;
+}
+
+export interface PendingGoogleLinkConfirmation {
+  readonly confirmationToken: string;
+  readonly expiresInSeconds: number;
+  readonly currentAccountEmail: string;
+  readonly googleEmail: string;
+  readonly googleEmailVerified: boolean;
+  readonly googleName: string;
+  readonly googlePictureUrl: string | null;
+  readonly sameEmail: boolean;
+}
+
 export interface UnlinkGoogleInput {
   readonly currentPassword?: string;
   readonly reauthToken?: string;

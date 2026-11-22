@@ -204,18 +204,15 @@
                     required
                   />
                   <ng-container [ngTemplateOutlet]="modalMfaBlock" />
-                  <label class="security-checkbox">
-                    <input type="checkbox" [(ngModel)]="linkConfirmed" />
-                    <span>Confirmo que deseo vincular Google como método de acceso a mi cuenta.</span>
-                  </label>
                   <app-google-signin-button
+                    #linkGoogleBtn
                     context="use"
                     purpose="LINK"
                     label="Seleccionar cuenta de Google a vincular"
                     [loading]="busy()"
                     [disabled]="busy() || !validLinkPrecheck()"
-                    disabledHint="Completa tu contraseña actual y marca la confirmación para habilitar Google."
-                    (credential)="confirmLinkGoogle($event)"
+                    disabledHint="Ingresa tu contraseña actual para habilitar la selección de Google."
+                    (credential)="prepareLinkGoogle($event)"
                     (cancelled)="onModalGoogleCancelled()"
                     (failed)="onModalGoogleError($event)"
                   />
@@ -229,10 +226,17 @@
                 title="Vincular cuenta de Google"
                 [content]="linkGoogleBody"
                 [busy]="busy()"
-                [dirty]="!!linkPassword || !!modalMfaCode || linkConfirmed"
+                [dirty]="!!linkPassword || !!modalMfaCode"
                 (closed)="clearSecrets()"
               />
             }
+            <cmc-google-link-confirm-sheet
+              [confirmation]="pendingGoogleLink()"
+              [busy]="confirmingGoogleLink()"
+              [errorMessage]="confirmLinkError()"
+              (confirmed)="confirmPendingGoogleLink()"
+              (cancelled)="cancelPendingGoogleLink(true)"
+            />
 
             @if (unlinkingGoogle()) {
               <ng-template #unlinkGoogleBody>

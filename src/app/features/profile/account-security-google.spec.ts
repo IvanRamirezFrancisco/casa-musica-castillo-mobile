@@ -57,6 +57,9 @@ describe('AccountSecurityPage — gestión de métodos y escenarios A–E', () =
     reauthenticateWithGoogle: ReturnType<typeof vi.fn>;
     sendAuthenticatedEmailTwoFactorCode: ReturnType<typeof vi.fn>;
     linkGoogle: ReturnType<typeof vi.fn>;
+    prepareLinkGoogle: ReturnType<typeof vi.fn>;
+    confirmLinkGoogle: ReturnType<typeof vi.fn>;
+    cancelLinkGoogle: ReturnType<typeof vi.fn>;
     unlinkGoogle: ReturnType<typeof vi.fn>;
     setup: ReturnType<typeof vi.fn>;
     confirm: ReturnType<typeof vi.fn>;
@@ -103,6 +106,18 @@ describe('AccountSecurityPage — gestión de métodos y escenarios A–E', () =
       reauthenticateWithGoogle: vi.fn().mockReturnValue(of('reauth-token-12345678901234567890')),
       sendAuthenticatedEmailTwoFactorCode: vi.fn().mockReturnValue(of(undefined)),
       linkGoogle: vi.fn().mockReturnValue(of({ ...baseCaps, hasLocalPassword: true, googleLinked: true, canSetInitialPassword: false, canChangePassword: true, canUnlinkGoogle: true })),
+      prepareLinkGoogle: vi.fn().mockReturnValue(of({
+        confirmationToken: 'confirm-link-tok-1234567890123456',
+        currentAccountEmail: 'ana@gmail.com',
+        googleEmail: 'google.otra@gmail.com',
+        googleEmailVerified: true,
+        googleName: 'Usuario Google',
+        googlePictureUrl: null,
+        sameEmail: false,
+        expiresInSeconds: 300,
+      })),
+      confirmLinkGoogle: vi.fn().mockReturnValue(of({ ...baseCaps, hasLocalPassword: true, googleLinked: true, canSetInitialPassword: false, canChangePassword: true, canUnlinkGoogle: true })),
+      cancelLinkGoogle: vi.fn().mockReturnValue(of(undefined)),
       unlinkGoogle: vi.fn().mockReturnValue(of({ ...baseCaps, hasLocalPassword: true, googleLinked: false, canSetInitialPassword: false, canChangePassword: true, canLinkGoogle: true, canUnlinkGoogle: false })),
       setup: vi.fn(),
       confirm: vi.fn(),
@@ -244,17 +259,39 @@ describe('AccountSecurityPage — gestión de métodos y escenarios A–E', () =
     fixture.detectChanges();
     fixture.componentInstance.linkPassword = 'Current!Pass123';
     fixture.componentInstance.modalMfaCode = '654321';
-    fixture.componentInstance.linkConfirmed = true;
-    fixture.componentInstance.confirmLinkGoogle({ idToken: 'google-link-token', nonce: 'nonce-link-123456' });
+    fixture.componentInstance.prepareLinkGoogle({ idToken: 'google-link-token', nonce: 'nonce-link-123456' });
+    fixture.detectChanges();
 
-    expect(repo.linkGoogle).toHaveBeenCalledWith({
+    expect(repo.prepareLinkGoogle).toHaveBeenCalledWith({
       idToken: 'google-link-token',
       nonce: 'nonce-link-123456',
       currentPassword: 'Current!Pass123',
-      confirmed: true,
       mfaMethod: 'EMAIL' as TwoFactorMethod,
       mfaCode: '654321',
     });
+    expect(repo.confirmLinkGoogle).not.toHaveBeenCalled();
+    expect(fixture.componentInstance.linkingGoogle()).toBe(false);
+    expect(fixture.componentInstance.linkPassword).toBe('');
+    expect(fixture.componentInstance.pendingGoogleLink()).toEqual({
+      confirmationToken: 'confirm-link-tok-1234567890123456',
+      currentAccountEmail: 'ana@gmail.com',
+      googleEmail: 'google.otra@gmail.com',
+      googleEmailVerified: true,
+      googleName: 'Usuario Google',
+      googlePictureUrl: null,
+      sameEmail: false,
+      expiresInSeconds: 300,
+    });
+    expect(el.textContent).toContain('Cuenta actual · principal');
+    expect(el.textContent).toContain('Cuenta Google seleccionada');
+    expect(el.textContent).toContain('ana@gmail.com');
+    expect(el.textContent).toContain('google.otra@gmail.com');
+    expect(el.textContent).toContain('Tu correo principal no cambiará.');
+
+    fixture.componentInstance.confirmPendingGoogleLink();
+    fixture.detectChanges();
+    expect(repo.confirmLinkGoogle).toHaveBeenCalledWith('confirm-link-tok-1234567890123456');
+    expect(fixture.componentInstance.pendingGoogleLink()).toBeNull();
   });
 
   it('Escenario C: cuenta dual muestra "Cambiar contraseña" y permite desvincular Google con contraseña + confirmación', () => {
@@ -395,7 +432,6 @@ describe('AccountSecurityPage — gestión de métodos y escenarios A–E', () =
     expect(el.textContent).not.toContain('Conectando con Google');
 
     fixture.componentInstance.linkPassword = 'TempSecret!123';
-    fixture.componentInstance.linkConfirmed = true;
     const cancelBtn = Array.from(el.querySelectorAll('button')).find((b) => b.textContent?.trim() === 'Cancelar');
     expect(cancelBtn).toBeTruthy();
     cancelBtn!.click();
@@ -403,7 +439,7 @@ describe('AccountSecurityPage — gestión de métodos y escenarios A–E', () =
 
     expect(fixture.componentInstance.linkingGoogle()).toBe(false);
     expect(fixture.componentInstance.linkPassword).toBe('');
-    expect(fixture.componentInstance.linkConfirmed).toBe(false);
+    expect(fixture.componentInstance.pendingGoogleLink()).toBeNull();
 
     // When Google is linked, Email MFA section shows mailbox independence note
     repo.capabilities.mockReturnValue(of<AccountSecurityCapabilities>({
@@ -445,7 +481,7 @@ describe('AccountSecurityPage — gestión de métodos y escenarios A–E', () =
         canUnlinkGoogle: true,
       };
       repo.capabilities.mockReturnValue(of(unlinkedCaps));
-      repo.linkGoogle.mockReturnValue(of(linkedCaps));
+      repo.confirmLinkGoogle.mockReturnValue(of(linkedCaps));
 
       const fixture = TestBed.createComponent(AccountSecurityPage);
       const toastFixture = TestBed.createComponent(AppNotificationsComponent);
@@ -461,8 +497,8 @@ describe('AccountSecurityPage — gestión de métodos y escenarios A–E', () =
 
       fixture.componentInstance.openLinkGoogle();
       fixture.componentInstance.linkPassword = 'Current!Pass123';
-      fixture.componentInstance.linkConfirmed = true;
-      fixture.componentInstance.confirmLinkGoogle({ idToken: 'google-link-ok', nonce: 'nonce-link-ok-123' });
+      fixture.componentInstance.prepareLinkGoogle({ idToken: 'google-link-ok', nonce: 'nonce-link-ok-123' });
+      fixture.componentInstance.confirmPendingGoogleLink();
       fixture.detectChanges();
       toastFixture.detectChanges();
 
@@ -494,8 +530,8 @@ describe('AccountSecurityPage — gestión de métodos y escenarios A–E', () =
       fixture.componentInstance.accountCapabilities.set(unlinkedCaps);
       fixture.componentInstance.openLinkGoogle();
       fixture.componentInstance.linkPassword = 'Current!Pass123';
-      fixture.componentInstance.linkConfirmed = true;
-      fixture.componentInstance.confirmLinkGoogle({ idToken: 'google-link-ok-2', nonce: 'nonce-link-ok-456' });
+      fixture.componentInstance.prepareLinkGoogle({ idToken: 'google-link-ok-2', nonce: 'nonce-link-ok-456' });
+      fixture.componentInstance.confirmPendingGoogleLink();
       fixture.detectChanges();
       toastFixture.detectChanges();
 
@@ -511,8 +547,8 @@ describe('AccountSecurityPage — gestión de métodos y escenarios A–E', () =
       fixture.componentInstance.accountCapabilities.set(unlinkedCaps);
       fixture.componentInstance.openLinkGoogle();
       fixture.componentInstance.linkPassword = 'Current!Pass123';
-      fixture.componentInstance.linkConfirmed = true;
-      fixture.componentInstance.confirmLinkGoogle({ idToken: 'google-link-ok-3', nonce: 'nonce-link-ok-789' });
+      fixture.componentInstance.prepareLinkGoogle({ idToken: 'google-link-ok-3', nonce: 'nonce-link-ok-789' });
+      fixture.componentInstance.confirmPendingGoogleLink();
       fixture.detectChanges();
       toastFixture.detectChanges();
       expect(toastEl.querySelector('.cmc-toast')).toBeTruthy();
@@ -531,14 +567,14 @@ describe('AccountSecurityPage — gestión de métodos y escenarios A–E', () =
       fixture.componentInstance.accountCapabilities.set(unlinkedCaps);
       fixture.componentInstance.openLinkGoogle();
       fixture.componentInstance.linkPassword = 'Current!Pass123';
-      fixture.componentInstance.linkConfirmed = true;
-      fixture.componentInstance.confirmLinkGoogle({ idToken: 'google-link-seq-1', nonce: 'nonce-seq-1' });
+      fixture.componentInstance.prepareLinkGoogle({ idToken: 'google-link-seq-1', nonce: 'nonce-seq-1' });
+      fixture.componentInstance.confirmPendingGoogleLink();
       vi.advanceTimersByTime(3000);
       fixture.componentInstance.accountCapabilities.set(unlinkedCaps);
       fixture.componentInstance.openLinkGoogle();
       fixture.componentInstance.linkPassword = 'Current!Pass123';
-      fixture.componentInstance.linkConfirmed = true;
-      fixture.componentInstance.confirmLinkGoogle({ idToken: 'google-link-seq-2', nonce: 'nonce-seq-2' });
+      fixture.componentInstance.prepareLinkGoogle({ idToken: 'google-link-seq-2', nonce: 'nonce-seq-2' });
+      fixture.componentInstance.confirmPendingGoogleLink();
       expect(clearSpy).toHaveBeenCalled();
 
       // At +1500ms (4500ms after first, 1500ms after second), second notice must still be visible and unstacked
@@ -553,27 +589,37 @@ describe('AccountSecurityPage — gestión de métodos y escenarios A–E', () =
 
       // 5. Error messages stay in inline alert (not auto-hidden at 4s); component destruction clears pending notice timer
       fixture.componentInstance.accountCapabilities.set(unlinkedCaps);
-      repo.linkGoogle.mockReturnValue(throwError(() => new ApiError('http', 409, 'Esta cuenta de Google ya está vinculada a otro usuario.')));
+      repo.prepareLinkGoogle.mockReturnValue(throwError(() => new ApiError('http', 409, 'Esta cuenta de Google ya está vinculada a otro usuario.')));
       fixture.componentInstance.openLinkGoogle();
       fixture.componentInstance.linkPassword = 'Current!Pass123';
-      fixture.componentInstance.linkConfirmed = true;
-      fixture.componentInstance.confirmLinkGoogle({ idToken: 'google-link-dup', nonce: 'nonce-link-dup-123' });
+      fixture.componentInstance.prepareLinkGoogle({ idToken: 'google-link-dup', nonce: 'nonce-link-dup-123' });
       fixture.detectChanges();
       toastFixture.detectChanges();
 
       vi.advanceTimersByTime(10000);
       fixture.detectChanges();
       toastFixture.detectChanges();
+      expect(fixture.componentInstance.pendingGoogleLink()).toBeNull();
       expect(fixture.componentInstance.error()).toContain('ya está vinculada');
 
       // Start a temporary notice and immediately destroy component -> pending timer is cancelled cleanly
       clearSpy.mockClear();
-      repo.linkGoogle.mockReturnValue(of(linkedCaps));
+      repo.prepareLinkGoogle.mockReturnValue(of({
+        confirmationToken: 'confirm-link-tok-final-1234567890',
+        currentAccountEmail: 'ana@gmail.com',
+        googleEmail: 'vincular.real@gmail.com',
+        googleEmailVerified: true,
+        googleName: 'Usuario Google',
+        googlePictureUrl: null,
+        sameEmail: false,
+        expiresInSeconds: 300,
+      }));
+      repo.confirmLinkGoogle.mockReturnValue(of(linkedCaps));
       fixture.componentInstance.clearSecrets();
       fixture.componentInstance.openLinkGoogle();
       fixture.componentInstance.linkPassword = 'Current!Pass123';
-      fixture.componentInstance.linkConfirmed = true;
-      fixture.componentInstance.confirmLinkGoogle({ idToken: 'google-link-ok-4', nonce: 'nonce-link-ok-999' });
+      fixture.componentInstance.prepareLinkGoogle({ idToken: 'google-link-ok-4', nonce: 'nonce-link-ok-999' });
+      fixture.componentInstance.confirmPendingGoogleLink();
       fixture.destroy();
       toastFixture.destroy();
       expect(clearSpy).toHaveBeenCalled();
@@ -581,5 +627,137 @@ describe('AccountSecurityPage — gestión de métodos y escenarios A–E', () =
     } finally {
       vi.useRealTimers();
     }
+  });
+
+  it('hoja de confirmación permite cancelar sin vincular, mantiene estado en fallo transitorio y limpia al destruir', () => {
+    const unlinkedCaps: AccountSecurityCapabilities = {
+      ...baseCaps,
+      hasLocalPassword: true,
+      googleLinked: false,
+      googleEmail: null,
+      canSetInitialPassword: false,
+      canChangePassword: true,
+      canLinkGoogle: true,
+      canUnlinkGoogle: false,
+    };
+    const linkedCaps: AccountSecurityCapabilities = {
+      ...baseCaps,
+      hasLocalPassword: true,
+      googleLinked: true,
+      googleEmail: 'otra.google@gmail.com',
+      canSetInitialPassword: false,
+      canChangePassword: true,
+      canLinkGoogle: false,
+      canUnlinkGoogle: true,
+    };
+    repo.capabilities.mockReturnValue(of(unlinkedCaps));
+    repo.prepareLinkGoogle.mockReturnValue(of({
+      confirmationToken: 'confirm-cancel-tok-123456789012',
+      currentAccountEmail: 'cuenta.local@ejemplo.com',
+      googleEmail: 'otra.google@gmail.com',
+      googleEmailVerified: true,
+      googleName: 'Usuario Google',
+      googlePictureUrl: null,
+      sameEmail: false,
+      expiresInSeconds: 300,
+    }));
+
+    const fixture = TestBed.createComponent(AccountSecurityPage);
+    fixture.detectChanges();
+    const el = fixture.nativeElement as HTMLElement;
+
+    // 1. Cancelar cierra hoja, invoca cancelLinkGoogle y conserva googleLinked=false
+    fixture.componentInstance.openLinkGoogle();
+    fixture.componentInstance.linkPassword = 'Current!Pass123';
+    fixture.componentInstance.prepareLinkGoogle({ idToken: 'google-ok-cancel', nonce: 'nonce-cancel-1234' });
+    fixture.detectChanges();
+
+    expect(fixture.componentInstance.pendingGoogleLink()?.googleEmail).toBe('otra.google@gmail.com');
+    const cancelBtn = Array.from(el.querySelectorAll('button')).find((b) => b.textContent?.trim() === 'Cancelar');
+    expect(cancelBtn).toBeTruthy();
+    cancelBtn!.click();
+    fixture.detectChanges();
+
+    expect(repo.cancelLinkGoogle).toHaveBeenCalledWith('confirm-cancel-tok-123456789012');
+    expect(repo.confirmLinkGoogle).not.toHaveBeenCalled();
+    expect(fixture.componentInstance.pendingGoogleLink()).toBeNull();
+    expect(fixture.componentInstance.accountCapabilities()?.googleLinked).toBe(false);
+
+    // 2. Error transitorio de red mantiene hoja abierta para reintento y luego permite completar vinculación
+    fixture.componentInstance.openLinkGoogle();
+    fixture.componentInstance.linkPassword = 'Current!Pass123';
+    fixture.componentInstance.prepareLinkGoogle({ idToken: 'google-retry-tok', nonce: 'nonce-retry-1234' });
+    fixture.detectChanges();
+
+    repo.confirmLinkGoogle.mockReturnValueOnce(throwError(() => new ApiError('connection', 0, 'Sin conexión temporal')));
+    const confirmBtn = Array.from(el.querySelectorAll('button')).find((b) => b.textContent?.includes('Confirmar vinculación'));
+    expect(confirmBtn).toBeTruthy();
+    confirmBtn!.click();
+    fixture.detectChanges();
+
+    expect(fixture.componentInstance.pendingGoogleLink()).not.toBeNull();
+    expect(fixture.componentInstance.confirmLinkError()).toContain('No se pudo conectar con el servidor');
+
+    repo.confirmLinkGoogle.mockReturnValueOnce(of(linkedCaps));
+    confirmBtn!.click();
+    fixture.detectChanges();
+    expect(fixture.componentInstance.pendingGoogleLink()).toBeNull();
+    expect(fixture.componentInstance.accountCapabilities()?.googleLinked).toBe(true);
+
+    // 3. Error 400 (token expirado/consumido) cierra la hoja y expone mensaje controlado
+    fixture.componentInstance.accountCapabilities.set(unlinkedCaps);
+    repo.prepareLinkGoogle.mockReturnValue(of({
+      confirmationToken: 'confirm-expired-tok-1234567890',
+      currentAccountEmail: 'cuenta.local@ejemplo.com',
+      googleEmail: 'otra.google@gmail.com',
+      googleEmailVerified: true,
+      googleName: 'Usuario Google',
+      googlePictureUrl: null,
+      sameEmail: false,
+      expiresInSeconds: 300,
+    }));
+    fixture.componentInstance.openLinkGoogle();
+    fixture.componentInstance.linkPassword = 'Current!Pass123';
+    fixture.componentInstance.prepareLinkGoogle({ idToken: 'google-exp-tok', nonce: 'nonce-exp-1234' });
+    fixture.detectChanges();
+
+    repo.confirmLinkGoogle.mockReturnValueOnce(throwError(() => new ApiError('http', 400, 'La confirmación expiró o ya fue utilizada.')));
+    fixture.componentInstance.confirmPendingGoogleLink();
+    fixture.detectChanges();
+
+    expect(fixture.componentInstance.pendingGoogleLink()).toBeNull();
+    expect(fixture.componentInstance.error()).toContain('expiró');
+    expect(fixture.componentInstance.accountCapabilities()?.googleLinked).toBe(false);
+
+    // 4. Caso B (409 correo pertenece a otra cuenta local): jamás abre la hoja de confirmación
+    repo.prepareLinkGoogle.mockReturnValueOnce(throwError(() => new ApiError('http', 409, 'Este correo de Google ya pertenece a otra cuenta registrada.')));
+    fixture.componentInstance.openLinkGoogle();
+    fixture.componentInstance.linkPassword = 'Current!Pass123';
+    fixture.componentInstance.prepareLinkGoogle({ idToken: 'google-case-b', nonce: 'nonce-case-b-123' });
+    fixture.detectChanges();
+
+    expect(fixture.componentInstance.pendingGoogleLink()).toBeNull();
+    expect(fixture.componentInstance.error()).toContain('otra cuenta registrada');
+
+    // 5. Salir de la vista cancela silenciosamente cualquier token pendiente
+    repo.cancelLinkGoogle.mockClear();
+    repo.prepareLinkGoogle.mockReturnValue(of({
+      confirmationToken: 'confirm-destroy-tok-1234567890',
+      currentAccountEmail: 'cuenta.local@ejemplo.com',
+      googleEmail: 'otra.google@gmail.com',
+      googleEmailVerified: true,
+      googleName: 'Usuario Google',
+      googlePictureUrl: null,
+      sameEmail: false,
+      expiresInSeconds: 300,
+    }));
+    fixture.componentInstance.clearSecrets();
+    fixture.componentInstance.openLinkGoogle();
+    fixture.componentInstance.linkPassword = 'Current!Pass123';
+    fixture.componentInstance.prepareLinkGoogle({ idToken: 'google-destroy-tok', nonce: 'nonce-destroy-123' });
+    fixture.detectChanges();
+
+    fixture.destroy();
+    expect(repo.cancelLinkGoogle).toHaveBeenCalledWith('confirm-destroy-tok-1234567890');
   });
 });
