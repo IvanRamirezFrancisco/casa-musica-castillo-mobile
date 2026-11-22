@@ -4,7 +4,9 @@ import { TestBed } from '@angular/core/testing';
 import { firstValueFrom } from 'rxjs';
 import { PRODUCTION_API_BASE_URL } from '../../../environments/environment-settings';
 import { productionCommerceInterceptor, REVIEWED_COMMERCE } from './production-commerce.interceptor';
-import { REQUIRES_AUTH } from '../api/api-client.service';
+import { API_BASE_URL } from '../api/api-base-url.token';
+import { describeApiError } from '../api/api-error-message';
+import { ApiClientService, REQUIRES_AUTH } from '../api/api-client.service';
 
 describe('Protección de operaciones comerciales en Production', () => {
   beforeEach(() => TestBed.configureTestingModule({ providers: [
@@ -20,6 +22,23 @@ describe('Protección de operaciones comerciales en Production', () => {
       TestBed.inject(HttpTestingController).expectNone(url);
     }
     await expect(firstValueFrom(http.delete(`${PRODUCTION_API_BASE_URL}/api/wishlist/1`))).rejects.toMatchObject({ status: 403 });
+  });
+
+  it('distingue un 403 local de un acceso denegado por el servidor', async () => {
+    TestBed.overrideProvider(API_BASE_URL, { useValue: PRODUCTION_API_BASE_URL });
+    const api = TestBed.inject(ApiClientService);
+    const transport = TestBed.inject(HttpTestingController);
+    const local = await firstValueFrom(api.post('/api/cart/items', { productId: 313, quantity: 1 }, { auth: true }))
+      .catch((error: unknown) => error);
+    expect(local).toMatchObject({ kind: 'operation-disabled', status: 403 });
+    expect(describeApiError(local)).toContain('esta versión');
+    transport.expectNone(`${PRODUCTION_API_BASE_URL}/api/cart/items`);
+
+    const remote = firstValueFrom(api.get('/api/wishlist', undefined, { auth: true })).catch((error: unknown) => error);
+    transport.expectOne(`${PRODUCTION_API_BASE_URL}/api/wishlist`).flush({}, { status: 403, statusText: 'Forbidden' });
+    const denied = await remote;
+    expect(denied).toMatchObject({ kind: 'http', status: 403 });
+    expect(describeApiError(denied)).toBe('No tienes permiso para realizar esta acción.');
   });
 
   it('conserva las lecturas y el contrato de un origen aislado', async () => {
