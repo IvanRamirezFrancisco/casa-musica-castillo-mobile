@@ -1,7 +1,16 @@
-import { HttpErrorResponse } from '@angular/common/http';
+import { HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { ApiError, sanitizeServerMessage, toApiError } from './api-error';
 
 describe('ApiError y toApiError', () => {
+  it('respeta Retry-After en segundos y conserva el contrato anterior cuando la cabecera no es válida', () => {
+    const response = (value: string) => new HttpErrorResponse({status: 429, headers: new HttpHeaders({'Retry-After': value}), error: {remainingTimeSeconds: 73}});
+    expect(toApiError(response('120')).retryAfterSeconds).toBe(120);
+    expect(toApiError(response('invalid')).retryAfterSeconds).toBe(73);
+    expect(toApiError(response('-1')).retryAfterSeconds).toBe(73);
+    const now = Date.now();
+    const retry = toApiError(response(new Date(now + 120_000).toUTCString())).retryAfterSeconds!;
+    expect(retry).toBeGreaterThanOrEqual(119);expect(retry).toBeLessThanOrEqual(120);
+  });
   it('conserva los mensajes técnicos existentes y no inventa detalle', () => {
     expect(new ApiError('connection', 0).message).toContain('No se pudo conectar con la API');
     expect(new ApiError('http', 503).message).toBe('La API respondió con HTTP 503.');

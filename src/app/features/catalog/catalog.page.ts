@@ -23,6 +23,7 @@ import {
 import { CatalogCategory, CatalogSort } from '../../core/models/catalog.model';
 import { DemoCatalogService } from '../../core/services/demo-catalog.service';
 import { CmcEmptyStateComponent } from '../../shared/ui/empty-state/cmc-empty-state.component';
+import { CmcBrandLogoDirective } from '../../shared/ui/branding/cmc-brand-logo.directive';
 
 @Component({
   selector: 'app-catalog',
@@ -31,6 +32,7 @@ import { CmcEmptyStateComponent } from '../../shared/ui/empty-state/cmc-empty-st
   standalone: true,
   imports: [
     PublicCatalogComponent,
+    CmcBrandLogoDirective,
     CommonModule,
     RouterLink,
     FormsModule,

@@ -11,9 +11,20 @@ import androidx.core.splashscreen.SplashScreen;
 public class MainActivity extends BridgeActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        SplashScreen.installSplashScreen(this);
+        SplashScreen splashScreen = SplashScreen.installSplashScreen(this);
+        final boolean[] webReady = { false };
+        splashScreen.setKeepOnScreenCondition(() -> !webReady[0]);
+        registerPlugin(GoogleCredentialPlugin.class);
         super.onCreate(savedInstanceState);
-        getBridge().getWebView().setBackgroundColor(getColor(R.color.ic_launcher_background));
+        WebView webView = getBridge().getWebView();
+        webView.setBackgroundColor(getColor(R.color.ic_launcher_background));
+        webView.postVisualStateCallback(1L, new WebView.VisualStateCallback() {
+            @Override
+            public void onComplete(long requestId) {
+                webReady[0] = true;
+            }
+        });
+        webView.postDelayed(() -> webReady[0] = true, 900L);
         boolean debug = (getApplicationInfo().flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0;
         // Manifest controls debugging, even if an asset configuration were to request it.
         WebView.setWebContentsDebuggingEnabled(debug);

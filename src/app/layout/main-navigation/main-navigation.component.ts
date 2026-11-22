@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
 import { IonBadge, IonIcon, IonLabel, IonTabBar, IonTabButton, IonTabs } from '@ionic/angular';
 import { addIcons } from 'ionicons';
-import { cartOutline, gridOutline, homeOutline, personOutline, receiptOutline } from 'ionicons/icons';
+import { bagHandleOutline, gridOutline, homeOutline, personOutline, receiptOutline } from 'ionicons/icons';
 import { cartCount } from './cart-count';
 
 /** Cantidad máxima mostrada en el indicador; arriba de este valor se muestra "99+". */
@@ -34,6 +34,6 @@ export class MainNavigationComponent {
   });
 
   constructor() {
-    addIcons({ homeOutline, gridOutline, cartOutline, receiptOutline, personOutline });
+    addIcons({ homeOutline, gridOutline, bagHandleOutline, receiptOutline, personOutline });
   }
 }

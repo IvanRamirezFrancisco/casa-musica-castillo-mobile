@@ -5,53 +5,67 @@ ion-tab-bar {
   flex: 0 0 auto;
   align-self: center;
   margin-block: var(--cmc-space-2) calc(var(--cmc-space-3) + var(--cmc-safe-area-bottom));
-  --capsule-gutter: max(var(--cmc-space-4), var(--ion-safe-area-left, 0px), var(--ion-safe-area-right, 0px));
+  --capsule-gutter: max(12px, var(--ion-safe-area-left, 0px), var(--ion-safe-area-right, 0px));
   width: calc(100% - 2 * var(--capsule-gutter));
-  max-width: 28rem;
-  border-radius: var(--cmc-radius-xl);
+  max-width: 31rem;
+  border-radius: 30px;
   --background: var(--cmc-surface);
   --border: none;
-  box-shadow: var(--cmc-shadow-medium), inset 0 0 0 1px var(--cmc-border-strong);
+  box-shadow: 0 8px 24px rgb(42 16 20 / 12%), 0 2px 6px rgb(42 16 20 / 6%), inset 0 0 0 1px var(--cmc-border);
   /* Ionic forces content-box in its shadow host. Keep outer geometry exact:
    * no layout border/padding; inset shadow and button margins draw the capsule. */
   padding: 0;
   // The margin includes the safe area for the capsule.
   --ion-safe-area-bottom: 0px;
-  min-height: var(--cmc-bubble-nav-height);
+  min-height: max(72px, 4.5rem);
   contain: none; /* allows box-shadow to show outside */
   overflow: visible;
+  justify-content: space-evenly;
   z-index: 1000;
-  border: 0;
 
   ion-tab-button {
     --color: var(--cmc-text-secondary);
-    --color-selected: var(--cmc-text-on-primary);
+    --color-selected: var(--cmc-primary);
     --background-focused: var(--cmc-surface-alt);
     --background-hover: transparent;
-    --padding-start: 0px;
-    --padding-end: 0px;
+    --padding-start: 4px;
+    --padding-end: 4px;
     background: transparent;
-    min-width: 44px;
-    min-height: 48px;
-    transition: background-color var(--cmc-transition-fast);
-    border-radius: var(--cmc-radius-lg);
+    flex: 1 1 0;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-width: 52px;
+    max-width: 88px;
+    min-height: 56px;
+    transition: background-color var(--cmc-transition-fast), color var(--cmc-transition-fast);
+    border-radius: 20px;
     height: auto;
-    padding-block: var(--cmc-space-1);
-    margin: var(--cmc-space-1) 0;
+    padding-block: 6px;
+    margin: 8px 2px;
+
+    &::part(native) {
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
 
     ion-icon {
-      font-size: 1.375rem;
-      margin-block-end: var(--cmc-space-1);
+      font-size: 1.4rem;
+      margin-block-end: 4px;
       z-index: 2;
     }
 
     ion-label {
       font-family: 'Roboto', sans-serif;
-      font-size: .75rem;
-      font-weight: 600;
+      font-size: 0.75rem;
+      font-weight: 500;
       line-height: 1.2;
-      white-space: normal;
-      overflow-wrap: anywhere;
+      letter-spacing: -0.01em;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-inline-size: 100%;
       z-index: 2;
     }
 
@@ -66,22 +80,123 @@ ion-tab-bar {
       z-index: 3;
     }
 
-    /* Activo: Cápsula burdeos */
     &.tab-selected {
-      background: var(--cmc-primary);
-      box-shadow: var(--cmc-shadow-brand), inset 0 -3px var(--cmc-promo-mamey);
+      background: color-mix(in srgb, var(--cmc-primary) 12%, var(--cmc-surface));
+      box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--cmc-primary) 20%, transparent);
 
-      ion-label { font-weight: 750; }
+      ion-label { font-weight: 700; }
 
-      ion-icon, ion-label {
-        color: var(--cmc-text-on-primary);
+      ion-icon, ion-label { color: var(--cmc-primary); }
+    }
+  }
+}
+
+/* Móviles pequeños (360–389 px): 4 destinos visibles (Inicio, Catálogo, Carrito, Perfil).
+ * Pedidos permanece accesible desde Perfil -> Mis pedidos. */
+@media (max-width: 389px) {
+  ion-tab-bar {
+    --capsule-gutter: max(10px, var(--ion-safe-area-left, 0px), var(--ion-safe-area-right, 0px));
+    min-height: max(68px, 4.25rem);
+    border-radius: 28px;
+
+    ion-tab-button {
+      min-width: 62px;
+      max-width: 84px;
+      min-height: 52px;
+      margin: 7px 2px;
+      border-radius: 18px;
+
+      ion-icon {
+        font-size: 1.375rem;
+      }
+    }
+
+    ion-tab-button[tab='orders'] {
+      display: none;
+    }
+  }
+}
+
+/* Móviles muy pequeños (320–359 px): 3 destinos visibles (Inicio, Catálogo, Carrito).
+ * Perfil y Pedidos permanecen accesibles desde el botón de cuenta en la cabecera. */
+@media (max-width: 359px) {
+  ion-tab-bar {
+    --capsule-gutter: max(10px, var(--ion-safe-area-left, 0px), var(--ion-safe-area-right, 0px));
+    min-height: max(64px, 4rem);
+    border-radius: 26px;
+
+    ion-tab-button {
+      min-width: 72px;
+      max-width: 96px;
+      min-height: 50px;
+      margin: 6px 3px;
+      border-radius: 18px;
+
+      ion-icon {
+        font-size: 1.35rem;
+      }
+    }
+
+    ion-tab-button[tab='orders'],
+    ion-tab-button[tab='profile'] {
+      display: none;
+    }
+  }
+}
+
+/* Tablet vertical (768–1023 px): 5 destinos visibles en cápsula de hasta 560 px */
+@media (min-width: 768px) {
+  ion-tab-bar {
+    max-width: 35rem;
+    min-height: max(76px, 4.75rem);
+    border-radius: 34px;
+
+    ion-tab-button {
+      max-width: 104px;
+      min-height: 60px;
+      margin: 8px 4px;
+      border-radius: 22px;
+
+      ion-icon {
+        font-size: 1.5rem;
+        margin-block-end: 5px;
+      }
+
+      ion-label {
+        font-size: 0.8125rem;
       }
     }
   }
 }
 
-ion-tab-button::part(native):focus-visible { outline: 3px solid var(--cmc-primary); outline-offset: -3px; }
-ion-tab-button.tab-selected::part(native):focus-visible { outline-color: var(--cmc-text-on-primary); }
+/* Tablet horizontal y Desktop (1024 px o más): cápsula amplia de 640 px con icono arriba y texto abajo */
+@media (min-width: 1024px) {
+  ion-tab-bar {
+    max-width: 40rem;
 
-ion-tab-button:first-child { margin-left: var(--cmc-space-1); }
-ion-tab-button:last-child { margin-right: var(--cmc-space-1); }
+    ion-tab-button {
+      max-width: 116px;
+    }
+  }
+}
+
+/* Orientación horizontal de poca altura o teclado virtual abierto */
+@media (max-height: 460px) {
+  ion-tab-bar {
+    margin-block: 4px calc(6px + var(--cmc-safe-area-bottom));
+    min-height: 58px;
+
+    ion-tab-button {
+      min-height: 46px;
+      margin: 5px 2px;
+      padding-block: 4px;
+    }
+  }
+}
+
+ion-tab-button::part(native):focus-visible { outline: 3px solid var(--cmc-primary); outline-offset: -3px; }
+ion-tab-bar[inert] { filter: brightness(.82); }
+
+@media (prefers-reduced-motion: reduce) {
+  ion-tab-bar ion-tab-button { transition: none; }
+}

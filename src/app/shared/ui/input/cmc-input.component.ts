@@ -40,6 +40,7 @@ export class CmcInputComponent implements ControlValueAccessor {
   readonly label = input.required<string>();
   readonly type = input<CmcInputType>('text');
   readonly placeholder = input('');
+  readonly leadingIcon = input<ReturnType<CmcIconComponent['name']>>();
   readonly hint = input('');
   readonly error = input('');
   readonly digitLimit = input<number | null>(null);

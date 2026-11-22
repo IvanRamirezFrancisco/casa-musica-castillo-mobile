@@ -1,5 +1,6 @@
 import { Injectable, computed, inject, signal } from '@angular/core';
-import { Observable, defer, finalize, tap } from 'rxjs';
+import { EMPTY, Observable, defer, finalize, firstValueFrom, takeUntil, tap } from 'rxjs';
+import { ApiError } from '../api/api-error';
 import { describeApiError } from '../api/api-error-message';
 import { CART_LIMITS, type Cart, type CartSummary, type CartValidation } from '../models/cart.model';
 import { CART_REPOSITORY } from '../repositories/cart.repository';
@@ -23,6 +24,8 @@ export class CartService {
   private readonly actionMessage = signal<string | null>(null);
   private readonly validationState = signal<CartValidation | null>(null);
   private loadSeq = 0;
+  private readonly uncertainState = signal(false);
+  readonly clearUncertain = this.uncertainState.asReadonly();
 
   readonly cart = this.current.asReadonly();
   readonly loading = this.loadingState.asReadonly();
@@ -90,17 +93,50 @@ export class CartService {
       .subscribe({ error: () => undefined });
   }
 
-  /** Vacía el carrito (`DELETE /api/cart`) sin invocar `GET /api/cart` después. */
-  clear(): void {
-    if (this.mutatingState()) return;
-    this.mutation(this.repository.clear(), () => {
-      const existing = this.current();
-      if (!existing) { this.reset(); this.summaryCount.set(0); return; }
-      this.applyCart({
-        ...existing, items: [], totalItems: 0, subtotal: 0, tax: 0, discount: 0, total: 0,
-        couponCode: null, canCheckout: false, warningMessage: null,
-      });
-    }).subscribe({ error: () => undefined });
+  /** DELETE is never retried automatically. Ambiguous delivery is reconciled with one read. */
+  async clear(): Promise<boolean> {
+    if (this.mutatingState() || this.loadingState() || this.clearUncertain()) return false;
+    const session = this.auth.sessionVersion;
+    try {
+      await firstValueFrom(this.mutation(this.repository.clear(), () => {
+        const existing = this.current();
+        if (!existing) { this.reset(); this.summaryCount.set(0); return; }
+        this.applyCart({
+          ...existing, items: [], totalItems: 0, subtotal: 0, tax: 0, discount: 0, total: 0,
+          couponCode: null, canCheckout: false, warningMessage: null,
+        });
+      }));
+      return session === this.auth.sessionVersion;
+    } catch (error: unknown) {
+      if (session !== this.auth.sessionVersion) return false;
+      if (error instanceof ApiError && (error.kind === 'connection' || error.status >= 500)) {
+        this.uncertainState.set(true);
+        return this.reconcileClear();
+      }
+      return false;
+    }
+  }
+
+  async reconcileClear(): Promise<boolean> {
+    if (!this.clearUncertain() || this.mutatingState()) return false;
+    const session = this.auth.sessionVersion;
+    const seq = ++this.loadSeq;
+    this.mutatingState.set(true);
+    try {
+      const fresh = await firstValueFrom(this.repository.loadCart().pipe(takeUntil(this.auth.sessionEnded$)));
+      if (session !== this.auth.sessionVersion || seq !== this.loadSeq) return false;
+      this.applyCart(fresh);
+      if (fresh.items.length) this.actionMessage.set('El servidor no confirmó el vaciado. El carrito conserva productos. Revisa su contenido antes de volver a confirmar.');
+      else this.actionMessage.set(null);
+      return fresh.items.length === 0;
+    } catch {
+      if (session === this.auth.sessionVersion) {
+        this.actionMessage.set('No pudimos confirmar el vaciado. Comprueba el carrito antes de volver a intentarlo.');
+      }
+      return false;
+    } finally {
+      if (session === this.auth.sessionVersion) this.mutatingState.set(false);
+    }
   }
 
   /** Valida existencias antes de continuar (`GET /api/cart/validate`). */
@@ -117,6 +153,7 @@ export class CartService {
     this.loadError.set(null);
     this.actionMessage.set(null);
     this.validationState.set(null);
+    this.uncertainState.set(false);
   }
 
   private applyCart(cart: Cart): void {
@@ -126,10 +163,12 @@ export class CartService {
     this.current.set(cart);
     this.summaryCount.set(cart.totalItems);
     this.validationState.set(null);
+    this.uncertainState.set(false);
   }
 
   private mutation<T>(request: Observable<T>, accept: (value: T) => void, context?: 'form'): Observable<T> {
     return defer(() => {
+      if (this.mutatingState()) return EMPTY;
       const session = this.auth.sessionVersion;
       this.mutatingState.set(true);
       this.actionMessage.set(null);
@@ -138,7 +177,7 @@ export class CartService {
         error: (error: unknown) => {
           if (session === this.auth.sessionVersion) this.actionMessage.set(describeApiError(error, context));
         },
-      }), finalize(() => { if (session === this.auth.sessionVersion) this.mutatingState.set(false); }));
+      }), takeUntil(this.auth.sessionEnded$), finalize(() => { if (session === this.auth.sessionVersion) this.mutatingState.set(false); }));
     });
   }
 }

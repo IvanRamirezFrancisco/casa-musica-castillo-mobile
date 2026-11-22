@@ -1,0 +1,14 @@
+@mixin header {
+  .account-header { background: var(--cmc-primary); color: white; border-radius: 0 0 1.75rem 1.75rem; overflow: hidden; }
+  .account-header ion-toolbar { --background: transparent; --color: white; --border-width: 0; --padding-top: 1rem; --padding-bottom: 1rem; }
+  .account-header .account-brand { padding-inline: clamp(.5rem, 2vw, 1rem); overflow-wrap: anywhere; }
+  .account-header .account-brand--with-mark { display: flex; align-items: center; gap: .625rem; }
+  .account-header .account-brand__logo { flex: none; width: 36px; height: 36px; border-radius: 10px; object-fit: contain; box-shadow: 0 2px 6px rgb(0 0 0 / 22%); }
+  .account-header .account-brand h1, .account-header .account-brand strong { display: block; color: white; font-weight: 700; font-family: 'Montserrat', 'Roboto', sans-serif; font-size: 1.25rem; line-height: 1.3; margin: 0; }
+  .account-header .account-brand p { margin: .25rem 0 0; font-size: .875rem; color: #ecdadc; }
+  .account-header ion-back-button, .account-header .account-back { --color: white; --background: #ffffff1a; --border-radius: 1rem; min-width: 48px; min-height: 48px; margin-inline-start: 1rem; }
+  .account-header ion-back-button::part(native), .account-header .account-back { border: 1px solid #ffffff33; border-radius: 1rem; }
+  .account-header .account-back { display: grid; place-items: center; padding: 0; background: #ffffff1a; color: white; font-size: 1.5rem; cursor: pointer; }
+  .account-header .account-back:focus-visible { outline: 2px solid white; outline-offset: 3px; }
+  @media(max-height: 30rem) { .account-header ion-toolbar { --padding-top: .75rem; --padding-bottom: .75rem; } }
+}

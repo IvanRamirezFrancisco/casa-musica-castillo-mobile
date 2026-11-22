@@ -13,6 +13,7 @@
     [class.cmc-input__field--disabled]="isDisabled()"
     [attr.data-feedback]="isDisabled() ? null : feedback()"
   >
+    @if (leadingIcon(); as icon) { <cmc-icon class="cmc-input__leading" [name]="icon" aria-hidden="true"/> }
     <input
       #control
       class="cmc-input__control"

@@ -1,0 +1,134 @@
+.complete-card-header__title-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-block-end: 8px;
+
+  .cmc-title {
+    margin-block-end: 0;
+  }
+}
+
+.complete-step-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: var(--cmc-radius-full);
+  background: var(--cmc-surface-alt);
+  border: 1px solid var(--cmc-border);
+  color: var(--cmc-primary);
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.google-identity-summary {
+  display: flex;
+  align-items: center;
+  gap: var(--cmc-space-3);
+  padding: var(--cmc-space-3);
+  margin-block-end: var(--cmc-space-4);
+  border: 1px solid var(--cmc-border);
+  border-radius: var(--cmc-radius-md);
+  background: var(--cmc-surface-alt);
+}
+
+.google-profile-avatar,
+.google-profile-gmark {
+  flex: none;
+  inline-size: 2.75rem;
+  block-size: 2.75rem;
+}
+
+.google-profile-avatar {
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid var(--cmc-border);
+}
+
+.google-profile-gmark {
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  border-radius: var(--cmc-radius-md);
+  background: #ffffff;
+  border: 1px solid var(--cmc-border);
+  box-shadow: 0 1px 2px rgb(28 19 21 / 6%);
+}
+
+.google-profile-initials__text {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.google-identity-summary__meta {
+  display: grid;
+  gap: 0.15rem;
+  min-inline-size: 0;
+}
+
+.google-identity-summary__label {
+  font-size: 0.75rem;
+  color: var(--cmc-text-secondary);
+}
+
+.google-identity-summary__email {
+  font-size: 0.9375rem;
+  color: var(--cmc-text-primary);
+  overflow-wrap: anywhere;
+}
+
+.google-verified-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--cmc-accent-gold, #b37d1e);
+}
+
+.complete-privacy-link {
+  margin: 0;
+  font-size: 0.8125rem;
+}
+
+.complete-secondary-actions {
+  display: flex;
+  justify-content: center;
+}
+
+.complete-back-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-block-size: 44px;
+  padding: 6px 16px;
+  border: 0;
+  border-radius: var(--cmc-radius-md);
+  background: transparent;
+  color: var(--cmc-text-secondary);
+  font: inherit;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+
+  &:hover:not(:disabled) {
+    color: var(--cmc-primary);
+    background: var(--cmc-surface-alt);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--cmc-primary);
+    outline-offset: 2px;
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}

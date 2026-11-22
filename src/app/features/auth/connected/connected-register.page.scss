@@ -25,3 +25,34 @@
 .field-feedback:empty { position: absolute; }
 .password-guide li + li { margin-block-start: .25rem; }
 .password-length-error { margin: .5rem 0 0; color: var(--cmc-error-text); font-size: .875rem; }
+.google-link-guidance {
+  display: grid;
+  gap: 10px;
+  margin: 0 0 16px;
+  padding: 14px 16px;
+  background: var(--cmc-surface-alt);
+  border: 1px solid var(--cmc-border);
+  border-inline-start: 3px solid var(--cmc-accent-gold);
+  border-radius: var(--cmc-radius-md);
+}
+.google-link-guidance__title {
+  margin: 0;
+  font-weight: 700;
+  color: var(--cmc-text-primary);
+  font-size: .95rem;
+}
+.google-link-guidance__body {
+  margin: 0;
+  color: var(--cmc-text-secondary);
+  font-size: .875rem;
+  line-height: 1.5;
+}
+.google-link-guidance__actions {
+  display: grid;
+  gap: 8px;
+  justify-items: center;
+}
+.google-link-guidance__recovery {
+  font-size: .875rem;
+  font-weight: 650;
+}

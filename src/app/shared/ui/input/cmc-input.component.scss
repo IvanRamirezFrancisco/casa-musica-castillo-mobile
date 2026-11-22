@@ -103,3 +103,5 @@
 .cmc-input__field[data-feedback='warning'] ~ .cmc-input__message--error {
   color: var(--cmc-warning-text);
 }
+
+.cmc-input__leading { color:var(--cmc-text-secondary);margin-inline-end:var(--cmc-space-2); }

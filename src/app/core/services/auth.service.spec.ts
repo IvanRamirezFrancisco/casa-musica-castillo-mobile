@@ -15,6 +15,8 @@ function setup(store: SessionStore = new MemorySessionStore()) {
     login: vi.fn(), sendTwoFactorEmailCode: vi.fn(), verifyTwoFactor: vi.fn(), register: vi.fn(),
     resendVerification: vi.fn(), verifyEmail: vi.fn(), verifyEmailCode: vi.fn(), requestPasswordReset: vi.fn(),
     confirmPasswordReset: vi.fn(), logout: vi.fn(), restoreUser: vi.fn().mockReturnValue(of(testSession().user)),
+    refreshSession: vi.fn(), getGoogleConfig: vi.fn(), createGoogleChallenge: vi.fn(),
+    authenticateWithGoogle: vi.fn(), completeGoogleRegistration: vi.fn(), checkUsernameAvailability: vi.fn(),
   } satisfies Record<keyof AuthRepository, ReturnType<typeof vi.fn>>;
   TestBed.configureTestingModule({ providers: [
     provideRouter([]), { provide: AUTH_REPOSITORY, useValue: repo }, { provide: SESSION_STORE, useValue: store },

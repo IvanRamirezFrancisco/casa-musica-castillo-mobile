@@ -8,6 +8,18 @@ describe('Account security HTTP contracts (synthetic responses only)',()=>{
  let repo:HttpAccountSecurityRepository;let http:HttpTestingController;
  beforeEach(()=>{TestBed.configureTestingModule({providers:[provideHttpClient(),provideHttpClientTesting(),{provide:API_BASE_URL,useValue:'http://localhost:8080'}]});repo=TestBed.inject(HttpAccountSecurityRepository);http=TestBed.inject(HttpTestingController);});
  afterEach(()=>http.verify());
+ it.each([true,false])('la capacidad requiere una garantía booleana explícita: %s',value=>{
+  repo.passwordChangeRevokesSessions().subscribe(result=>expect(result).toBe(value));
+  http.expectOne('http://localhost:8080/api/users/security-settings').flush({success:true,data:{passwordChangeRevokesSessions:value}});
+ });
+ it.each([undefined,'true',1,null])('un contrato ausente o incompatible no se convierte en unsupported: %s',value=>{
+  repo.passwordChangeRevokesSessions().subscribe({error:e=>expect(e.kind).toBe('invalid-response')});
+  http.expectOne('http://localhost:8080/api/users/security-settings').flush({success:true,data:value===undefined?{}:{passwordChangeRevokesSessions:value}});
+ });
+ it.each([401,403,404,500])('conserva el error HTTP de capacidad %s',status=>{
+  repo.passwordChangeRevokesSessions().subscribe({error:e=>expect(e.status).toBe(status)});
+  http.expectOne('http://localhost:8080/api/users/security-settings').flush({success:false},{status,statusText:'Synthetic failure'});
+ });
  it('lists only the session fields used by the app and revokes a selected session', () => {
    repo.sessions().subscribe(sessions => expect(sessions).toEqual([
      { id: 'session-a', device: 'Móvil', current: true },

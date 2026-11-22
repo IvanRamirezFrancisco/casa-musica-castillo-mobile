@@ -1,0 +1,281 @@
+{
+  "$schema": "https://design-tokens.github.io/community-group/format/",
+  "metadata": {
+    "systemName": "Casa de Música Castillo Mobile Design System",
+    "version": "1.0.0",
+    "lastAudit": "2026-11-15",
+    "author": "Equipo de Arquitectura Frontend & UI/UX",
+    "sourceFiles": [
+      "src/theme/variables.scss",
+      "src/global.scss",
+      "src/app/shared/ui/styles/_discovery.scss",
+      "src/app/shared/ui/styles/_commerce.scss",
+      "src/app/shared/ui/styles/_checkout-options.scss",
+      "src/app/shared/ui/styles/_auth-shell.scss",
+      "src/app/layout/main-navigation/main-navigation.component.scss"
+    ],
+    "verificationStatus": "Verificado contra código fuente"
+  },
+  "color": {
+    "brand": {
+      "primary": {
+        "value": "#722f37",
+        "type": "color",
+        "description": "Color principal de marca (Burdeos / Wine). Utilizado en botones primarios, enlaces, foco y navegación activa.",
+        "verified": true,
+        "source": "src/theme/variables.scss:11"
+      },
+      "primarySoft": {
+        "value": "#a64d5b",
+        "type": "color",
+        "description": "Variante suave de marca para estados de hover y acentos interactivos secundarios.",
+        "verified": true,
+        "source": "src/theme/variables.scss:12"
+      },
+      "primaryDark": {
+        "value": "#421a20",
+        "type": "color",
+        "description": "Variante oscura de marca para estados activos/presionados de botones.",
+        "verified": true,
+        "source": "src/theme/variables.scss:13"
+      },
+      "accentGold": {
+        "value": "#c5a059",
+        "type": "color",
+        "description": "Acento dorado premium. Utilizado en badges, iconos hero, estrellas y detalles de marca.",
+        "verified": true,
+        "source": "src/theme/variables.scss:14"
+      }
+    },
+    "surface": {
+      "background": {
+        "value": "#fcfaf7",
+        "type": "color",
+        "description": "Fondo general de la aplicación (crema/marfil suave).",
+        "verified": true,
+        "source": "src/theme/variables.scss:20"
+      },
+      "surface": {
+        "value": "#ffffff",
+        "type": "color",
+        "description": "Superficie de tarjetas, inputs, diálogos modales y barra de navegación.",
+        "verified": true,
+        "source": "src/theme/variables.scss:21"
+      },
+      "surfaceAlt": {
+        "value": "#f5efe8",
+        "type": "color",
+        "description": "Superficie alterna para contenedores deshabilitados, activos y placeholders.",
+        "verified": true,
+        "source": "src/theme/variables.scss:22"
+      },
+      "surfaceOverlay": {
+        "value": "rgba(255, 255, 255, 0.92)",
+        "type": "color",
+        "description": "Superficie translúcida para cabeceras y controles superpuestos.",
+        "verified": true,
+        "source": "src/theme/variables.scss:93"
+      },
+      "overlayBackdrop": {
+        "value": "rgba(41, 37, 36, 0.65)",
+        "type": "color",
+        "description": "Fondo de oscurecimiento cálido para modales y hojas inferiores.",
+        "verified": true,
+        "source": "src/theme/variables.scss:92"
+      }
+    },
+    "text": {
+      "primary": {
+        "value": "#292524",
+        "type": "color",
+        "description": "Texto primario, encabezados y valores de entrada (Stone 800 cálido). Contraste >13:1.",
+        "verified": true,
+        "source": "src/theme/variables.scss:28"
+      },
+      "secondary": {
+        "value": "#6b6560",
+        "type": "color",
+        "description": "Texto secundario, placeholders y metadatos (Stone 500 cálido). Contraste >5:1.",
+        "verified": true,
+        "source": "src/theme/variables.scss:29"
+      },
+      "disabled": {
+        "value": "#8f8985",
+        "type": "color",
+        "description": "Texto en controles bloqueados o deshabilitados.",
+        "verified": true,
+        "source": "src/theme/variables.scss:30"
+      },
+      "onPrimary": {
+        "value": "#ffffff",
+        "type": "color",
+        "description": "Texto sobre fondos burdeos y estados seleccionados. Contraste >8:1.",
+        "verified": true,
+        "source": "src/theme/variables.scss:31"
+      }
+    },
+    "border": {
+      "default": {
+        "value": "#e7ded5",
+        "type": "color",
+        "description": "Borde estándar para tarjetas, chips y divisores de lista.",
+        "verified": true,
+        "source": "src/theme/variables.scss:37"
+      },
+      "strong": {
+        "value": "#d4c8bd",
+        "type": "color",
+        "description": "Borde enfatizado para inputs, controles de cantidad y botones secundarios.",
+        "verified": true,
+        "source": "src/theme/variables.scss:38"
+      },
+      "onPrimary": {
+        "value": "rgba(255, 255, 255, 0.35)",
+        "type": "color",
+        "description": "Borde divisor sobre superficies oscuras o burdeos.",
+        "verified": true,
+        "source": "src/theme/variables.scss:94"
+      }
+    },
+    "semantic": {
+      "success": {
+        "value": "#10b981",
+        "type": "color",
+        "description": "Color semántico para estado exitoso y pedidos pagados.",
+        "verified": true,
+        "source": "src/theme/variables.scss:44"
+      },
+      "successText": {
+        "value": "#047857",
+        "type": "color",
+        "description": "Texto legible para mensajes de éxito sobre fondo claro.",
+        "verified": true,
+        "source": "src/theme/variables.scss:97"
+      },
+      "warning": {
+        "value": "#f59e0b",
+        "type": "color",
+        "description": "Color semántico para advertencias y pedidos pendientes.",
+        "verified": true,
+        "source": "src/theme/variables.scss:45"
+      },
+      "warningSurface": {
+        "value": "#fff1dc",
+        "type": "color",
+        "description": "Fondo tintado cálido para alertas de advertencia.",
+        "verified": true,
+        "source": "src/theme/variables.scss:96"
+      },
+      "warningText": {
+        "value": "#914201",
+        "type": "color",
+        "description": "Texto de alto contraste para alertas de advertencia.",
+        "verified": true,
+        "source": "src/theme/variables.scss:95"
+      },
+      "error": {
+        "value": "#dc2626",
+        "type": "color",
+        "description": "Color semántico para errores de validación y fallos de red.",
+        "verified": true,
+        "source": "src/theme/variables.scss:46"
+      }
+    }
+  },
+  "typography": {
+    "fontFamilies": {
+      "display": {
+        "value": "'Montserrat', 'Roboto', sans-serif",
+        "type": "fontFamily",
+        "description": "Fuente para títulos, cabeceras, botones y elementos con presencia de marca.",
+        "verified": true,
+        "source": "src/global.scss:83"
+      },
+      "body": {
+        "value": "'Roboto', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+        "type": "fontFamily",
+        "description": "Fuente para texto corrido, controles, campos de formulario y descripciones.",
+        "verified": true,
+        "source": "src/global.scss:59"
+      }
+    },
+    "fontWeights": {
+      "regular": { "value": 400, "type": "fontWeight" },
+      "medium": { "value": 500, "type": "fontWeight" },
+      "semiBold": { "value": 600, "type": "fontWeight" },
+      "bold": { "value": 700, "type": "fontWeight" }
+    },
+    "fontSizes": {
+      "caption": { "value": "12px", "type": "dimension" },
+      "bodyCompact": { "value": "14px", "type": "dimension" },
+      "body": { "value": "16px", "type": "dimension" },
+      "sectionTitle": { "value": "20px", "type": "dimension" },
+      "title": { "value": "24px", "type": "dimension" },
+      "heroTitle": { "value": "28px", "type": "dimension" }
+    },
+    "lineHeights": {
+      "caption": { "value": "16px", "type": "dimension" },
+      "bodyCompact": { "value": "20px", "type": "dimension" },
+      "body": { "value": "24px", "type": "dimension" },
+      "sectionTitle": { "value": "28px", "type": "dimension" },
+      "title": { "value": "32px", "type": "dimension" },
+      "heroTitle": { "value": "36px", "type": "dimension" }
+    }
+  },
+  "spacing": {
+    "space1": { "value": "4px", "type": "dimension", "source": "src/theme/variables.scss:53" },
+    "space2": { "value": "8px", "type": "dimension", "source": "src/theme/variables.scss:54" },
+    "space3": { "value": "12px", "type": "dimension", "source": "src/theme/variables.scss:55" },
+    "space4": { "value": "16px", "type": "dimension", "source": "src/theme/variables.scss:56" },
+    "space5": { "value": "20px", "type": "dimension", "source": "src/theme/variables.scss:57" },
+    "space6": { "value": "24px", "type": "dimension", "source": "src/theme/variables.scss:58" },
+    "space8": { "value": "32px", "type": "dimension", "source": "src/theme/variables.scss:59" },
+    "sectionGap": { "value": "32px", "type": "dimension", "source": "src/theme/variables.scss:60" },
+    "controlHeight": { "value": "48px", "type": "dimension", "source": "src/theme/variables.scss:61" },
+    "contentWide": { "value": "1120px", "type": "dimension", "source": "src/theme/variables.scss:62" }
+  },
+  "borderRadius": {
+    "xs": { "value": "4px", "type": "dimension", "source": "src/theme/variables.scss:68" },
+    "sm": { "value": "8px", "type": "dimension", "source": "src/theme/variables.scss:69" },
+    "md": { "value": "12px", "type": "dimension", "source": "src/theme/variables.scss:70" },
+    "lg": { "value": "16px", "type": "dimension", "source": "src/theme/variables.scss:71" },
+    "xl": { "value": "24px", "type": "dimension", "source": "src/theme/variables.scss:72" },
+    "full": { "value": "9999px", "type": "dimension", "source": "src/theme/variables.scss:73" }
+  },
+  "shadows": {
+    "subtle": {
+      "value": "0 1px 2px rgba(41, 37, 36, 0.05)",
+      "type": "boxShadow",
+      "source": "src/theme/variables.scss:79"
+    },
+    "card": {
+      "value": "0 2px 8px rgba(41, 37, 36, 0.10)",
+      "type": "boxShadow",
+      "source": "src/theme/variables.scss:80"
+    },
+    "medium": {
+      "value": "0 4px 12px rgba(41, 37, 36, 0.12)",
+      "type": "boxShadow",
+      "source": "src/theme/variables.scss:81"
+    },
+    "brand": {
+      "value": "0 4px 12px rgba(114, 47, 55, 0.15)",
+      "type": "boxShadow",
+      "source": "src/theme/variables.scss:82"
+    }
+  },
+  "motion": {
+    "transitionFast": { "value": "150ms ease", "type": "transition", "source": "src/theme/variables.scss:88" },
+    "transitionBase": { "value": "220ms ease", "type": "transition", "source": "src/theme/variables.scss:89" }
+  },
+  "navigation": {
+    "bubbleNavHeight": { "value": "64px", "type": "dimension", "source": "src/global.scss:179" },
+    "bubbleNavBottomMargin": { "value": "12px", "type": "dimension", "source": "src/global.scss:180" },
+    "bubbleNavSpacing": { "value": "16px", "type": "dimension", "source": "src/global.scss:181" },
+    "bubbleNavOffset": {
+      "value": "calc(64px + 12px + 16px + env(safe-area-inset-bottom))",
+      "type": "dimension",
+      "source": "src/global.scss:182"
+    }
+  }
+}

@@ -1,0 +1,96 @@
+<ion-header class="ion-no-border account-header">
+      <ion-toolbar>
+        <ion-buttons slot="start"><button appProfileBack type="button" class="account-back" aria-label="Volver"><ion-icon name="arrow-back-outline" aria-hidden="true"/></button></ion-buttons>
+        <div class="account-brand account-brand--with-mark">
+          <img appBrandLogo="sm" class="account-brand__logo" alt="" width="36" height="36" />
+          <div class="account-brand__copy"><h1>Perfil</h1><p>Tu cuenta, seguridad y preferencias</p></div>
+        </div>
+      </ion-toolbar>
+    </ion-header>
+
+    <ion-content class="cmc-page cmc-root-page">
+      <main class="cmc-page-container cmc-account profile-shell">
+        @if (loading() && !profile()) {
+          <cmc-loading message="Consultando perfil de tu cuenta..."></cmc-loading>
+        } @else if (error() && !profile()) {
+          <cmc-error-state
+            heading="No pudimos cargar tu perfil"
+            [description]="error()!"
+            retryLabel="Reintentar"
+            (retry)="reload()"
+          ></cmc-error-state>
+        } @else if (profile(); as user) {
+          <section class="profile-card" aria-label="Datos de la cuenta">
+            <div class="profile-identity">
+              <div class="avatar" aria-hidden="true">{{ initial() }}</div>
+              <div>
+                <h2 class="cmc-title">{{ user.fullName }}</h2>
+                <p class="cmc-text-secondary">{{ privacy.hideContact() ? 'Correo oculto' : user.email }}</p>
+              </div>
+            </div>
+
+            <div class="profile-statuses">
+              <span class="account-status">{{ user.enabled ? 'Cuenta activa' : 'Cuenta inactiva' }}</span>
+              <span class="account-status">{{ user.twoFactorEnabled ? '2FA activo' : '2FA desactivado' }}</span>
+            </div>
+
+            <dl class="field-grid">
+              <div class="field-row">
+                <dt>Correo electrónico</dt>
+                <dd>{{ privacy.hideContact() ? 'Correo oculto' : user.email }}</dd>
+              </div>
+              <div class="field-row">
+                <dt>Teléfono</dt>
+                <dd>{{ privacy.hideContact() ? 'Teléfono oculto' : (user.phone ?? 'Sin teléfono registrado') }}</dd>
+              </div>
+              <div class="field-row">
+                <dt>Segundo factor (2FA)</dt>
+                <dd>{{ twoFactorSummary(user) }}</dd>
+              </div>
+            </dl>
+
+            <button type="button" class="profile-edit" (click)="goToEditProfile()">
+              Información sobre edición de perfil <cmc-icon name="arrow"/>
+            </button>
+          </section>
+
+          <section class="profile-card" aria-label="Accesos de tu cuenta">
+            <h2 class="cmc-title">Accesos de tu cuenta</h2>
+            <nav class="account-links" aria-label="Accesos de tu cuenta">
+              <button type="button" (click)="goToOrders()"><span class="link-icon"><cmc-icon name="cart"/></span><span>Mis pedidos</span><cmc-icon name="next"/></button>
+              <button type="button" (click)="goToFavorites()"><span class="link-icon"><cmc-icon name="heart"/></span><span>Mis favoritos</span><cmc-icon name="next"/></button>
+              <button type="button" (click)="goToSecurity()"><span class="link-icon"><cmc-icon name="security"/></span><span>Seguridad de la cuenta</span><cmc-icon name="next"/></button>
+              <a routerLink="/privacy"><span class="link-icon"><cmc-icon name="lock"/></span><span>Privacidad y mis datos</span><cmc-icon name="next"/></a>
+            </nav>
+          </section>
+
+          @if (auth.storageFailure()) {
+            <p class="session-note" role="alert">No se pudo acceder al almacenamiento seguro de la sesión. No se pudo confirmar su conservación o borrado. Reintenta; si el problema continúa, borra los datos de la aplicación desde Ajustes de Android.</p>
+          }
+          @if (!auth.persistent) {
+            <div class="session-note" role="note">
+              <ion-icon name="shield-checkmark-outline" aria-hidden="true"></ion-icon>
+              <span>
+                Tu sesión se mantiene mientras la aplicación está en ejecución. Si la aplicación se reinicia, deberás iniciar sesión de nuevo.
+              </span>
+            </div>
+          }
+
+          @if (logoutNotice()) {
+            <p class="session-note" role="status">{{ logoutNotice() }}</p>
+          }
+
+          <section class="profile-logout" aria-label="Sesión">
+            <cmc-button
+              variant="secondary"
+              fullWidth
+              [loading]="loggingOut()"
+              loadingLabel="Cerrando sesión"
+              (click)="logout()"
+            >
+              <ion-icon name="log-out-outline" aria-hidden="true"/> Cerrar sesión
+            </cmc-button>
+          </section>
+        }
+      </main>
+    </ion-content>

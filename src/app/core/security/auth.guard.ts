@@ -8,6 +8,10 @@ export function safeReturnUrl(value: unknown, fallback = '/main/home'): string {
   if (typeof value !== 'string' || value.length > 256) return fallback;
   if (!value.startsWith('/') || value.startsWith('//') || value.includes('\\') || value.includes('://')) return fallback;
   if (/[\u0000-\u001f]/.test(value)) return fallback;
+  const path = value.split(/[?#]/)[0];
+  // Authentication/action-token routes and unknown destinations must not become loops.
+  if (!/^\/(main(?:\/(?:home|catalog|cart|orders|profile))?|favorites|products\/[1-9]\d*|orders\/[1-9]\d*|profile\/(?:security|edit)|privacy(?:\/(?:my-data|delete-account))?|checkout(?:\/(?:delivery|payment|confirmation))?)$/.test(path)) return fallback;
+  if (/[?&]returnUrl=/i.test(value) || /%(?:0[0-9a-f]|1[0-9a-f]|5c)/i.test(value)) return fallback;
   return value;
 }
 
@@ -22,5 +26,7 @@ export const authGuard: CanActivateFn = async (_route, state) => {
   await auth.restore();
   if (auth.hasValidSession()) return true;
   if (auth.user() !== null) auth.handleUnauthorized(false);
+  // Expiry is a session boundary, not a new request to revisit the outgoing private view.
+  if (auth.sessionExpired()) return router.createUrlTree(['/login']);
   return router.createUrlTree(['/login'], { queryParams: { returnUrl: safeReturnUrl(state.url) } });
 };

@@ -38,8 +38,8 @@ assert "name='com.casademusicacastillo.app'" in badging and f"versionCode='{vers
 assert re.search(r"(?:minSdkVersion|sdkVersion):'24'",badging) and "targetSdkVersion:'36'" in badging
 assert 'application-debuggable' not in badging
 permissions=re.findall(r"uses-permission: name='([^']+)'",badging)
-# VIBRATE comes from the existing Haptics plugin; AndroidX Core declares a signature-only receiver permission.
-assert set(permissions)=={'android.permission.INTERNET','android.permission.VIBRATE','com.casademusicacastillo.app.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION'},permissions
+# VIBRATE comes from Haptics; AndroidX Core declares a signature-only receiver permission; USE_BIOMETRIC/USE_FINGERPRINT come transitively from androidx.credentials:credentials (androidx.biometric:biometric).
+assert set(permissions)=={'android.permission.INTERNET','android.permission.USE_BIOMETRIC','android.permission.USE_FINGERPRINT','android.permission.VIBRATE','com.casademusicacastillo.app.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION'},permissions
 manifest=output(aapt,'dump','xmltree',apk,'--file','AndroidManifest.xml')
 assert re.search(r'android:allowBackup[^\n]*=(?:false|0x0)(?:\s|$)',manifest),manifest
 assert re.search(r'android:usesCleartextTraffic[^\n]*=(?:false|0x0)(?:\s|$)',manifest),manifest

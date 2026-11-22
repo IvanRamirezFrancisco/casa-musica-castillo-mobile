@@ -1,6 +1,7 @@
-import { ChangeDetectionStrategy, Component, inject, input, output, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, effect, inject, input, linkedSignal, output, signal, viewChild } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
+import { Platform } from '@ionic/angular';
 import { Subject, catchError, distinctUntilChanged, map, of, switchMap, timer } from 'rxjs';
 import { PUBLIC_CATALOG_REPOSITORY } from '../../core/repositories/public-catalog.repository';
 import { PublicProduct } from '../../core/models/public-product.model';
@@ -13,27 +14,31 @@ import { PublicImageComponent } from './public-product-grid.component';
   imports: [RouterLink, CmcIconComponent, CmcMoneyPipe, PublicImageComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="search-area" (focusout)="leave($event)" (keydown.escape)="suggesting.set(false)">
-      <form class="search-bar" role="search" (submit)="$event.preventDefault(); submit(field)">
-        <cmc-icon name="search" />
+    <div class="search-area" (focusout)="onFocusOut($event)" (keydown.escape)="dismissInline($event)">
+      <form #form class="search-bar" role="search" (submit)="$event.preventDefault(); submit(field)">
+        <cmc-icon name="search" class="search-leading-icon" />
         <input #field [id]="fieldId()" type="search" maxlength="100" enterkeyhint="search"
           autocomplete="off" aria-label="Buscar instrumentos en el catálogo" placeholder="Buscar instrumentos"
-          [value]="term()" (input)="update(field.value)" (focus)="suggest(field.value)"
-          (keydown.enter)="$event.preventDefault(); submit(field)" />
-        @if (term()) {
-          <button type="button" aria-label="Limpiar búsqueda" (click)="clear(field)"><cmc-icon name="close" /></button>
+          [attr.aria-controls]="suggesting() ? fieldId() + '-suggestions' : null"
+          [value]="draftTerm()" (input)="update(field.value)"
+          (keydown.enter)="onEnter($event, field)" />
+        @if (draftTerm()) {
+          <button type="button" class="clear-btn" aria-label="Limpiar búsqueda" (click)="clear(field)"><cmc-icon name="close" /></button>
         }
-        <button type="submit" aria-label="Buscar instrumentos"><cmc-icon name="arrow" /></button>
+        <button type="submit" class="search-go-btn" aria-label="Buscar instrumentos">
+          <span class="go-pill" aria-hidden="true"><cmc-icon name="arrow" /></span>
+        </button>
       </form>
       @if (suggesting()) {
-        <div class="suggestions" aria-label="Sugerencias del catálogo">
+        <div class="suggestions" [id]="fieldId() + '-suggestions'" role="region" tabindex="0" aria-label="Sugerencias del catálogo"
+          [style.--suggestions-space]="suggestionsSpace()">
           @switch (status()) {
             @case ('loading') { <p role="status">Buscando…</p> }
             @case ('error') { <p role="status">Sugerencias sin conexión. Puedes intentar la búsqueda.</p> }
             @case ('ready') {
               @if (products().length) {
                 <ul>@for (item of products(); track item.id) {
-                  <li><a [routerLink]="['/products', item.id]" (click)="close(field)">
+                  <li><a [routerLink]="['/products', item.id]" (click)="selectProduct()">
                     <span class="thumbnail" aria-hidden="true"><cmc-public-image [src]="item.imageUrl" alt="" [compact]="true" /></span>
                     <span class="description"><strong>{{item.name}}</strong><small>{{item.brand}} · {{item.category}}</small></span>
                     <span class="price">{{item.price | cmcMoney}}</span>
@@ -46,45 +51,62 @@ import { PublicImageComponent } from './public-product-grid.component';
       }
     </div>
   `,
-  styles: `
-    :host { display: block; margin-block-end: var(--cmc-space-4); }
-    .search-area { position: relative; }
-    .search-bar { display: flex; align-items: center; gap: .35rem; padding: .25rem .5rem;
-      background: var(--cmc-surface); border: 1px solid var(--cmc-border-strong); border-radius: var(--cmc-radius-lg); }
-    .search-bar:focus-within { border-color: var(--cmc-primary); }
-    .search-bar > cmc-icon { color: var(--cmc-primary); flex: none; margin-inline-start: .35rem; }
-    .search-bar input { flex: 1; min-width: 0; border: 0; background: transparent; min-height: 48px; color: var(--cmc-text-primary); }
-    .search-bar input::-webkit-search-cancel-button { appearance: none; }
-    button { display: grid; place-items: center; min-width: 48px; min-height: 48px;
-      background: transparent; color: var(--cmc-primary); }
-    .suggestions { margin-block-start: .35rem; max-block-size: min(18rem, 42dvh); overflow-y: auto;
-      overscroll-behavior: contain; background: var(--cmc-surface); border: 1px solid var(--cmc-border);
-      border-radius: var(--cmc-radius-lg); box-shadow: var(--cmc-shadow-subtle); }
-    .suggestions p { margin: 0; padding: .75rem; }
-    ul { list-style: none; padding: .25rem; margin: 0; }
-    li + li { border-block-start: 1px solid var(--cmc-border); }
-    a { display: grid; grid-template-columns: 42px minmax(0,1fr) auto; align-items: center; gap: .5rem;
-      color: var(--cmc-text-primary); padding: .375rem; min-height: 54px; text-decoration: none; }
-    a:hover, a:focus-visible { background: var(--cmc-surface-alt); }
-    .thumbnail { width: 42px; height: 42px; border-radius: .5rem; overflow: hidden; }
-    .description { overflow-wrap: anywhere; }
-    .description small { display: block; color: var(--cmc-text-secondary); }
-    .price { color: var(--cmc-primary); font-weight: 700; font-size: .8rem; }
-  `,
+  styles: `:host { display: block; margin-block-end: var(--cmc-space-4); }`,
 })
 export class CatalogSearchComponent {
   readonly fieldId = input('catalog-search');
+  readonly compact = input(false);
   readonly term = input('');
   readonly category = input<number>();
-  readonly termChange = output<string>();
+  readonly draftTerm = linkedSignal(() => this.term());
   readonly searched = output<string>();
+  readonly productSelected = output<void>();
   readonly suggesting = signal(false);
+  readonly suggestionsSpace = signal<string | null>(null);
   readonly status = signal<'idle' | 'loading' | 'ready' | 'error'>('idle');
   readonly products = signal<readonly PublicProduct[]>([]);
+  private readonly platform = inject(Platform);
   private readonly repository = inject(PUBLIC_CATALOG_REPOSITORY);
   private readonly query = new Subject<{ keyword: string; categoryId?: number }>();
+  private readonly fieldRef = viewChild<ElementRef<HTMLInputElement>>('field');
+  private readonly formRef = viewChild<ElementRef<HTMLFormElement>>('form');
 
   constructor() {
+    effect(() => {
+      if (this.compact()) this.fieldRef()?.nativeElement.focus({ preventScroll: true });
+    });
+
+    effect(onCleanup => {
+      if (!this.suggesting()) return;
+      const form = this.formRef()?.nativeElement;
+      const content = form?.closest('ion-content');
+      if (!form || !content) return;
+
+      const viewport = window.visualViewport;
+      const measure = () => {
+        const bottom = Math.min(content.getBoundingClientRect().bottom,
+          viewport ? viewport.offsetTop + viewport.height : window.innerHeight);
+        this.suggestionsSpace.set(Math.max(0, bottom - form.getBoundingClientRect().bottom - 14) + 'px');
+      };
+      measure();
+      viewport?.addEventListener('resize', measure);
+      viewport?.addEventListener('scroll', measure);
+      content.addEventListener('ionScrollEnd', measure);
+      const observer = typeof ResizeObserver === 'undefined' ? undefined : new ResizeObserver(measure);
+      observer?.observe(content);
+      const back = this.compact() ? undefined : this.platform.backButton.subscribeWithPriority(200, () => {
+        this.resetDraft();
+        this.fieldRef()?.nativeElement.focus({ preventScroll: true });
+      });
+      onCleanup(() => {
+        viewport?.removeEventListener('resize', measure);
+        viewport?.removeEventListener('scroll', measure);
+        content.removeEventListener('ionScrollEnd', measure);
+        observer?.disconnect();
+        back?.unsubscribe();
+      });
+    });
+
     this.query.pipe(
       distinctUntilChanged((a, b) => a.keyword === b.keyword && a.categoryId === b.categoryId),
       switchMap(query => {
@@ -106,11 +128,7 @@ export class CatalogSearchComponent {
   }
 
   update(value: string): void {
-    this.termChange.emit(value);
-    this.suggest(value);
-  }
-
-  suggest(value: string): void {
+    this.draftTerm.set(value);
     const keyword = value.trim();
     this.suggesting.set(keyword.length >= 2);
     this.query.next({ keyword, categoryId: this.category() });
@@ -122,19 +140,43 @@ export class CatalogSearchComponent {
     field.focus();
   }
 
-  leave(event: FocusEvent): void {
-    if (!(event.currentTarget instanceof HTMLElement) || !event.currentTarget.contains(event.relatedTarget as Node | null)) {
-      this.suggesting.set(false);
-    }
+  onEnter(event: Event, field: HTMLInputElement): void {
+    if ((event as KeyboardEvent).isComposing) return;
+    event.preventDefault();
+    this.submit(field);
   }
 
-  close(field: HTMLInputElement): void {
-    this.suggesting.set(false);
-    field.blur();
+  onFocusOut(event: FocusEvent): void {
+    if (this.compact() || (event.currentTarget as HTMLElement).contains(event.relatedTarget as Node | null)) return;
+    this.resetDraft();
+  }
+
+  dismissInline(event: Event): void {
+    if (this.compact()) return;
+    event.preventDefault();
+    if (!this.suggesting() && this.draftTerm() === this.term()) return;
+    event.stopPropagation();
+    this.resetDraft();
+    this.fieldRef()?.nativeElement.focus({ preventScroll: true });
+  }
+
+  selectProduct(): void {
+    this.resetDraft();
+    this.productSelected.emit();
   }
 
   submit(field: HTMLInputElement): void {
-    this.close(field);
-    this.searched.emit(field.value.trim());
+    const value = field.value.trim();
+    this.resetDraft();
+    this.searched.emit(value);
+  }
+
+  private resetDraft(): void {
+    this.suggesting.set(false);
+    const term = this.term();
+    this.draftTerm.set(term);
+    const field = this.fieldRef()?.nativeElement;
+    if (field) field.value = term;
+    this.query.next({ keyword: '' });
   }
 }
