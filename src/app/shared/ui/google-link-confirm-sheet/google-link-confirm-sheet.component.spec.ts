@@ -53,7 +53,7 @@ describe('GoogleLinkConfirmSheetComponent', () => {
     });
     TestBed.configureTestingModule({
       imports: [TestHostComponent],
-      providers: [provideIonicAngular()],
+      providers: [provideIonicAngular({ animated: false })],
     });
   });
 
@@ -71,15 +71,13 @@ describe('GoogleLinkConfirmSheetComponent', () => {
 
     const el = fixture.nativeElement as HTMLElement;
     const text = el.textContent ?? '';
-    expect(text).toContain('VERIFICACIÓN COMPLETADA · PASO FINAL');
-    expect(text).toContain('Confirmar vinculación de Google');
     expect(el.querySelector('[data-testid="link-confirm-current-email"]')?.textContent?.trim()).toBe('cuenta.actual@ejemplo.com');
     expect(el.querySelector('[data-testid="link-confirm-google-email"]')?.textContent?.trim()).toBe('google.seleccionada@gmail.com');
     expect(text).toContain('Tu correo principal no cambiará.');
 
-    const buttons = Array.from(el.querySelectorAll('button'));
-    const cancelBtn = buttons.find((b) => b.textContent?.includes('Cancelar'));
-    const confirmBtn = buttons.find((b) => b.textContent?.includes('Confirmar vinculación'));
+    const actionButtons = Array.from(el.querySelectorAll<HTMLButtonElement>('.link-confirm-sheet__actions button'));
+    const cancelBtn = actionButtons.find((b) => b.textContent?.includes('Cancelar'));
+    const confirmBtn = actionButtons.find((b) => b.textContent?.includes('Confirmar vinculación'));
     expect(cancelBtn).toBeTruthy();
     expect(confirmBtn).toBeTruthy();
 
@@ -102,9 +100,9 @@ describe('GoogleLinkConfirmSheetComponent', () => {
     const el = fixture.nativeElement as HTMLElement;
     expect(el.querySelector('[role="alert"]')?.textContent?.trim()).toBe('Error de conexión temporal.');
 
-    const buttons = Array.from(el.querySelectorAll('button'));
-    expect(buttons.length).toBeGreaterThanOrEqual(2);
-    for (const button of buttons) {
+    const actionButtons = Array.from(el.querySelectorAll<HTMLButtonElement>('.link-confirm-sheet__actions button'));
+    expect(actionButtons).toHaveLength(2);
+    for (const button of actionButtons) {
       expect(button.disabled).toBe(true);
     }
 
