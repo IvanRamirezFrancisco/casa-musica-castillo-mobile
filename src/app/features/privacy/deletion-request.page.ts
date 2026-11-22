@@ -1,10 +1,11 @@
 import { DatePipe, NgTemplateOutlet } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject, input, output, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, computed, inject, input, output, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { IonContent, IonHeader, IonTitle, IonToolbar } from '@ionic/angular';
 import { describeApiError } from '../../core/api/api-error-message';
+import type { TwoFactorMethod } from '../../core/models/auth.model';
 import {
   AccountDeletionPolicy,
   AccountDeletionReceipt,
@@ -12,17 +13,18 @@ import {
 } from '../../core/infrastructure/http-account-security.repository';
 import { AuthService } from '../../core/services/auth.service';
 import { ActionDialogComponent } from '../../shared/ui/action-dialog/action-dialog.component';
+import { GoogleSigninButtonComponent } from '../../shared/ui/google-signin-button/google-signin-button.component';
 
 const UUID_PATTERN = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/;
 
 @Component({
   selector: 'app-deletion-request',
-  imports: [DatePipe, FormsModule, RouterLink, IonContent, IonHeader, IonTitle, IonToolbar, NgTemplateOutlet, ActionDialogComponent],
+  imports: [DatePipe, FormsModule, RouterLink, IonContent, IonHeader, IonTitle, IonToolbar, NgTemplateOutlet, ActionDialogComponent, GoogleSigninButtonComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     @if (dialog()) {
       <cmc-action-dialog #panel [open]="true" title="Solicitud de eliminación" [content]="body"
-        [busy]="busy() || trackingBusy()" [dirty]="!!password || confirmed" (closed)="closeRequest()"/>
+        [busy]="busy() || trackingBusy() || reauthBusy()" [dirty]="!!password || !!reauthToken() || confirmed" (closed)="closeRequest()"/>
     } @else {
       <ion-header class="ion-no-border cmc-header-transparent">
         <ion-toolbar><ion-title class="cmc-title" role="heading" aria-level="1">Eliminar mi cuenta</ion-title></ion-toolbar>
@@ -90,6 +92,53 @@ const UUID_PATTERN = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{
         <p role="status">
           La recepción automatizada está pausada temporalmente. Escribe a {{ policy()?.supportEmail || 'soporte@casamusicacastillo.com' }} o usa el enlace web externo.
         </p>
+      } @else if (!effectiveHasLocalPassword() && effectiveGoogleLinked()) {
+        <form (ngSubmit)="submit()">
+          @if (!reauthToken()) {
+            <p>Tu cuenta inicia sesión con Google y no tiene contraseña local. Verifica tu identidad con Google para confirmar esta solicitud.</p>
+            @if (effectiveMfaActive()) {
+              <div class="security-mfa-box">
+                <div class="security-mfa-radios" role="radiogroup" aria-label="Método de segundo factor">
+                  @for (m of availableMfaMethods(); track m) {
+                    <label>
+                      <input type="radio" name="deletionMfaMethod" [value]="m" [checked]="deletionMfaMethod() === m" (change)="deletionMfaMethod.set(m)">
+                      <span>{{ m === 'EMAIL' ? 'Correo' : m === 'GOOGLE_AUTHENTICATOR' ? 'Autenticador' : 'Código respaldo' }}</span>
+                    </label>
+                  }
+                </div>
+                @if (deletionMfaMethod() === 'EMAIL') {
+                  <button type="button" class="secondary-btn" [disabled]="reauthBusy() || busy()" (click)="sendDeletionEmailCode()">
+                    Enviar código a mi correo
+                  </button>
+                }
+                <label for="deletion-mfa-code">Código de verificación</label>
+                <input id="deletion-mfa-code" name="deletionMfaCode" type="text" autocomplete="one-time-code" maxlength="32" [(ngModel)]="deletionMfaCode">
+              </div>
+            }
+            @if (reauthNotice()) {
+              <p role="status">{{ reauthNotice() }}</p>
+            }
+            <app-google-signin-button
+              context="use"
+              purpose="REAUTH"
+              label="Verificar con Google para eliminar"
+              [disabled]="busy() || reauthBusy() || (effectiveMfaActive() && !validDeletionMfaCode())"
+              (credential)="onGoogleReauth($event)"
+              (cancelled)="onGoogleReauthCancelled()"
+              (failed)="onGoogleReauthError($event)"
+            />
+          } @else {
+            <p role="status">Identidad verificada con Google. Confirma debajo para enviar la solicitud.</p>
+            <button type="button" class="secondary-btn" [disabled]="busy()" (click)="reauthToken.set(null)">Usar otra verificación</button>
+            <label class="checkbox-row">
+              <input type="checkbox" name="confirmed" [(ngModel)]="confirmed">
+              <span>Confirmo que solicito eliminar permanentemente mi cuenta de Casa de Música Castillo y conozco el tratamiento de retención fiscal.</span>
+            </label>
+            <button type="submit" [disabled]="busy() || !confirmed">
+              {{ busy() ? 'Procesando solicitud…' : 'Enviar solicitud de eliminación' }}
+            </button>
+          }
+        </form>
       } @else {
         <form (ngSubmit)="submit()">
           <label for="deletion-password">Confirma tu contraseña actual</label>
@@ -140,22 +189,51 @@ const UUID_PATTERN = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{
 })
 export class DeletionRequestPage {
   readonly dialog = input(false);
+  readonly hasLocalPassword = input<boolean | undefined>(undefined);
+  readonly googleLinked = input<boolean | undefined>(undefined);
+  readonly mfaActive = input<boolean | undefined>(undefined);
+  readonly availableMfaMethods = input<readonly TwoFactorMethod[]>(['GOOGLE_AUTHENTICATOR', 'EMAIL', 'BACKUP_CODE']);
   readonly closed = output<void>();
   private readonly repo = inject(HttpAccountSecurityRepository);
   private readonly auth = inject(AuthService);
+  private readonly destroyRef = inject(DestroyRef);
   private readonly availabilitySub = takeUntilDestroyed<AccountDeletionPolicy>();
   private readonly requestsSub = takeUntilDestroyed<AccountDeletionReceipt>();
   private readonly trackSub = takeUntilDestroyed<AccountDeletionReceipt>();
+
+  protected readonly effectiveHasLocalPassword = computed(() => {
+    const explicit = this.hasLocalPassword();
+    if (explicit !== undefined) return explicit;
+    const authUser = typeof (this.auth as Partial<AuthService>).user === 'function' ? this.auth.user() : null;
+    return authUser?.hasLocalPassword ?? true;
+  });
+  protected readonly effectiveGoogleLinked = computed(() => {
+    const explicit = this.googleLinked();
+    if (explicit !== undefined) return explicit;
+    const authUser = typeof (this.auth as Partial<AuthService>).user === 'function' ? this.auth.user() : null;
+    return authUser?.googleLinked ?? false;
+  });
+  protected readonly effectiveMfaActive = computed(() => {
+    const explicit = this.mfaActive();
+    if (explicit !== undefined) return explicit;
+    const authUser = typeof (this.auth as Partial<AuthService>).user === 'function' ? this.auth.user() : null;
+    return authUser?.twoFactorEnabled ?? false;
+  });
 
   readonly policy = signal<AccountDeletionPolicy | null>(null);
   readonly available = signal<boolean | null>(null);
   readonly receipt = signal<AccountDeletionReceipt | null>(null);
   readonly busy = signal(false);
+  readonly reauthBusy = signal(false);
+  readonly reauthToken = signal<string | null>(null);
+  readonly reauthNotice = signal('');
+  readonly deletionMfaMethod = signal<TwoFactorMethod>('GOOGLE_AUTHENTICATOR');
   readonly error = signal('');
   readonly trackingBusy = signal(false);
   readonly trackingError = signal('');
 
   password = '';
+  deletionMfaCode = '';
   confirmed = false;
   lookupRequestId = '';
 
@@ -167,6 +245,7 @@ export class DeletionRequestPage {
         if (value.available) {
           this.repo.ownDeletionRequest().pipe(this.requestsSub).subscribe({
             next: receipt => {
+              if (!receipt) return;
               this.receipt.set(receipt);
               this.lookupRequestId = receipt.requestId;
             },
@@ -180,7 +259,10 @@ export class DeletionRequestPage {
 
   ionViewWillLeave(): void {
     this.password = '';
+    this.deletionMfaCode = '';
     this.confirmed = false;
+    this.reauthToken.set(null);
+    this.reauthNotice.set('');
     this.error.set('');
     this.trackingError.set('');
   }
@@ -191,9 +273,62 @@ export class DeletionRequestPage {
   }
 
   closeIfClean(): void {
-    if (this.dialog() && !this.password && !this.confirmed && !this.busy() && !this.trackingBusy()) {
+    if (this.dialog() && !this.password && !this.reauthToken() && !this.confirmed && !this.busy() && !this.reauthBusy() && !this.trackingBusy()) {
       this.closeRequest();
     }
+  }
+
+  validDeletionMfaCode(): boolean {
+    const code = this.deletionMfaCode.trim();
+    return this.deletionMfaMethod() === 'BACKUP_CODE' ? code.length >= 6 : /^\d{6}$/.test(code);
+  }
+
+  sendDeletionEmailCode(): void {
+    if (this.reauthBusy() || this.busy()) return;
+    this.reauthBusy.set(true);
+    this.error.set('');
+    this.reauthNotice.set('');
+    this.repo.sendAuthenticatedEmailTwoFactorCode().pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+      next: () => {
+        this.reauthBusy.set(false);
+        this.reauthNotice.set('Enviamos un código de verificación a tu correo.');
+      },
+      error: (err) => {
+        this.reauthBusy.set(false);
+        this.error.set(describeApiError(err, 'form'));
+      },
+    });
+  }
+
+  onGoogleReauth(event: { idToken: string; nonce: string }): void {
+    if (this.reauthBusy() || this.busy()) return;
+    this.reauthBusy.set(true);
+    this.error.set('');
+    this.reauthNotice.set('');
+    this.repo.reauthenticateWithGoogle({
+      idToken: event.idToken,
+      nonce: event.nonce,
+      purpose: 'DELETE_ACCOUNT',
+      ...(this.effectiveMfaActive() ? { mfaMethod: this.deletionMfaMethod(), mfaCode: this.deletionMfaCode.trim() } : {}),
+    }).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+      next: (token) => {
+        this.reauthBusy.set(false);
+        this.deletionMfaCode = '';
+        this.reauthToken.set(token);
+      },
+      error: (err) => {
+        this.reauthBusy.set(false);
+        this.error.set(describeApiError(err, 'form'));
+      },
+    });
+  }
+
+  onGoogleReauthCancelled(): void {
+    this.reauthNotice.set('Verificación con Google cancelada.');
+  }
+
+  onGoogleReauthError(message: string): void {
+    this.error.set(message);
   }
 
   isValidUuid(value: string): boolean {
@@ -201,12 +336,16 @@ export class DeletionRequestPage {
   }
 
   submit(): void {
-    if (!this.available() || this.busy() || !this.confirmed || !this.password.trim()) return;
+    const token = this.reauthToken();
+    const googleFlow = !this.effectiveHasLocalPassword() && this.effectiveGoogleLinked();
+    if (!this.available() || this.busy() || !this.confirmed) return;
+    if (googleFlow ? !token : !this.password.trim()) return;
     this.busy.set(true);
     this.error.set('');
-    const currentPassword = this.password;
+    const proof = googleFlow && token ? { reauthToken: token } : this.password;
     this.password = '';
-    this.repo.requestAccountDeletion(currentPassword, true).pipe(this.requestsSub).subscribe({
+    this.reauthToken.set(null);
+    this.repo.requestAccountDeletion(proof, true).pipe(this.requestsSub).subscribe({
       next: receipt => {
         this.receipt.set(receipt);
         this.lookupRequestId = receipt.requestId;

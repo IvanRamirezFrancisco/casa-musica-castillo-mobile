@@ -24,6 +24,7 @@ interface Category {
 
 import { Router, RouterLink } from '@angular/router';
 import { CurrencyPipe } from '@angular/common';
+import { CmcBrandLogoDirective } from '../../shared/ui/branding/cmc-brand-logo.directive';
 
 @Component({
   selector: 'app-home',
@@ -32,6 +33,7 @@ import { CurrencyPipe } from '@angular/common';
   standalone: true,
   imports: [
     PublicHomeComponent,
+    CmcBrandLogoDirective,
     IonContent,
     IonHeader,
     IonToolbar,

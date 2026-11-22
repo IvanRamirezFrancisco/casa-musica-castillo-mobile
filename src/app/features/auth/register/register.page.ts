@@ -7,6 +7,7 @@ import { addIcons } from 'ionicons';
 import { arrowBackOutline } from 'ionicons/icons';
 import { CmcInputComponent } from '../../../shared/ui/input/cmc-input.component';
 import { CmcButtonComponent } from '../../../shared/ui/button/cmc-button.component';
+import { CmcBrandLogoDirective } from '../../../shared/ui/branding/cmc-brand-logo.directive';
 import { BACKEND_SESSION_ENABLED } from '../../../core/config/backend-session.token';
 import { ConnectedRegisterPage } from '../connected/connected-register.page';
 
@@ -17,6 +18,7 @@ import { ConnectedRegisterPage } from '../connected/connected-register.page';
   standalone: true,
   imports: [
     ConnectedRegisterPage,
+    CmcBrandLogoDirective,
     IonContent,
     IonIcon,
     RouterLink,

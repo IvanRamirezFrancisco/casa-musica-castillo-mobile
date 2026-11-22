@@ -2,11 +2,12 @@ import { emailValidator } from '../../../core/validation/auth-fields.validation'
 import { ChangeDetectionStrategy, Component, inject, viewChild } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { addIcons } from 'ionicons';
-import { arrowBackOutline, musicalNotesOutline } from 'ionicons/icons';
+import { arrowBackOutline } from 'ionicons/icons';
 import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { IonContent, IonIcon } from '@ionic/angular';
 import { CmcInputComponent } from '../../../shared/ui/input/cmc-input.component';
 import { CmcButtonComponent } from '../../../shared/ui/button/cmc-button.component';
+import { CmcBrandLogoDirective } from '../../../shared/ui/branding/cmc-brand-logo.directive';
 import { BACKEND_SESSION_ENABLED } from '../../../core/config/backend-session.token';
 import { ConnectedLoginPage } from '../connected/connected-login.page';
 
@@ -17,6 +18,7 @@ import { ConnectedLoginPage } from '../connected/connected-login.page';
   standalone: true,
   imports: [
     ConnectedLoginPage,
+    CmcBrandLogoDirective,
     IonContent, IonIcon,
     ReactiveFormsModule,
     RouterLink,
@@ -29,7 +31,7 @@ export class LoginPage {
   private readonly connectedLogin = viewChild(ConnectedLoginPage);
   ionViewWillLeave(): void { this.connectedLogin()?.ionViewWillLeave(); }
   readonly connected = inject(BACKEND_SESSION_ENABLED);
-  constructor() { addIcons({ arrowBackOutline, musicalNotesOutline }); }
+  constructor() { addIcons({ arrowBackOutline }); }
 
   private fb = inject(NonNullableFormBuilder);
   private router = inject(Router);

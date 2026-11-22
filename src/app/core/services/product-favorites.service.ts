@@ -1,7 +1,9 @@
-import { DestroyRef, Injectable, inject, signal } from '@angular/core';
+import { DestroyRef, Injectable, computed, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { EMPTY, Observable, Subject, finalize, of, shareReplay, switchMap, takeUntil, tap } from 'rxjs';
 import { BACKEND_SESSION_ENABLED } from '../config/backend-session.token';
+import { ApiError } from '../api/api-error';
+import { describeApiError } from '../api/api-error-message';
 import { WishlistItem } from '../models/wishlist.model';
 import { WISHLIST_REPOSITORY } from '../repositories/wishlist.repository';
 import { AuthService } from './auth.service';
@@ -16,12 +18,20 @@ export class ProductFavoritesService {
   private readonly resetRequests = new Subject<void>();
   private readonly entries = signal(new Map<number, WishlistItem>());
   private readonly pending = signal<number | null>(null);
-  private readonly feedback = signal<{ productId: number; message: string } | null>(null);
+  private readonly feedback = signal<{ productId: number; message: string; failed: boolean } | null>(null);
   private readonly loadingState = signal(false);
+  private readonly loadError = signal('');
   private readonly version = signal(-1);
   private feedbackTimer: ReturnType<typeof setTimeout> | undefined;
-  private loaded = false;
+  private readonly loaded = signal(false);
   private reading: Observable<void> | null = null;
+
+  readonly items = computed<readonly WishlistItem[]>(() => this.active() ? [...this.entries().values()] : []);
+  readonly loading = computed(() => this.active() && this.loadingState());
+  readonly ready = computed(() => this.active() && this.loaded());
+  readonly error = computed(() => this.active() ? this.loadError() : '');
+  readonly removing = computed(() => this.active() && this.pending() !== null);
+  readonly noticeFailed = computed(() => this.active() && this.feedback()?.failed === true);
 
   constructor() {
     this.destroyRef.onDestroy(() => clearTimeout(this.feedbackTimer));
@@ -39,11 +49,23 @@ export class ProductFavoritesService {
   }
 
   load(): void {
-    if (!this.prepare() || this.loaded || this.reading) return;
-    this.read().subscribe({ error: () => this.report(0, 'No pudimos consultar tus favoritos. Intenta de nuevo.') });
+    if (!this.prepare() || this.loaded() || this.reading) return;
+    this.read().subscribe({ error: error => this.report(0, describeApiError(error)) });
   }
 
-  toggle(productId: number): void {
+  reload(): void {
+    if (!this.prepare() || this.busy()) return;
+    this.loaded.set(false);
+    this.load();
+  }
+
+  remove(wishlistId: number): void {
+    if (!this.active() || !Number.isSafeInteger(wishlistId) || wishlistId < 1) return;
+    const item = this.items().find(entry => entry.wishlistId === wishlistId);
+    if (item) this.toggle(item.productId, true);
+  }
+
+  toggle(productId: number, refreshAfterRemoval = false): void {
     if (!Number.isSafeInteger(productId) || productId < 1 || !this.prepare() || this.pending() !== null) return;
     const version = this.version();
     const removing = this.id(productId) !== null;
@@ -62,12 +84,16 @@ export class ProductFavoritesService {
             if (!this.active()) return;
             this.forget(wishlistId);
             this.report(productId, 'Producto retirado de favoritos.', true);
+          }), switchMap(() => {
+            if (!refreshAfterRemoval) return of(undefined);
+            this.loaded.set(false);
+            return this.read();
           }));
         }
         if (removing) return EMPTY;
         return this.repository.add(productId).pipe(tap(item => {
           if (!this.active()) return;
-          if (item.productId !== productId) throw new Error('El favorito corresponde a otro producto.');
+          if (item.productId !== productId) throw new ApiError('invalid-response', 200);
           this.entries.update(entries => new Map(entries).set(productId, item));
           this.report(productId, 'Producto guardado en favoritos.', true);
         }));
@@ -75,7 +101,7 @@ export class ProductFavoritesService {
       takeUntil(this.resetRequests),
       takeUntilDestroyed(this.destroyRef),
       finalize(() => { if (this.version() === version) this.pending.set(null); }),
-    ).subscribe({ error: () => this.report(productId, 'No se pudo actualizar el favorito. Intenta de nuevo.') });
+    ).subscribe({ error: error => this.report(productId, describeApiError(error, 'form')) });
   }
 
   /** Called only after a confirmed deletion from the favorites page. */
@@ -97,19 +123,21 @@ export class ProductFavoritesService {
   }
 
   private read(): Observable<void> {
-    if (this.loaded) return of(undefined);
+    if (this.loaded()) return of(undefined);
     if (this.reading) return this.reading;
     const version = this.version();
     this.loadingState.set(true);
+    this.loadError.set('');
     this.reading = this.repository.list().pipe(
       switchMap(list => {
         if (this.active() && this.version() === version) {
           this.entries.set(new Map(list.items.map(item => [item.productId, item])));
-          this.loaded = true;
+          this.loaded.set(true);
           if (this.feedback()?.productId === 0) this.feedback.set(null);
         }
         return of(undefined);
       }),
+      tap({ error: error => { if (this.active() && this.version() === version) this.loadError.set(describeApiError(error)); } }),
       takeUntil(this.resetRequests),
       takeUntilDestroyed(this.destroyRef),
       finalize(() => {
@@ -125,7 +153,7 @@ export class ProductFavoritesService {
   private report(productId: number, message: string, temporary = false): void {
     if (!this.active()) return;
     this.clearFeedback();
-    this.feedback.set({ productId, message });
+    this.feedback.set({ productId, message, failed: !temporary });
     if (temporary) this.feedbackTimer = setTimeout(() => this.clearFeedback(), 3000);
   }
 
@@ -142,7 +170,8 @@ export class ProductFavoritesService {
     this.clearFeedback();
     this.pending.set(null);
     this.loadingState.set(false);
-    this.loaded = false;
+    this.loaded.set(false);
+    this.loadError.set('');
     this.reading = null;
   }
 }

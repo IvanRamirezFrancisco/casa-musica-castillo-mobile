@@ -1,10 +1,11 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { AuthService } from '../../core/services/auth.service';
 import { PUBLIC_DEMO } from '../../core/config/public-demo.token';
 import { API_BASE_URL } from '../../core/api/api-base-url.token';
 import { safeImageUrl } from '../../core/api/public-product.mapper';
 import { PublicProduct } from '../../core/models/public-product.model';
 import { CmcIconComponent } from '../../shared/ui/icon/cmc-icon.component';
+import { CmcBrandLogoDirective } from '../../shared/ui/branding/cmc-brand-logo.directive';
 import { Router, RouterLink } from '@angular/router';
 import { IonContent, IonHeader, IonToolbar } from '@ionic/angular';
 import { PublicCatalogService } from '../../core/services/public-catalog.service';
@@ -13,22 +14,26 @@ import { CmcLoadingComponent } from '../../shared/ui/loading/cmc-loading.compone
 import { CmcErrorStateComponent } from '../../shared/ui/error-state/cmc-error-state.component';
 import { CmcEmptyStateComponent } from '../../shared/ui/empty-state/cmc-empty-state.component';
 import { CatalogSearchComponent } from './catalog-search.component';
+import { AdaptiveSearchHeaderController } from './adaptive-search-header';
+
 @Component({
   selector:'app-public-home', standalone:true, providers:[PublicCatalogService],
-  imports:[CatalogSearchComponent,CmcIconComponent,RouterLink,IonContent,IonHeader,IonToolbar,PublicImageComponent,PublicProductGridComponent,CmcLoadingComponent,CmcErrorStateComponent,CmcEmptyStateComponent],
+  imports:[CatalogSearchComponent,CmcBrandLogoDirective,CmcIconComponent,RouterLink,IonContent,IonHeader,IonToolbar,PublicImageComponent,PublicProductGridComponent,CmcLoadingComponent,CmcErrorStateComponent,CmcEmptyStateComponent],
   host:{class:'ion-page'}, changeDetection:ChangeDetectionStrategy.OnPush,
   styleUrl:'./public-home.view.scss', templateUrl:'./public-home.view.html',
 })
 export class PublicHomeComponent {
   readonly auth=inject(AuthService);
   readonly publicDemo=inject(PUBLIC_DEMO);
+  readonly header = new AdaptiveSearchHeaderController();
   private readonly apiBase=inject(API_BASE_URL);
   categoryImage(raw:string|null):string|null{return safeImageUrl(raw,this.apiBase);}
   available(products:readonly PublicProduct[]):readonly PublicProduct[]{return products.filter(p=>p.availability==='available').slice(0,4);}
-  readonly service=inject(PublicCatalogService); readonly term=signal('');
+  readonly service=inject(PublicCatalogService);
   private readonly router = inject(Router);
   constructor() { this.service.loadHome(); }
   search(keyword: string): void {
+    this.header.closeOverlay(false);
     void this.router.navigate(['/main/catalog'], { queryParams: { q: keyword } });
   }
   heroImageFailed(event: Event): void {

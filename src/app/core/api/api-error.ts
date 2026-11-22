@@ -5,7 +5,7 @@ const MAX_SERVER_MESSAGE = 200;
 
 export class ApiError extends Error {
   constructor(
-    public readonly kind: 'connection' | 'http' | 'invalid-response' | 'incompatible-mfa',
+    public readonly kind: 'connection' | 'http' | 'invalid-response' | 'incompatible-mfa' | 'operation-disabled',
     public readonly status: number,
     /** Mensaje de negocio del backend (solo 4xx), saneado y acotado. Nunca de 5xx. */
     public readonly serverMessage?: string,
@@ -16,7 +16,9 @@ export class ApiError extends Error {
       ? 'No se pudo conectar con la API. Revisa red, servidor, CORS o tiempo de espera.'
       : kind === 'invalid-response' || kind === 'incompatible-mfa'
         ? 'La API devolvió una respuesta incompatible con el contrato esperado.'
-        : `La API respondió con HTTP ${status}.`);
+        : kind === 'operation-disabled'
+          ? 'La operación está deshabilitada en esta compilación.'
+          : `La API respondió con HTTP ${status}.`);
     this.name = 'ApiError';
   }
 
@@ -43,13 +45,22 @@ function readBody(body: unknown): { message?: string; retry?: number } {
   };
 }
 
+/** Retry-After may be a delta in seconds or an HTTP date. It is guidance, not authorization. */
+function readRetryAfter(value: string | null): number | undefined {
+  if (!value?.trim()) return undefined;
+  const raw = value.trim();
+  const seconds = /^\d+$/.test(raw) ? Number(raw) : (Date.parse(raw) - Date.now()) / 1000;
+  return Number.isFinite(seconds) && seconds >= 0 ? Math.ceil(seconds) : undefined;
+}
+
 export function toApiError(error: unknown): ApiError {
   if (error instanceof ApiError) return error;
   if (error instanceof HttpErrorResponse) {
     if (error.status === 0) return new ApiError('connection', 0);
     // Los cuerpos de error 5xx pueden contener detalles internos: no se propagan.
     const detail = error.status >= 400 && error.status < 500 ? readBody(error.error) : {};
-    return new ApiError('http', error.status, detail.message, detail.retry);
+    const retry = error.status === 429 ? readRetryAfter(error.headers.get('Retry-After')) : undefined;
+    return new ApiError('http', error.status, detail.message, retry ?? detail.retry);
   }
   return new ApiError('connection', 0);
 }

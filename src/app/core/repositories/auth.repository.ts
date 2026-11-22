@@ -3,11 +3,16 @@ import type { Observable } from 'rxjs';
 import type {
   AuthSession,
   AuthUser,
+  CompleteGoogleRegistrationInput,
+  GoogleAuthConfig,
+  GoogleAuthOutcome,
+  GoogleChallenge,
   LoginCredentials,
   LoginOutcome,
   RegisterInput,
   TwoFactorChallenge,
   TwoFactorVerification,
+  UsernameAvailability,
 } from '../models/auth.model';
 import { HttpAuthRepository } from '../infrastructure/http-auth.repository';
 
@@ -25,8 +30,14 @@ export interface AuthRepository {
   verifyEmailCode(email: string, code: string): Observable<void>;
   requestPasswordReset(email: string): Observable<void>;
   confirmPasswordReset(token: string, newPassword: string): Observable<void>;
-  logout(token: string): Observable<void>;
+  logout(token: string, refreshToken?: string | null): Observable<void>;
   restoreUser(token: string): Observable<AuthUser>;
+  refreshSession(refreshToken?: string | null): Observable<AuthSession>;
+  getGoogleConfig(): Observable<GoogleAuthConfig>;
+  createGoogleChallenge(purpose?: 'AUTH' | 'LINK' | 'REAUTH'): Observable<GoogleChallenge>;
+  authenticateWithGoogle(idToken: string, nonce: string): Observable<GoogleAuthOutcome>;
+  completeGoogleRegistration(input: CompleteGoogleRegistrationInput): Observable<AuthSession>;
+  checkUsernameAvailability(username: string): Observable<UsernameAvailability>;
 }
 
 export const AUTH_REPOSITORY = new InjectionToken<AuthRepository>('AUTH_REPOSITORY', {

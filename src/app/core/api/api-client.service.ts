@@ -14,6 +14,8 @@ export interface ApiRequestOptions {
   /** Adjunta el JWT de la sesión actual (endpoints autenticados). */
   readonly auth?: boolean;
   readonly params?: HttpParams;
+  readonly withCredentials?: boolean;
+  readonly headers?: Record<string, string>;
 }
 
 type ApiPath = `/api/${string}`;
@@ -48,7 +50,9 @@ export class ApiClientService {
     return {
       params,
       timeout: 60_000,
-      credentials: 'omit' as const,
+      credentials: (options.withCredentials ? 'include' : 'omit') as 'include' | 'omit',
+      withCredentials: options.withCredentials === true,
+      ...(options.headers ? { headers: options.headers } : {}),
       redirect: 'error' as const,
       context: new HttpContext().set(REQUIRES_AUTH, options.auth === true),
     };

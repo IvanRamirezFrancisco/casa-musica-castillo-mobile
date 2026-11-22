@@ -29,6 +29,9 @@ export const routes: Routes = [
     path: 'forgot-password',
     loadComponent: page.recover,
   },
+  { path: 'reset-password', loadComponent: () => import('./features/auth/connected/connected-forgot-password.page').then(m => m.ConnectedForgotPasswordPage) },
+  { path: 'verify-account', loadComponent: () => import('./features/auth/connected/verify-email.page').then(m => m.VerifyEmailPage) },
+  { path: 'complete-account', loadComponent: () => import('./features/auth/connected/complete-google-account.page').then(m => m.CompleteGoogleAccountPage) },
   {
     path: 'verify-email',
     loadComponent: () => import('./features/auth/connected/verify-email.page').then((m) => m.VerifyEmailPage),

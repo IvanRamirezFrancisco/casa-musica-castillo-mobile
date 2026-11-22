@@ -1,0 +1,134 @@
+.cmc-toast-stack {
+  position: fixed;
+  inset-block-start: calc(var(--cmc-safe-area-top, 0px) + 12px);
+  inset-inline: 12px;
+  z-index: 30000;
+  pointer-events: none;
+  display: grid;
+  justify-items: center;
+  gap: 10px;
+}
+
+.cmc-toast {
+  pointer-events: auto;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+  inline-size: 100%;
+  max-inline-size: min(420px, 100%);
+  padding: 12px 14px;
+  background: #ffffff;
+  border: 1px solid var(--cmc-border, #e7ded5);
+  border-radius: 16px;
+  box-shadow: 0 10px 28px rgb(28 19 21 / 14%), 0 2px 6px rgb(28 19 21 / 6%);
+  box-sizing: border-box;
+  animation: cmcToastIn 180ms ease-out;
+}
+
+.cmc-toast__icon {
+  display: grid;
+  place-items: center;
+  flex: none;
+  inline-size: 36px;
+  block-size: 36px;
+  border-radius: 50%;
+}
+
+.cmc-toast--success .cmc-toast__icon {
+  background: #e7f6ee;
+  color: #16794c;
+}
+
+.cmc-toast--error .cmc-toast__icon {
+  background: #fdecec;
+  color: #c62828;
+}
+
+.cmc-toast--warning .cmc-toast__icon {
+  background: #fef4e2;
+  color: #b45309;
+}
+
+.cmc-toast--info .cmc-toast__icon {
+  background: #f7ecee;
+  color: #722f37;
+}
+
+.cmc-toast__content {
+  display: grid;
+  gap: 2px;
+  min-inline-size: 0;
+}
+
+.cmc-toast__title {
+  margin: 0;
+  font-family: 'Montserrat', 'Roboto', sans-serif;
+  font-size: 0.9375rem;
+  font-weight: 700;
+  line-height: 1.3;
+  color: var(--cmc-text-primary, #292524);
+  overflow-wrap: anywhere;
+}
+
+.cmc-toast__message {
+  margin: 0;
+  font-size: 0.8125rem;
+  line-height: 1.4;
+  color: var(--cmc-text-secondary, #6b6560);
+  overflow-wrap: anywhere;
+}
+
+.cmc-toast__close {
+  display: grid;
+  place-items: center;
+  flex: none;
+  min-inline-size: 36px;
+  min-block-size: 36px;
+  margin-inline-end: -4px;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--cmc-text-secondary, #6b6560);
+  font-size: 1.25rem;
+  line-height: 1;
+  cursor: pointer;
+
+  &:hover {
+    background: var(--cmc-surface-alt, #f5efe8);
+    color: var(--cmc-text-primary, #292524);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--cmc-primary, #722f37);
+    outline-offset: 2px;
+  }
+}
+
+@media (max-width: 359px) {
+  .cmc-toast-stack {
+    inset-inline: 8px;
+  }
+
+  .cmc-toast {
+    gap: 10px;
+    padding: 10px 12px;
+  }
+}
+
+@keyframes cmcToastIn {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cmc-toast {
+    animation: none;
+  }
+}

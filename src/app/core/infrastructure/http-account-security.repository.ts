@@ -1,8 +1,16 @@
 import { Injectable, inject } from '@angular/core';
 import { map } from 'rxjs';
 import { ApiClientService } from '../api/api-client.service';
-import { unwrapApiResponse } from '../api/auth.validation';
+import { parseAccountSecurityCapabilities, unwrapApiResponse } from '../api/auth.validation';
 import { ApiError } from '../api/api-error';
+import type {
+  AccountSecurityCapabilities,
+  GoogleReauthInput,
+  LinkGoogleInput,
+  StepUpProof,
+  UnlinkGoogleInput,
+} from '../models/auth.model';
+
 export interface SecurityMethods { EMAIL: boolean; GOOGLE_AUTHENTICATOR: boolean; BACKUP_CODES: boolean; }
 export interface TotpEnrollment { manualEntryKey: string; qrCode: string; }
 export interface AccountSession {
@@ -26,13 +34,22 @@ export interface AccountDeletionPolicy {
   tokenValidityMinutes: number;
   retentionPolicyVersion: string;
 }
+
 const UUID_PATTERN = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/;
 const ISO_DATE_PATTERN = /^\d{4}-\d{2}-\d{2}T/;
 const DELETION_STATUSES: ReadonlySet<string> = new Set(['RECEIVED', 'REVIEW_REQUIRED', 'COMPLETED']);
 const invalid = () => new ApiError('invalid-response', 200);
+
 function isIsoTimestamp(value: unknown): value is string {
   return typeof value === 'string' && ISO_DATE_PATTERN.test(value) && Number.isFinite(Date.parse(value));
 }
+
+function stepUpBody(proof: StepUpProof): Record<string, string> {
+  return typeof proof === 'string'
+    ? { currentPassword: proof }
+    : { reauthToken: proof.reauthToken };
+}
+
 export function parseAccountDeletionPolicy(raw: unknown): AccountDeletionPolicy {
   if (!raw || typeof raw !== 'object' || Array.isArray(raw)) throw invalid();
   const data = raw as Record<string, unknown>;
@@ -61,6 +78,7 @@ export function parseAccountDeletionPolicy(raw: unknown): AccountDeletionPolicy 
     retentionPolicyVersion: typeof retentionPolicyVersion === 'string' ? retentionPolicyVersion : 'v1',
   };
 }
+
 export function parseAccountDeletionReceipt(raw: unknown): AccountDeletionReceipt {
   if (!raw || typeof raw !== 'object' || Array.isArray(raw)) throw invalid();
   const data = raw as Record<string, unknown>;
@@ -82,18 +100,32 @@ export function parseAccountDeletionReceipt(raw: unknown): AccountDeletionReceip
     completedAt: typeof completedAt === 'string' ? completedAt : null,
   };
 }
+
 export function securityData(raw: unknown): Record<string, unknown> {
   const data = unwrapApiResponse(raw)['data'];
   if (!data || typeof data !== 'object' || Array.isArray(data)) throw invalid();
   return data as Record<string, unknown>;
 }
+
 @Injectable({ providedIn: 'root' })
 export class HttpAccountSecurityRepository {
   private readonly api = inject(ApiClientService);
+
+  capabilities() {
+    return this.api.get<unknown>('/api/users/security-settings', undefined, { auth: true })
+      .pipe(map(parseAccountSecurityCapabilities));
+  }
+
   passwordChangeRevokesSessions() {
     return this.api.get<unknown>('/api/users/security-settings', undefined, { auth: true })
-      .pipe(map(raw => securityData(raw)['passwordChangeRevokesSessions'] === true));
+      .pipe(map(raw => {
+        const value = securityData(raw)['passwordChangeRevokesSessions'];
+        // A missing guarantee is an unconfirmed contract, not an explicit lack of support.
+        if (typeof value !== 'boolean') throw invalid();
+        return value === true;
+      }));
   }
+
   availableBackupCodes() {
     return this.api.get<unknown>('/api/2fa/backup-codes/status', undefined, { auth: true }).pipe(map(raw => {
       const available = securityData(raw)['available'];
@@ -101,9 +133,37 @@ export class HttpAccountSecurityRepository {
       return available;
     }));
   }
+
   changePassword(currentPassword: string, newPassword: string) {
     return this.action('/api/users/change-password', { currentPassword, newPassword });
   }
+
+  setInitialPassword(reauthToken: string, newPassword: string) {
+    return this.action('/api/users/set-initial-password', { reauthToken, newPassword });
+  }
+
+  reauthenticateWithGoogle(input: GoogleReauthInput) {
+    return this.api.post<unknown>('/api/auth/google/reauthenticate', input, { auth: true }).pipe(map(raw => {
+      const d = securityData(raw);
+      if (typeof d['reauthToken'] !== 'string' || d['reauthToken'].length < 24) throw invalid();
+      return d['reauthToken'];
+    }));
+  }
+
+  linkGoogle(input: LinkGoogleInput): ReturnType<typeof this.api.post<AccountSecurityCapabilities>> {
+    return this.api.post<unknown>('/api/auth/google/link', input, { auth: true })
+      .pipe(map(parseAccountSecurityCapabilities));
+  }
+
+  unlinkGoogle(input: UnlinkGoogleInput): ReturnType<typeof this.api.post<AccountSecurityCapabilities>> {
+    return this.api.post<unknown>('/api/auth/google/unlink', input, { auth: true })
+      .pipe(map(parseAccountSecurityCapabilities));
+  }
+
+  sendAuthenticatedEmailTwoFactorCode() {
+    return this.action('/api/2fa/email/send');
+  }
+
   sessions() {
     return this.api.get<unknown>('/api/auth/sessions', undefined, { auth: true }).pipe(map(raw => {
       const list: unknown = securityData(raw)['sessions'];
@@ -119,47 +179,66 @@ export class HttpAccountSecurityRepository {
       });
     }));
   }
+
   revokeSession(id: string) {
     return this.api.delete<unknown>(`/api/auth/sessions/${encodeURIComponent(id)}`, { auth: true });
   }
-  methods() { return this.api.get<unknown>('/api/2fa/methods', undefined, { auth: true }).pipe(map(raw => {
-    const d = securityData(raw);
-    if (['EMAIL', 'GOOGLE_AUTHENTICATOR', 'BACKUP_CODES'].some(k => typeof d[k] !== 'boolean')) throw invalid();
-    return { EMAIL: d['EMAIL'] as boolean, GOOGLE_AUTHENTICATOR: d['GOOGLE_AUTHENTICATOR'] as boolean, BACKUP_CODES: d['BACKUP_CODES'] as boolean };
-  })); }
-  setup() { return this.api.post<unknown>('/api/2fa/google/setup', {}, { auth: true }).pipe(map(raw => {
-    const d = securityData(raw);
-    if (typeof d['manualEntryKey'] !== 'string' || !/^[A-Z2-7]{16,128}$/.test(d['manualEntryKey']) || typeof d['qrCode'] !== 'string'
-      || !/^data:image\/png;base64,[A-Za-z0-9+/=]+$/.test(d['qrCode']) || d['qrCode'].length > 1000000) throw invalid();
-    return { manualEntryKey: d['manualEntryKey'], qrCode: d['qrCode'] } as TotpEnrollment;
-  })); }
+
+  methods() {
+    return this.api.get<unknown>('/api/2fa/methods', undefined, { auth: true }).pipe(map(raw => {
+      const d = securityData(raw);
+      if (['EMAIL', 'GOOGLE_AUTHENTICATOR', 'BACKUP_CODES'].some(k => typeof d[k] !== 'boolean')) throw invalid();
+      return { EMAIL: d['EMAIL'] as boolean, GOOGLE_AUTHENTICATOR: d['GOOGLE_AUTHENTICATOR'] as boolean, BACKUP_CODES: d['BACKUP_CODES'] as boolean };
+    }));
+  }
+
+  setup() {
+    return this.api.post<unknown>('/api/2fa/google/setup', {}, { auth: true }).pipe(map(raw => {
+      const d = securityData(raw);
+      if (typeof d['manualEntryKey'] !== 'string' || !/^[A-Z2-7]{16,128}$/.test(d['manualEntryKey']) || typeof d['qrCode'] !== 'string'
+        || !/^data:image\/png;base64,[A-Za-z0-9+/=]+$/.test(d['qrCode']) || d['qrCode'].length > 1000000) throw invalid();
+      return { manualEntryKey: d['manualEntryKey'], qrCode: d['qrCode'] } as TotpEnrollment;
+    }));
+  }
+
   confirm(code: string) { return this.action('/api/2fa/google/confirm', { code }); }
-  email(enabled: boolean, currentPassword?: string) {
+
+  email(enabled: boolean, proof?: StepUpProof) {
     return enabled
       ? this.action('/api/2fa/email/enable')
-      : this.action('/api/2fa/email/disable', { currentPassword: currentPassword ?? '' });
+      : this.action('/api/2fa/email/disable', stepUpBody(proof ?? ''));
   }
-  disableTotp(currentPassword: string) { return this.action('/api/2fa/google/disable', { currentPassword }); }
-  generate(currentPassword: string) { return this.api.post<unknown>('/api/2fa/backup-codes/generate', { currentPassword }, { auth: true }).pipe(map(raw => {
-    const d = securityData(raw); const codes = d['codes'];
-    if (d['count'] !== 10 || !Array.isArray(codes) || codes.length !== 10 || !codes.every(c => typeof c === 'string' && /^\d{4}-\d{4}$/.test(c)) || new Set(codes).size !== 10) throw invalid();
-    return codes as string[];
-  })); }
-  disableBackupCodes(currentPassword: string) { return this.action('/api/2fa/backup-codes/disable', { currentPassword }); }
+
+  disableTotp(proof: StepUpProof) { return this.action('/api/2fa/google/disable', stepUpBody(proof)); }
+
+  generate(proof: StepUpProof) {
+    return this.api.post<unknown>('/api/2fa/backup-codes/generate', stepUpBody(proof), { auth: true }).pipe(map(raw => {
+      const d = securityData(raw); const codes = d['codes'];
+      if (d['count'] !== 10 || !Array.isArray(codes) || codes.length !== 10 || !codes.every(c => typeof c === 'string' && /^\d{4}-\d{4}$/.test(c)) || new Set(codes).size !== 10) throw invalid();
+      return codes as string[];
+    }));
+  }
+
+  disableBackupCodes(proof: StepUpProof) { return this.action('/api/2fa/backup-codes/disable', stepUpBody(proof)); }
+
   deletionAvailability() {
     return this.api.get<unknown>('/api/public/legal/deletion').pipe(map(parseAccountDeletionPolicy));
   }
+
   ownDeletionRequest() {
     return this.api.get<unknown>('/api/users/me/deletion-requests', undefined, { auth: true }).pipe(map(parseAccountDeletionReceipt));
   }
-  requestAccountDeletion(currentPassword: string, confirmed: boolean) {
-    return this.api.post<unknown>('/api/users/me/deletion-requests', { currentPassword, confirmed }, { auth: true })
+
+  requestAccountDeletion(proof: StepUpProof, confirmed: boolean) {
+    return this.api.post<unknown>('/api/users/me/deletion-requests', { ...stepUpBody(proof), confirmed }, { auth: true })
       .pipe(map(parseAccountDeletionReceipt));
   }
+
   trackAccountDeletion(requestId: string) {
     return this.api.post<unknown>('/api/public/legal/deletion/status', { requestId: requestId.trim() })
       .pipe(map(parseAccountDeletionReceipt));
   }
+
   private action(path: `/api/${string}`, body: object = {}) {
     return this.api.post<unknown>(path, body, { auth: true }).pipe(map(raw => { unwrapApiResponse(raw); }));
   }

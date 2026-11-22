@@ -1,0 +1,157 @@
+.cmc-page.cmc-connected-auth {
+  --padding-top:0px;
+
+  .auth-hero,.recovery-header {
+    position:relative;background:var(--cmc-primary);color:var(--cmc-text-on-primary);
+    border-radius:0 0 var(--cmc-radius-xl) var(--cmc-radius-xl);
+    padding-block-start:calc(var(--cmc-safe-area-top) + 12px);
+    padding-inline:max(16px,var(--ion-safe-area-left,0px)) max(16px,var(--ion-safe-area-right,0px));
+  }
+  .auth-hero {
+    padding-block-end:20px;min-block-size:112px;
+    .brand-info {max-inline-size:36rem;}
+  }
+  .auth-top-bar {display:contents;}
+  .auth-back-pill,.recovery-header .auth-back-btn {
+    display:grid;place-items:center;min-inline-size:44px;min-block-size:44px;
+    padding:0;border:1px solid rgb(255 255 255 / 28%);border-radius:var(--cmc-radius-md);
+    color:var(--cmc-text-on-primary);background:rgb(255 255 255 / 12%);font-size:1.25rem;
+  }
+  .auth-hero .auth-back-pill {position:absolute;inset-block-start:calc(var(--cmc-safe-area-top) + 10px);inset-inline-start:max(16px,var(--ion-safe-area-left,0px));}
+  .auth-back-pill:focus-visible,.recovery-header .auth-back-btn:focus-visible {outline:2px solid var(--cmc-text-on-primary);outline-offset:2px;}
+  .auth-brand-logo {
+    display:block;margin:0 auto 8px;width:56px;height:56px;border:0;
+    border-radius:14px;padding:0;object-fit:contain;
+    box-shadow:0 3px 10px rgb(0 0 0 / 22%);
+  }
+  .auth-brand-title,.recovery-title {color:inherit;font:700 clamp(1.05rem,4.4vw,1.45rem)/1.23 Montserrat,sans-serif;margin:0;}
+  .auth-brand-subtitle,.recovery-subtitle {color:inherit;opacity:.90;font-size:.875rem;line-height:1.4;margin:4px 0 0;}
+  .auth-card-container,.recovery-container {
+    max-inline-size:34rem;
+    padding-inline:max(16px,var(--ion-safe-area-left,0px)) max(16px,var(--ion-safe-area-right,0px));
+  }
+  .auth-card {padding:clamp(16px,5.3vw,28px);box-shadow:var(--cmc-shadow-subtle);}
+  .auth-card-header .cmc-title {font-size:clamp(1.3rem,5.4vw,1.75rem);margin-block:0 8px;}
+  .auth-tabs {
+    display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:3px;
+    background:var(--cmc-surface-alt);border-radius:var(--cmc-radius-md);padding:3px;
+  }
+  .auth-tabs a {
+    display:grid;place-items:center;text-align:center;min-block-size:44px;padding:5px;
+    color:var(--cmc-text-secondary);text-decoration:none;font-weight:700;border-radius:var(--cmc-radius-md);
+  }
+  .auth-tabs a[aria-current='page'] {background:var(--cmc-surface);color:var(--cmc-primary);box-shadow:var(--cmc-shadow-subtle);}
+  .auth-help summary,.step-actions summary {min-height:44px;align-content:center;font-weight:650;color:var(--cmc-text-primary);cursor:pointer;}
+  .auth-form fieldset {min-inline-size:0;border:1px solid var(--cmc-border);border-radius:var(--cmc-radius-md);padding:12px;}
+  .auth-form fieldset label {display:flex;align-items:center;gap:8px;min-block-size:44px;}
+  .auth-form fieldset input {flex:none;accent-color:var(--cmc-primary);}
+  .recovery-header {
+    display:flex;align-items:center;gap:12px;max-inline-size:none;padding-block-end:16px;
+    .auth-back-btn {flex:none;}
+  }
+  .recovery-brand-logo {
+    flex:none;width:40px;height:40px;border-radius:10px;object-fit:contain;
+    box-shadow:0 2px 8px rgb(0 0 0 / 22%);
+  }
+  .recovery-hero-card {
+    background:transparent;color:var(--cmc-text-primary);text-align:center;padding:0;
+    margin-block:0 18px;justify-items:center;gap:8px;
+    h2.hero-title {color:var(--cmc-text-primary);font:700 clamp(1.4rem,5.6vw,1.75rem) Montserrat,sans-serif;margin:0;}
+    p {color:var(--cmc-text-secondary);line-height:1.5;margin:0;}
+  }
+  .hero-icon-wrapper {
+    display:grid;place-items:center;margin-inline:auto;width:52px;height:52px;
+    border-radius:var(--cmc-radius-lg);background:color-mix(in srgb,var(--cmc-accent-gold) 16%,var(--cmc-surface));color:var(--cmc-primary);
+    ion-icon {font-size:26px;color:inherit;}
+  }
+  .recovery-hero-card .hero-icon-wrapper ion-icon {color:var(--cmc-primary);}
+  .verification-intro {text-align:center;margin-block-start:0;}
+  .verification-intro .hero-icon-wrapper {margin-block-end:14px;}
+  .recovery-choices,.recovery-choices .recovery-secondary {width:100%;}
+  .recovery-choices .recovery-secondary {min-height:48px;text-align:center;}
+  .recovery-return {
+    display:inline-flex;align-items:center;justify-content:center;min-height:44px;
+    border:0;border-radius:var(--cmc-radius-md);background:transparent;color:var(--cmc-primary);font-weight:650;
+  }
+  .auth-divider-or {
+    display:flex;align-items:center;gap:.75rem;margin-block:16px;
+    color:var(--cmc-text-secondary);font-size:.8125rem;font-weight:600;
+    &::before,&::after {content:'';flex:1;height:1px;background:var(--cmc-border);}
+  }
+  .activation-link {border-block-start:1px solid var(--cmc-border);padding-block-start:8px;}
+  &.mfa-page .auth-hero {
+    padding-block:calc(var(--cmc-safe-area-top) + clamp(16px,4dvh,36px)) clamp(18px,4dvh,34px);
+  }
+  &.mfa-page .auth-brand-logo {inline-size:54px;block-size:54px;}
+  @media (max-height:32rem) {
+    &.mfa-page .auth-hero {padding-block:calc(var(--cmc-safe-area-top) + 10px) 12px;}
+    &.mfa-page .auth-brand-logo {inline-size:38px;block-size:38px;}
+  }
+  @media (max-height:32rem) {
+    .auth-hero {min-block-size:0;padding-block-end:12px;}
+  }
+
+  .google-link-guidance {
+    display:grid;gap:6px;margin:0 0 16px;padding:14px 16px;
+    background:#fdf2f2;border:1px solid #f2c6c6;border-radius:var(--cmc-radius-md);
+  }
+  .google-link-guidance__header {display:flex;align-items:flex-start;justify-content:space-between;gap:8px;}
+  .google-link-guidance__heading {display:flex;align-items:center;gap:8px;min-inline-size:0;}
+  .google-link-guidance__icon {display:inline-flex;align-items:center;justify-content:center;flex:none;color:#a8242b;}
+  .google-link-guidance__title {margin:0;font-weight:700;color:#8f1d24;font-size:.9375rem;line-height:1.35;}
+  .google-link-guidance__dismiss {
+    display:grid;place-items:center;flex:none;min-inline-size:32px;min-block-size:32px;margin:-4px -6px 0 0;
+    border:0;border-radius:var(--cmc-radius-md);background:transparent;color:#8f1d24;font-size:1.25rem;line-height:1;cursor:pointer;
+  }
+  .google-link-guidance__dismiss:focus-visible {outline:2px solid var(--cmc-primary);outline-offset:2px;}
+  .google-link-guidance__body {margin:0;padding-inline-start:26px;color:#7a2328;font-size:.84375rem;line-height:1.5;}
+
+  .register-step-choose[hidden], .register-step-form[hidden] {display:none;}
+  .register-google-card {
+    display:grid;gap:12px;padding:16px;border-radius:var(--cmc-radius-lg);
+    background:color-mix(in srgb,var(--cmc-primary) 7%,var(--cmc-surface));
+    border:1px solid color-mix(in srgb,var(--cmc-primary) 16%,var(--cmc-border));
+  }
+  .register-google-card__top {display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px;}
+  .register-google-card__badge {
+    display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:var(--cmc-radius-full);
+    background:var(--cmc-surface);border:1px solid var(--cmc-border);color:var(--cmc-text-primary);font-size:.75rem;font-weight:700;
+  }
+  .register-google-card__sparkle {color:var(--cmc-accent-gold,#c6922c);}
+  .register-google-card__tag {color:var(--cmc-primary);font-size:.75rem;font-weight:700;}
+  .register-google-card__caption {margin:0;color:var(--cmc-primary);font-size:.8125rem;line-height:1.45;}
+  .register-email-option-btn {
+    display:flex;align-items:center;justify-content:space-between;gap:12px;inline-size:100%;min-block-size:52px;padding:10px 16px;
+    border:1px solid var(--cmc-border);border-radius:var(--cmc-radius-md);background:var(--cmc-surface);color:var(--cmc-text-primary);
+    font:inherit;font-size:.9375rem;font-weight:700;text-align:start;cursor:pointer;transition:background-color 150ms ease,border-color 150ms ease;
+    &:hover:not(:disabled) {background:var(--cmc-surface-alt);border-color:var(--cmc-border-strong);}
+    &:focus-visible {outline:2px solid var(--cmc-primary);outline-offset:2px;}
+    &:disabled {opacity:.6;cursor:not-allowed;}
+  }
+  .register-email-option-btn__lead {
+    display:inline-flex;align-items:center;gap:10px;min-inline-size:0;
+    cmc-icon {flex:none;color:var(--cmc-primary);font-size:1.15rem;}
+  }
+  .register-email-option-btn__chevron {flex:none;color:var(--cmc-text-secondary);font-size:1.25rem;line-height:1;}
+  .register-email-option-hint {margin:10px 0 0;color:var(--cmc-text-secondary);font-size:.8125rem;line-height:1.5;}
+  .register-form-topbar {display:flex;align-items:center;margin-block-end:4px;}
+  .register-back-method-btn {
+    display:inline-flex;align-items:center;gap:6px;min-block-size:44px;padding:4px 10px;margin-inline-start:-10px;
+    border:0;border-radius:var(--cmc-radius-md);background:transparent;color:var(--cmc-primary);
+    font:inherit;font-size:.875rem;font-weight:700;cursor:pointer;
+    &:hover {background:var(--cmc-surface-alt);}
+    &:focus-visible {outline:2px solid var(--cmc-primary);outline-offset:2px;}
+  }
+  .register-form-header {margin-block-start:4px;}
+  .register-privacy-note {margin:0;font-size:.8125rem;}
+  .register-prefer-google-wrap {display:flex;justify-content:center;margin-block-end:8px;}
+  .register-prefer-google-btn {
+    display:inline-flex;align-items:center;justify-content:center;gap:8px;min-block-size:44px;padding:6px 14px;
+    border:0;border-radius:var(--cmc-radius-md);background:transparent;color:var(--cmc-primary);
+    font:inherit;font-size:.875rem;font-weight:700;cursor:pointer;
+    &:hover:not(:disabled) {background:var(--cmc-surface-alt);}
+    &:focus-visible {outline:2px solid var(--cmc-primary);outline-offset:2px;}
+    &:disabled {opacity:.6;cursor:not-allowed;}
+  }
+  .register-prefer-google-btn__icon {display:inline-flex;align-items:center;flex:none;}
+}

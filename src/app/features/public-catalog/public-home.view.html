@@ -1,22 +1,63 @@
-<ion-header class="cmc-store-header cmc-store-header--inverted ion-no-border">
+<ion-header class="cmc-store-header cmc-store-header--inverted ion-no-border"
+  [class.is-compact]="header.isHeaderCompact()">
   <ion-toolbar>
     <div class="store-header-row">
       <div class="store-brand">
-        <span class="brand-badge" aria-hidden="true"><cmc-icon name="music"/></span>
-        <div>
+        <span class="brand-badge" aria-hidden="true"><img appBrandLogo="sm" class="brand-logo-img" alt="" width="44" height="44" /></span>
+        <div class="brand-copy">
           <h1>Casa de Música Castillo</h1>
           <small class="brand-eyebrow">Instrumentos musicales</small>
         </div>
       </div>
-      @if(!publicDemo){<a class="icon-action" routerLink="/favorites" aria-label="Abrir Favoritos"><cmc-icon name="heart"/></a>}
+      <div class="store-header-actions">
+        <button
+          type="button"
+          class="icon-action compact-search-trigger"
+          [class.is-visible]="header.isHeaderCompact()"
+          [class.is-active]="header.searchOverlayOpen()"
+          aria-label="Abrir búsqueda"
+          [attr.aria-expanded]="header.searchOverlayOpen()"
+          [attr.aria-controls]="header.searchOverlayOpen() ? 'home-floating-search-panel' : null"
+          aria-haspopup="dialog"
+          [attr.tabindex]="header.isHeaderCompact() ? null : -1"
+          [attr.aria-hidden]="header.isHeaderCompact() ? null : 'true'"
+          (click)="header.toggleOverlay($event.currentTarget)"
+        >
+          <cmc-icon name="search"/>
+        </button>
+        @if(!publicDemo){<a class="icon-action" routerLink="/favorites" aria-label="Abrir Favoritos"><cmc-icon name="heart"/></a>}
+        @if(!publicDemo){<a class="icon-action compact-account-action" routerLink="/main/profile" aria-label="Abrir Perfil y Pedidos"><cmc-icon name="person"/></a>}
+      </div>
     </div>
   </ion-toolbar>
-  <div class="header-search-row">
-    <cmc-catalog-search fieldId="home-search" [term]="term()" (termChange)="term.set($event)" (searched)="search($event)" />
-  </div>
+
 </ion-header>
 
-<ion-content class="cmc-page cmc-root-page">
+<ion-content class="cmc-page cmc-root-page cmc-adaptive-content" [scrollEvents]="true" [class.is-search-open]="header.searchOverlayOpen()" (ionScroll)="header.onScroll($event)">
+  @if (header.searchOverlayOpen()) {
+    <div id="home-floating-search-panel" class="floating-search-panel" slot="fixed" role="dialog"
+      aria-label="Buscar instrumentos" (keydown.escape)="header.closeOnEscape($event)" (focusout)="header.onPanelFocusOut($event)">
+      <div class="floating-search-row">
+        <cmc-catalog-search [compact]="true"
+          fieldId="home-search"
+          (searched)="search($event)"
+          (productSelected)="header.closeOverlay(true)"
+        />
+        <button type="button" class="floating-search-close" aria-label="Cerrar búsqueda" (click)="header.closeOverlay(true)">
+          <cmc-icon name="close"/>
+        </button>
+      </div>
+    </div>
+  }
+
+  <div class="store-search-dock" [attr.inert]="header.isHeaderCompact() ? '' : null">
+    <div class="header-search-row">
+      @if (!header.isHeaderCompact()) {
+        <cmc-catalog-search fieldId="home-search" (searched)="search($event)" />
+      }
+    </div>
+  </div>
+
   <main class="cmc-store">
     <section class="store-hero" aria-labelledby="store-welcome">
       <img class="hero-photo" alt="" aria-hidden="true" fetchpriority="high" decoding="async"

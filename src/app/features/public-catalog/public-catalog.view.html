@@ -1,30 +1,93 @@
-<ion-header class="cmc-store-header cmc-store-header--inverted ion-no-border">
+<ion-header class="cmc-store-header cmc-store-header--inverted ion-no-border"
+  [class.is-compact]="header.isHeaderCompact()">
   <ion-toolbar>
     <div class="store-header-row">
       <div class="store-brand">
-        <span class="brand-badge" aria-hidden="true"><cmc-icon name="music"/></span>
-        <div>
+        <span class="brand-badge" aria-hidden="true"><img appBrandLogo="sm" class="brand-logo-img" alt="" width="44" height="44" /></span>
+        <div class="brand-copy">
           <h1>Casa de Música Castillo</h1>
-          <small>
-            @if(service.page().data;as page){ Catálogo · {{page.totalElements}} instrumentos disponibles }
-            @else{ Catálogo · Encuentra tu sonido }
-          </small>
+          <small>Catálogo</small>
         </div>
       </div>
-      @if(!publicDemo){<a class="icon-action" routerLink="/favorites" aria-label="Abrir Favoritos"><cmc-icon name="heart"/></a>}
+      <div class="store-header-actions">
+        <button
+          type="button"
+          class="icon-action compact-filter-trigger catalog-filter-trigger"
+          [class.is-visible]="header.isHeaderCompact()"
+          [class.has-active-filters]="activeFilterCount() > 0"
+          [attr.aria-label]="filterButtonLabel()"
+          aria-haspopup="dialog"
+          [attr.tabindex]="header.isHeaderCompact() ? null : -1"
+          [attr.aria-hidden]="header.isHeaderCompact() ? null : 'true'"
+          (click)="openFilters($event.currentTarget)"
+        >
+          <cmc-icon name="filters"/>
+          @if (activeFilterCount() > 0) {
+            <span class="filter-count-badge" aria-hidden="true">{{ activeFilterCount() }}</span>
+          }
+        </button>
+        <button
+          type="button"
+          class="icon-action compact-search-trigger"
+          [class.is-visible]="header.isHeaderCompact()"
+          [class.is-active]="header.searchOverlayOpen() || !!appliedTerm().trim()"
+          [attr.aria-label]="appliedTerm() ? 'Abrir búsqueda: ' + appliedTerm() : 'Abrir búsqueda'"
+          [attr.aria-expanded]="header.searchOverlayOpen()"
+          [attr.aria-controls]="header.searchOverlayOpen() ? 'catalog-floating-search-panel' : null"
+          aria-haspopup="dialog"
+          [attr.tabindex]="header.isHeaderCompact() ? null : -1"
+          [attr.aria-hidden]="header.isHeaderCompact() ? null : 'true'"
+          (click)="header.toggleOverlay($event.currentTarget)"
+        >
+          <cmc-icon name="search"/>
+          @if (appliedTerm().trim() && !header.searchOverlayOpen()) {
+            <span class="search-active-dot" aria-hidden="true"></span>
+          }
+        </button>
+        @if(!publicDemo){<a class="icon-action" routerLink="/favorites" aria-label="Abrir Favoritos"><cmc-icon name="heart"/></a>}
+        @if(!publicDemo){<a class="icon-action compact-account-action" routerLink="/main/profile" aria-label="Abrir Perfil y Pedidos"><cmc-icon name="person"/></a>}
+      </div>
     </div>
   </ion-toolbar>
-  <div class="header-search-row">
-    <cmc-catalog-search [term]="keyword()" [category]="searchCategory()" (termChange)="search($event)" (searched)="search($event)" />
-    <div class="catalog-controls" aria-label="Filtros y ordenamiento">
-      <button type="button" class="filter-gold-btn catalog-filter-trigger" aria-label="Abrir filtros y ordenamiento" aria-haspopup="dialog" (click)="openFilters()">
-        <cmc-icon name="filters"/>
-      </button>
-    </div>
-  </div>
+
 </ion-header>
 
-<ion-content class="cmc-page cmc-root-page">
+<ion-content class="cmc-page cmc-root-page cmc-adaptive-content" [scrollEvents]="true" (ionScroll)="onContentScroll($event)">
+  @if (header.searchOverlayOpen()) {
+    <div id="catalog-floating-search-panel" class="floating-search-panel" slot="fixed" role="dialog"
+      aria-label="Buscar instrumentos en el catálogo" (keydown.escape)="header.closeOnEscape($event)" (focusout)="header.onPanelFocusOut($event)">
+      <div class="floating-search-row">
+        <cmc-catalog-search [compact]="true"
+          [term]="appliedTerm()"
+          [category]="searchCategory()"
+          (searched)="onCatalogSearchSubmitted($event)"
+          (productSelected)="header.closeOverlay(true)"
+        />
+        <button type="button" class="floating-search-close" aria-label="Cerrar búsqueda" (click)="header.closeOverlay(true)">
+          <cmc-icon name="close"/>
+        </button>
+      </div>
+    </div>
+  }
+
+  <div class="store-search-dock" [attr.inert]="header.isHeaderCompact() ? '' : null">
+    <div class="header-search-row">
+      @if (!header.isHeaderCompact()) {
+        <cmc-catalog-search [term]="appliedTerm()" [category]="searchCategory()"
+          (searched)="onCatalogSearchSubmitted($event)" />
+      }
+      <div class="catalog-controls" aria-label="Filtros y ordenamiento">
+        <button type="button" class="filter-gold-btn catalog-filter-trigger" [class.has-active-filters]="activeFilterCount() > 0"
+          [attr.aria-label]="filterButtonLabel()" aria-haspopup="dialog" (click)="openFilters($event.currentTarget)">
+          <cmc-icon name="filters"/>
+          @if (activeFilterCount() > 0) {
+            <span class="filter-count-badge" aria-hidden="true">{{ activeFilterCount() }}</span>
+          }
+        </button>
+      </div>
+    </div>
+  </div>
+
   <main class="cmc-store">
     <nav class="catalog-chips-bar" aria-label="Categorías del catálogo">
       <button type="button" class="catalog-chip" [class.chip-active]="!categoryId()" [attr.aria-pressed]="!categoryId()" (click)="category('')">
@@ -39,9 +102,9 @@
       }
     </nav>
 
-    <div class="catalog-meta">
+    <div #resultsHeading class="catalog-meta" tabindex="-1">
       <p class="muted" role="status">@if(service.page().status==='loading'){Buscando instrumentos…}@else if(service.page().data;as page){ {{page.totalElements}} resultados }@else{Explora nuestros instrumentos}</p>
-      @if(sort()!=='featured'){<button type="button" class="sort-pill-btn catalog-filter-trigger" (click)="openFilters()"><cmc-icon name="filters"/> {{sortLabel()}}</button>}
+      @if(sort()!=='featured'){<button type="button" class="sort-pill-btn catalog-filter-trigger" (click)="openFilters($event.currentTarget)"><cmc-icon name="filters"/> {{sortLabel()}}</button>}
     </div>
 
     @if(categoryId() || sort()!=='featured') {
@@ -52,7 +115,7 @@
       </div>
     }
 
-    @if(keyword().trim()){<p class="muted relevance-note">Resultados ordenados por relevancia del servidor.</p>}
+    @if(appliedTerm().trim()){<p class="muted relevance-note">Resultados ordenados por relevancia del servidor.</p>}
 
     @if(service.categories().status==='error'){
       <aside class="category-error">
@@ -154,7 +217,7 @@
       </div>
     </fieldset>
 
-    <fieldset [disabled]="!!keyword().trim()">
+    <fieldset [disabled]="!!appliedTerm().trim()">
       <legend><span class="legend-dot" aria-hidden="true"></span>Ordenar por</legend>
       @for(option of sortOptions;track option.id){
         <label class="filter-option" [class.option-selected]="draftSort()===option.id">
@@ -167,7 +230,7 @@
       }
     </fieldset>
 
-    @if(keyword().trim()){<p class="muted relevance-note">La búsqueda usa la relevancia del servidor.</p>}
+    @if(appliedTerm().trim()){<p class="muted relevance-note">La búsqueda usa la relevancia del servidor.</p>}
 
     <div class="sheet-actions">
       <button type="button" (click)="resetDraft()">Limpiar</button>

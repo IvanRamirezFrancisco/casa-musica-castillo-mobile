@@ -8,6 +8,7 @@ export type ApiErrorContext = 'generic' | 'auth' | 'form' | 'two-factor';
  */
 export function describeApiError(error: unknown, context: ApiErrorContext = 'generic'): string {
   if (!(error instanceof ApiError)) return 'Ocurrió un error inesperado. Inténtalo de nuevo.';
+  if (error.kind === 'operation-disabled') return 'Esta operación no está habilitada en esta versión de la aplicación.';
   if (error.kind === 'connection') {
     return 'No se pudo conectar con el servidor. Revisa tu conexión e inténtalo de nuevo.';
   }
@@ -30,7 +31,11 @@ export function describeApiError(error: unknown, context: ApiErrorContext = 'gen
     if (context === 'auth') return error.serverMessage ?? 'Correo o contraseña incorrectos.';
     return 'Tu sesión expiró. Inicia sesión de nuevo.';
   }
-  if (error.status === 403) return 'No tienes permiso para realizar esta acción.';
+  if (error.status === 403) {
+    return context === 'auth'
+      ? (error.serverMessage ?? 'No tienes permiso para realizar esta acción.')
+      : 'No tienes permiso para realizar esta acción.';
+  }
   if (error.status === 404) return 'No encontramos lo que buscas.';
   if (error.status >= 500) return 'El servidor no pudo procesar la solicitud. Inténtalo más tarde.';
   return error.serverMessage ?? (context === 'form' ? 'Revisa los datos ingresados e inténtalo de nuevo.' : 'No se pudo completar la solicitud.');
